@@ -1,0 +1,25 @@
+<div class="form-group">
+    <div class="row">
+        <div class="col-12 col-sm-4">
+            <label for="idDataOrcamento">Mês Movimento Orçado</label>
+            <select class="form-select" id="idDataOrcamento" name="dataOrcamento" required>
+                <?php foreach ($months as $k => $v): ?>
+                    <option value="<?= date('y') . "-" . ($k + 1) . "-01"; ?>" <?= ((date('m') + 1) == ($k + 1) ? "selected" : ""); ?>><?= $v; ?></option>
+                <?php endforeach;?>
+            </select>
+        </div>
+        <div class="col-12 col-sm-4">
+            <label for="idCategoria">Categoria Orçamento</label>
+            <select class="form-select" id="idCategoria" name="idCategoria" required>
+                <option value="">Selecione</option>
+                <?php foreach ($categorias as $cat): ?>
+                    <option value="<?= $cat['idCategoria'] . ' - sinal: ' . $cat['sinal']; ?>"><?= $cat['categoria'] . ' - ' . $cat['tipo']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="col-12 col-sm-4">
+            <label for="tipo">Valor (EUA e apenas inteiro)</label>
+            <input type="number" class="form-control" id="idValor" name="valor" required>
+        </div>
+    </div>
+</div>

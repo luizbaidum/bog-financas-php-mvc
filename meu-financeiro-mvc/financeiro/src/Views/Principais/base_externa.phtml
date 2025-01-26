@@ -1,0 +1,53 @@
+<?php 
+	$buttons = $this->view->buttons ?? false;
+	$margin_bottom = '';
+	if ($buttons) {
+		$margin_bottom = 'margin-bottom: 50px;';
+	}
+?>
+
+<html lang="pt-br">
+	
+	<?php require_once ('view_head.php'); ?>
+
+	<body>        
+        <?php require ('menu.phtml'); ?>
+        
+		<main id="grid-principal">
+
+			<div style="<?= $margin_bottom; ?>">
+				<?php 
+					if ($this->view->base_interna != '')
+						$this->carregarBaseInterna();
+					else
+						$this->carregarConteudo();
+				?>
+			</div>
+
+			<?php if ($buttons): ?>
+				<div id="myBtn" title="Go to top" class="bg-light">
+					<div class="container">
+						<?php foreach ($buttons as $btn): ?>
+							<button 
+								type="button"
+								title="<?= $btn['title']; ?>"
+								action="<?= $btn['action']; ?>"
+								class="<?= $btn['classes']; ?>"
+							>
+								<?= $btn['title'];; ?>
+							</button>
+						<?php endforeach; ?>
+					</div>
+				</div>
+			<?php endif; ?>
+
+		</main>
+
+		<?php include ('modal_form.phtml') ?>
+		<?php include ('modal_alerta.phtml') ?>
+		
+	</body>
+
+	<?php require_once ('view_bottom.php'); ?>
+
+</html>

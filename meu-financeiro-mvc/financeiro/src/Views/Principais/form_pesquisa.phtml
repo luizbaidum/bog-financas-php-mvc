@@ -1,0 +1,7 @@
+<form id="idFormPesquisa" class="form-ajax d-flex mb-0" data-url-action="<?= $search_submit_post; ?>" data-method="POST" role="search">
+    <?php require_once 'select_month.php'; ?>
+    <?php if ($search_submit_post == 'index.php'): ?>
+        <input type="text" class="form-control me-2 ms-2" name="pesquisa" value="<?= $pesquisa ?? ''; ?>">                        
+        <button type="submit" class="btn btn-outline-primary">Pesquisar</button>
+    <?php endif; ?>
+</form>

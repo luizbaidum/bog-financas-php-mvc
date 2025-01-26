@@ -1,0 +1,29 @@
+<div class="form-group">
+    <div class="row">
+        <div class="col-6">
+            <label for="idNomeObj">Título</label>
+            <input type="text" class="form-control" id="idNomeObj" name="nomeObj" required>
+        </div>
+        <div class="col-6">
+            <label for="idVlrObj">Valor Final Juntar (decimal com ponto)</label>
+            <input type="number" class="form-control" id="idVlrObj" name="vlrObj" step=".01" required>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-12 col-sm-6">
+            <label for="idContaInvest">Conta Invest</label>
+            <select class="form-select" id="idContaInvest" name="idContaInvest" required>
+                <option value="">Selecione</option>
+                <?php foreach ($invests as $value): ?>
+                    <option value="<?= $value['idContaInvest']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="col-12 col-sm-6">
+            <label for="idPercentObjContaInvest">% da Conta p/ Objetivo (decimal com ponto)</label>
+            <input type="number" class="form-control" id="idPercentObjContaInvest" name="percentObjContaInvest" step=".01" required>
+        </div>
+    </div>
+</div>

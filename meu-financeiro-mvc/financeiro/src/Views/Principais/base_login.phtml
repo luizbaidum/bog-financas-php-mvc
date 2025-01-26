@@ -1,0 +1,48 @@
+<?php
+    use src\Diretorio;
+    include (Diretorio::diretorio . "\\financeiro\\vendor\\MF\\View\\DataExtract.php");
+?>
+
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title><?= $title ?? $this->empresa; ?></title>
+
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/bootstrap.css.map">
+        <link rel="stylesheet" href="css/custom.css">
+        <link rel="stylesheet" href="css/media-query.css">
+    </head>
+
+	<body>
+		<div class="container">
+			<div class="wrapper">
+                <div class="logo">
+                    <img src="https://img.freepik.com/fotos-gratis/show-de-fontes-de-arco-iris-na-expo-bridge-na-coreia-do-sul_335224-487.jpg?t=st=1736901091~exp=1736904691~hmac=7309001d50eaf8f238981a2c24456f4ac225a5ea6e402643511d1fd814d0c3b1&w=1060" alt="">
+                </div>
+                <div class="text-center mt-4 name"><?= $this->empresa; ?></div>
+                <form class="p-3 mt-3" method="post" action="<?= $action; ?>">
+                    <div class="form-field d-flex align-items-center">
+                        <span class="far fa-user"></span>
+                        <input type="text" name="login" id="login" placeholder="Login">
+                    </div>
+                    <div class="form-field d-flex align-items-center">
+                        <span class="fas fa-key"></span>
+                        <input type="password" name="senha" id="pwd" placeholder="Senha">
+                    </div>
+                    <button type="submit" class="btn mt-3">Entrar</button>
+                    <div class="text-center mt-1">
+                        <?php if (isset($mensagem)): ?>
+                            <p class="fw-semibold"><?= $mensagem ?></p>
+                        <?php endif; ?>
+                    </div>
+                </form>
+            </div>
+		</div>
+	</body>
+
+	<?php require_once ('view_bottom.php'); ?>
+
+</html>

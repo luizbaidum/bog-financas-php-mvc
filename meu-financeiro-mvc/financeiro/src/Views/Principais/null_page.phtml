@@ -1,0 +1,16 @@
+<html lang="pt-br">
+
+	<?php require_once ('view_head.php'); ?>
+
+	<body>
+		<div class="card mt-2 text-center">
+			<div class="card-body"><h5> <?= $this->view->data['mensagem'] ?? "Aconteceu um erro ao carregar a página. Entre em contato com o suporte."; ?> </h5></div>
+			<div>
+				<button class="btn btn-info m-1"onclick="returnToHome()">Ir para Home</button>
+			</div>
+		</div>
+	</body>
+
+	<?php require_once ('view_bottom.php'); ?>
+
+</html>
