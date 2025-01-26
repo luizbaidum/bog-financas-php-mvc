@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/badge/version-beta-blue)]()
+[![Version](https://img.shields.io/badge/Version-beta-blue)]()
 [![GitHub Release](https://img.shields.io/badge/Release-v1.0-blueviolet)]() 
 
 ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white)
