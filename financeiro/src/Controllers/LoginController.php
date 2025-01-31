@@ -12,6 +12,7 @@ class LoginController extends Controller {
         if ($this->isSetPost()) {
             try {
                 if (!empty($_POST['login']) && !empty($_POST['senha'])) {
+
                     $_SESSION['logado'] = false;
     
                     $model_usuarios = new UsuariosDAO();
@@ -32,7 +33,7 @@ class LoginController extends Controller {
                         $_SESSION['nivel'] = $logon[0]['nivel'];
                         $_SESSION['id_familia'] = $logon[0]['idFamilia'];
                         $_SESSION['logado'] = true;
-    
+
                         header('Location: /home');
                     } else {
                         $this->renderizarModalAlerta('Atenção!', 'Usuário ou senha incorretos.');
@@ -51,7 +52,7 @@ class LoginController extends Controller {
         }
 
         $this->view->settings = [
-            'action' => $this->index_route,
+            'action' => $this->index_route . '/',
             'title'  => 'Teste - Entre'
         ];
 

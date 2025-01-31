@@ -31,7 +31,7 @@ class Controller {
 		if ($this->isAjaxRequest()) {
 			ob_start();
 
-			include (Diretorio::diretorio . '\\financeiro\\vendor\\MF\\View\\DataExtract.php');
+			include (Diretorio::diretorio . 'financeiro/vendor/MF/View/DataExtract.php');
 			
 			if ($base_interna == '') {
 				$this->carregarConteudo();
@@ -104,19 +104,19 @@ class Controller {
 		 */
 		$classe_atual = lcfirst($classe_atual);
 
-		include (Diretorio::diretorio . '\\financeiro\\vendor\\MF\\View\\DataExtract.php');
+		include (Diretorio::diretorio . 'financeiro/vendor/MF/View/DataExtract.php');
 		require_once (Diretorio::getDiretorio() . '/Views/' . $classe_atual . '/' . $this->view->conteudo . '.phtml');
 	}
 
 	protected function carregarBaseInterna()
 	{
-		include (Diretorio::diretorio . '\\financeiro\\vendor\\MF\\View\\DataExtract.php');
+		include (Diretorio::diretorio . 'financeiro/vendor/MF/View/DataExtract.php');
 		require_once (Diretorio::getDiretorio() . '/Views/Principais/' . $this->view->base_interna . '.phtml');
 	}
 
 	protected function contentModal()
 	{
-		include (Diretorio::diretorio . '\\financeiro\\vendor\\MF\\View\\DataExtract.php');
+		include (Diretorio::diretorio . 'financeiro/vendor/MF/View/DataExtract.php');
 		require_once (Diretorio::getDiretorio() . '/Views/Principais/modal_alerta.phtml');
 	}
 }

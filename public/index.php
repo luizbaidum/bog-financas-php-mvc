@@ -6,9 +6,12 @@ setlocale(LC_ALL, 'pt_BR.utf-8');
 
 session_start();
 
-include ("../financeiro/vendor/MF/Security/ErrorTreatment.php");
+/**
+ * Alterar diretório
+ */
+include ("C:\Users\luizb\Desktop\github\meu-financeiro-mvc\\financeiro\\vendor\\MF\\Security\\ErrorTreatment.php");
 
-require_once ("../financeiro/vendor/autoload.php");
+require_once ("C:\Users\luizb\Desktop\github\meu-financeiro-mvc\\financeiro\\vendor\\autoload.php");
 
 set_error_handler('errorHandler'); 
 set_exception_handler('exceptionHandler'); 
