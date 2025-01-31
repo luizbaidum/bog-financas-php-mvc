@@ -13,3 +13,9 @@ Controle diário de gastos, identificados por data, categoria, valor e descriç�
 Controle de investimentos de renda fixa, por conta.
 Extrato dos investimentos.
 Gráfico de evolução dos investimentos.
+
+Por favor, executar
+```
+php composer.phar update
+```
+para atualizar e instalar o monolog
