@@ -6,14 +6,14 @@ use MF\Model\Model;
 use MF\Model\SQLActions;
 
 class MovimentosDAO extends Model {
-    public function indexTable($pesquisa, $month = '')
+    public function indexTable($pesquisa, $year = '', $month = '')
     {
-        $where = 'WHERE (MONTH(movimentos.dataMovimento) = MONTH(CURRENT_DATE()))';
+        $where = 'WHERE (DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = DATE_FORMAT(CURRENT_DATE(), "%Y%m"))';
 
         if ($month != '' && $month == 'Todos') {
             $where = 'WHERE movimentos.dataMovimento IS NOT NULL';
         } elseif ($month != '' && $month != 'Todos') {
-            $where = "WHERE DATE_FORMAT(movimentos.dataMovimento, '%b') = '$month'";
+            $where = "WHERE DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$year$month'";
         }
 
         if ($pesquisa != '') {
@@ -44,14 +44,14 @@ class MovimentosDAO extends Model {
         return $result;
     }
 
-    public function indicadores($month = '')
+    public function indicadores($year = '', $month = '')
     {
-        $where = 'WHERE (MONTH(movimentos.dataMovimento) = MONTH(CURRENT_DATE()))';
+        $where = 'WHERE (DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = DATE_FORMAT(CURRENT_DATE(), "%Y%m"))';
         if (!empty($month)) {
             if ($month == 'Todos') {
                 $where = 'WHERE movimentos.dataMovimento IS NOT NULL';
             } else {
-                $where = "WHERE DATE_FORMAT(movimentos.dataMovimento, '%b') = '$month'";
+                $where = "WHERE DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$year$month'";
             }
         }
 

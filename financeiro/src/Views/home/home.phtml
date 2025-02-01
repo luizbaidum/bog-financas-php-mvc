@@ -79,6 +79,7 @@
                         $acumulado += $value['valor'];
                 ?>
                     <tr class="table-dark">
+                        <td></td>
                         <td colspan="3" style="text-align: right">Resultado mês <?= $value['MES']; ?>:</td>
                         <td>R$ <?= NumbersHelper::formatUStoBR($value['valor']); ?></td>
                         <td></td>
@@ -86,6 +87,7 @@
                     </tr>
                 <?php endforeach; ?>
                 <tr class="table-dark">
+                    <td></td>
                     <td colspan="3" style="text-align: right">Acumulado</td>
                     <td>R$ <?= NumbersHelper::formatUStoBR($acumulado); ?></td>
                     <td></td>

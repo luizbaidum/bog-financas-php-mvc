@@ -3,12 +3,9 @@
 namespace src\Controllers;
 
 use MF\Controller\Controller;
-use MF\Model\Model;
-use src\Models\Categorias\CategoriasEntity;
 use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Investimentos\InvestimentosEntity;
 use src\Models\Movimentos\MovimentosDAO;
-use src\Models\Objetivos\ObjetivosDAO;
 use src\Models\Objetivos\ObjetivosEntity;
 use src\Models\Orcamento\OrcamentoDAO;
 
@@ -18,22 +15,23 @@ class ConsultasController extends Controller {
         $model_movimentos = new MovimentosDAO();
         $model_orcamento = new OrcamentoDAO();
 
+        $ano_filtro = $_GET['anoFiltro'] ?? '';
+		$mes_filtro = $_GET['mesFiltro'] ?? '';
+
         $this->view->settings = [
-            'action'   => '',
-            'redirect' => $this->index_route . '/indicadores_index',
-            'title'    => 'Indicadores',
+            'action'     => '',
+            'redirect'   => $this->index_route . '/indicadores_index',
+            'title'      => 'Indicadores',
+            'url_search' => $this->index_route . '/indicadores_index'
         ];
 
         $indicadores = $model_movimentos->indicadores(); 
         $orcamentos = $model_orcamento->orcamentos();
 
-        // if (isset($_POST['mesFiltro']) && !empty($_POST['mesFiltro'])) {
-        //     $indicadores = $crud->indicadores($_POST['mesFiltro']); 
-        //     $orcamentos = $crud->orcamentos($_POST['mesFiltro']);
-        // } else {
-        //     $indicadores = $crud->indicadores(); 
-        //     $orcamentos = $crud->orcamentos();
-        // }
+        if ($mes_filtro != '') {
+            $indicadores = $model_movimentos->indicadores($ano_filtro, $mes_filtro); 
+            $orcamentos = $model_orcamento->orcamentos($ano_filtro, $mes_filtro);
+        }
 
         $receitas = 0;
         $aplicado = 0;

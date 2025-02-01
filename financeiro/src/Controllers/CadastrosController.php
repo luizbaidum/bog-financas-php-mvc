@@ -96,6 +96,10 @@ class CadastrosController extends Controller {
 
         if ($this->isSetPost()) {
             try {
+                if ($_POST['idCategoria'] == '') {
+                    throw new Exception('Por favor, escolher categoria.'); 
+                }
+
                 $model = new Model();
 
                 $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);

@@ -7,8 +7,6 @@
     $routes = $menu->routes;
     $logout_url = $menu->getUrlLogout();
     $home_url = $menu->getUrlHome();
-
-    $search_submit_post = 'index.php';
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -39,7 +37,7 @@
                 </li>
             </ul>
             
-            <?php //require 'form_pesquisa.phtml'; ?>
+            <?php require 'form_pesquisa.phtml'; ?>
 
         </div>
     </div>
