@@ -88,5 +88,27 @@ class ConsultasController extends Controller {
 
         $this->renderPage(main_route: $this->index_route . '/orcamento_index', conteudo: 'orcamento_index');
     }
+
+    public function exibirResultados()
+    {
+        $model_movimentos = new MovimentosDAO();
+
+        $ret = $model_movimentos->getResultado();
+
+        $data = [];
+        if ($ret) {
+            foreach ($ret as $val) {
+                if (!isset($data[$val['proprietario']]['resultado'])) {
+                    $data[$val['proprietario']]['resultado'] = $val['total'];
+                } else {
+                    $data[$val['proprietario']]['resultado'] += $val['total'];
+                }
+            }
+        }
+
+        $this->view->data['data'] = $data;
+
+        $this->renderInModal(titulo: 'Resultado', conteudo: 'exibir_resultado');
+    }
 }
 ?>

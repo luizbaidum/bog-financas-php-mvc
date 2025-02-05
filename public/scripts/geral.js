@@ -6,7 +6,8 @@ $(document).on('click', '.render-ajax', function (e) {
     let url_action = e.currentTarget.dataset.url;
     let div_destino = e.currentTarget.dataset.div;
     let modal = e.currentTarget.dataset.modal ?? false;
-    sendAjaxRendering(
+
+    requireAjaxRender(
         {
             action: url_action, 
             id_destino: div_destino, 
@@ -16,14 +17,14 @@ $(document).on('click', '.render-ajax', function (e) {
 });
 
 $(document).on('click', '.ajax-ver-resultado', function (e) {
-    let url_action = '';
-    let div_destino = '';
+    let action = e.currentTarget.dataset.action;
     let modal = true;
-    sendAjaxRendering(
+
+    requireAjaxRender(
         {
-            action: url_action, 
-            id_destino: div_destino, 
-            modal: modal
+            action: action, 
+            modal: modal,
+            method: 'GET'
         }
     );
 });

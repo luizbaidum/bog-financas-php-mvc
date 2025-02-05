@@ -19,6 +19,20 @@ class Controller {
 		}
 	}
 
+	protected function renderInModal($titulo, $conteudo)
+	{
+		$this->view->conteudo = $conteudo;
+		$this->view->titulo = $titulo;
+
+		ob_start();
+			$this->carregarConteudo();
+			$resultado = ob_get_contents();
+		ob_end_clean();
+
+		echo $resultado;
+		exit;
+	}
+
 	protected function renderPage($main_route, $conteudo, $base_interna = '')
 	{	
 		$lembretes = (new LembretesDAO())->selectAll(new LembretesEntity);
@@ -99,9 +113,6 @@ class Controller {
 		$classe_atual = get_class($this);
 		$classe_atual = str_replace('src\Controllers\\', '', $classe_atual);
 		$classe_atual = str_replace('Controller', '', $classe_atual);
-		/**
-		 * primeira letra da pasta p/ minusculo
-		 */
 		$classe_atual = lcfirst($classe_atual);
 
 		include (Diretorio::diretorio . 'financeiro/vendor/MF/View/DataExtract.php');

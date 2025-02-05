@@ -43,7 +43,6 @@ async function requireAjaxRender(user_options) {
         action: null,
         method: 'POST',
         data: null,
-        redirect: false,
         callback: null,
         modal: false
     };
@@ -54,7 +53,10 @@ async function requireAjaxRender(user_options) {
     req.open(defined.method, defined.action, true);
     req.send(defined.data);
     req.onload = function () {
-        console.log(this);
+        let html = this.response;
+
+        $('#id-modal-conteudo .modal-content').html(html);
+        $('#id-modal-conteudo').modal('show'); 
     }
 }
 

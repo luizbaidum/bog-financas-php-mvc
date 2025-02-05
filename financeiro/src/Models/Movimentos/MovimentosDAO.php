@@ -17,10 +17,10 @@ class MovimentosDAO extends Model {
         }
 
         if ($pesquisa != '') {
-            $where .= ' AND (categoria_movimentos.categoria LIKE "%' . $pesquisa . '%" OR movimentos.nomeMovimento LIKE "%' . $pesquisa . '%")';
+            $where .= ' AND (categorias.categoria LIKE "%' . $pesquisa . '%" OR movimentos.nomeMovimento LIKE "%' . $pesquisa . '%")';
         }
 
-        $query = "SELECT movimentos.*, categoria_movimentos.categoria, categoria_movimentos.tipo FROM movimentos INNER JOIN categoria_movimentos ON categoria_movimentos.idCategoria = movimentos.idCategoria $where ORDER BY dataMovimento DESC";
+        $query = "SELECT movimentos.*, categorias.categoria, categorias.tipo FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria $where ORDER BY dataMovimento DESC";
 
         $new_sql = new SQLActions();
 		$result = $new_sql->executarQuery($query);
@@ -55,9 +55,9 @@ class MovimentosDAO extends Model {
             }
         }
 
-        $query = "SELECT SUM(movimentos.valor) AS total, categoria_movimentos.idCategoria, categoria_movimentos.categoria, categoria_movimentos.tipo
+        $query = "SELECT SUM(movimentos.valor) AS total, categorias.idCategoria, categorias.categoria, categorias.tipo
                     FROM movimentos 
-                    INNER JOIN categoria_movimentos ON categoria_movimentos.idCategoria = movimentos.idCategoria
+                    INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria
                     $where
                     GROUP BY movimentos.idCategoria
                     ORDER BY total DESC";
@@ -71,5 +71,24 @@ class MovimentosDAO extends Model {
         }
 
         return $ret;
+    }
+
+    public function getResultado($year = '', $month = '')
+    {
+        $where = '(DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = DATE_FORMAT(CURRENT_DATE(), "%Y%m"))';
+        if (!empty($month)) {
+            $where = "DATE_FORMAT(movimentos.dataMovimento, '%Y%m') = '$year-$month'";
+        }
+
+        $query = "SELECT SUM(movimentos.valor) AS total, movimentos.proprietario, categorias.tipo, categorias.categoria FROM movimentos INNER JOIN categorias ON movimentos.idCategoria = categorias.idCategoria WHERE categorias.tipo != 'A' AND categorias.idCategoria != 10 AND $where GROUP BY movimentos.proprietario, categorias.idCategoria";
+
+        $new_sql = new SQLActions();
+        $result = $new_sql->executarQuery($query);
+
+        if (count($result) > 0) {
+            return $result;
+        }
+
+        return false;
     }
 }

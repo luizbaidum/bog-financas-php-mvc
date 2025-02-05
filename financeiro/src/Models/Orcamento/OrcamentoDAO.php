@@ -18,13 +18,13 @@ class OrcamentoDAO extends Model {
         }
 
         $query = "SELECT SUM(orcamentos.valor) AS totalOrcado, 
-                            categoria_movimentos.idCategoria, 
-                            categoria_movimentos.categoria, 
-                            categoria_movimentos.tipo, 
+                            categorias.idCategoria, 
+                            categorias.categoria, 
+                            categorias.tipo, 
                             MONTH(orcamentos.dataOrcamento) AS mesOrcado,
                             GROUP_CONCAT(orcamentos.idOrcamento SEPARATOR ',') AS idOrcamento
                     FROM orcamentos 
-                    INNER JOIN categoria_movimentos ON categoria_movimentos.idCategoria = orcamentos.idCategoria
+                    INNER JOIN categorias ON categorias.idCategoria = orcamentos.idCategoria
                     $where
                     GROUP BY orcamentos.idCategoria
                     ORDER BY totalOrcado DESC";

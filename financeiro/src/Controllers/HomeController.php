@@ -45,7 +45,7 @@ class HomeController extends Controller {
 
 			$buttons->setButton(
 				'Ver resultado',
-				$this->index_route . '/ver_resultado',
+				$this->index_route . '/exibir_resultado',
 				'px-2 btn btn-info ajax-ver-resultado'
 			);
 
