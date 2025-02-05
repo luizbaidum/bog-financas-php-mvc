@@ -77,7 +77,7 @@ class MovimentosDAO extends Model {
     {
         $where = '(DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = DATE_FORMAT(CURRENT_DATE(), "%Y%m"))';
         if (!empty($month)) {
-            $where = "DATE_FORMAT(movimentos.dataMovimento, '%Y%m') = '$year-$month'";
+            $where = "DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$year$month'";
         }
 
         $query = "SELECT SUM(movimentos.valor) AS total, movimentos.proprietario, categorias.tipo, categorias.categoria FROM movimentos INNER JOIN categorias ON movimentos.idCategoria = categorias.idCategoria WHERE categorias.tipo != 'A' AND categorias.idCategoria != 10 AND $where GROUP BY movimentos.proprietario, categorias.idCategoria";
