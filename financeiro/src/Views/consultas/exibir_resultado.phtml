@@ -1,0 +1,26 @@
+<div class="modal-header p-2">
+    <h1 class="modal-title fs-5" id="modal-conteudo-titulo"><?= $this->view->titulo; ?></h1>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body" id="modal-conteudo-conteudo">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Proprietário</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($data as $prop => $result): ?>
+                <?php foreach ($result as $val): ?>
+                    <tr>
+                        <td><?= ($prop == '1' ? 'Luiz' : 'Uepa'); ?></td>
+                        <td>
+                            <?= $val; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>

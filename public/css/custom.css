@@ -91,7 +91,7 @@
     vertical-align: baseline;
 }
 
-#myBtn {
+#fixedBotton {
     display: block;
     position: fixed;
     bottom: 0px;
@@ -103,6 +103,6 @@
     width: 100%;
 }
 
-#myBtn:hover {
+#fixedBotton:hover {
     background-color: #555;
 }

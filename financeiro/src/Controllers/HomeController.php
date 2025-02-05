@@ -12,18 +12,20 @@ class HomeController extends Controller {
 	public function home()
 	{
 		try {
-			// $pesquisa = '';
-			// if (!empty($_POST['pesquisa']) && trim($_POST['pesquisa'], ' ') != '') {
-			// 	$pesquisa = trim($_POST['pesquisa'], ' ');
-			// }
+			$ano_filtro = $_GET['anoFiltro'] ?? '';
+			$mes_filtro = $_GET['mesFiltro'] ?? '';
+			$pesquisa = $_GET['pesquisa'] ?? '';
+			if ($pesquisa != '') {
+				$pesquisa = trim($pesquisa, ' ');
+			}
 
 			$model_movimentos = new MovimentosDAO();
 			$buttons = new SetButtons();
 
 			$saldos_anteriores = array();
 
-			if (isset($_POST['mesFiltro']) && !empty($_POST['mesFiltro'])) {
-				$movimentos = $model_movimentos->indexTable('', $_POST['mesFiltro']);
+			if ($mes_filtro != '' || $pesquisa != '') {
+				$movimentos = $model_movimentos->indexTable($pesquisa, $ano_filtro, $mes_filtro);
 			} else {
 				$movimentos = $model_movimentos->indexTable('');
 				$saldos_anteriores = $model_movimentos->getSaldoPassado();
@@ -31,17 +33,20 @@ class HomeController extends Controller {
 
 			$this->view->settings = [
 				'url_edit'   => $this->index_route . '/edit_movimentos?idMovimento=',
-				'redirect'   => $this->index_route . '/home'
+				'redirect'   => $this->index_route . '/home',
+				'url_search' => $this->index_route . '/home'
 			];
-
-			// if ($pesquisa != '') {
-			// 	$saldos_anteriores = array();
-			// }
 
 			$buttons->setButton(
 				'Del',
 				$this->index_route . '/delete_movimentos',
 				'px-2 btn btn-danger'
+			);
+
+			$buttons->setButton(
+				'Ver resultado',
+				$this->index_route . '/exibir_resultado',
+				'px-2 btn btn-info ajax-ver-resultado'
 			);
 
 			$this->view->buttons = $buttons->getButtons();

@@ -1,4 +1,3 @@
-//Formata valores para R$
 $('.moeda').on('keyup', (e) => {
 
     let valor = $(e.target).val();

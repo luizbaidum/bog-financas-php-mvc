@@ -6,7 +6,7 @@ use MF\Entity\Entity;
 
 class CategoriasEntity extends Entity {
 
-    public const main_table = 'categoria_movimentos';
+    public const main_table = 'categorias';
 
     public int $idCategoria;
     public string $categoria;

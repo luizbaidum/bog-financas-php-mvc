@@ -25,16 +25,16 @@
 			</div>
 
 			<?php if ($buttons): ?>
-				<div id="myBtn" title="Go to top" class="bg-light">
+				<div id="fixedBotton" class="bg-light">
 					<div class="container">
 						<?php foreach ($buttons as $btn): ?>
 							<button 
 								type="button"
 								title="<?= $btn['title']; ?>"
-								action="<?= $btn['action']; ?>"
+								data-action="<?= $btn['action']; ?>"
 								class="<?= $btn['classes']; ?>"
 							>
-								<?= $btn['title'];; ?>
+								<?= $btn['title']; ?>
 							</button>
 						<?php endforeach; ?>
 					</div>
@@ -43,8 +43,8 @@
 
 		</main>
 
-		<?php include ('modal_form.phtml') ?>
 		<?php include ('modal_alerta.phtml') ?>
+		<?php include ('modal.phtml') ?>
 		
 	</body>
 
