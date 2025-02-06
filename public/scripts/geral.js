@@ -28,3 +28,12 @@ $(document).on('click', '.ajax-ver-resultado', function (e) {
         }
     );
 });
+
+$(document).on('click', '.limpar-pesquisa', function (e) {
+    let btn = e.currentTarget;
+    let form = btn.closest('#idFormPesquisa');
+    let url_action = form.action;
+    url_action = url_action.split('?')[0];
+
+    window.location.href = url_action;
+})
