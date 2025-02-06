@@ -91,9 +91,12 @@ class ConsultasController extends Controller {
 
     public function exibirResultados()
     {
+        $ano_filtro = $_GET['anoFiltro'];
+		$mes_filtro = $_GET['mesFiltro'];
+
         $model_movimentos = new MovimentosDAO();
 
-        $ret = $model_movimentos->getResultado();
+        $ret = $model_movimentos->getResultado($ano_filtro, $mes_filtro);
 
         $data = [];
         if ($ret) {

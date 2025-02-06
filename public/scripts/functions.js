@@ -3,7 +3,7 @@ addEventListener('popstate', () => {
     window.location.href = url;
 });
 
-async function requireAjaxOperation(user_options) {
+function requireAjaxOperation(user_options) {
     let default_options = {
         action: null,
         method: 'POST',
@@ -38,13 +38,14 @@ async function requireAjaxOperation(user_options) {
     }
 }
 
-async function requireAjaxRender(user_options) {
+function requireAjaxRender(user_options) {
     let default_options = {
         action: null,
         method: 'POST',
         data: null,
         callback: null,
-        modal: false
+        modal: false,
+        div_destino: undefined
     };
 
     let defined = Object.assign(default_options, user_options);
@@ -55,8 +56,14 @@ async function requireAjaxRender(user_options) {
     req.onload = function () {
         let html = this.response;
 
-        $('#id-modal-conteudo .modal-content').html(html);
-        $('#id-modal-conteudo').modal('show'); 
+        if (defined.modal) {
+            $('#id-modal-conteudo .modal-content').html(html);
+            $('#id-modal-conteudo').modal('show'); 
+        } else {
+            if (defined.div_destino == undefined) {
+
+            }
+        }
     }
 }
 
