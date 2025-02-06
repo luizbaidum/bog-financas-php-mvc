@@ -415,26 +415,51 @@ class CadastrosController extends Controller {
             }
         }
     }
-    // public function lancarMovimentoMensal()
-    // {
-    //     if ($this->isSetPost()) {
-    //         if (isset($_POST['registro']) && $_POST['registro'] == 'T') {
-    //             $item = array();
 
-    //             foreach ($_POST['idMovMensal'] as $id) {
-    //                 $arr_cat = explode(' - sinal: ', $_POST['idCategoria'][$id]);
-    //                 $sinal = $arr_cat[1];
+    public function lancarMovimentoMensal()
+    {
+        if ($this->isSetPost()) {
+            $item = array();
 
-    //                 $item['nomeMovimento'] = $_POST['nomeMovimento'][$id];
-    //                 $item['dataMovimento'] = $_POST['dataMovimento'][$id];
-    //                 $item['proprietario'] = $_POST['proprietario'][$id];
-    //                 $item['idCategoria'] = $arr_cat[0];
-    //                 $item['valor'] = $sinal . $_POST['valor'][$id];
+            $model_movimentos_mensais = new MovimentosMensaisDAO();
 
-    //                 (new MovimentosMensaisDAO())->cadastrar(new MovimentosMensaisEntity, $item);
-    //             }
-    //         }
-    //     }
-    // }
+            try {
+                foreach ($_POST['idMovMensal'] as $id) {
+                    $arr_cat = explode(' - sinal: ', $_POST['idCategoria'][$id]);
+                    $sinal = $arr_cat[1];
+
+                    $item['nomeMovimento'] = $_POST['nomeMovimento'][$id];
+                    $item['dataMovimento'] = $_POST['dataMovimento'][$id];
+                    $item['proprietario'] = $_POST['proprietario'][$id];
+                    $item['idCategoria'] = $arr_cat[0];
+                    $item['valor'] = $sinal . $_POST['valor'][$id];
+
+                    $ret = $model_movimentos_mensais->cadastrar(new MovimentosEntity(), $item);
+
+                    if (!isset($ret['result']) || empty($ret['result'])) {
+                        throw new Exception($this->msg_retorno_falha . '<br>' . 'O lançamento: ' . $item['nomeMovimento'] . ' e subsequentes não foram salvos.');
+                    }//testar se o Exception interrompe o foreach
+
+                    $success[] = $ret['result'];
+                }
+
+                if (isset($success) && count($success) > 0) {
+                    $array_retorno = array(
+						'result'   => true,
+						'mensagem' => $this->msg_retorno_sucesso
+					);
+
+					echo json_encode($array_retorno);
+                }
+            } catch (Exception $e) {
+                $array_retorno = array(
+					'result'   => false,
+					'mensagem' => $e->getMessage(),
+				);
+
+				echo json_encode($array_retorno);
+            }
+        }
+    }
 }
 ?>

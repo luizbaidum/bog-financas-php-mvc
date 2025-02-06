@@ -6,6 +6,7 @@ use MF\Controller\Controller;
 use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Investimentos\InvestimentosEntity;
 use src\Models\Movimentos\MovimentosDAO;
+use src\Models\MovimentosMensais\MovimentosMensaisDAO;
 use src\Models\Objetivos\ObjetivosEntity;
 use src\Models\Orcamento\OrcamentoDAO;
 
@@ -112,6 +113,21 @@ class ConsultasController extends Controller {
         $this->view->data['data'] = $data;
 
         $this->renderInModal(titulo: 'Resultado', conteudo: 'exibir_resultado');
+    }
+
+    public function movimentosMensais()
+    {
+        $model_movimentos_mensais = new MovimentosMensaisDAO();
+
+        $this->view->settings = [
+            'action'   => $this->index_route . '/cad_mov_mensal',
+            'redirect' => $this->index_route . '/movimentos_mensais_index',
+            'title'    => 'Lançar Mov. Mensal',
+        ];
+
+        $this->view->data['arr_mensais'] = $model_movimentos_mensais->getMensais();
+
+        $this->renderPage(main_route: $this->index_route . '/movimentos_mensais_index', conteudo: 'movimentos_mensais_index', base_interna: 'base_cruds');
     }
 }
 ?>
