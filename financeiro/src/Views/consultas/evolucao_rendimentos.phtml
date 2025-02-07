@@ -1,0 +1,56 @@
+<script>    
+    <?php echo 'let ret = ' . $ret . ';'; ?>
+
+    let mes_ano = Array();
+    let arr_data = Array();
+
+    for (const item of ret) {
+        let obj = Object();
+
+        mes_ano.push(item.mesAno);
+        obj.label = item.nome;
+        obj.data = item.valor;
+
+        arr_data.push(obj);
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container">
+    <canvas id="myChart"></canvas>
+</div>
+
+<script>
+    const ctx = document.getElementById('myChart');
+
+    const labels = mes_ano;
+    const data = {
+        labels: labels,
+        datasets: arr_data
+    };
+
+  new Chart(ctx, {
+    type: 'line',
+    data: data,
+    options: {
+        responsive: true,
+        plugins: {
+        legend: {
+            position: 'top',
+        },
+        title: {
+            display: true,
+            text: 'Chart.js Line Chart'
+        }
+        }
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: false
+        }
+      }
+    }
+  });
+</script>

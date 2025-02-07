@@ -5,7 +5,6 @@ namespace src\System;
 use MF\Controller\Controller;
 
 class Menu {
-
     public function getUrlLogout()
     {
         return (new Controller())->index_route . '/logout?logout=true';
@@ -25,7 +24,7 @@ class Menu {
             'Categorias', 'Movimentos', 'Contas Invest', 'Movimentos Mensais', 'Objetivos', 'Orçamento', 'Importar Orçamento'
         ],
         'Consultas' => [
-            'Indicadores', 'Lista Contas Invest', 'Extrato Contas Invest', 'Movimentos Mensais', 'Orçamento'
+            'Indicadores', 'Lista Contas Invest', 'Extrato Contas Invest', 'Movimentos Mensais', 'Orçamento', 'Evolução Rendimentos'
         ]
     ];
 
@@ -34,7 +33,7 @@ class Menu {
             'categorias', 'movimentos', 'investimentos', 'movimentos_mensais', 'objetivos', 'orcamento', 'importar_orcamento'
         ],
         'Consultas' => [
-            'indicadores_index', 'contas_investimentos_index', 'contas_investimentos_extrato', 'movimentos_mensais_index', 'orcamento_index'
+            'indicadores_index', 'contas_investimentos_index', 'contas_investimentos_extrato', 'movimentos_mensais_index', 'orcamento_index', 'evolucao_rendimentos'
         ]
     ];
 

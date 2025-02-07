@@ -1,0 +1,3 @@
+[2025-02-07T01:33:15.974080+01:00] log_php.txt.ERROR: Array to string conversion {"local":"C:\\Users\\luizb\\Desktop\\github\\web-financas-mvc\\financeiro\\src\\Views\\consultas\\evolucao_rendimentos.phtml","linha":2,"tipo":"WARNING"} []
+[2025-02-07T01:33:24.554653+01:00] log_php.txt.ERROR: Array to string conversion {"local":"C:\\Users\\luizb\\Desktop\\github\\web-financas-mvc\\financeiro\\src\\Views\\consultas\\evolucao_rendimentos.phtml","linha":2,"tipo":"WARNING"} []
+[2025-02-07T01:35:28.931702+01:00] log_php.txt.ERROR: Array to string conversion {"local":"C:\\Users\\luizb\\Desktop\\github\\web-financas-mvc\\financeiro\\src\\Views\\consultas\\evolucao_rendimentos.phtml","linha":2,"tipo":"WARNING"} []
