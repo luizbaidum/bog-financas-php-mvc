@@ -3,7 +3,7 @@
 
     let mes_ano = Array();
     let arr_valores = Array();
-    let arr_mes_ano = Array();
+    let arr_names = Array();
     let obj = Object();
     let final = Array();
 
@@ -17,31 +17,23 @@
 
         if (index2 == -1) {
             arr_valores[item.idContaInvest] = Array();
-            arr_mes_ano[item.idContaInvest] = Array();
+            arr_names[item.idContaInvest] = item.nome;
         }
     }
 
     for (const item of ret) {
         arr_valores[item.idContaInvest].push(item.valor);
-        arr_mes_ano[item.idContaInvest].push(item.mesAno);
     }
 
     arr_valores.forEach(function (v, id) {
         obj = {
             id: id,
-            mes: arr_mes_ano[id],
-            valor: v
+            label: arr_names[id],
+            data: v
         };
 
         final.push(obj);
     })
-
-    console.log(final);
-
-    // console.log(mes_ano);
-    // console.log(arr_valores);
-    // console.log(arr_mes_ano);
-    // console.log(arr_valores);
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -53,10 +45,9 @@
 <script>
     const ctx = document.getElementById('myChart');
 
-    const labels = mes_ano;
     const data = {
-        labels: labels,
-        datasets: arr_data
+        labels: mes_ano,
+        datasets: final
     };
 
   new Chart(ctx, {

@@ -134,10 +134,30 @@ class ConsultasController extends Controller {
     public function evolucaoRendimentos()
     {
         $model_rendimentos = new RendimentosDAO();
+        $model_investimentos = new InvestimentosDAO();
 
-        $ret = $model_rendimentos->getEvolucaoRendimentos();
+        $saldos = $model_investimentos->getSaldosIniciais();
+        $rendi = $model_rendimentos->getEvolucaoRendimentos();
 
-        $this->view->data['ret'] = json_encode($ret);
+        foreach ($saldos as $s) {
+            foreach ($rendi as $k => $r) {
+                if ($r['idContaInvest'] == $s['idContaInvest']) {
+                    $rendi[$k]['valor'] = $r['valor'] + $s['saldoInicial'];
+                    break;
+                }
+            }
+        }
+
+        foreach ($rendi as $k => $r) {
+            $id = $rendi[($k - 1)]['idContaInvest'] ?? 0;
+            $valor = $rendi[($k - 1)]['valor'] ?? 0;
+
+            if ($id > 0 && $id == $r['idContaInvest']) {
+                $rendi[$k]['valor'] = $r['valor'] + $valor;
+            }
+        }
+
+        $this->view->data['ret'] = json_encode($rendi);
 
         $this->renderPage(main_route: $this->index_route . '/evolucao_rendimentos', conteudo: 'evolucao_rendimentos');
     }
