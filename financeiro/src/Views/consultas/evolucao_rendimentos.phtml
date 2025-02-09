@@ -2,17 +2,46 @@
     <?php echo 'let ret = ' . $ret . ';'; ?>
 
     let mes_ano = Array();
-    let arr_data = Array();
+    let arr_valores = Array();
+    let arr_mes_ano = Array();
+    let obj = Object();
+    let final = Array();
 
     for (const item of ret) {
-        let obj = Object();
+        let index = mes_ano.indexOf(item.mesAno);
+        let index2 = arr_valores.indexOf(item.idContaInvest);
 
-        mes_ano.push(item.mesAno);
-        obj.label = item.nome;
-        obj.data = item.valor;
+        if (index == -1) {
+            mes_ano.push(item.mesAno);
+        }
 
-        arr_data.push(obj);
+        if (index2 == -1) {
+            arr_valores[item.idContaInvest] = Array();
+            arr_mes_ano[item.idContaInvest] = Array();
+        }
     }
+
+    for (const item of ret) {
+        arr_valores[item.idContaInvest].push(item.valor);
+        arr_mes_ano[item.idContaInvest].push(item.mesAno);
+    }
+
+    arr_valores.forEach(function (v, id) {
+        obj = {
+            id: id,
+            mes: arr_mes_ano[id],
+            valor: v
+        };
+
+        final.push(obj);
+    })
+
+    console.log(final);
+
+    // console.log(mes_ano);
+    // console.log(arr_valores);
+    // console.log(arr_mes_ano);
+    // console.log(arr_valores);
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -36,13 +65,13 @@
     options: {
         responsive: true,
         plugins: {
-        legend: {
-            position: 'top',
-        },
-        title: {
-            display: true,
-            text: 'Chart.js Line Chart'
-        }
+          legend: {
+              position: 'top',
+          },
+          title: {
+              display: true,
+              text: 'Chart.js Line Chart'
+          }
         }
     },
     options: {
