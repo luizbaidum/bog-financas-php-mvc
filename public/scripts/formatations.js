@@ -11,7 +11,7 @@ $('.moeda').on('keyup', (e) => {
 
     if(valor == 'NaN') $(e.target).val('');
 })
-/****************************************************/
+
 $('.input-data').keyup((e) => {
 
     var v=e.target.value.replace(/\D/g,"");
@@ -19,11 +19,6 @@ $('.input-data').keyup((e) => {
     v=v.replace(/(\d{2})(\d)/,"$1/$2");
     v=v.replace(/(\d{2})(\d)/,"$1/$2");
     e.target.value = v;
-})
-/****************************************************/
-$(document).ready(function() {
-    aplicarR$();
-    $('.select2').select2();
 })
 
 function aplicarR$()

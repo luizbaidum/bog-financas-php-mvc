@@ -16,7 +16,6 @@
     <meta charset="utf-8">
     <title><?= $title ?? $this->empresa; ?></title>
     <link rel="stylesheet" href="<?= Diretorio::getBaseUrl() ?>/css/bootstrap.css">
-    <link rel="stylesheet" href="<?= Diretorio::getBaseUrl() ?>/css/bootstrap.css.map">
     <link rel="stylesheet" href="<?= Diretorio::getBaseUrl() ?>/css/custom.css">
     <link rel="stylesheet" href="<?= Diretorio::getBaseUrl() ?>/css/media-query.css">
 </head>

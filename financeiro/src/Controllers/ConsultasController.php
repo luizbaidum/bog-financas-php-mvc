@@ -9,6 +9,7 @@ use src\Models\Movimentos\MovimentosDAO;
 use src\Models\MovimentosMensais\MovimentosMensaisDAO;
 use src\Models\Objetivos\ObjetivosEntity;
 use src\Models\Orcamento\OrcamentoDAO;
+use src\Models\Rendimentos\RendimentosDAO;
 
 class ConsultasController extends Controller {
     public function indicadores()
@@ -128,6 +129,37 @@ class ConsultasController extends Controller {
         $this->view->data['arr_mensais'] = $model_movimentos_mensais->getMensais();
 
         $this->renderPage(main_route: $this->index_route . '/movimentos_mensais_index', conteudo: 'movimentos_mensais_index', base_interna: 'base_cruds');
+    }
+
+    public function evolucaoRendimentos()
+    {
+        $model_rendimentos = new RendimentosDAO();
+        $model_investimentos = new InvestimentosDAO();
+
+        $saldos = $model_investimentos->getSaldosIniciais();
+        $rendi = $model_rendimentos->getEvolucaoRendimentos();
+
+        foreach ($saldos as $s) {
+            foreach ($rendi as $k => $r) {
+                if ($r['idContaInvest'] == $s['idContaInvest']) {
+                    $rendi[$k]['valor'] = $r['valor'] + $s['saldoInicial'];
+                    break;
+                }
+            }
+        }
+
+        foreach ($rendi as $k => $r) {
+            $id = $rendi[($k - 1)]['idContaInvest'] ?? 0;
+            $valor = $rendi[($k - 1)]['valor'] ?? 0;
+
+            if ($id > 0 && $id == $r['idContaInvest']) {
+                $rendi[$k]['valor'] = $r['valor'] + $valor;
+            }
+        }
+
+        $this->view->data['ret'] = json_encode($rendi);
+
+        $this->renderPage(main_route: $this->index_route . '/evolucao_rendimentos', conteudo: 'evolucao_rendimentos');
     }
 }
 ?>

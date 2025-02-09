@@ -110,3 +110,28 @@ function modalAlerta(titulo, texto) {
 
     $('#id-modal-alerta').modal('show');    
 }
+
+function insertOptions(select_element, options, comparator) {
+    options.forEach(function(item, value) {
+
+        if (item.idContaInvest == comparator) {
+            let value = item.idObj;
+            let text = item.nomeObj;
+            let opt = document.createElement('option');
+
+            opt.value = value;
+            opt.innerHTML = text;
+            select_element.appendChild(opt);
+        }
+    })
+}
+
+function removeOptions(select_element) {
+    let i, L = select_element.options.length - 1;
+
+    for (i = L; i >= 0; i--) {
+        if (select_element[i].value != '') {
+            select_element.remove(i);
+        }
+    }
+}
