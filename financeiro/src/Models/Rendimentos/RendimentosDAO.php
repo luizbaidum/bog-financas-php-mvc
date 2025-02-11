@@ -8,12 +8,26 @@ use MF\Model\SQLActions;
 class RendimentosDAO extends Model {
     public function getEvolucaoRendimentos()
     {
-        $query = "SELECT rendimentos.idContaInvest, SUM(rendimentos.valorRendimento) AS valor, DATE_FORMAT(rendimentos.dataRendimento, '%Y%m') AS mesAno, CONCAT(rendimentos.idContaInvest, ' - ', contas_investimentos.tituloInvest) AS nome FROM rendimentos INNER JOIN contas_investimentos ON rendimentos.idContaInvest = contas_investimentos.idContaInvest WHERE 0 = 0 GROUP BY rendimentos.idContaInvest, mesAno ORDER BY rendimentos.idContaInvest ASC, mesAno ASC";
-
-        //DATE_FORMAT(rendimentos.dataRendimento, '%Y%m') BETWEEN DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL -6 MONTH), '%Y%m') AND DATE_FORMAT(CURDATE(), '%Y%m')
+        $query = "SELECT 
+                    contas.idContaInvest,
+                    COALESCE(SUM(rendimentos.valorRendimento), 0) AS valor,
+                    meses.mesAno,
+                    CONCAT(contas.idContaInvest, ' - ', contas.tituloInvest) AS nome
+                FROM 
+                    (SELECT DISTINCT idContaInvest, tituloInvest FROM contas_investimentos WHERE contas_investimentos.idFamilia = $_SESSION[id_familia]) contas
+                CROSS JOIN 
+                    (SELECT DISTINCT DATE_FORMAT(dataRendimento, '%Y%m') AS mesAno FROM rendimentos WHERE rendimentos.idFamilia = $_SESSION[id_familia]) meses
+                LEFT JOIN 
+                    rendimentos 
+                    ON rendimentos.idContaInvest = contas.idContaInvest
+                    AND DATE_FORMAT(rendimentos.dataRendimento, '%Y%m') = meses.mesAno
+                GROUP BY 
+                    contas.idContaInvest, meses.mesAno
+                ORDER BY 
+                    contas.idContaInvest ASC, meses.mesAno ASC";
 
         $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query);
+        $result = $new_sql->executarQuery(query: $query, apply_security: false);
 
         if (count($result) > 0) {
             return $result;
