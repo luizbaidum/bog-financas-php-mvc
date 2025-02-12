@@ -62,7 +62,7 @@ class ConsultasController extends Controller {
         $objs = $model_investimentos->selectAll(new ObjetivosEntity, [], [], ['saldoAtual' => 'DESC']);
 
         $this->view->settings = [
-            'action'   => '',
+            'action'   => $this->index_route . '/cadastrar_rendimento',
             'redirect' => $this->index_route . '/contas_investimentos_index',
             'title'    => 'Indicadores',
         ];
