@@ -130,4 +130,16 @@ class Controller {
 		include (Diretorio::diretorio . 'financeiro/vendor/MF/View/DataExtract.php');
 		require_once (Diretorio::getDiretorio() . '/Views/Principais/modal_alerta.phtml');
 	}
+
+    protected function renderSimple($conteudo)
+	{
+		$this->view->conteudo = $conteudo;
+
+        ob_start();
+            $this->carregarConteudo();
+            $resultado = ob_get_contents();
+        ob_end_clean();
+        echo $resultado;
+        exit;
+	}
 }

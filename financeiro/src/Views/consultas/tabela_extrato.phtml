@@ -1,0 +1,47 @@
+<?php
+    use MF\Helpers\DateHelper;
+    use MF\Helpers\NumbersHelper;
+    $resultado_ext = 0;
+?>
+
+<table class="table">
+    <theader>
+        <tr>
+            <th>Conta</th>
+            <th>Data</th>
+            <th>Ação</th>
+            <th>Valor</th>
+            <th>Objetivo</th>
+        </tr>
+    </theader>
+    <tbody>
+        <?php
+            foreach ($extrato as $value): 
+                $acao = match ($value['tipo']) {
+                    '1' => 'Prejuízo',
+                    '2' => 'Lucro',
+                    '3' => 'Resgate',
+                    '4' => 'Aplicação'
+                };
+
+                $resultado_ext += $value['valorRendimento'];
+        ?>
+            <tr>
+                <td><?= $value['conta']; ?></td>
+                <td><?= DateHelper::convertUStoBR($value['dataRendimento']); ?></td>
+                <td><?= $acao; ?></td>
+                <td>R$ <?= NumbersHelper::formatUStoBR($value['valorRendimento']); ?></td>
+                <td>
+                    <?php if ($acao == 'Resgate'): ?>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr class="table-dark">
+            <td colspan="3" style="text-align: right">Resultado</td>
+            <td>R$ <?= NumbersHelper::formatUStoBR($resultado_ext); ?>
+        </tr>
+    </tfoot>
+</table>

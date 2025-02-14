@@ -33,7 +33,7 @@ class Menu {
             'categorias', 'movimentos', 'investimentos', 'movimentos_mensais', 'objetivos', 'orcamento', 'importar_orcamento'
         ],
         'Consultas' => [
-            'indicadores_index', 'contas_investimentos_index', 'contas_investimentos_extrato', 'movimentos_mensais_index', 'orcamento_index', 'evolucao_rendimentos'
+            'indicadores_index', 'contas_investimentos_index', 'extrato_investimentos', 'movimentos_mensais_index', 'orcamento_index', 'evolucao_rendimentos'
         ]
     ];
 

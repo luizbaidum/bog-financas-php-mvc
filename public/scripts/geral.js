@@ -10,21 +10,28 @@ $(document).on('click', '.render-ajax', function (e) {
     requireAjaxRender(
         {
             action: url_action, 
-            id_destino: div_destino, 
+            div_destino: div_destino, 
             modal: modal
         }
     );
 });
 
-$(document).on('click', '.ajax-ver-resultado', function (e) {
-    let action = e.currentTarget.dataset.action;
-    let modal = true;
+$(document).on('submit', '.submit-form-ajax', function (e) {
+    e.preventDefault();
+
+    let url_action = e.currentTarget.dataset.action;
+    let div_destino = e.currentTarget.dataset.div;
+    let modal = e.currentTarget.dataset.modal ?? false;
+    let method = e.currentTarget.method ?? 'POST';
+    let data = createPostData(e.currentTarget);
 
     requireAjaxRender(
         {
-            action: action, 
+            action: url_action, 
+            data: data,
+            div_destino: div_destino, 
             modal: modal,
-            method: 'GET'
+            method: method
         }
     );
 });

@@ -1,0 +1,66 @@
+
+<?php
+    use MF\Helpers\DateHelper;
+    use MF\Helpers\NumbersHelper;
+?>
+
+<div class="container">
+    <div class="card mt-2">
+        <div class="card-header">Filtro</div>
+        <div class="card-body p-1">
+            <form method="POST" data-action="<?= $action; ?>" class="submit-form-ajax" data-div="<?= $div; ?>">
+                <div class="form-group m-2">
+                    <div class="row">
+                        <div class="col-3">
+                            <label for="idExtratoMes">Mês</label>
+                            <select class="form-select" id="idExtratoMes" name="extratoMes">
+                                <option value="">Trimestre</option>
+                                <?php foreach ($months as $v): ?>
+                                    <option value="<?= $v; ?>"><?= $v; ?></option>
+                                <?php endforeach;?>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="idExtratoInvest">Invest</label>
+                            <select class="form-select" id="idExtratoInvest" name="extratoInvest">
+                                <option value="">Todos</option>
+                                <?php foreach ($lista_invest as $v): ?>
+                                    <option value="<?= $v['idContaInvest']; ?>"><?= $v['nomeBanco'] . ' - ' . $v['tituloInvest']; ?></option>
+                                <?php endforeach;?>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="idAcaoInvest">Ação</label>
+                            <select class="form-select" id="idAcaoInvest" name="acaoInvest">
+                                <option value="">Todos</option>
+                                <?php 
+                                    foreach ($lista_acao as $v): 
+                                        $acao = match ($v['tipo']) {
+                                            '1' => 'Prejuízo',
+                                            '2' => 'Lucro',
+                                            '3' => 'Resgate',
+                                            '4' => 'Aplicação'
+                                        };
+                                ?>
+                                    <option value="<?= $v['tipo']; ?>"><?= $acao; ?></option>
+                                <?php endforeach;?>
+                            </select>
+                        </div>
+                        <div class="col-3 pt-3">
+                            <button class="btn btn-primary mt-1" type="submit">Aplicar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header p-2">
+            Extrato
+        </div>
+        <div class="card-body p-1" id="<?= $div; ?>">
+            <?php require ('tabela_extrato.phtml'); ?>
+        </div>
+    </div>
+</div>
