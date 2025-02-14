@@ -10,6 +10,7 @@ use src\Models\MovimentosMensais\MovimentosMensaisDAO;
 use src\Models\Objetivos\ObjetivosEntity;
 use src\Models\Orcamento\OrcamentoDAO;
 use src\Models\Rendimentos\RendimentosDAO;
+use src\Models\Rendimentos\RendimentosEntity;
 
 class ConsultasController extends Controller {
     public function indicadores()
@@ -160,6 +161,30 @@ class ConsultasController extends Controller {
         $this->view->data['ret'] = json_encode($rendi);
 
         $this->renderPage(main_route: $this->index_route . '/evolucao_rendimentos', conteudo: 'evolucao_rendimentos');
+    }
+
+    public function extratoInvestimentos()
+    {
+        $model_investimentos = new InvestimentosDAO();
+
+        $this->view->settings = [
+            'action'   => $this->index_route . '/extrato_investimentos',
+            'redirect' => $this->index_route . '/extrato_investimentos',
+            'title'    => 'Extrato Investimentos',
+            'div'      => 'id-tabela-extrato'
+        ];
+
+        if (isset($_POST) && !empty($_POST)) {
+            $this->view->data['extrato'] = $model_investimentos->consultarExtrato($_POST);
+            $this->renderSimple('tabela_extrato');
+        }
+
+        $this->view->data['extrato'] = $model_investimentos->consultarExtrato([]);;
+        $this->view->data['lista_invest'] = $model_investimentos->selectAll(new InvestimentosEntity, [], [], []);
+        $this->view->data['months'] = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Todos');
+        $this->view->data['lista_acao'] = $model_investimentos->selectAll(new RendimentosEntity, [], ['rendimentos', 'tipo'], []);
+
+        $this->renderPage(main_route: $this->index_route . '/extrato_investimentos', conteudo: 'extrato_investimentos');
     }
 }
 ?>

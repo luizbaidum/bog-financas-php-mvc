@@ -62,6 +62,8 @@ function requireAjaxRender(user_options) {
         } else {
             if (defined.div_destino == undefined) {
 
+            } else {
+                $(`#${defined.div_destino}`).html(html);
             }
         }
     }
