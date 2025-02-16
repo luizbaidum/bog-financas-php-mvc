@@ -7,9 +7,15 @@
     let obj = Object();
     let final = Array();
 
+    let obj_2 = Object();
+    let final_2 = Array();
+    let arr_proprietario = Array();
+    let arr_valores_2 = Array();
+
     for (const item of ret) {
         let index = mes_ano.indexOf(item.mesAno);
         let index2 = arr_valores.indexOf(item.idContaInvest);
+        let index3 = arr_proprietario.indexOf(item.proprietario);
 
         if (index == -1) {
             mes_ano.push(item.mesAno);
@@ -19,10 +25,16 @@
             arr_valores[item.idContaInvest] = Array();
             arr_names[item.idContaInvest] = item.nome;
         }
+
+        if (index3 == -1) {
+            arr_proprietario[item.proprietario] = item.proprietario;
+            arr_valores_2[item.proprietario] = Array();
+        }
     }
 
     for (const item of ret) {
         arr_valores[item.idContaInvest].push(item.valor);
+        arr_valores_2[item.proprietario].push(item.valor);
     }
 
     arr_valores.forEach(function (v, id) {
@@ -34,43 +46,82 @@
 
         final.push(obj);
     })
+
+    arr_valores_2.forEach(function (v, id) {
+        obj_2 = {
+            label: arr_proprietario[id],
+            data: v
+        };
+
+        final_2.push(obj_2);
+    })
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div class="container">
-    <canvas id="myChart"></canvas>
+    <canvas id="porContaInvestimento"></canvas>
+    <canvas id="porProprietario"></canvas>
 </div>
 
 <script>
-    const ctx = document.getElementById('myChart');
-
-    const data = {
+    let porContaInvestimento = document.getElementById('porContaInvestimento');
+    let data_porContaInvestimento = {
         labels: mes_ano,
         datasets: final
     };
 
-  new Chart(ctx, {
-    type: 'line',
-    data: data,
-    options: {
-        responsive: true,
-        plugins: {
-          legend: {
-              position: 'top',
-          },
-          title: {
-              display: true,
-              text: 'Chart.js Line Chart'
-          }
+    let porProprietario = document.getElementById('porProprietario');
+    let data_porProprietario = {
+        labels: mes_ano,
+        datasets: final_2
+    };
+
+    new Chart(porContaInvestimento, {
+        type: 'line',
+        data: data_porContaInvestimento,
+        options: {
+            responsive: true,
+            plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Chart.js Line Chart'
+            }
+            }
+        },
+        options: {
+        scales: {
+            y: {
+            beginAtZero: false
+            }
         }
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: false
+    }
+  });
+
+  new Chart(porProprietario, {
+        type: 'line',
+        data: data_porProprietario,
+        options: {
+            responsive: true,
+            plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Chart.js Line Chart'
+            }
+            }
+        },
+        options: {
+        scales: {
+            y: {
+            beginAtZero: false
+            }
         }
-      }
     }
   });
 </script>
