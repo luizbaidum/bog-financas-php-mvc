@@ -27,14 +27,13 @@
         }
 
         if (index3 == -1) {
-            arr_proprietario[item.proprietario] = item.proprietario;
-            arr_valores_2[item.proprietario] = Array();
+            arr_valores_2[`${item.proprietario}-${item.mesAno}`] = 0;
         }
     }
 
     for (const item of ret) {
         arr_valores[item.idContaInvest].push(item.valor);
-        arr_valores_2[item.proprietario].push(item.valor);
+        arr_valores_2[`${item.proprietario}-${item.mesAno}`] += item.valor;
     }
 
     arr_valores.forEach(function (v, id) {
@@ -47,14 +46,37 @@
         final.push(obj);
     })
 
-    arr_valores_2.forEach(function (v, id) {
+    for (const [key, value] of Object.entries(arr_valores_2)) {
+        let spliting = key.split('-')[0];
+
         obj_2 = {
-            label: arr_proprietario[id],
-            data: v
+            label: spliting,
+            data: value
         };
 
         final_2.push(obj_2);
+    }
+
+    let gerarDataPorProprietario = Array();
+
+    final_2.forEach(function(v, i) {
+        gerarDataPorProprietario[v.label] = Array();
     })
+
+    final_2.forEach(function(v, i) {
+        gerarDataPorProprietario[v.label].push(v.data);
+    })
+
+    final_2 = Array();
+
+    for (const [key, value] of Object.entries(gerarDataPorProprietario)) {
+        obj_2 = {
+            label: key + (key == 1 ? ' - Luiz' : ' - Uepa'),
+            data: value
+        };
+
+        final_2.push(obj_2);
+    }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -95,7 +117,7 @@
         options: {
         scales: {
             y: {
-            beginAtZero: false
+                beginAtZero: false
             }
         }
     }
