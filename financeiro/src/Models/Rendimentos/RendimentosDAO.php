@@ -12,9 +12,10 @@ class RendimentosDAO extends Model {
                     contas.idContaInvest,
                     COALESCE(SUM(rendimentos.valorRendimento), 0) AS valor,
                     meses.mesAno,
-                    CONCAT(contas.idContaInvest, ' - ', contas.tituloInvest) AS nome
+                    CONCAT(contas.idContaInvest, ' - ', contas.tituloInvest) AS nome,
+                    contas.proprietario
                 FROM 
-                    (SELECT DISTINCT idContaInvest, tituloInvest FROM contas_investimentos WHERE contas_investimentos.idFamilia = $_SESSION[id_familia]) contas
+                    (SELECT DISTINCT idContaInvest, tituloInvest, proprietario FROM contas_investimentos WHERE contas_investimentos.idFamilia = $_SESSION[id_familia]) contas
                 CROSS JOIN 
                     (SELECT DISTINCT DATE_FORMAT(dataRendimento, '%Y%m') AS mesAno FROM rendimentos WHERE rendimentos.idFamilia = $_SESSION[id_familia]) meses
                 LEFT JOIN 
