@@ -14,39 +14,45 @@ function requireAjaxOperation(user_options) {
     };
 
     let defined = Object.assign(default_options, user_options);
-    let req = new XMLHttpRequest();
 
-    req.open(defined.method, defined.action, true);
-    req.send(defined.data);
-    req.onload = function () {
-        let resposta = responseTreatment(this);
+    fetch(defined.action, {
+        method: defined.method,
+        body: defined.data,
+    })
+    .then(response => {
+        if (response.ok) {
+            response.text()
+            .then((text) => {
+                let resposta = responseTreatment(text);
 
-        if (resposta != undefined) {
-            if (defined.callback != null) {
-                window[defined.callback](resposta);
-            } else {
-                let texto = resposta.mensagem;
-                let titulo = 'Atenção!';
+                if (resposta != undefined) {
+                    if (defined.callback != null) {
+                        window[defined.callback](resposta);
+                    } else {
+                        let texto = resposta.mensagem;
+                        let titulo = 'Atenção!';
 
-                if (defined.modal == false && resposta.result != null && resposta.result != false) {
-                    titulo = 'Sucesso!';
-                    limparForm(defined.id_form);
+                        if (defined.modal == false && resposta.result != null && resposta.result != false) {
+                            titulo = 'Sucesso!';
+                            limparForm(defined.id_form);
 
-                    modalAlerta(titulo, texto);
-                }
+                            modalAlerta(titulo, texto);
+                        }
 
-                let id_modal_str = '#id-modal-conteudo';
+                        let id_modal_str = '#id-modal-conteudo';
 
-                if (defined.modal == 'false') {
-                    if ($(id_modal_str).hasClass('show')) {
-                        $(id_modal_str).modal('hide');                       
+                        if (defined.modal == 'false') {
+                            if ($(id_modal_str).hasClass('show')) {
+                                $(id_modal_str).modal('hide');                       
+                            }
+                        } else {
+                            $(id_modal_str + ' .modal-content .card').html(texto);
+                        }
                     }
-                } else {
-                    $(id_modal_str + ' .modal-content .card').html(texto);
                 }
-            }
-        }        
-    }
+            })
+        }
+    })
 }
 
 function requireAjaxRender(user_options) {
@@ -80,23 +86,19 @@ function requireAjaxRender(user_options) {
     }
 }
 
-function responseTreatment(response) {
+function responseTreatment(response_text) {
     let resposta = Object();
 
-    if (response.status === 200) {
-        resposta = response.response;
+    resposta = response_text;
 
-        try {
-            if (typeof(JSON.parse(resposta)) == 'object') {
-                resposta = JSON.parse(resposta);
-            }
-        } catch (error) {
-            console.log(error);
-            modalAlerta('Atenção!', 'Houve um erro na sua solicitação.');
-            return;
+    try {
+        if (typeof(JSON.parse(resposta)) == 'object') {
+            resposta = JSON.parse(resposta);
         }
-    } else {
-        resposta.mensagem = 'Forbidden || Not Found';
+    } catch (error) {
+        console.log(error);
+        modalAlerta('Atenção!', 'Houve um erro na sua solicitação.');
+        return;
     }
 
     return resposta;
