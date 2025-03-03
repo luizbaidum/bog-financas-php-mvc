@@ -7,6 +7,7 @@ use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Investimentos\InvestimentosEntity;
 use src\Models\Movimentos\MovimentosDAO;
 use src\Models\MovimentosMensais\MovimentosMensaisDAO;
+use src\Models\Objetivos\ObjetivosDAO;
 use src\Models\Objetivos\ObjetivosEntity;
 use src\Models\Orcamento\OrcamentoDAO;
 use src\Models\Rendimentos\RendimentosDAO;
@@ -66,6 +67,7 @@ class ConsultasController extends Controller {
             'action'   => $this->index_route . '/cadastrar_rendimento',
             'redirect' => $this->index_route . '/contas_investimentos_index',
             'title'    => 'Indicadores',
+            'url_obj'  => $this->index_route . '/consultar_objetivos?idContaInvest=',
         ];
 
         $this->view->data['contas'] = $contas;
@@ -185,6 +187,19 @@ class ConsultasController extends Controller {
         $this->view->data['lista_acao'] = $model_investimentos->selectAll(new RendimentosEntity, [], ['rendimentos', 'tipo'], []);
 
         $this->renderPage(main_route: $this->index_route . '/extrato_investimentos', conteudo: 'extrato_investimentos');
+    }
+
+    public function consultarObjetivos()
+    {
+        $id_invest = $_GET['idContaInvest'];
+
+        $model_objetivos = new ObjetivosDAO();
+
+        $lista_objetivos = $model_objetivos->consultarObjetivosPorInvestimento($id_invest);
+
+        $this->view->data['lista_objetivos'] = $lista_objetivos;
+
+        $this->renderInModal(titulo: 'Objetivos', conteudo: 'objetivos');
     }
 }
 ?>

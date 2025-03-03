@@ -85,14 +85,10 @@
                         <tr>
                             <td><?= $value['nomeBanco']; ?></td>
                             <td><?= $value['tituloInvest']; ?></td>
-                            <td><button class="consultar-objetivo" 
-                                        data-url-action="../sql/consultas.php"
-                                        data-id="<?= $value['idContaInvest']; ?>"
-                                        data-action="consultar-objetivos"
-                                        data-field-id="idContaInvest"
-                                        data-table="obj"
-                                        data-method="GET"
-                                        data-callback="dispararAlert"
+                            <td><button class="render-ajax" 
+                                        data-url="<?= $url_obj . $value['idContaInvest'] ?>"
+                                        data-div=""
+                                        data-modal="true"
                                 >&#8505;</button>
                                 <a href="edit_objetivos.php?idContaInvest=<?= $value['idContaInvest']; ?>">
                                     <button>&#9998;</button>
