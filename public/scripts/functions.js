@@ -156,3 +156,20 @@ function removeOptions(select_element) {
         }
     }
 }
+
+function deleteTr(botao) {
+    let linha = botao.closest('tr');
+    let tabela = linha.closest('table');
+
+    tabela.deleteRow(linha.rowIndex);
+}
+
+function createPostData(formulario) {
+    let post_data = new FormData();
+
+    new FormData(formulario).forEach((value, key) => {
+        post_data.append(key, value);
+    });
+ 
+    return post_data;
+}

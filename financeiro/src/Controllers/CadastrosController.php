@@ -343,17 +343,17 @@ class CadastrosController extends Controller {
         $this->renderPage(main_route: $this->index_route . '/orcamento', conteudo: 'orcamento', base_interna: 'base_cruds');
     }
 
-    public function importarOrcamento()
+    public function orcamentoDoRealizado()
     {
         $this->view->settings = [
-            'action'   => $this->index_route . '/cad_importar_orcamento',
-            'url_ajax' => $this->index_route . '/import_importar_orcamento',
-            'redirect' => $this->index_route . '/importar_orcamento',
+            'action'   => $this->index_route . '/cad_orcamento_do_realizado',
+            'url_ajax' => $this->index_route . '/buscar_orcamento_do_realizado',
+            'redirect' => $this->index_route . '/orcamento_do_realizado',
             'title'    => 'Importação de Orçamento',
             'div_ajax' => 'id-content-importar'
         ];
 
-        $this->renderPage(main_route: $this->index_route . '/importar_orcamento', conteudo: 'importar_orcamento', base_interna: 'base_cruds');
+        $this->renderPage(main_route: $this->index_route . '/orcamento_do_realizado', conteudo: 'orcamento_do_realizado', base_interna: 'base_cruds');
     }
 
     public function cadastrarOrcamento()
@@ -390,22 +390,46 @@ class CadastrosController extends Controller {
         }
     }
 
-    public function cadastrarImportarOrcamento()
+    public function cadastrarOrcamentoDoRealizado()
     {
         if ($this->isSetPost()) {
             try {
                 $ret = [];
 
-                if ($ret['result']) {
-					$array_retorno = array(
-						'result'   => $ret['result'],
+                foreach ($_POST['idCategoria'] as $k => $categoria) {
+                    $item['idCategoria'] = $categoria;
+                    $sinal = $_POST['sinal'][$k];
+    
+                    $item['valor'] = $_POST['valor'][$k];
+                    if ($sinal == '-' && $item['valor'] > 0) {
+                        $item['valor'] = $item['valor'] * -1;
+                    }
+
+                    if ($sinal == '+' && $item['valor'] < 0) {
+                        $item['valor'] = $item['valor'] * -1;
+                    }
+    
+                    $item['dataOrcamento'] = $_POST['destino'] . '-01';
+
+                    $bd = (new OrcamentoDAO())->cadastrar(new OrcamentoEntity(), $item);
+
+                    if ($bd['result'] == '' || $bd['result'] == 0) {
+                        throw new Exception('Nem todos os orçamentos foram cadastrados.');
+                    }
+    
+                    $ret[] = $bd;
+                }
+
+                if (count($ret) == 0) {
+                    throw new Exception($this->msg_retorno_falha);
+                } else {
+                    $array_retorno = array(
+						'result'   => true,
 						'mensagem' => $this->msg_retorno_sucesso
 					);
 
 					echo json_encode($array_retorno);
-				} else {
-					throw new Exception($this->msg_retorno_falha);
-				}
+                }
             } catch (Exception $e) {
                 $array_retorno = array(
 					'result'   => false,

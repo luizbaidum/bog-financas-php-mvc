@@ -39,4 +39,28 @@ class OrcamentoDAO extends Model {
 
         return $ret;
     }
+
+    public function buscarMediasDespesas($year, $month)
+    {
+        $where = "DATE_FORMAT(movimentos.dataMovimento, '%Y') = '$year'";
+        $media = "(SUM(movimentos.valor) / MONTH(NOW())) AS valorOrcamento";
+        if (!is_null($month) && $month != '') {
+            $where = "DATE_FORMAT(movimentos.dataMovimento, '%Y-%m') = '$year-$month'";
+            $media = "SUM(movimentos.valor) AS valorOrcamento";
+        }
+
+        $query = "SELECT movimentos.idCategoria,
+                    $media,
+                    categorias.categoria,
+                    categorias.sinal
+                    FROM movimentos
+                    INNER JOIN categorias ON movimentos.idCategoria = categorias.idCategoria
+                    WHERE $where
+                    GROUP BY movimentos.idCategoria";
+
+        $new_sql = new SQLActions();
+        $result = $new_sql->executarQuery($query);
+
+        return $result;
+    }
 }
