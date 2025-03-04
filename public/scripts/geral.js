@@ -16,7 +16,7 @@ $(document).on('click', '.render-ajax', function (e) {
     );
 });
 
-$(document).on('submit', '.submit-form-ajax', function (e) {
+$(document).on('submit', '.submit-form-render-ajax', function (e) {
     e.preventDefault();
 
     let url_action = e.currentTarget.dataset.action;
@@ -68,3 +68,21 @@ $(document).on('change', '.exibir-objetivos', function (e) {
         console.error(error);
     }
 })
+
+$(document).on('submit', '.submit-form-crud-ajax', function (e) {
+    e.preventDefault();
+
+    let url_action = e.currentTarget.dataset.action;
+    let modal = e.currentTarget.dataset.modal ?? false;
+    let data = createPostData(e.currentTarget);
+    let redirect = e.currentTarget.dataset.redirect;
+    let id_form = e.currentTarget.id;
+
+    requireAjaxOperation({
+        action: url_action, 
+        data: data, 
+        redirect: redirect,
+        id_form: id_form,
+        modal: modal
+    })
+});

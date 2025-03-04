@@ -197,9 +197,14 @@ class ConsultasController extends Controller {
 
         $lista_objetivos = $model_objetivos->consultarObjetivosPorInvestimento($id_invest);
 
+        $this->view->settings = [
+            'action'   => $this->index_route . '/editar_objetivo',
+            'redirect' => $this->index_route . '/extrato_investimentos',
+        ];
+
         $this->view->data['lista_objetivos'] = $lista_objetivos;
 
-        $this->renderInModal(titulo: 'Objetivos', conteudo: 'objetivos');
+        $this->renderInModal(titulo: 'Objetivos do investimento conta', conteudo: 'objetivos');
     }
 }
 ?>
