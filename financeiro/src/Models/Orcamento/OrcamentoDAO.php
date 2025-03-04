@@ -6,14 +6,14 @@ use MF\Model\Model;
 use MF\Model\SQLActions;
 
 class OrcamentoDAO extends Model {
-    public function orcamentos($month = '')
+    public function orcamentos($year = '', $month = '')
     {
         $where = 'WHERE (MONTH(orcamentos.dataOrcamento) = MONTH(CURRENT_DATE()))';
-        if (!empty($month)) {
+        if ($month != '') {
             if ($month == 'Todos') {
                 $where = 'WHERE orcamentos.dataOrcamento IS NOT NULL';
             } else {
-                $where = "WHERE DATE_FORMAT(orcamentos.dataOrcamento, '%b') = '$month'";
+                $where = "WHERE DATE_FORMAT(orcamentos.dataOrcamento, '%Y%b') = '$year$month'";
             }
         }
 

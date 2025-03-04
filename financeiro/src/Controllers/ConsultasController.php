@@ -81,12 +81,20 @@ class ConsultasController extends Controller {
     {
         $model_orcamento = new OrcamentoDAO();
 
-        $orcamentos = $model_orcamento->orcamentos($_POST['mesFiltro'] ?? '');
+        $ano_filtro = $_GET['anoFiltro'] ?? '';
+		$mes_filtro = $_GET['mesFiltro'] ?? '';
+
+        if ($mes_filtro != '') {
+            $orcamentos = $model_orcamento->orcamentos($ano_filtro, $mes_filtro);
+        } else {
+            $orcamentos = $model_orcamento->orcamentos();
+        }
 
         $this->view->settings = [
-            'action'   => '',
-            'redirect' => $this->index_route . '/orcamento_index',
-            'title'    => 'Orçamento',
+            'action'     => '',
+            'redirect'   => $this->index_route . '/orcamento_index',
+            'title'      => 'Orçamento',
+            'url_search' => $this->index_route . '/orcamento_index'
         ];
 
         $this->view->data['orcamentos'] = $orcamentos;
