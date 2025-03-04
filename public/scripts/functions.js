@@ -66,24 +66,30 @@ function requireAjaxRender(user_options) {
     };
 
     let defined = Object.assign(default_options, user_options);
-    let req = new XMLHttpRequest();
 
-    req.open(defined.method, defined.action, true);
-    req.send(defined.data);
-    req.onload = function () {
-        let html = this.response;
+    fetch(defined.action, {
+        method: defined.method,
+        body: defined.data,
+    })
+    .then(response => {
+        if (response.ok) {
+            response.text()
+            .then(text => {
+                let html = text;
 
-        if (defined.modal) {
-            $('#id-modal-conteudo .modal-content').html(html);
-            $('#id-modal-conteudo').modal('show'); 
-        } else {
-            if (defined.div_destino == undefined) {
-
-            } else {
-                $(`#${defined.div_destino}`).html(html);
-            }
+                if (defined.modal) {
+                    $('#id-modal-conteudo .modal-content').html(html);
+                    $('#id-modal-conteudo').modal('show'); 
+                } else {
+                    if (defined.div_destino == undefined) {
+    
+                    } else {
+                        $(`#${defined.div_destino}`).html(html);
+                    }
+                }
+            })
         }
-    }
+    })
 }
 
 function responseTreatment(response_text) {
