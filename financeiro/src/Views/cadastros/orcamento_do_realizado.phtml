@@ -1,9 +1,5 @@
-<div class="form-group">
+<div class="form-group p-1">
     <div class="row">
-        <div class="col-3">
-            <label for="idAnoOrigem">Ano origem</label>
-            <input type="text" id="idAnoOrigem" name="anoOrigem" value="<?= date('Y'); ?>">
-        </div>
         <div class="col-3">
             <label for="idMesOrigem">Mês origem</label>
             <input type="month" id="idMesOrigem" name="mesOrigem" placeholder="yyyy-mm">
@@ -13,8 +9,8 @@
             <input type="month" id="idDestino" name="destino" placeholder="yyyy-mm">
         </div>
     </div>
+
+    <button type="button" class="btn btn-primary mt-1 obter-orcamentos" data-url="<?= $url_ajax; ?>" data-div="<?= $div_ajax; ?>">Buscar</button>
 </div>
 
-<button type="button" class="btn btn-primary mt-1 render-ajax" data-url="<?= $url_ajax; ?>" data-div="<?= $div_ajax; ?>">Buscar</button>
-
-<div id="id-content-importar"></div>
+<div id="<?= $div_ajax; ?>"></div>

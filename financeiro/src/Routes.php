@@ -23,7 +23,7 @@ class Routes extends Bootstrap {
 		$routes[] = array('route' => '/cad_objetivos', 'controller' => 'CadastrosController', 'action' => 'cadastrarObjetivos');
 		$routes[] = array('route' => '/orcamento', 'controller' => 'CadastrosController', 'action' => 'orcamento');
 		$routes[] = array('route' => '/cad_orcamento', 'controller' => 'CadastrosController', 'action' => 'cadastrarOrcamento');
-		$routes[] = array('route' => '/importar_orcamento', 'controller' => 'CadastrosController', 'action' => 'importarOrcamento');
+		$routes[] = array('route' => '/orcamento_do_realizado', 'controller' => 'CadastrosController', 'action' => 'orcamentoDoRealizado');
 		$routes[] = array('route' => '/indicadores_index', 'controller' => 'ConsultasController', 'action' => 'indicadores');
 		$routes[] = array('route' => '/contas_investimentos_index', 'controller' => 'ConsultasController', 'action' => 'investimentos');
 		$routes[] = array('route' => '/orcamento_index', 'controller' => 'ConsultasController','action' => 'orcamento');
@@ -35,6 +35,8 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/extrato_investimentos', 'controller' => 'ConsultasController', 'action' => 'extratoInvestimentos');
         $routes[] = array('route' => '/consultar_objetivos', 'controller' => 'ConsultasController', 'action' => 'consultarObjetivos');
         $routes[] = array('route' => '/editar_objetivo', 'controller' => 'EdicoesController', 'action' => 'editarObjetivo');
+        $routes[] = array('route' => '/buscar_orcamento_do_realizado', 'controller' => 'ConsultasController', 'action' => 'buscarOrcamentoDoRealizado');
+        $routes[] = array('route' => '/cad_orcamento_do_realizado', 'controller' => 'CadastrosController', 'action' => 'cadastrarOrcamentoDoRealizado');
 
 		$this->setRoutes($routes);
 	}

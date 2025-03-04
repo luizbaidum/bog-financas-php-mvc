@@ -206,5 +206,18 @@ class ConsultasController extends Controller {
 
         $this->renderInModal(titulo: 'Objetivos do investimento conta', conteudo: 'objetivos');
     }
+
+    public function buscarOrcamentoDoRealizado()
+    {
+        $model_orcamento = new OrcamentoDAO();
+
+        list($ano_origem, $mes_origem) = explode('-', $_POST['mesAnoOrigem']);
+
+        $lista = $model_orcamento->buscarMediasDespesas($ano_origem, $mes_origem);
+
+        $this->view->data['lista'] = $lista;
+
+        $this->renderSimple('tabela_orcamento_importado');
+    }
 }
 ?>

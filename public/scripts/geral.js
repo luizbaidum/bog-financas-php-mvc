@@ -86,3 +86,21 @@ $(document).on('submit', '.submit-form-crud-ajax', function (e) {
         modal: modal
     })
 });
+
+$(document).on('click', '.obter-orcamentos', function (e) {
+
+    let url_action = e.currentTarget.dataset.url;
+    let div_destino = e.currentTarget.dataset.div;
+    let post_data = new FormData();
+
+    post_data.append('mesAnoOrigem', document.getElementById('idMesOrigem').value);
+
+    requireAjaxRender(
+        {
+            action: url_action, 
+            data: post_data,
+            div_destino: div_destino,
+            method: 'POST'
+        }
+    );
+});

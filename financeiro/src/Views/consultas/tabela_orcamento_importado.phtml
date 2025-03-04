@@ -1,0 +1,26 @@
+<table class="table">
+    <theader>
+        <tr>
+            <th>Remover</th>
+            <th>Categoria</th>
+            <th>Valor</th>
+        </tr>
+    </theader>
+    <tbody>
+        <?php foreach ($lista as $value): ?>
+            <tr>
+                <td>
+                    <button type="button" onclick="deleteTr(this)">&#9747;</button>
+                </td>
+                <td>
+                    <?= $value['idCategoria'] . ' - '  . $value['categoria']; ?>
+                    <input type="hidden" name="idCategoria[]" value="<?= $value['idCategoria']; ?>">
+                    <input type="hidden" name="sinal[]" value="<?= $value['sinal']; ?>">
+                </td>
+                <td>
+                    <input type="number" class="form-control" name="valor[]" step=".01" value="<?= $value['valorOrcamento']; ?>">
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

@@ -1,13 +1,3 @@
-function createPostData(formulario) {
-    let post_data = new FormData();
-
-    new FormData(formulario).forEach((value, key) => {
-        post_data.append(key, value);
-    });
- 
-    return post_data;
-}
-
 $('#excluir').click(async function() {
 
     let action = $(this).attr('data-action');
