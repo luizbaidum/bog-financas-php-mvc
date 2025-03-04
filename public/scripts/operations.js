@@ -1,12 +1,3 @@
-function submitFormCrud() {
-    let id_form = '#idform-crud';
-    let action = $(id_form).attr('data-action');
-    let data = createPostData($(id_form)[0]);
-    let redirect = $(id_form)[0].dataset.redirect;
-
-    requireAjaxOperation({action, id_form, data, redirect})
-};
-
 function createPostData(formulario) {
     let post_data = new FormData();
 

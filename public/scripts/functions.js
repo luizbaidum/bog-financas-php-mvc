@@ -9,7 +9,8 @@ function requireAjaxOperation(user_options) {
         method: 'POST',
         data: null,
         redirect: false,
-        callback: null
+        callback: null,
+        modal: false
     };
 
     let defined = Object.assign(default_options, user_options);
@@ -27,12 +28,22 @@ function requireAjaxOperation(user_options) {
                 let texto = resposta.mensagem;
                 let titulo = 'Atenção!';
 
-                if (resposta.result != null && resposta.result != false) {
+                if (defined.modal == false && resposta.result != null && resposta.result != false) {
                     titulo = 'Sucesso!';
                     limparForm(defined.id_form);
+
+                    modalAlerta(titulo, texto);
                 }
 
-                modalAlerta(titulo, texto);
+                let id_modal_str = '#id-modal-conteudo';
+
+                if (defined.modal == 'false') {
+                    if ($(id_modal_str).hasClass('show')) {
+                        $(id_modal_str).modal('hide');                       
+                    }
+                } else {
+                    $(id_modal_str + ' .modal-content .card').html(texto);
+                }
             }
         }        
     }
@@ -92,7 +103,7 @@ function responseTreatment(response) {
 }
 
 function limparForm(id_form) {
-    $(id_form).trigger('reset');
+    $(`#${id_form}`).trigger('reset');
 }
 
 function returnToHome() {

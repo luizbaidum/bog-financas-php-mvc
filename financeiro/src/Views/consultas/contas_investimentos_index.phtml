@@ -18,7 +18,7 @@
         </div>
         <div class="collapse" id="collapseCadRendimento">
             <div class="card-body p-1">
-                <form data-action="<?= $action; ?>" id="idform-crud">
+                <form data-action="<?= $action; ?>" id="idform-crud" class="submit-form-crud-ajax">
                     <div class="form-group">
                         <div class="row">
                             <div class="col-6">
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                     </div>
-                    <button id="salvar" type="button" class="btn btn-success m-1" onclick="submitFormCrud()">Salvar</button>
+                    <button id="salvar" type="submit" class="btn btn-success m-1">Salvar</button>
                 </form>
             </div>
         </div>
@@ -85,18 +85,12 @@
                         <tr>
                             <td><?= $value['nomeBanco']; ?></td>
                             <td><?= $value['tituloInvest']; ?></td>
-                            <td><button class="consultar-objetivo" 
-                                        data-url-action="../sql/consultas.php"
-                                        data-id="<?= $value['idContaInvest']; ?>"
-                                        data-action="consultar-objetivos"
-                                        data-field-id="idContaInvest"
-                                        data-table="obj"
-                                        data-method="GET"
-                                        data-callback="dispararAlert"
+                            <td class="text-left">
+                                <button class="render-ajax" 
+                                        data-url="<?= $url_obj . $value['idContaInvest'] ?>"
+                                        data-div=""
+                                        data-modal="true"
                                 >&#8505;</button>
-                                <a href="edit_objetivos.php?idContaInvest=<?= $value['idContaInvest']; ?>">
-                                    <button>&#9998;</button>
-                                </a>
                             </td>
                             <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoAtual']); ?></td>
                             <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoAnterior']); ?></td>
