@@ -3,24 +3,41 @@
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body" id="modal-conteudo-conteudo">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Proprietário</th>
-                <th>Valor</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($data as $prop => $result): ?>
-                <?php foreach ($result as $val): ?>
+    <?php foreach ($data as $prop => $tipo): ?>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th colspan="100%"><?= ($prop == '1' ? 'Luiz' : 'Uepa'); ?></th>
+                </tr>
+                <tr>
+                    <th style="width: 40%">Descrição</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($tipo as $k => $val): ?>
                     <tr>
-                        <td><?= ($prop == '1' ? 'Luiz' : 'Uepa'); ?></td>
+                        <td><?= $k; ?></td>
                         <td>
                             <?= $val; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+                </tbody>
+                <tfoot>
+                    <tr class="table-active">
+                        <td>Receitas - Despesas - Resgates</td>
+                        <td><?= (abs(($total_receita[$prop] ?? 0)) - abs(($total_despesa[$prop] ?? 0)) - abs(($total_resgate[$prop] ?? 0))); ?></td>
+                    </tr>
+                    <tr class="table-active">
+                        <td>Aplicação - Resgates</td>
+                        <td><?= (abs(($total_aplicacao[$prop] ?? 0)) - abs(($total_resgate[$prop] ?? 0))); ?></td>
+                    </tr>
+                    <tr class="table-active">
+                        <td>Receitas - Despesas</td>
+                        <td><?= (abs(($total_receita[$prop] ?? 0)) - abs(($total_despesa[$prop] ?? 0))); ?></td>
+                    </tr>
+                </tfoot>
+            </table>
+    <?php endforeach; ?>
 </div>

@@ -44,7 +44,7 @@ class HomeController extends Controller {
 			);
 
 			$buttons->setButton(
-				'Ver resultado',
+				'Ver demonstrativo',
 				$this->index_route . '/exibir_resultado?anoFiltro=' . $ano_filtro . '&mesFiltro=' . $mes_filtro,
 				'px-2 btn btn-info render-ajax',
                 'true'
