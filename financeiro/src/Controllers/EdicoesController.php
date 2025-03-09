@@ -83,13 +83,30 @@ class EdicoesController extends Controller {
                     $status = $_POST['status'][$id] ?? 'F';
                     $item['status'] = $status;
      
-                    $ret[] = $model_preferencias->atualizar(new PreferenciasEntity, $item, ['idPreferencia' => $id]);
+                    $ret = $model_preferencias->atualizar(new PreferenciasEntity, $item, ['idPreferencia' => $id]);
+
+                    if (isset($ret['result']) && $ret['result'] > 0) {
+                        $arr_atualizado[] = $id;
+                    } else {
+                        $arr_nao_atualizado[] = $id;
+                    }
                 }
 
-                if (true) {
-                    print_r($ret);
+                if (isset($arr_atualizado) && count($arr_atualizado) > 0) {
+                    $msg = 'Preferências atualizadas: ' . implode(', ', $arr_atualizado);
+
+                    if (count($arr_nao_atualizado) > 0) {
+                        $msg .= '<br> Não atualizadas: ' . implode(', ', $arr_nao_atualizado);
+                    }
+
+                    $array_retorno = array(
+                        'result'   => true,
+                        'mensagem' => $msg,
+                    );
+    
+                    echo json_encode($array_retorno);
 				} else {
-					throw new Exception('Pelo menos uma preferência não foi atualizada.');
+					throw new Exception('Nenhuma preferência foi atualizada.');
 				}
             } catch (Exception $e) {
 				$array_retorno = array(
