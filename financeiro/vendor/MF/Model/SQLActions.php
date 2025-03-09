@@ -126,7 +126,6 @@ class SQLActions {
         $stmt = $bd->prepare($query);
 
         try {
-            
             $bd->beginTransaction();
 
             if (!empty($arr_values))

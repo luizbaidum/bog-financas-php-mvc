@@ -16,7 +16,7 @@ class Menu {
     }
 
     public array $grupos = [
-        'Cadastros', 'Consultas'
+        'Cadastros', 'Consultas', 'Preferencias'
     ];
 
     public array $titles = [
@@ -25,6 +25,9 @@ class Menu {
         ],
         'Consultas' => [
             'Indicadores', 'Lista Contas Invest', 'Extrato Contas Invest', 'Movimentos Mensais', 'Orçamento', 'Evolução Rendimentos'
+        ],
+        'Preferencias' => [
+            'Preferencias'
         ]
     ];
 
@@ -34,6 +37,9 @@ class Menu {
         ],
         'Consultas' => [
             'indicadores_index', 'contas_investimentos_index', 'extrato_investimentos', 'movimentos_mensais_index', 'orcamento_index', 'evolucao_rendimentos'
+        ],
+        'Preferencias' => [
+            'preferencias'
         ]
     ];
 

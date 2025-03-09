@@ -37,6 +37,9 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/editar_objetivo', 'controller' => 'EdicoesController', 'action' => 'editarObjetivo');
         $routes[] = array('route' => '/buscar_orcamento_do_realizado', 'controller' => 'ConsultasController', 'action' => 'buscarOrcamentoDoRealizado');
         $routes[] = array('route' => '/cad_orcamento_do_realizado', 'controller' => 'CadastrosController', 'action' => 'cadastrarOrcamentoDoRealizado');
+        $routes[] = array('route' => '/preferencias', 'controller' => 'ConsultasController', 'action' => 'preferencias');
+        $routes[] = array('route' => '/salvar_preferencias', 'controller' => 'EdicoesController', 'action' => 'editarPreferencia');
+        $routes[] = array('route' => '/nova_preferencia', 'controller' => 'CadastrosController', 'action' => 'cadastrarPreferencia');
 
 		$this->setRoutes($routes);
 	}
