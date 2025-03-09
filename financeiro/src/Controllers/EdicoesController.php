@@ -7,6 +7,8 @@ use MF\Controller\Controller;
 use MF\Helpers\NumbersHelper;
 use src\Models\Objetivos\ObjetivosDAO;
 use src\Models\Objetivos\ObjetivosEntity;
+use src\Models\Preferencias\PreferenciasDAO;
+use src\Models\Preferencias\PreferenciasEntity;
 
 class EdicoesController extends Controller {
     public function editarObjetivo()
@@ -32,7 +34,7 @@ class EdicoesController extends Controller {
                         throw new Exception($validation['msg']);
                     }
                 }
-                
+
                 $ret = $model_objetivos->atualizar(new ObjetivosEntity, $_POST, ['idObj' => $id]);
 
                 if (!isset($ret['result']) || empty($ret['result'])) {
@@ -69,5 +71,51 @@ class EdicoesController extends Controller {
         }
 
         return ['status' => true];
+    }
+
+    public function editarPreferencia()
+    {
+        if ($this->isSetPost()) {
+            $model_preferencias = new PreferenciasDAO();
+
+            try {
+                foreach ($_POST['idPreferencia'] as $id) {
+                    $status = $_POST['status'][$id] ?? 'F';
+                    $item['status'] = $status;
+     
+                    $ret = $model_preferencias->atualizar(new PreferenciasEntity, $item, ['idPreferencia' => $id]);
+
+                    if (isset($ret['result']) && $ret['result'] > 0) {
+                        $arr_atualizado[] = $id;
+                    } else {
+                        $arr_nao_atualizado[] = $id;
+                    }
+                }
+
+                if (isset($arr_atualizado) && count($arr_atualizado) > 0) {
+                    $msg = 'Preferências atualizadas: ' . implode(', ', $arr_atualizado);
+
+                    if (count($arr_nao_atualizado) > 0) {
+                        $msg .= '<br> Não atualizadas: ' . implode(', ', $arr_nao_atualizado);
+                    }
+
+                    $array_retorno = array(
+                        'result'   => true,
+                        'mensagem' => $msg,
+                    );
+    
+                    echo json_encode($array_retorno);
+				} else {
+					throw new Exception('Nenhuma preferência foi atualizada.');
+				}
+            } catch (Exception $e) {
+				$array_retorno = array(
+					'result'   => false,
+					'mensagem' => $e->getMessage(),
+				);
+
+				echo json_encode($array_retorno);
+			}
+        }
     }
 }

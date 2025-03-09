@@ -1,0 +1,59 @@
+<div class="container">
+    <div class="card mt-2">
+        <div class="card-header">
+            <button class="btn btn-light btn-sm nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCadRendimento" aria-expanded="false" aria-controls="collapseCadRendimento">
+                Cadastrar Preferência
+            </button>
+        </div>
+        <div class="collapse" id="collapseCadRendimento">
+            <div class="card-body p-1">
+                <form data-action="<?= $action_2; ?>" id="idform-crud" class="submit-form-crud-ajax">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="idTitulo">Descrição/Título</label>
+                                <input type="text" class="form-control" id="idTitulo" name="titulo" required>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="salvar" type="submit" class="btn btn-success m-1">Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-body">
+            <form data-action="<?= $action; ?>" id="idform-crud" class="submit-form-crud-ajax">
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table">
+                            <theader>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Descrição</th>
+                                    <th>Status</th>
+                                </tr>
+                            </theader>
+                            <tbody>
+                                <?php foreach ($prefs as $val): ?>
+                                    <tr>
+                                        <td>
+                                            <?= $val['idPreferencia']; ?>
+                                            <input type="hidden" name="idPreferencia[<?= $val['idPreferencia']; ?>]" value="<?= $val['idPreferencia']; ?>">
+                                        </td>
+                                        <td><?= $val['titulo']; ?></td>
+                                        <td>
+                                            <input type="checkbox" name="status[<?= $val['idPreferencia']; ?>]" value="T" <?= $val['status'] == 'T' ? 'checked' : ''; ?>>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>   
+                    </div>
+                </div>
+                <button id="salvar" type="submit" class="btn btn-success m-1">Salvar</button>
+            </form> 
+        </div>
+    </div>
+</div>

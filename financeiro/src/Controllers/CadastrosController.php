@@ -17,6 +17,8 @@ use src\Models\Objetivos\ObjetivosDAO;
 use src\Models\Objetivos\ObjetivosEntity;
 use src\Models\Orcamento\OrcamentoDAO;
 use src\Models\Orcamento\OrcamentoEntity;
+use src\Models\Preferencias\PreferenciasDAO;
+use src\Models\Preferencias\PreferenciasEntity;
 use src\Models\Rendimentos\RendimentosDAO;
 use src\Models\Rendimentos\RendimentosEntity;
 
@@ -550,6 +552,37 @@ class CadastrosController extends Controller {
 
 				echo json_encode($array_retorno);
             }
+        }
+    }
+
+    public function cadastrarPreferencia()
+    {
+        if ($this->isSetPost()) {
+            $model_preferencias = new PreferenciasDAO();
+
+            try {
+                $item = $_POST;
+                $item['status'] = 'T';
+                $ret = $model_preferencias->cadastrar(new PreferenciasEntity, $item);
+
+                if ($ret['result']) {
+					$array_retorno = array(
+						'result'   => $ret['result'],
+						'mensagem' => $this->msg_retorno_sucesso
+					);
+
+					echo json_encode($array_retorno);
+				} else {
+					throw new Exception($this->msg_retorno_falha);
+				}
+            } catch (Exception $e) {
+				$array_retorno = array(
+					'result'   => false,
+					'mensagem' => $e->getMessage(),
+				);
+
+				echo json_encode($array_retorno);
+			}
         }
     }
 }
