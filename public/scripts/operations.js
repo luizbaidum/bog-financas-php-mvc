@@ -1,10 +1,10 @@
-$('#excluir').click(async function() {
+$('.action-delete').click(async function() {
 
-    let action = $(this).attr('data-action');
+    let action = $(this).attr('data-url');
     let data = arraySelecteds();
     let redirect = true;
 
-    if (dados.entries().next().done) {
+    if (data.entries().next().done) {
         modalAlerta('Atenção', 'Por favor, selecione ao menos um item para excluir.');
     } else {
         let r_confirmacao = await confirmacao();
@@ -23,7 +23,7 @@ function arraySelecteds() {
 
     let array_of_values = new FormData;
 
-    let selected_selects = $('input[name="item_selecionado"]:checked').each(function () {
+    let selected_selects = $('input[name="selectedData[]"]:checked').each(function () {
         array_of_values.append('itens[]', this.value)
     });
 

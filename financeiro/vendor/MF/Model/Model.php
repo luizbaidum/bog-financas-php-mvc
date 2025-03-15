@@ -10,6 +10,8 @@ use src\Models\Objetivos\ObjetivosEntity;
 class Model {
 
 	protected DateTime $current_time;
+    public array $arr_afetados = array();
+    public array $arr_nao_afetados = array();
 
 	public function cadastrar(object $entity, $data)
 	{
@@ -196,5 +198,19 @@ class Model {
 		$result = $new_sql->executarQuery($query, $arr_values);
 
         return $result[0]['saldoAtual'] ?? [];
+    }
+
+    public function delete(object $entity, string $field, string | int $id)
+    {
+        $arr_values = array();
+        $table = $table = $entity::main_table;
+
+        $query = "DELETE FROM `$table` WHERE `$field` = ?"; 
+        $arr_values[] = $id;
+
+        $new_sql = new SQLActions();
+		$result = $new_sql->executarQuery($query, $arr_values);
+
+        return $result;
     }
 }

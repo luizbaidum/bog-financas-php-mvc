@@ -32,15 +32,15 @@ class HomeController extends Controller {
 			}
 
 			$this->view->settings = [
-				'url_edit'   => $this->index_route . '/edit_movimentos?idMovimento=',
+				'url_edit'   => $this->index_route . '/edit_movimento?idMovimento=',
 				'redirect'   => $this->index_route . '/home',
-				'url_search' => $this->index_route . '/home'
+				'url_search' => $this->index_route . '/home',
 			];
 
 			$buttons->setButton(
 				'Del',
 				$this->index_route . '/delete_movimentos',
-				'px-2 btn btn-danger'
+				'px-2 btn btn-danger action-delete'
 			);
 
 			$buttons->setButton(
