@@ -160,3 +160,19 @@ $('.input-data').keyup((e) => {
     v = v.replace(/(\d{2})(\d)/, "$1/$2");
     e.target.value = v;
 })
+
+$('.action-delete').click(async function() {
+
+    let action = $(this).attr('data-url');
+    let data = arraySelecteds();
+    let redirect = true;
+
+    if (data.entries().next().done) {
+        modalAlerta('Atenção', 'Por favor, selecione ao menos um item para excluir.');
+    } else {
+        let r_confirmacao = await confirmacao();
+
+        if (r_confirmacao)
+            requireAjaxOperation({action, data, redirect})
+    }
+});

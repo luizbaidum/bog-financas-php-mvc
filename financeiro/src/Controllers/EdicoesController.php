@@ -119,4 +119,9 @@ class EdicoesController extends Controller {
 			}
         }
     }
+
+    public function editarMovimento()
+    {
+        
+    }
 }
