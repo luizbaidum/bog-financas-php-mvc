@@ -104,3 +104,59 @@ $(document).on('click', '.obter-orcamentos', function (e) {
         }
     );
 });
+
+$(document).on('change', '.calcular-percentual-completo', function (e) {
+    let campos = $('.calcular-percentual-completo');
+    let arr_values = Array();
+
+    for (const campo of campos) {
+        let formatador = new Formatations(campo.value);
+        arr_values.push(Number(formatador.convertToUS()));
+    }
+
+    let soma = arr_values.reduce(function(val, current_val) {
+        return val + current_val;
+    });
+
+    for (const campo of campos) {
+        if (soma != 100) {
+            campo.style.borderColor = 'red' 
+        } else {
+            campo.style.borderColor = '#86b7fe' 
+        }
+    }
+})
+
+$(document).on('keyup', '.numero-br', (e) => {
+    let valor = $(e.target).val();
+
+    valor = valor.replace(/\D/g, '');
+
+    if (valor.length === 0) {
+        valor = '000';
+    } else if (valor.length === 1) {
+        valor = '00' + valor;
+    } else if (valor.length === 2) {
+        valor = '0' + valor;
+    }
+
+    const parteInteira = valor.slice(0, -2).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const parteDecimal = valor.slice(-2);
+    valor = `${parteInteira},${parteDecimal}`;
+
+    valor = valor.replace(/^0+(?=\d)/, '');
+
+    $(e.target).val(valor);
+
+    if (valor === 'NaN') {
+        $(e.target).val('');
+    }
+})
+
+$('.input-data').keyup((e) => {
+    let v = e.target.value.replace(/\D/g, '');
+
+    v = v.replace(/(\d{2})(\d)/, "$1/$2");
+    v = v.replace(/(\d{2})(\d)/, "$1/$2");
+    e.target.value = v;
+})

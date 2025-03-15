@@ -38,11 +38,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="idVlrObj-<?= $id; ?>">Valor obj.</label>
-                                    <input type="text" class="form-control" name="vlrObj" id="idVlrObj-<?= $id; ?>" value="<?= NumbersHelper::formatUStoBR($value['vlrObj']); ?>">
+                                    <input type="text" class="form-control numero-br" name="vlrObj" id="idVlrObj-<?= $id; ?>" value="<?= NumbersHelper::formatUStoBR($value['vlrObj']); ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="idPercentObjContaInvest-<?= $id; ?>">% destinado ao obj.</label>
-                                    <input type="text" class="form-control" name="percentObjContaInvest" id="idPercentObjContaInvest-<?= $id; ?>" value="<?= NumbersHelper::formatUStoBR($value['percentObjContaInvest']); ?>">
+                                    <input type="text" class="form-control calcular-percentual-completo numero-br" name="percentObjContaInvest" id="idPercentObjContaInvest-<?= $id; ?>" value="<?= NumbersHelper::formatUStoBR($value['percentObjContaInvest']); ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="idSaldoAtual">Saldo atual</label>
