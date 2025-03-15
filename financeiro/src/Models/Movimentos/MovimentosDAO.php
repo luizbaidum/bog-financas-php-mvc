@@ -91,4 +91,14 @@ class MovimentosDAO extends Model {
 
         return false;
     }
+
+    public function consultarMovimento($id)
+    {
+        $query = "SELECT movimentos.*, rendimentos.idRendimento, rendimentos.idObj FROM movimentos LEFT JOIN rendimentos ON movimentos.idMovimento = rendimentos.idMovimento WHERE movimentos.idMovimento = ?";
+
+        $new_sql = new SQLActions();
+		$result = $new_sql->executarQuery($query, [$id]);
+
+        return $result;
+    }
 }

@@ -32,7 +32,7 @@ class HomeController extends Controller {
 			}
 
 			$this->view->settings = [
-				'url_edit'   => $this->index_route . '/edit_movimento?idMovimento=',
+				'url_edit'   => $this->index_route . '/movimentos?action=edit&idMovimento=',
 				'redirect'   => $this->index_route . '/home',
 				'url_search' => $this->index_route . '/home',
 			];

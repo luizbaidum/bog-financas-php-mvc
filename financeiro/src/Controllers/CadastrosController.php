@@ -75,23 +75,6 @@ class CadastrosController extends Controller {
         }
     }
 
-    public function movimentos()
-    {
-        $model = new Model();
-
-        $this->view->settings = [
-            'action'   => $this->index_route . '/cad_movimentos',
-            'redirect' => $this->index_route . '/movimentos',
-            'title'    => 'Cadastro de Movimento',
-        ];
-
-        $this->view->data['options_list'] = json_encode($model->selectAll(new ObjetivosEntity, [], [], []));
-        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
-        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC']);
-
-        $this->renderPage(main_route: $this->index_route . '/movimentos', conteudo: 'movimentos', base_interna: 'base_cruds');
-    }
-
     public function cadastrarMovimentos()
     {
         define('APLICACAO', '12');
