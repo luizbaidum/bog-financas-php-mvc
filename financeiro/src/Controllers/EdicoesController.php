@@ -18,17 +18,18 @@ class EdicoesController extends Controller {
         if ($this->isSetPost()) {
             try {
                 $id = $_POST['idObj'];
+                $_POST['vlrObj'] = NumbersHelper::formatBRtoUS($_POST['vlrObj']);
+                $_POST['percentObjContaInvest'] = NumbersHelper::formatBRtoUS($_POST['percentObjContaInvest']);
+
                 $conta_invest = $_POST['idContaInvest'];
                 $percentual_old = $_POST['percentObjContaInvestOLD'];
-
-                $_POST['percentObjContaInvest'] = NumbersHelper::formatBRtoUS($_POST['percentObjContaInvest']);
 
                 unset($_POST['idObj']);
                 unset($_POST['idContaInvest']);
                 unset($_POST['percentObjContaInvestOLD']);
 
                 if ($_POST['percentObjContaInvest'] > $percentual_old) {
-                    $validation = $this->validation($conta_invest, ($_POST['percentObjContaInvest'] - $percentual_old));
+                    $validation = $this->validarPercentualUso($conta_invest, ($_POST['percentObjContaInvest'] - $percentual_old));
 
                     if (!$validation['status']) {
                         throw new Exception($validation['msg']);
@@ -59,7 +60,7 @@ class EdicoesController extends Controller {
         }
     }
 
-    private function validation($id_conta_invest, $percentual)
+    private function validarPercentualUso($id_conta_invest, $percentual)
     {
         $utilizado = (new ObjetivosDAO())->consultarPercentualDisponivel($id_conta_invest, $percentual);
 

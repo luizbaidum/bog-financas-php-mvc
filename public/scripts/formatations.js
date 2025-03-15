@@ -1,32 +1,19 @@
-$('.moeda').on('keyup', (e) => {
+class Formatations {
+    constructor (value) {
+        this.valor = value;
+    }
 
-    let valor = $(e.target).val();
-
-    valor = valor.replace(/[\D]+/g, '');
-    valor = valor.replace(/([0-9]{2})$/g, ",$1");
-
-    if (valor.length > 6) valor = valor.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
-
-    $(e.target).val(valor);
-
-    if(valor == 'NaN') $(e.target).val('');
-})
-
-$('.input-data').keyup((e) => {
-
-    var v=e.target.value.replace(/\D/g,"");
-
-    v=v.replace(/(\d{2})(\d)/,"$1/$2");
-    v=v.replace(/(\d{2})(\d)/,"$1/$2");
-    e.target.value = v;
-})
-
-function aplicarR$()
-{
-    $(document).find('.vlr-compra-peca').each((index, item) => {
-
-        let vlr1 = $(item).text();
-        let vlr2 = vlr1.replace('.',',').replace('R$ ', '');
-        $(item).text('R$ ' + vlr2);
-    });
+    convertToUS() 
+    {
+        try {
+            let br = this.valor;
+            let converting = br.replace(/\./g, '');
+    
+            let us = converting.replace(/,/g, '.');
+    
+            return us;
+        } catch (e) {
+            console.log('Error ->' + e);
+        }
+    }
 }
