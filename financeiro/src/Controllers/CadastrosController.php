@@ -149,7 +149,8 @@ class CadastrosController extends Controller {
                         'valorRendimento' => $valor_aplicado,
                         'dataRendimento'  => $_POST['dataMovimento'],
                         'tipo'            => $tipo,
-                        'idMovimento'     => $id_movimento
+                        'idMovimento'     => $id_movimento,
+                        'idObj'           => $id_objetivo
                     ];
 
                     $model->cadastrar(new RendimentosEntity, $item);
