@@ -1,15 +1,9 @@
 
 <?php
     echo '<script>var options_obj = ' . $options_list . '</script>';
-
-    // $movimento = [];
-    // if (isset($_GET['idMovimento'])) {
-    //     $movimento = $crud->selectAll('movimento', [['idMovimento', '=', $_GET['idMovimento']]], [], [])[0];
-    //     $url_to_submit = '../sql/updates.php';
-    // }
 ?>
 
-<?php if (isset($_GET['idMovimento'])) { ?>
+<?php if (isset($movimento['idMovimento'])) { ?>
     <input type="hidden" name="action" value="movimento">
     <input type="hidden" name="idMovimento" value="<?= $_GET['idMovimento']; ?>">
 <?php } ?>

@@ -12,7 +12,7 @@ class Routes extends Bootstrap {
 		$routes[] = array('route' => '/logout', 'controller' => 'LoginController', 'action' => 'logout');
 		$routes[] = array('route' => '/categorias', 'controller' => 'CadastrosController', 'action' => 'categorias');
 		$routes[] = array('route' => '/cad_categorias', 'controller' => 'CadastrosController', 'action' => 'cadastrarCategorias');
-		$routes[] = array('route' => '/movimentos', 'controller' => 'CadastrosController', 'action' => 'movimentos');
+		$routes[] = array('route' => '/movimentos', 'controller' => 'ConsultasController', 'action' => 'movimentos');
 		$routes[] = array('route' => '/cad_movimentos', 'controller' => 'CadastrosController', 'action' => 'cadastrarMovimentos');
 		$routes[] = array('route' => '/investimentos', 'controller' => 'CadastrosController', 'action' => 'investimentos');
 		$routes[] = array('route' => '/cad_investimentos', 'controller' => 'CadastrosController', 'action' => 'cadastrarInvestimentos');

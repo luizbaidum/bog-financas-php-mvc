@@ -173,3 +173,19 @@ function createPostData(formulario) {
  
     return post_data;
 }
+
+function confirmacao() {
+    let r_confirmacao = confirm('Confirma exclusão?');
+    return r_confirmacao;
+}
+
+function arraySelecteds() {
+
+    let array_of_values = new FormData;
+
+    let selected_selects = $('input[name="selectedData[]"]:checked').each(function () {
+        array_of_values.append('itens[]', this.value)
+    });
+
+    return array_of_values;
+}

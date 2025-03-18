@@ -3,9 +3,12 @@
 namespace src\Controllers;
 
 use MF\Controller\Controller;
+use MF\Model\Model;
+use src\Models\Categorias\CategoriasEntity;
 use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Investimentos\InvestimentosEntity;
 use src\Models\Movimentos\MovimentosDAO;
+use src\Models\Movimentos\MovimentosEntity;
 use src\Models\MovimentosMensais\MovimentosMensaisDAO;
 use src\Models\Objetivos\ObjetivosDAO;
 use src\Models\Objetivos\ObjetivosEntity;
@@ -296,6 +299,37 @@ class ConsultasController extends Controller {
         $this->view->data['prefs'] = $prefs;
 
         $this->renderPage(main_route: $this->index_route . '/preferencias', conteudo: 'preferencias');
+    }
+
+    public function movimentos()
+    {
+        $model = new Model();
+        $model_movimentos = new MovimentosDAO();
+
+        $action = $_GET['action'] ?? null;
+        $id = $_GET['idMovimento'] ?? null;
+
+        $title = 'Cadastro de Movimento';
+        $url_action = '/cad_movimentos';
+        if ($id != '') {
+            $url_action = '/edit_movimento';
+            $title = 'Edição de Movimento';
+
+            $mov = $model_movimentos->consultarMovimento($id);
+        }
+
+        $this->view->settings = [
+            'action'   => $this->index_route . $url_action,
+            'redirect' => $this->index_route . '/home',
+            'title'    => $title,
+        ];
+
+        $this->view->data['options_list'] = json_encode($model->selectAll(new ObjetivosEntity, [], [], []));
+        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
+        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC']);
+        $this->view->data['movimento'] = $mov[0] ?? null;
+
+        $this->renderPage(main_route: $this->index_route . '/movimentos', conteudo: 'movimentos', base_interna: 'base_cruds');
     }
 }
 ?>
