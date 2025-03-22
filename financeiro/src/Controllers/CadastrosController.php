@@ -75,11 +75,70 @@ class CadastrosController extends Controller {
         }
     }
 
-    public function cadastrarMovimentos()
+    public function inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento)
     {
         define('APLICACAO', '12');
         define('RESGATE', '10');
 
+        $model = new Model();
+
+        switch ($_POST['idCategoria']) {
+            case APLICACAO:
+                $tipo = 4;
+                $valor_aplicado = ($_POST['valor'] * -1); //veio negativo, pois aplicação é saída de dinheiro da conta corrente, mas é entrada em aplicações.
+
+                $objetivos = $model->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $id_conta_invest]], [], []);
+
+                foreach ($objetivos as $value) {
+                    $item = [
+                        'saldoAtual' => $value['saldoAtual'] + ($valor_aplicado * ($value['percentObjContaInvest'] / 100))
+                    ];
+                    $item_where = ['idObj' => $value['idObj']];
+                    $model->atualizar(new ObjetivosEntity, $item, $item_where);
+                }
+
+                break;
+            case RESGATE:
+                $tipo = 3;
+                $valor_aplicado = ($_POST['valor'] * -1); //veio positivo, pois resgate é entrada de dinheiro da conta corrente, mas é saída em aplicações.
+
+                $saldo_atual = $model->getSaldoAtual(new ObjetivosEntity, $id_objetivo);
+                $item = [
+                    'saldoAtual' => ($saldo_atual + $valor_aplicado)
+                ];
+                $item_where = [
+                    'idObj' => $id_objetivo
+                ];
+                $model->atualizar(new ObjetivosEntity, $item, $item_where);
+
+                break;
+            default:
+                $tipo = '';
+        }
+
+        $item = [
+            'idContaInvest'   => $id_conta_invest,
+            'valorRendimento' => $valor_aplicado,
+            'dataRendimento'  => $_POST['dataMovimento'],
+            'tipo'            => $tipo,
+            'idMovimento'     => $id_movimento,
+            'idObj'           => $id_objetivo
+        ];
+
+        $model->cadastrar(new RendimentosEntity, $item);
+
+        $saldo_atual = $model->getSaldoAtual(new InvestimentosEntity, $id_conta_invest);
+        $item = [
+            'saldoAtual' => ($saldo_atual + $valor_aplicado)
+        ];
+        $item_where = [
+            'idContaInvest' => $id_conta_invest
+        ];
+        $model->atualizar(new InvestimentosEntity, $item, $item_where);
+    }
+
+    public function cadastrarMovimentos()
+    {
         if ($this->isSetPost()) {
             try {
                 if ($_POST['idCategoria'] == '') {
@@ -110,59 +169,7 @@ class CadastrosController extends Controller {
 
                 //Inserção de Rendimento (invest ou retirada)
                 if (!empty($id_conta_invest)) {
-                    switch ($_POST['idCategoria']) {
-                        case APLICACAO:
-                            $tipo = 4;
-                            $valor_aplicado = ($_POST['valor'] * -1); //veio negativo, pois aplicação é saída de dinheiro da conta corrente, mas é entrada em aplicações.
-
-                            $objetivos = $model->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $id_conta_invest]], [], []);
-
-                            foreach ($objetivos as $value) {
-                                $item = [
-                                    'saldoAtual' => $value['saldoAtual'] + ($valor_aplicado * ($value['percentObjContaInvest'] / 100))
-                                ];
-                                $item_where = ['idObj' => $value['idObj']];
-                                $model->atualizar(new ObjetivosEntity, $item, $item_where);
-                            }
-
-                            break;
-                        case RESGATE:
-                            $tipo = 3;
-                            $valor_aplicado = ($_POST['valor'] * -1); //veio positivo, pois resgate é entrada de dinheiro da conta corrente, mas é saída em aplicações.
-
-                            $saldo_atual = $model->getSaldoAtual(new ObjetivosEntity, $id_objetivo);
-                            $item = [
-                                'saldoAtual' => ($saldo_atual + $valor_aplicado)
-                            ];
-                            $item_where = [
-                                'idObj' => $id_objetivo
-                            ];
-                            $model->atualizar(new ObjetivosEntity, $item, $item_where);
-
-                            break;
-                        default:
-                            $tipo = '';
-                    }
-
-                    $item = [
-                        'idContaInvest'   => $id_conta_invest,
-                        'valorRendimento' => $valor_aplicado,
-                        'dataRendimento'  => $_POST['dataMovimento'],
-                        'tipo'            => $tipo,
-                        'idMovimento'     => $id_movimento,
-                        'idObj'           => $id_objetivo
-                    ];
-
-                    $model->cadastrar(new RendimentosEntity, $item);
-
-                    $saldo_atual = $model->getSaldoAtual(new InvestimentosEntity, $id_conta_invest);
-                    $item = [
-                        'saldoAtual' => ($saldo_atual + $valor_aplicado)
-                    ];
-                    $item_where = [
-                        'idContaInvest' => $id_conta_invest
-                    ];
-                    $model->atualizar(new InvestimentosEntity, $item, $item_where);
+                    $this->inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento);
                 }
 
                 if ($ret['result']) {

@@ -5,10 +5,16 @@ namespace src\Controllers;
 use Exception;
 use MF\Controller\Controller;
 use MF\Helpers\NumbersHelper;
+use src\Models\Investimentos\InvestimentosDAO;
+use src\Models\Investimentos\InvestimentosEntity;
+use src\Models\Movimentos\MovimentosDAO;
+use src\Models\Movimentos\MovimentosEntity;
 use src\Models\Objetivos\ObjetivosDAO;
 use src\Models\Objetivos\ObjetivosEntity;
 use src\Models\Preferencias\PreferenciasDAO;
 use src\Models\Preferencias\PreferenciasEntity;
+use src\Models\Rendimentos\RendimentosDAO;
+use src\Models\Rendimentos\RendimentosEntity;
 
 class EdicoesController extends Controller {
     public function editarObjetivo()
@@ -122,126 +128,116 @@ class EdicoesController extends Controller {
 
     public function editarMovimento()
     {
-        // $crud = new Crud();
+        $model_movimentos = new MovimentosDAO();
+        $model_rendimentos = new RendimentosDAO();
+        $model_objetivos = new ObjetivosDAO();
 
-        // $id_movimento = $_POST['idMovimento'];
-        // $id_conta_invest = $_POST['idContaInvest'];
-        // $id_objetivo = $_POST['idObjetivo'] ?? '';
-        // $rendimento = $crud->selectAll('rendimento', [['idMovimento', '=', $_POST['idMovimento']]], [], []);
+        try {
+            $id_movimento = $_POST['idMovimento'];
+            $id_conta_invest = $_POST['idContaInvest'];
+            $id_objetivo = $_POST['idObjetivo'] ?? '';
+            $id_objetivo_old = $_POST['idObjOld'] ?? '0';
 
-        // $where = array(
-        //     'idMovimento' => $_POST['idMovimento']
-        // );
+            unset($_POST['idMovimento']);
+            unset($_POST['idObjetivo']);
+            unset($_POST['idObjOld']);
 
-        // $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
-        // $_POST['idCategoria'] = $arr_cat[0];
-        // $sinal = $arr_cat[1];
+            $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
+            $_POST['idCategoria'] = $arr_cat[0];
+            $sinal = $arr_cat[1];
 
-        // if ($sinal == '-' && $_POST['valor'] > 0) {
-        //     $_POST['valor'] = $_POST['valor'] * -1;
-        // } elseif ($sinal == '+' && $_POST['valor'] < 0) {
-        //     $_POST['valor'] = $_POST['valor'] * -1;
-        // }
+            if ($sinal == '-' && $_POST['valor'] > 0) {
+                $_POST['valor'] = $_POST['valor'] * -1;
+            } elseif ($sinal == '+' && $_POST['valor'] < 0) {
+                $_POST['valor'] = $_POST['valor'] * -1;
+            }
 
-        // unset($_POST['idMovimento']);
-        // unset($_POST['idObjetivo']);
+            $values = $_POST;
+            $where = array(
+                'idMovimento' => $id_movimento
+            );
 
-        // $values = $_POST;
+            $ret = $model_movimentos->atualizar(new MovimentosEntity, $values, $where);
 
-        // $crud->update('movimento', $values, $where);
+            $rendimento = $model_rendimentos->selectAll(new RendimentosEntity, [['idMovimento', '=', $id_movimento]], [], []);
 
-        // if (isset($rendimento[0]['idRendimento'])) {
-        //     $old_id = $rendimento[0]['idRendimento'];
-        //     $old_invest = $rendimento[0]['idContaInvest'];
-        //     $old_valor = $rendimento[0]['valorRendimento'];
-        //     $old_tipo = $rendimento[0]['tipo'];
-        //     $old_data = $rendimento[0]['dataRendimento'];
-        //     $old_movimento = $rendimento[0]['idMovimento'];
+            if (isset($rendimento[0]['idRendimento'])) {
+                $rendimento = $rendimento[0];
+                $old_id = $rendimento['idRendimento'];
+                $old_invest = $rendimento['idContaInvest'];
+                $old_valor = $rendimento['valorRendimento'];
+                $old_tipo = $rendimento['tipo'];
+                $old_data = $rendimento['dataRendimento'];
+                $old_movimento = $rendimento['idMovimento'];
 
-        //     $crud->delete([
-        //         'action'       => 'rendimento',
-        //         'idRendimento' => $old_id
-        //     ]);
+                /**
+                 * Fazer poder escolher e salvar idobj quando aplicação tbm. Regra: se escolher idobj, então todo o dinheiro aplicado vai pr'aquele obj. Caso contrário, será distribuido por todos, conforme percentual.
+                 */
 
-        //     $conta_invest = $crud->selectAll('conta_investimento', [['idContaInvest', '=', $old_invest]], [], [])[0];
+                $conta_invest = $model_rendimentos->selectAll(new InvestimentosEntity, [['idContaInvest', '=', $old_invest]], [], [])[0];
 
-        //     if ($old_tipo == '4' || $old_tipo == '2') {
-        //         $saldo = $conta_invest['saldoAtual'] - $old_valor;
-        //     } elseif ($old_tipo == '3' || $old_tipo == '1') {
-        //         $saldo = $conta_invest['saldoAtual'] + abs($old_valor);
-        //     }
+                if ($old_tipo == '4' || $old_tipo == '2') {
+                    $saldo = $conta_invest['saldoAtual'] - $old_valor;
+                } elseif ($old_tipo == '3' || $old_tipo == '1') {
+                    $saldo = $conta_invest['saldoAtual'] + abs($old_valor);
+                }
 
-        //     $crud->update(
-        //         'conta_investimento', 
-        //         ['saldoAtual' => $saldo], 
-        //         ['idContaInvest' => $old_invest]
-        //     );
+                $model_rendimentos->atualizar(
+                    new InvestimentosEntity, 
+                    ['saldoAtual' => $saldo], 
+                    ['idContaInvest' => $old_invest]
+                );
 
-        //     $objetivos = $crud->selectAll('obj', [['idContaInvest', '=', $old_invest]], [], []);
-    
-        //     foreach ($objetivos as $value) {
-        //         $item = [
-        //             'saldoAtual' => ($saldo * ($value['percentObjContaInvest'] / 100))
-        //         ];
-        //         $item_where = ['idObj' => $value['idObj']];
-        //         $crud->update('obj', $item, $item_where);
-        //     }
-        // }
+                if (empty($id_objetivo_old)) {        
+                    $objetivos = $model_objetivos->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $old_invest]], [], []);
+        
+                    foreach ($objetivos as $value) {
+                        $item = [
+                            'saldoAtual' => ($saldo * ($value['percentObjContaInvest'] / 100))
+                        ];
+                        $item_where = ['idObj' => $value['idObj']];
+                        $model_objetivos->atualizar(new ObjetivosEntity, $item, $item_where);
+                    }
+                } else {
+                    $objetivo = $model_objetivos->selectAll(new ObjetivosEntity, [['idObj', '=', $id_objetivo_old]], [], [])[0];
 
-        // if ($id_conta_invest != '') {
-        //     switch ($_POST['idCategoria']) {
-        //         case $this->APLICACAO:
-        //             $new_tipo = 4;
-        //             $valor_aplicado = ($_POST['valor'] * -1); 
-    
-        //             $objetivos = $crud->selectAll('obj', [['idContaInvest', '=', $id_conta_invest]], [], []);
-    
-        //             foreach ($objetivos as $value) {
-        //                 $item = [
-        //                     'saldoAtual' => $value['saldoAtual'] + ($valor_aplicado * ($value['percentObjContaInvest'] / 100))
-        //                 ];
-        //                 $item_where = ['idObj' => $value['idObj']];
-        //                 $crud->update('obj', $item, $item_where);
-        //             }
-    
-        //             break;
-        //         case $this->RESGATE:
-        //             $new_tipo = 3;
-        //             $valor_aplicado = ($_POST['valor'] * -1); 
-    
-        //             $saldo_atual = $crud->getSaldoAtual('obj', $id_objetivo);
-        //             $item = [
-        //                 'saldoAtual' => ($saldo_atual + $valor_aplicado)
-        //             ];
-        //             $item_where = [
-        //                 'idObj' => $id_objetivo
-        //             ];
-        //             $crud->update('obj', $item, $item_where);
-    
-        //             break;
-        //         default:
-        //             $new_tipo = '';
-        //             $valor_aplicado = 0;
-        //     }
+                    if ($old_tipo == '4' || $old_tipo == '2') {
+                        $saldo_obj = $objetivo['saldoAtual'] - $old_valor;
+                    } elseif ($old_tipo == '3' || $old_tipo == '1') {
+                        $saldo_obj = $objetivo['saldoAtual'] + abs($old_valor);
+                    }
 
-        //     $item = [
-        //         'idContaInvest'   => $id_conta_invest,
-        //         'valorRendimento' => $valor_aplicado,
-        //         'dataRendimento'  => $_POST['dataMovimento'],
-        //         'tipo'            => $new_tipo,
-        //         'idMovimento'     => $id_movimento
-        //     ];
+                    $item = [
+                        'saldoAtual' => $saldo_obj
+                    ];
+                    $item_where = ['idObj' => $id_objetivo_old];
+                    $model_objetivos->atualizar(new ObjetivosEntity, $item, $item_where);
+                }
 
-        //     $crud->insert('rendimento', $item);
+                $model_rendimentos->delete(new RendimentosEntity, 'idRendimento', $old_id);
+            }
 
-        //     $saldo_atual = $crud->getSaldoAtual('conta_investimento', $id_conta_invest);
-        //     $item = [
-        //         'saldoAtual' => ($saldo_atual + $valor_aplicado)
-        //     ];
-        //     $item_where = [
-        //         'idContaInvest' => $id_conta_invest
-        //     ];
-        //     $crud->update('conta_investimento', $item, $item_where);
-        //}
+            if (!empty($id_conta_invest)) {
+                (new CadastrosController())->inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento);
+            }
+
+            if (!isset($ret['result']) || empty($ret['result'])) {
+                throw new Exception('O Movimento não foi atualizado.');
+            }
+
+            $array_retorno = array(
+                'result'   => true,
+                'mensagem' => 'Movimento id ' . $id_movimento . ' atualizado com sucesso.',
+            );
+
+            echo json_encode($array_retorno);
+        } catch (Exception $e) {
+            $array_retorno = array(
+                'result'   => false,
+                'mensagem' => $e->getMessage(),
+            );
+
+            echo json_encode($array_retorno);
+        }
     }
 }

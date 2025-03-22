@@ -1,12 +1,17 @@
 
 <?php
     echo '<script>var options_obj = ' . $options_list . '</script>';
+    $id_obj_old = 0;
 ?>
 
 <?php if (isset($movimento['idMovimento'])) { ?>
-    <input type="hidden" name="action" value="movimento">
-    <input type="hidden" name="idMovimento" value="<?= $_GET['idMovimento']; ?>">
-<?php } ?>
+    <input type="hidden" name="idMovimento" value="<?= $movimento['idMovimento']; ?>">
+    <input type="hidden" name="idObjOld" value="<?= $movimento['idObj']; ?>">
+
+    <?php
+        if (!empty($movimento['idObj'])) 
+            $id_obj_old = $movimento['idObj']; $obj_old_name = $movimento['nomeObj'];
+    } ?>
 
 <div class="form-group">
     <div class="row">
@@ -58,10 +63,13 @@
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="col-3 d-none" id="idSelectObjetivo">
+            <div class="col-3 <?= $id_obj_old != '0' ? 'd-block' : 'd-none'; ?>" id="idSelectObjetivo">
                 <label for="idObjetivo">Conta Invest (se houver)</label>
                 <select class="form-select" id="idObjetivo" name="idObjetivo">
                     <option value="">Selecione</option>
+                    <?php if ($id_obj_old != 0): ?>
+                        <option value="<?= $id_obj_old; ?>" selected><?= $id_obj_old . ' - ' . $obj_old_name; ?></option>
+                    <?php endif; ?>
                 </select>
             </div>
             <!-- <div class="col-6 mt-4">

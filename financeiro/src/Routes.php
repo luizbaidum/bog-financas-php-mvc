@@ -41,6 +41,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/salvar_preferencias', 'controller' => 'EdicoesController', 'action' => 'editarPreferencia');
         $routes[] = array('route' => '/nova_preferencia', 'controller' => 'CadastrosController', 'action' => 'cadastrarPreferencia');
         $routes[] = array('route' => '/delete_movimentos', 'controller' => 'DelecoesController', 'action' => 'deletarMovimento');
+        $routes[] = array('route' => '/edit_movimento', 'controller' => 'EdicoesController', 'action' => 'editarMovimento');
 
 		$this->setRoutes($routes);
 	}

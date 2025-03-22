@@ -94,7 +94,7 @@ class MovimentosDAO extends Model {
 
     public function consultarMovimento($id)
     {
-        $query = "SELECT movimentos.*, rendimentos.idRendimento, rendimentos.idObj FROM movimentos LEFT JOIN rendimentos ON movimentos.idMovimento = rendimentos.idMovimento WHERE movimentos.idMovimento = ?";
+        $query = "SELECT movimentos.*, rendimentos.idRendimento, rendimentos.idObj, objetivos_invest.nomeObj FROM movimentos LEFT JOIN rendimentos ON movimentos.idMovimento = rendimentos.idMovimento LEFT JOIN objetivos_invest ON rendimentos.idObj = objetivos_invest.idObj WHERE movimentos.idMovimento = ?";
 
         $new_sql = new SQLActions();
 		$result = $new_sql->executarQuery($query, [$id]);
