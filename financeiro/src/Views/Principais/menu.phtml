@@ -11,7 +11,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="<?= $home_url; ?>">Start</a>
+        <a class="navbar-brand" href="<?= $home_url; ?>">Início</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
@@ -28,9 +28,6 @@
                     </li>
                 <?php endforeach; ?>
                 <li class="nav-item">
-                    <button class="btn btn-light btn-sm nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLembretes" aria-expanded="false" aria-controls="collapseLembretes">Lembretes</button>
-                </li>
-                <li class="nav-item">
                     <a href="<?= $logout_url; ?>">
                         <button type="button" class="btn btn-danger">Sair</button>
                     </a>
@@ -42,31 +39,3 @@
         </div>
     </div>
 </nav>
-
-<div class="m-1">
-    <div class="collapse" id="collapseLembretes">
-        <div class="card card-body">
-            <div>
-                <a class="btn btn-primary btn-sm" href="lembretes.php">Cadastrar</a>
-            </div>
-            <div>
-                <?php foreach ($this->view->lembretes as $value): ?>
-                    <hr>
-                    <div class="row">
-                        <div class="col-11">
-                            <?= $value['lembrete']; ?> 
-                        </div>
-                        <div class="col-1 acao-deletar" 
-                            style="width: 40px; cursor: pointer" 
-                            data-chave="<?= $value['idLembrete']; ?>" 
-                            data-table="lembrete"
-                            data-campo="idLembrete"
-                        >
-                            <h5>X</h5>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </div>
-</div>

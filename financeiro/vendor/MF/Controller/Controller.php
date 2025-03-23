@@ -3,8 +3,6 @@
 namespace MF\Controller;
 
 use src\Diretorio;
-use src\Models\System\LembretesDAO;
-use src\Models\System\LembretesEntity;
 
 class Controller {
 
@@ -34,10 +32,7 @@ class Controller {
 	}
 
 	protected function renderPage($main_route, $conteudo, $base_interna = '')
-	{	
-		$lembretes = (new LembretesDAO())->selectAll(new LembretesEntity);
-		$this->view->lembretes = $lembretes;
-
+	{
 		$this->view->conteudo = $conteudo;
 		$this->view->base_interna = $base_interna;
 		$this->view->route = $main_route;

@@ -191,7 +191,7 @@ class CadastrosController extends Controller {
         }
     }
 
-    public function Investimentos()
+    public function investimentos()
     {
         $this->view->settings = [
             'action'   => $this->index_route . '/cad_investimentos',

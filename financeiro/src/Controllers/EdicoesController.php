@@ -5,7 +5,6 @@ namespace src\Controllers;
 use Exception;
 use MF\Controller\Controller;
 use MF\Helpers\NumbersHelper;
-use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Investimentos\InvestimentosEntity;
 use src\Models\Movimentos\MovimentosDAO;
 use src\Models\Movimentos\MovimentosEntity;
