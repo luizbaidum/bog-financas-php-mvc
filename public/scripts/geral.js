@@ -86,7 +86,7 @@ $(document).on('submit', '.submit-form-crud-ajax', function (e) {
                 const validar = new file.default
                 let ret = validar.movimento(data)
     
-                if (ret !== false) {
+                if (ret.length == 0) {
                     requireAjaxOperation({
                         action: url_action, 
                         data: data, 
@@ -94,6 +94,8 @@ $(document).on('submit', '.submit-form-crud-ajax', function (e) {
                         id_form: id_form,
                         modal: modal
                     })
+                } else {
+                    modalAlerta('Atenção!', ret.join('<br>'))
                 }
             });
         break

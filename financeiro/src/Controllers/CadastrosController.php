@@ -151,8 +151,6 @@ class CadastrosController extends Controller {
                 $_POST['idCategoria'] = $arr_cat[0];
                 $sinal = $arr_cat[1];
 
-                //Validator::cadastrarMovimentos();
-
                 $id_conta_invest = $_POST['idContaInvest'];
                 $id_objetivo = $_POST['idObjetivo'] ?? '';
                 unset($_POST['idObjetivo']);
