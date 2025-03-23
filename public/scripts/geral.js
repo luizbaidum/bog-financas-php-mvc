@@ -72,19 +72,42 @@ $(document).on('change', '.exibir-objetivos', function (e) {
 $(document).on('submit', '.submit-form-crud-ajax', function (e) {
     e.preventDefault();
 
+    let pathname = window.location.pathname
+    let data = createPostData(e.currentTarget);
     let url_action = e.currentTarget.dataset.action;
     let modal = e.currentTarget.dataset.modal ?? false;
-    let data = createPostData(e.currentTarget);
     let redirect = e.currentTarget.dataset.redirect;
     let id_form = e.currentTarget.id;
 
-    requireAjaxOperation({
-        action: url_action, 
-        data: data, 
-        redirect: redirect,
-        id_form: id_form,
-        modal: modal
-    })
+    switch (pathname) {
+        case '/movimentos':
+            import('./exportValidations.js')
+            .then((file) => {
+                const validar = new file.default
+                let ret = validar.movimento(data)
+    
+                if (ret.length == 0) {
+                    requireAjaxOperation({
+                        action: url_action, 
+                        data: data, 
+                        redirect: redirect,
+                        id_form: id_form,
+                        modal: modal
+                    })
+                } else {
+                    modalAlerta('Atenção!', ret.join('<br>'))
+                }
+            });
+        break
+        default:
+            requireAjaxOperation({
+                action: url_action, 
+                data: data, 
+                redirect: redirect,
+                id_form: id_form,
+                modal: modal
+            })
+    }
 });
 
 $(document).on('click', '.obter-orcamentos', function (e) {
