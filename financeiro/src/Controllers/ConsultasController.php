@@ -8,7 +8,6 @@ use src\Models\Categorias\CategoriasEntity;
 use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Investimentos\InvestimentosEntity;
 use src\Models\Movimentos\MovimentosDAO;
-use src\Models\Movimentos\MovimentosEntity;
 use src\Models\MovimentosMensais\MovimentosMensaisDAO;
 use src\Models\Objetivos\ObjetivosDAO;
 use src\Models\Objetivos\ObjetivosEntity;
