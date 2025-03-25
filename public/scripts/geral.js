@@ -57,7 +57,7 @@ $(document).on('change', '.exibir-objetivos', function (e) {
         div.classList.add('d-none');
 
         if (categoria != '' && conta != '') {
-            if (categoria === '10 - sinal: +') {
+            if (categoria == '10 - sinal: +' || categoria == '12 - sinal: -') {
                 div.classList.remove('d-none');
                 div.classList.add('d-block');
 

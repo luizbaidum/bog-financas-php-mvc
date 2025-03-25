@@ -116,13 +116,7 @@ function limparForm(id_form) {
 
 function returnToHome() {
     let destino = window.location.origin;
-    window.location = destino + "/home";
-}
-
-function returnToIndex() {
-    let url = window.location.pathname;
-    let destino = url.split("-");
-    window.location =  `/${destino[1]}`;
+    window.location = destino + '/home';
 }
 
 function modalAlerta(titulo, texto) {
