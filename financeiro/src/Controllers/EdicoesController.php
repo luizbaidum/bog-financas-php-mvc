@@ -29,6 +29,10 @@ class EdicoesController extends Controller {
                 $conta_invest = $_POST['idContaInvest'];
                 $percentual_old = $_POST['percentObjContaInvestOLD'];
 
+                if (!isset($_POST['finalizado'])) {
+                    $_POST['finalizado'] = 'F';
+                }
+
                 unset($_POST['idObj']);
                 unset($_POST['idContaInvest']);
                 unset($_POST['percentObjContaInvestOLD']);
