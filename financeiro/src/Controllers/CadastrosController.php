@@ -87,14 +87,24 @@ class CadastrosController extends Controller {
                 $tipo = 4;
                 $valor_aplicado = ($_POST['valor'] * -1); //veio negativo, pois aplicação é saída de dinheiro da conta corrente, mas é entrada em aplicações.
 
-                $objetivos = $model->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $id_conta_invest]], [], []);
+                if ($id_objetivo != '' && $id_objetivo != '0') {
+                    $objetivo = $model->selectAll(new ObjetivosEntity, [['idObj', '=', $id_objetivo]], [], [])[0];
 
-                foreach ($objetivos as $value) {
                     $item = [
-                        'saldoAtual' => $value['saldoAtual'] + ($valor_aplicado * ($value['percentObjContaInvest'] / 100))
+                        'saldoAtual' => $objetivo['saldoAtual'] + $valor_aplicado
                     ];
-                    $item_where = ['idObj' => $value['idObj']];
+                    $item_where = ['idObj' => $objetivo['idObj']];
                     $model->atualizar(new ObjetivosEntity, $item, $item_where);
+                } else {
+                    $objetivos = $model->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $id_conta_invest]], [], []);
+
+                    foreach ($objetivos as $value) {
+                        $item = [
+                            'saldoAtual' => $value['saldoAtual'] + ($valor_aplicado * ($value['percentObjContaInvest'] / 100))
+                        ];
+                        $item_where = ['idObj' => $value['idObj']];
+                        $model->atualizar(new ObjetivosEntity, $item, $item_where);
+                    }
                 }
 
                 break;

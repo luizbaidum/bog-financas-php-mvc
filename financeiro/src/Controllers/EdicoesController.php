@@ -29,6 +29,10 @@ class EdicoesController extends Controller {
                 $conta_invest = $_POST['idContaInvest'];
                 $percentual_old = $_POST['percentObjContaInvestOLD'];
 
+                if (!isset($_POST['finalizado'])) {
+                    $_POST['finalizado'] = 'F';
+                }
+
                 unset($_POST['idObj']);
                 unset($_POST['idContaInvest']);
                 unset($_POST['percentObjContaInvestOLD']);
@@ -169,10 +173,6 @@ class EdicoesController extends Controller {
                 $old_data = $rendimento['dataRendimento'];
                 $old_movimento = $rendimento['idMovimento'];
 
-                /**
-                 * Fazer poder escolher e salvar idobj quando aplicação tbm. Regra: se escolher idobj, então todo o dinheiro aplicado vai pr'aquele obj. Caso contrário, será distribuido por todos, conforme percentual.
-                 */
-
                 $conta_invest = $model_rendimentos->selectAll(new InvestimentosEntity, [['idContaInvest', '=', $old_invest]], [], [])[0];
 
                 if ($old_tipo == '4' || $old_tipo == '2') {
@@ -187,9 +187,9 @@ class EdicoesController extends Controller {
                     ['idContaInvest' => $old_invest]
                 );
 
-                if (empty($id_objetivo_old)) {        
+                if (empty($id_objetivo_old)) {
                     $objetivos = $model_objetivos->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $old_invest]], [], []);
-        
+
                     foreach ($objetivos as $value) {
                         $item = [
                             'saldoAtual' => ($saldo * ($value['percentObjContaInvest'] / 100))
