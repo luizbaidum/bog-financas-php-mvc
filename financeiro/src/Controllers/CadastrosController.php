@@ -454,6 +454,7 @@ class CadastrosController extends Controller {
                     $arr_cat = explode(' - sinal: ', $_POST['idCategoria'][$id]);
                     $sinal = $arr_cat[1];
 
+                    $item['idMovMensal'] = $id;
                     $item['nomeMovimento'] = $_POST['nomeMovimento'][$id];
                     $item['dataMovimento'] = $_POST['dataMovimento'][$id];
                     $item['proprietario'] = $_POST['proprietario'][$id];
