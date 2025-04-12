@@ -1,7 +1,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>selecione</th>
+            <th></th>
             <th>Data</th>
             <th>Descrição</th>
             <th>Prop.</th>
@@ -10,21 +10,21 @@
         </tr>
     </thead>
     <tbody> 
-        <?php foreach ($arr_mensais as $value): ?>
-            <tr>
+        <?php 
+            foreach ($arr_mensais as $value): 
+                $dia_original = date('d', strtotime($value['dataRepete']));
+                $mes_original = date('m', strtotime($value['dataRepete']));
+                $ano_original = date('Y', strtotime($value['dataRepete']));
+                $mes_atual = date('m');
+                $ano_atual = date('Y');
+
+                $date = date_format(date_create("$ano_atual-$mes_atual-$dia_original"), 'Y-m-d');
+        ?>
+            <tr class="<?= ($value['idPago'] > 0 ? ' bg-pago ' : (date('Y-m-d') >= $date ? ' bg-atencao ' : '')); ?>">
                 <td>
-                    <input type="checkbox" value="<?= $value['idMovMensal']; ?>" name="idMovMensal[]">
+                    <input type="checkbox" value="<?= $value['idMovMensal']; ?>" name="idMovMensal[]" <?= ($value['idPago'] > 0 ? ' disabled ' : ''); ?>>
                 </td>
                 <td>
-                    <?php   
-                        $dia_original = date('d', strtotime($value['dataRepete']));
-                        $mes_original = date('m', strtotime($value['dataRepete']));
-                        $ano_original = date('Y', strtotime($value['dataRepete']));
-                        $mes_atual = date('m');
-                        $ano_atual = date('Y');
-        
-                        $date = date_format(date_create("$ano_atual-$mes_atual-$dia_original"), 'Y-m-d');
-                    ?>
                     <input type="date" id="idDataMovimento" name="dataMovimento[<?= $value['idMovMensal']; ?>]" value="<?= $date; ?>">
                 </td>
                 <td>

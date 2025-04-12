@@ -188,7 +188,7 @@ class ConsultasController extends Controller {
         $this->view->settings = [
             'action'   => $this->index_route . '/cad_mov_mensal',
             'redirect' => $this->index_route . '/movimentos_mensais_index',
-            'title'    => 'Lançar Mov. Mensal',
+            'title'    => 'Movimentos Mensais',
         ];
 
         $this->view->data['arr_mensais'] = $model_movimentos_mensais->getMensais();
