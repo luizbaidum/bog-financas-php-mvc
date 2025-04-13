@@ -183,3 +183,11 @@ function arraySelecteds() {
 
     return array_of_values;
 }
+
+function limparMovMensalVinculado() {
+    $('#idNomeMovimento').val('');
+    $('#idValor').val('');
+    $('#idCategoria').val('');
+
+    $(`#id-content-return`).html('');
+}

@@ -133,8 +133,8 @@ class SQLActions {
             else
                 $stmt->execute();
 
-            //$stmt->debugDumpParams();
-            //exit;
+            // $stmt->debugDumpParams();
+            // exit;
             switch ($operacao) {
                 case 'INSERT':
                     $result = $bd->lastInsertId();

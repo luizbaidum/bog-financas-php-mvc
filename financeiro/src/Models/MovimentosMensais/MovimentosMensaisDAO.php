@@ -19,4 +19,22 @@ class MovimentosMensaisDAO extends Model {
 
         return [];
     }
+
+    public function buscar($search)
+    {
+        $params = [
+            '%' . $search . '%'
+        ];
+
+        $query = 'SELECT movimentos_mensais.*, categorias.categoria, categorias.tipo, categorias.sinal FROM movimentos_mensais INNER JOIN categorias ON movimentos_mensais.idCategoria = categorias.idCategoria  WHERE movimentos_mensais.idMovMensal > 0 AND movimentos_mensais.nomeMovimento LIKE (?)';
+
+        $new_sql = new SQLActions();
+        $result = $new_sql->executarQuery($query, $params);
+
+        if (count($result) > 0) {
+            return $result;
+        }
+
+        return [];
+    }
 }

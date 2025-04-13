@@ -173,7 +173,7 @@ class ConsultasController extends Controller {
         }
 
         $this->view->data['data'] = $data;
-        $this->view->data['total_resgate'] = $total_resgate;
+        $this->view->data['total_resgate'] = $total_resgate ?? 0;
         $this->view->data['total_receita'] = $total_receita;
         $this->view->data['total_despesa'] = $total_despesa;
         $this->view->data['total_aplicacao'] = $total_aplicacao;
@@ -327,8 +327,23 @@ class ConsultasController extends Controller {
         $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
         $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC']);
         $this->view->data['movimento'] = $mov[0] ?? null;
+        $this->view->data['url_buscar_mov_mensal'] = $this->index_route . '/buscaMovMensal?buscar=';
+        $this->view->data['div_buscar_mov_mensal'] = 'id-content-return';
 
         $this->renderPage(main_route: $this->index_route . '/movimentos', conteudo: 'movimentos', base_interna: 'base_cruds');
+    }
+
+    public function buscarMovMensal()
+    {
+        $buscar = $_GET['buscar'];
+
+        $model_movimentos_mensais = new MovimentosMensaisDAO();
+
+        $ret = $model_movimentos_mensais->buscar($buscar);
+
+        $this->view->data['ret'] = $ret;
+
+        $this->renderSimple('ret_mov_mensais');
     }
 }
 ?>

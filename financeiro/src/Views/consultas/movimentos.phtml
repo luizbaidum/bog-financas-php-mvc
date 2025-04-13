@@ -17,7 +17,16 @@
     <div class="row">
         <div class="col-12 col-sm-6">
             <label for="idNomeMovimento">Nome Movimento</label>
-            <input type="text" class="form-control" id="idNomeMovimento" name="nomeMovimento" required value="<?= $movimento['nomeMovimento'] ?? ''; ?>">
+            <input 
+                type="text" 
+                class="form-control" 
+                id="idNomeMovimento" 
+                name="nomeMovimento" required 
+                value="<?= $movimento['nomeMovimento'] ?? ''; ?>"
+                data-action="<?= $url_buscar_mov_mensal; ?>"
+                data-div="<?= $div_buscar_mov_mensal; ?>"
+            >
+            <div id="<?= $div_buscar_mov_mensal; ?>"></div>
         </div>
         <div class="col-12 col-sm-3">
             <label for="idDataMovimento">Data Movimento (m/d/a)</label>

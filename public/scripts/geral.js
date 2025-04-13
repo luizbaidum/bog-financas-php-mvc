@@ -165,3 +165,34 @@ $('.action-delete').click(async function() {
             requireAjaxOperation({action, data, redirect})
     }
 });
+
+$(document).on('keyup', '#idNomeMovimento', function (e) {
+    let valor = e.target.value;
+    let url_action = e.target.dataset.action + valor;
+    let div = e.target.dataset.div;
+
+    if (valor.length > 2) {
+        requireAjaxRender(
+            {
+                action: url_action, 
+                div_destino: div, 
+                method: 'GET'
+            }
+        );
+    } else {
+        $(`#${div}`).html('');
+    }
+})
+
+$(document).on('click', '.vincular-mov-mensal', function (e) {
+    let json_value = $(e.target).closest('tr').find('.movimento_m').val();
+    let movimento_m = JSON.parse(json_value);
+
+    $('#idNomeMovimento').val(movimento_m.nomeMovimento);
+    $('#idValor').val(movimento_m.valorDespesa);
+    $('#idCategoria').val(`${movimento_m.idCategoria} - sinal: ${movimento_m.sinal}`);
+
+    $(`#id-content-return`).html(
+        '<span class="bg-warning">Movimento mensal vinculado: ' + movimento_m.idMovMensal + '<button class="btn btn-sm" type="button" onclick="limparMovMensalVinculado()">Limpar</button></span>'
+    );
+})
