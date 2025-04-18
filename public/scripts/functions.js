@@ -189,8 +189,9 @@ function limparMovMensalVinculado() {
         $('#idNomeMovimento').val('');
         $('#idValor').val('');
         $('#idCategoria').val('');
-    
-        $(`#id-content-return`).html('');
+        $('#idProprietario').val('');
+
+        $('#id-content-return').html('');
     } catch (error) {
         console.log('Error -> ' + error)
     }
