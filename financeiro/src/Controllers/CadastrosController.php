@@ -155,8 +155,6 @@ class CadastrosController extends Controller {
                     throw new Exception('Por favor, escolher categoria.'); 
                 }
 
-                $model = new Model();
-
                 $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
                 $_POST['idCategoria'] = $arr_cat[0];
                 $sinal = $arr_cat[1];

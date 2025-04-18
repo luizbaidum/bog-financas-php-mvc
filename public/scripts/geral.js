@@ -193,6 +193,6 @@ $(document).on('click', '.vincular-mov-mensal', function (e) {
     $('#idCategoria').val(`${movimento_m.idCategoria} - sinal: ${movimento_m.sinal}`);
 
     $(`#id-content-return`).html(
-        '<span class="bg-warning">Movimento mensal vinculado: ' + movimento_m.idMovMensal + '<button class="btn btn-sm" type="button" onclick="limparMovMensalVinculado()">Limpar</button></span>'
+        '<span class="bg-warning">Movimento mensal vinculado: ' + movimento_m.idMovMensal + '<button class="btn btn-sm" type="button" onclick="limparMovMensalVinculado()">Limpar</button></span><input type="hidden" name="idMovMensal" value="' + movimento_m.idMovMensal + '">'
     );
 })
