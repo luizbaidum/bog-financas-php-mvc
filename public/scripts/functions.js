@@ -35,7 +35,7 @@ function requireAjaxOperation(user_options) {
                         if (defined.modal == false && resposta.result != null && resposta.result != false) {
                             titulo = 'Sucesso!';
                             limparForm(defined.id_form);
-
+                            limparMovMensalVinculado();
                             modalAlerta(titulo, texto);
                         }
 
@@ -182,4 +182,17 @@ function arraySelecteds() {
     });
 
     return array_of_values;
+}
+
+function limparMovMensalVinculado() {
+    try {
+        $('#idNomeMovimento').val('');
+        $('#idValor').val('');
+        $('#idCategoria').val('');
+        $('#idProprietario').val('');
+
+        $('#id-content-return').html('');
+    } catch (error) {
+        console.log('Error -> ' + error)
+    }
 }

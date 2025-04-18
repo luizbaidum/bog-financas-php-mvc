@@ -1,0 +1,34 @@
+<?php
+    use MF\Helpers\NumbersHelper;
+
+    if (!empty($ret)): 
+?>
+    <table class="table">
+        <theader>
+            <tr>
+                <th>Movimento</th>
+                <th>Categoria</th>
+                <th>Valor</th>
+            </tr>
+        </theader>
+        <tbody>
+            <?php foreach ($ret as $value): ?>
+                <tr
+                    class="vincular-mov-mensal"
+                    style="cursor: pointer"
+                >
+                    <input type="hidden" class="movimento_m" value='<?= json_encode($value, JSON_UNESCAPED_SLASHES); ?>'>
+                    <td>
+                        <?= $value['nomeMovimento']; ?>
+                    </td>
+                    <td>
+                        <?= $value['categoria']; ?>
+                    </td>
+                    <td>
+                        <?= NumbersHelper::formatUStoBR($value['valorDespesa']); ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
