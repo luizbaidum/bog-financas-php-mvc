@@ -48,18 +48,18 @@
     </div>
     <div class="form-group">
         <div class="row">
-            <div class="col-3">
+            <div class="col-12 col-sm-3">
                 <label for="tipo">Valor (EUA e apenas inteiro)</label>
                 <input type="number" class="form-control" id="idValor" name="valor" required value="<?= $movimento['valor'] ?? ''; ?>">
             </div>
-            <div class="col-3">
+            <div class="col-12 col-sm-3">
                 <label for="idProprietario">Proprietário</label>
                 <select class="form-select" id="idProprietario" name="proprietario">
                     <option value="1" <?= (!empty($movimento) && $movimento['proprietario'] == '1' ? ' selected ' : ''); ?>>Luiz</option>
                     <option value="2" <?= (!empty($movimento) && $movimento['proprietario'] == '2' ? ' selected ' : ''); ?>>Uepa</option>
                 </select>
             </div>
-            <div class="col-3">
+            <div class="col-12 col-sm-3">
                 <label for="idContaInvest">Conta Invest (se houver)</label>
                 <select class="form-select exibir-objetivos" id="idContaInvest" name="idContaInvest">
                     <option value="">Selecione</option>
@@ -72,7 +72,7 @@
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="col-3 <?= $id_obj_old != '0' ? 'd-block' : 'd-none'; ?>" id="idSelectObjetivo">
+            <div class="col-12 col-sm-3 <?= $id_obj_old != '0' ? 'd-block' : 'd-none'; ?>" id="idSelectObjetivo">
                 <label for="idObjetivo">Conta Invest (se houver)</label>
                 <select class="form-select" id="idObjetivo" name="idObjetivo">
                     <option value="">Selecione</option>
