@@ -60,55 +60,57 @@
 
     <div class="card mt-1">
         <div class="card-body">
-            <table class="table">
-                <theader>
-                    <tr>
-                        <th>Banco</th>
-                        <th>Título</th>
-                        <th>Objetivos</th>
-                        <th>Saldo atual</th>
-                        <th class="bg-secondary">Saldo anterior</th>
-                        <th class="bg-secondary">Data anterior</th>
-                    </tr>
-                </theader>
-                <tbody>
-                    <?php 
-                        foreach ($contas as $value): 
-                            $total += $value['saldoAtual'];
-
-                            if ($value['proprietario'] == '1') {
-                                $total_lb += $value['saldoAtual'];
-                            } elseif ($value['proprietario'] == '2') {
-                                $total_uepa += $value['saldoAtual'];
-                            }
-                    ?>
+            <div class="table-responsive">
+                <table class="table">
+                    <theader>
                         <tr>
-                            <td><?= $value['nomeBanco']; ?></td>
-                            <td><?= $value['tituloInvest']; ?></td>
-                            <td class="text-left">
-                                <button class="render-ajax" 
-                                        data-url="<?= $url_obj . $value['idContaInvest'] ?>"
-                                        data-div=""
-                                        data-modal="true"
-                                >&#8505;</button>
-                            </td>
-                            <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoAtual']); ?></td>
-                            <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoAnterior']); ?></td>
-                            <td><?= DateHelper::convertUStoBR($value['dataAnterior']); ?></td>
+                            <th>Banco</th>
+                            <th>Título</th>
+                            <th>Objetivos</th>
+                            <th>Saldo atual</th>
+                            <th class="bg-secondary">Saldo anterior</th>
+                            <th class="bg-secondary">Data anterior</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-                <tfoot>
-                    <tr class="table-dark">
-                        <td colspan="3" style="text-align: right">Total</td>
-                        <td>R$ <?= NumbersHelper::formatUStoBR($total); ?>
-                        <td>
-                            <small>Luiz: <?= NumbersHelper::formatUStoBR($total_lb); ?> <br> Uepa: <?= NumbersHelper::formatUStoBR($total_uepa); ?></small>
-                        </td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
+                    </theader>
+                    <tbody>
+                        <?php 
+                            foreach ($contas as $value): 
+                                $total += $value['saldoAtual'];
+
+                                if ($value['proprietario'] == '1') {
+                                    $total_lb += $value['saldoAtual'];
+                                } elseif ($value['proprietario'] == '2') {
+                                    $total_uepa += $value['saldoAtual'];
+                                }
+                        ?>
+                            <tr>
+                                <td><?= $value['nomeBanco']; ?></td>
+                                <td><?= $value['tituloInvest']; ?></td>
+                                <td class="text-left">
+                                    <button class="render-ajax" 
+                                            data-url="<?= $url_obj . $value['idContaInvest'] ?>"
+                                            data-div=""
+                                            data-modal="true"
+                                    >&#8505;</button>
+                                </td>
+                                <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoAtual']); ?></td>
+                                <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoAnterior']); ?></td>
+                                <td><?= DateHelper::convertUStoBR($value['dataAnterior']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-dark">
+                            <td colspan="3" style="text-align: right">Total</td>
+                            <td>R$ <?= NumbersHelper::formatUStoBR($total); ?>
+                            <td>
+                                <small>Luiz: <?= NumbersHelper::formatUStoBR($total_lb); ?> <br> Uepa: <?= NumbersHelper::formatUStoBR($total_uepa); ?></small>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
 
