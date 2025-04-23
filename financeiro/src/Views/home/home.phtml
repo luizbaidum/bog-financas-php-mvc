@@ -9,91 +9,93 @@
 ?>
 
 <div class="container">
-    <table class="table">
-        <theader>
-            <tr>
-                <th style="width: 40px"></th>
-                <th style="width: 50px">Editar</th>
-                <th>Data</th>
-                <th>Movimento</th>
-                <th>Categoria</th>
-                <th>Valor</th>
-                <th>Prop.</th>
-            </tr>
-        </theader>
-        <tbody>
-            <?php 
-                foreach ($movimentos as $mov): 
-                    $resultado += $mov['valor'];
-
-                    switch ($mov['proprietario']) {
-                        case '1':
-                            $prop = 'Luiz';
-                            $result_lb += $mov['valor'];
-                            break;
-                        case '2':
-                            $prop = 'Uepa';
-                            $result_uepa += $mov['valor'];
-                            break;
-                        default:
-                            $prop = '';
-                    }
-            ?>
+    <div class="table-responsive">
+        <table class="table">
+            <theader>
                 <tr>
-                    <td>
-                        <input type="checkbox" name="selectedData[]" value="<?= $mov['idMovimento']; ?>">
-                    </td>
-                    <td>
-                        <a href="<?= $url_edit . $mov['idMovimento']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
-                            <button title="Editar" data-table="movimento">
-                                &#9998;
-                            </button>
-                        </a>
-                    </td>
-                    <td class="dataMovimento"><?= DateHelper::convertUStoBR($mov['dataMovimento']); ?></td>
-                    <td class="nomeMovimento"><?= $mov['nomeMovimento']; ?></td>
-                    <td class="idCategoria"><?= $mov['categoria']; ?></td>
-                    <td class="valor">R$ <?= NumbersHelper::formatUStoBR($mov['valor']); ?></td>
-                    <td class="proprietario <?= $mov['proprietario']; ?>">
-                        <?= $prop; ?>
-                    </td>
+                    <th style="width: 40px"></th>
+                    <th style="width: 50px">Editar</th>
+                    <th>Data</th>
+                    <th>Movimento</th>
+                    <th>Categoria</th>
+                    <th>Valor</th>
+                    <th>Prop.</th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-        <tfoot>
-            <tr class="table-dark">
-                <td></td>
-                <td colspan="3" style="text-align: right">Resultado (Rec. - Des. - Apli.)</td>
-                <td>R$ <?= NumbersHelper::formatUStoBR($resultado); ?></td>
-                <td>
-                    <small>Luiz: <?= NumbersHelper::formatUStoBR($result_lb); ?> <br> Uepa: <?= NumbersHelper::formatUStoBR($result_uepa); ?></small>
-                </td>
-                <td></td>
-            </tr>
-            <?php 
-                if (!empty($saldos_anteriores)): 
-                    $acumulado = $resultado;
-            ?>
+            </theader>
+            <tbody>
                 <?php 
-                    foreach ($saldos_anteriores as $value): 
-                        $acumulado += $value['valor'];
+                    foreach ($movimentos as $mov): 
+                        $resultado += $mov['valor'];
+
+                        switch ($mov['proprietario']) {
+                            case '1':
+                                $prop = 'Luiz';
+                                $result_lb += $mov['valor'];
+                                break;
+                            case '2':
+                                $prop = 'Uepa';
+                                $result_uepa += $mov['valor'];
+                                break;
+                            default:
+                                $prop = '';
+                        }
                 ?>
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="selectedData[]" value="<?= $mov['idMovimento']; ?>">
+                        </td>
+                        <td>
+                            <a href="<?= $url_edit . $mov['idMovimento']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
+                                <button title="Editar" data-table="movimento">
+                                    &#9998;
+                                </button>
+                            </a>
+                        </td>
+                        <td class="dataMovimento"><?= DateHelper::convertUStoBR($mov['dataMovimento']); ?></td>
+                        <td class="nomeMovimento"><?= $mov['nomeMovimento']; ?></td>
+                        <td class="idCategoria"><?= $mov['categoria']; ?></td>
+                        <td class="valor">R$ <?= NumbersHelper::formatUStoBR($mov['valor']); ?></td>
+                        <td class="proprietario <?= $mov['proprietario']; ?>">
+                            <?= $prop; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr class="table-dark">
+                    <td></td>
+                    <td colspan="3" style="text-align: right">Resultado (Rec. - Des. - Apli.)</td>
+                    <td>R$ <?= NumbersHelper::formatUStoBR($resultado); ?></td>
+                    <td>
+                        <small>Luiz: <?= NumbersHelper::formatUStoBR($result_lb); ?> <br> Uepa: <?= NumbersHelper::formatUStoBR($result_uepa); ?></small>
+                    </td>
+                    <td></td>
+                </tr>
+                <?php 
+                    if (!empty($saldos_anteriores)): 
+                        $acumulado = $resultado;
+                ?>
+                    <?php 
+                        foreach ($saldos_anteriores as $value): 
+                            $acumulado += $value['valor'];
+                    ?>
+                        <tr class="table-dark">
+                            <td></td>
+                            <td colspan="3" style="text-align: right">Resultado mês <?= $value['MES']; ?>:</td>
+                            <td>R$ <?= NumbersHelper::formatUStoBR($value['valor']); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    <?php endforeach; ?>
                     <tr class="table-dark">
                         <td></td>
-                        <td colspan="3" style="text-align: right">Resultado mês <?= $value['MES']; ?>:</td>
-                        <td>R$ <?= NumbersHelper::formatUStoBR($value['valor']); ?></td>
+                        <td colspan="3" style="text-align: right">Acumulado</td>
+                        <td>R$ <?= NumbersHelper::formatUStoBR($acumulado); ?></td>
                         <td></td>
                         <td></td>
                     </tr>
-                <?php endforeach; ?>
-                <tr class="table-dark">
-                    <td></td>
-                    <td colspan="3" style="text-align: right">Acumulado</td>
-                    <td>R$ <?= NumbersHelper::formatUStoBR($acumulado); ?></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-        </tfoot>
-    </table>
+                <?php endif; ?>
+            </tfoot>
+        </table>
+    </div>
 </div>
