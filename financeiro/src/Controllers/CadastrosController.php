@@ -583,5 +583,26 @@ class CadastrosController extends Controller {
 			}
         }
     }
+
+    public function movimentarInvestimentos()
+    {
+        $model = new Model();
+
+        if ($this->isSetPost()) {
+
+        }
+
+        $this->view->settings = [
+            'action'   => $this->index_route . '/investimentos_movimentar',
+            'redirect' => $this->index_route . '/investimentos_movimentar',
+            'url_ajax' => $this->index_route . '/definir_movimento_investimento?action=',
+            'title'    => 'Cadastro de Mov. a partir de Investimento',
+            'div_ajax' => 'id-destino'
+        ];
+
+        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
+
+        $this->renderPage(main_route: $this->index_route . '/investimentos_movimentar', conteudo: 'investimentos_movimentar', base_interna: 'base_cruds');
+    }
 }
 ?>

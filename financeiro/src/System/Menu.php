@@ -21,7 +21,7 @@ class Menu {
 
     public array $titles = [
         'Cadastros' => [
-            'Categorias', 'Movimentos', 'Contas Invest', 'Movimentos Mensais', 'Objetivos', 'Orçamento', 'Orçamento do Realizado'
+            'Categorias', 'Movimentos', 'Contas Invest', 'Movimentos Mensais', 'Objetivos', 'Orçamento', 'Orçamento do Realizado', 'Investimentos: Movimentar'
         ],
         'Consultas' => [
             'Indicadores', 'Lista Contas Invest', 'Extrato Contas Invest', 'Movimentos Mensais', 'Orçamento', 'Evolução Rendimentos'
@@ -33,7 +33,7 @@ class Menu {
 
     public array $routes = [
         'Cadastros' => [
-            'categorias', 'movimentos', 'investimentos', 'movimentos_mensais', 'objetivos', 'orcamento', 'orcamento_do_realizado'
+            'categorias', 'movimentos', 'investimentos', 'movimentos_mensais', 'objetivos', 'orcamento', 'orcamento_do_realizado', 'investimentos_movimentar'
         ],
         'Consultas' => [
             'indicadores_index', 'contas_investimentos_index', 'extrato_investimentos', 'movimentos_mensais_index', 'orcamento_index', 'evolucao_rendimentos'

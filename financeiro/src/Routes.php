@@ -24,6 +24,7 @@ class Routes extends Bootstrap {
 		$routes[] = array('route' => '/objetivos', 'controller' => 'CadastrosController', 'action' => 'objetivos');
 		$routes[] = array('route' => '/orcamento', 'controller' => 'CadastrosController', 'action' => 'orcamento');
 		$routes[] = array('route' => '/orcamento_do_realizado', 'controller' => 'CadastrosController', 'action' => 'orcamentoDoRealizado');
+        $routes[] = array('route' => '/investimentos_movimentar', 'controller' => 'CadastrosController', 'action' => 'movimentarInvestimentos');
 
 		$routes[] = array('route' => '/delete_movimentos', 'controller' => 'DelecoesController', 'action' => 'deletarMovimento');
 
@@ -48,6 +49,7 @@ class Routes extends Bootstrap {
 		$routes[] = array('route' => '/movimentos_mensais_index', 'controller' => 'ConsultasController', 'action' => 'movimentosMensais');
 		$routes[] = array('route' => '/orcamento_index', 'controller' => 'ConsultasController','action' => 'orcamento');
 		$routes[] = array('route' => '/preferencias', 'controller' => 'ConsultasController', 'action' => 'preferencias');
+        $routes[] = array('route' => '/definir_movimento_investimento', 'controller' => 'ConsultasController', 'action' => 'definirMovimentoDoInvestimento');
 
 		$this->setRoutes($routes);
 	}

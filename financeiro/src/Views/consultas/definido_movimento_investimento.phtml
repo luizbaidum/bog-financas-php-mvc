@@ -1,0 +1,42 @@
+<?php if ($tipo_movimento == 'transferencia'): ?>
+    <div class="form-group">
+        <div class="row">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-6 col-sm-3">
+                        <label for="idContaInvestOrigem">Conta Invest Origem</label>
+                        <select class="form-select exibir-objetivos-origem" id="idContaInvestOrigem" name="idContaInvestOrigem">
+                            <option value="">Selecione</option>
+                            <?php foreach ($invests as $value): ?>
+                                <option value="<?= $value['idContaInvest']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-3 d-none" id="idSelectObjetivoOrigem">
+                        <label for="idObjetivoOrigem">Objetivo</label>
+                        <select class="form-select" id="idObjetivoOrigem" name="idObjetivoOrigem">
+                            <option value="">Selecione</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-sm-3">
+                        <label for="idContaInvestDestino">Conta Invest Destino</label>
+                        <select class="form-select exibir-objetivos-destino" id="idContaInvestDestino" name="idContaInvestDestino">
+                            <option value="">Selecione</option>
+                            <?php foreach ($invests as $value): ?>
+                                <option value="<?= $value['idContaInvest']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-3 d-none" id="idSelectObjetivoDestino">
+                        <label for="idObjetivoDestino">Objetivo</label>
+                        <select class="form-select" id="idObjetivoDestino" name="idObjetivoDestino">
+                            <option value="">Selecione</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
+    <?= $tipo_movimento; ?>
+<?php endif; ?>
