@@ -23,6 +23,8 @@ use src\Models\Rendimentos\RendimentosDAO;
 use src\Models\Rendimentos\RendimentosEntity;
 
 class CadastrosController extends Controller {
+    const APLICACAO = '12';
+    const RESGATE = '10';
 
     private string $msg_retorno_falha = 'O cadastro não teve sucesso. Verifique os dados e tente novamente. Se o erro persistir, entre em contato com o suporte.';
     private string $msg_retorno_sucesso = 'Cadastro realizado.';
@@ -75,17 +77,18 @@ class CadastrosController extends Controller {
         }
     }
 
-    public function inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento)
+    public function inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento, $id_categoria, $valor, $data_rend)
     {
-        define('APLICACAO', '12');
-        define('RESGATE', '10');
-
         $model = new Model();
 
-        switch ($_POST['idCategoria']) {
-            case APLICACAO:
+        switch ($id_categoria) {
+            case self::APLICACAO:
                 $tipo = 4;
-                $valor_aplicado = ($_POST['valor'] * -1); //veio negativo, pois aplicação é saída de dinheiro da conta corrente, mas é entrada em aplicações.
+
+                $valor_aplicado = $valor; 
+                if ($valor_aplicado < 0) {
+                    $valor_aplicado = ($valor_aplicado * -1); //veio negativo, pois aplicação é saída de dinheiro da conta corrente, mas é entrada em aplicações.
+                }
 
                 if ($id_objetivo != '' && $id_objetivo != '0') {
                     $objetivo = $model->selectAll(new ObjetivosEntity, [['idObj', '=', $id_objetivo]], [], [])[0];
@@ -108,9 +111,13 @@ class CadastrosController extends Controller {
                 }
 
                 break;
-            case RESGATE:
+            case self::RESGATE:
                 $tipo = 3;
-                $valor_aplicado = ($_POST['valor'] * -1); //veio positivo, pois resgate é entrada de dinheiro da conta corrente, mas é saída em aplicações.
+
+                $valor_aplicado = $valor; 
+                if ($valor_aplicado > 0) {
+                    $valor_aplicado = ($valor_aplicado * -1); //veio positivo, pois resgate é entrada de dinheiro da conta corrente, mas é saída em aplicações.
+                }
 
                 $saldo_atual = $model->getSaldoAtual(new ObjetivosEntity, $id_objetivo);
                 $item = [
@@ -129,7 +136,7 @@ class CadastrosController extends Controller {
         $item = [
             'idContaInvest'   => $id_conta_invest,
             'valorRendimento' => $valor_aplicado,
-            'dataRendimento'  => $_POST['dataMovimento'],
+            'dataRendimento'  => $data_rend,
             'tipo'            => $tipo,
             'idMovimento'     => $id_movimento,
             'idObj'           => $id_objetivo
@@ -175,7 +182,7 @@ class CadastrosController extends Controller {
 
                 //Inserção de Rendimento (invest ou retirada)
                 if (!empty($id_conta_invest)) {
-                    $this->inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento);
+                    $this->inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento, $_POST['idCategoria'], $_POST['valor'], $_POST['dataMovimento']);
                 }
 
                 if ($ret['result']) {
@@ -589,14 +596,80 @@ class CadastrosController extends Controller {
         $model = new Model();
 
         if ($this->isSetPost()) {
+            try {
+                $ret = array();
 
+                //Resgate
+                list($id_invest, $proprietario) = explode('@', $_POST['idContaInvestOrigem']);
+                
+                $item = array(
+                            'nomeMovimento' => 'Resgate - movimento entre investimentos',
+                            'dataMovimento' => date("Y-m-d"),
+                            'idCategoria'   => 10, //Resgate
+                            'valor'         => $_POST['valor'],
+                            'proprietario'  => $proprietario,
+                            'idContaInvest' => $id_invest
+                        );
+
+                $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $item);
+
+                if (!$ret['result']) {
+                    throw new Exception($this->msg_retorno_falha);
+                }
+
+                $id_movimento = $ret['result'];
+
+                $this->inserirMovimentacaodeAplicacao($id_invest, $_POST['idObjetivoOrigem'], $id_movimento, '10', $_POST['valor'], date('Y-m-d'));
+
+                //Aplicação
+                list($id_invest, $proprietario) = explode('@', $_POST['idContaInvestDestino']);
+                
+                $item = array(
+                    'nomeMovimento' => 'Aplicação - movimento entre investimentos',
+                    'dataMovimento' => date("Y-m-d"),
+                    'idCategoria'   => 12, //Aplicação
+                    'valor'         => ($_POST['valor'] * -1),
+                    'proprietario'  => $proprietario,
+                    'idContaInvest' => $id_invest
+                );
+
+                $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $item);
+
+                if (!$ret['result']) {
+                    throw new Exception($this->msg_retorno_falha);
+                }
+
+                $id_movimento = $ret['result'];
+
+                $this->inserirMovimentacaodeAplicacao($id_invest, $_POST['idObjetivoDestino'], $id_movimento, '12', $_POST['valor'], date('Y-m-d'));
+
+                if (true) {
+					$array_retorno = array(
+						'result'   => $ret['result'],
+						'mensagem' => $this->msg_retorno_sucesso
+					);
+
+					echo json_encode($array_retorno);
+                    exit;
+				} else {
+					throw new Exception($this->msg_retorno_falha);
+				}
+            } catch (Exception $e) {
+				$array_retorno = array(
+					'result'   => false,
+					'mensagem' => $e->getMessage(),
+				);
+
+				echo json_encode($array_retorno);
+                exit;
+			}
         }
 
         $this->view->settings = [
             'action'   => $this->index_route . '/investimentos_movimentar',
             'redirect' => $this->index_route . '/investimentos_movimentar',
             'url_ajax' => $this->index_route . '/definir_movimento_investimento?action=',
-            'title'    => 'Cadastro de Mov. a partir de Investimento',
+            'title'    => 'Movimento entre Investimentos',
             'div_ajax' => 'id-destino'
         ];
 

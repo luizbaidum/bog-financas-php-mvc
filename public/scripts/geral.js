@@ -198,23 +198,42 @@ $(document).on('click', '.vincular-mov-mensal', function (e) {
     );
 })
 
-$(document).on('change', '.exibir-objetivos-origem', function (e) {
+$(document).on('change', '.exibir-objetivos-origem', function () {
     try {
-        let conta = document.getElementById('idContaInvest').value;
-        let select = document.getElementById('idObjetivo');
-        let div = document.getElementById('idSelectObjetivo');
+        let conta = document.getElementById('idContaInvestOrigem').value.split('@')[0];
+        let select = document.getElementById('idObjetivoOrigem');
+        let div = document.getElementById('idSelectObjetivoOrigem');
 
         removeOptions(select);
         div.classList.remove('d-block');
         div.classList.add('d-none');
 
-        if (categoria != '' && conta != '') {
-            if (categoria == '10 - sinal: +' || categoria == '12 - sinal: -') {
-                div.classList.remove('d-none');
-                div.classList.add('d-block');
+        if (conta != '') {
+            div.classList.remove('d-none');
+            div.classList.add('d-block');
 
-                insertOptions(select, options_obj, conta);
-            }
+            insertOptions(select, options_obj, conta);
+        }
+    } catch (error) {
+        console.error('Erro -> ' + error);
+    }
+})
+
+$(document).on('change', '.exibir-objetivos-destino', function () {
+    try {
+        let conta = document.getElementById('idContaInvestDestino').value.split('@')[0];
+        let select = document.getElementById('idObjetivoDestino');
+        let div = document.getElementById('idSelectObjetivoDestino');
+
+        removeOptions(select);
+        div.classList.remove('d-block');
+        div.classList.add('d-none');
+
+        if (conta != '') {
+            div.classList.remove('d-none');
+            div.classList.add('d-block');
+
+            insertOptions(select, options_obj, conta);
         }
     } catch (error) {
         console.error('Erro -> ' + error);

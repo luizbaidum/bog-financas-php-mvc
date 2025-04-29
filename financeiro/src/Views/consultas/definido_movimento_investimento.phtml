@@ -1,37 +1,72 @@
+<?php
+    echo '<script>var options_obj = ' . $options_list . '</script>';
+?>
+
 <?php if ($tipo_movimento == 'transferencia'): ?>
-    <div class="form-group">
+    <div class="container mt-4">
         <div class="row">
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-6 col-sm-3">
-                        <label for="idContaInvestOrigem">Conta Invest Origem</label>
-                        <select class="form-select exibir-objetivos-origem" id="idContaInvestOrigem" name="idContaInvestOrigem">
-                            <option value="">Selecione</option>
-                            <?php foreach ($invests as $value): ?>
-                                <option value="<?= $value['idContaInvest']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
+            <!-- Card ORIGEM -->
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Origem</h5>
                     </div>
-                    <div class="col-12 col-sm-3 d-none" id="idSelectObjetivoOrigem">
-                        <label for="idObjetivoOrigem">Objetivo</label>
-                        <select class="form-select" id="idObjetivoOrigem" name="idObjetivoOrigem">
-                            <option value="">Selecione</option>
-                        </select>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-12 col-sm-6 mb-3">
+                                    <label for="idContaInvestOrigem">Conta Invest Origem</label>
+                                    <select class="form-select exibir-objetivos-origem" id="idContaInvestOrigem" name="idContaInvestOrigem">
+                                        <option value="">Selecione</option>
+                                        <?php foreach ($invests as $value): ?>
+                                            <option value="<?= $value['idContaInvest'] . '@' . $value['proprietario']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-sm-6 mb-3 d-none" id="idSelectObjetivoOrigem">
+                                    <label for="idObjetivoOrigem">Objetivo</label>
+                                    <select class="form-select" id="idObjetivoOrigem" name="idObjetivoOrigem">
+                                        <option value="">Selecione</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    <label for="idValor">Valor transferir (R$)</label>
+                                    <input type="number" class="form-control" name="valor" step=".01" value="" id="idValor">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-6 col-sm-3">
-                        <label for="idContaInvestDestino">Conta Invest Destino</label>
-                        <select class="form-select exibir-objetivos-destino" id="idContaInvestDestino" name="idContaInvestDestino">
-                            <option value="">Selecione</option>
-                            <?php foreach ($invests as $value): ?>
-                                <option value="<?= $value['idContaInvest']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                </div>
+            </div>
+
+            <!-- Card DESTINO -->
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="card-title mb-0">Destino</h5>
                     </div>
-                    <div class="col-12 col-sm-3 d-none" id="idSelectObjetivoDestino">
-                        <label for="idObjetivoDestino">Objetivo</label>
-                        <select class="form-select" id="idObjetivoDestino" name="idObjetivoDestino">
-                            <option value="">Selecione</option>
-                        </select>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-12 col-sm-6 mb-3">
+                                    <label for="idContaInvestDestino">Conta Invest Destino</label>
+                                    <select class="form-select exibir-objetivos-destino" id="idContaInvestDestino" name="idContaInvestDestino">
+                                        <option value="">Selecione</option>
+                                        <?php foreach ($invests as $value): ?>
+                                            <option value="<?= $value['idContaInvest'] . '@' . $value['proprietario']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-sm-6 mb-3 d-none" id="idSelectObjetivoDestino">
+                                    <label for="idObjetivoDestino">Objetivo</label>
+                                    <select class="form-select" id="idObjetivoDestino" name="idObjetivoDestino">
+                                        <option value="">Selecione</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

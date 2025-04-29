@@ -345,13 +345,14 @@ class ConsultasController extends Controller {
 
         $this->renderSimple('ret_mov_mensais');
     }
-    
+
     public function definirMovimentoDoInvestimento()
     {
         $model = new Model();
 
         $this->view->data['tipo_movimento'] = $_GET['action'];
         $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
+        $this->view->data['options_list'] = json_encode($model->selectAll(new ObjetivosEntity, [], [], []));
 
         $this->renderSimple('definido_movimento_investimento');
     }
