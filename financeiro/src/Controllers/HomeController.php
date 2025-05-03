@@ -26,9 +26,11 @@ class HomeController extends Controller {
 
 			if ($mes_filtro != '' || $pesquisa != '') {
 				$movimentos = $model_movimentos->indexTable($pesquisa, $ano_filtro, $mes_filtro);
+                $mov_investimentos = $model_movimentos->indexTableInvestimentos($pesquisa, $ano_filtro, $mes_filtro);
 			} else {
 				$movimentos = $model_movimentos->indexTable('');
 				$saldos_anteriores = $model_movimentos->getSaldoPassado();
+                $mov_investimentos = $model_movimentos->indexTableInvestimentos();
 			}
 
 			$this->view->settings = [
@@ -53,6 +55,7 @@ class HomeController extends Controller {
 			$this->view->buttons = $buttons->getButtons();
 			$this->view->data['movimentos'] = $movimentos;
 			$this->view->data['saldos_anteriores'] = $saldos_anteriores;
+            $this->view->data['mov_investimentos'] = $mov_investimentos;
 
 			$this->renderPage(main_route: $this->index_route, conteudo: 'home');
 		} catch (Exception $e) {
