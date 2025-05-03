@@ -600,14 +600,36 @@ class CadastrosController extends Controller {
                 $ret = array();
 
                 if ($_POST['tipoMovimento'] == 'pagamento') {
+                    //Resgate
+                    $item = array(
+                        'nomeMovimento' => 'Resgate para pagar ' . $_POST['nomeMovimento'],
+                        'dataMovimento' => $_POST['dataMovimento'],
+                        'idCategoria'   => 10, //Resgate
+                        'valor'         => $_POST['valor'],
+                        'proprietario'  => $_POST['proprietario'],
+                        'idContaInvest' => $_POST['idContaInvest']
+                    );
+    
+                    $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $item);
+                    $id_movimento = $ret['result'];
 
+                    $this->inserirMovimentacaodeAplicacao($_POST['idContaInvest'], $_POST['idObjetivo'], $id_movimento, '10', $_POST['valor'], $_POST['dataMovimento']);
+
+                    //Movimento
+                    $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
+                    $_POST['idCategoria'] = $arr_cat[0];
+                    $sinal = $arr_cat[1];
+                    $_POST['valor'] = $sinal . $_POST['valor'];
+
+                    unset($_POST['idObjetivo']);
+                    unset($_POST['tipoMovimento']);
+                    unset($_POST['idContaInvest']);
+
+                    //Inserção de Movimento
+                    $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $_POST);
                 }
 
-                /**
-                 * testar se o throw exception q tem dentro da função funciona para capturar erros
-                 */
-
-                if ($_POST['tipoMovimento'] == 'transferencia') {
+                if (isset($_POST['tipoMovimento']) && $_POST['tipoMovimento'] == 'transferencia') {
                     $ret = $this->cadastrarTransferenciaEntreInvestimentos();
                 }
 
