@@ -101,4 +101,26 @@ class MovimentosDAO extends Model {
 
         return $result;
     }
+
+    public function indexTableInvestimentos($pesquisa = '', $year = '', $month = '')
+    {
+        $where = '(DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = DATE_FORMAT(CURRENT_DATE(), "%Y%m"))';
+
+        if ($month != '' && $month == 'Todos') {
+            $where = 'movimentos.dataMovimento IS NOT NULL';
+        } elseif ($month != '' && $month != 'Todos') {
+            $where = "DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$year$month'";
+        }
+
+        if ($pesquisa != '') {
+            $where .= ' AND (categorias.categoria LIKE "%' . $pesquisa . '%" OR movimentos.nomeMovimento LIKE "%' . $pesquisa . '%")';
+        }
+
+        $query = "SELECT movimentos.*, categorias.categoria, CONCAT(contas_investimentos.nomeBanco, ' - ', contas_investimentos.tituloInvest) AS invest FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria INNER JOIN contas_investimentos ON contas_investimentos.idContaInvest = movimentos.idContaInvest WHERE movimentos.idContaInvest > 0 AND categorias.idCategoria IN (12, 10) AND $where ORDER BY dataMovimento DESC";
+
+        $new_sql = new SQLActions();
+		$result = $new_sql->executarQuery($query);
+
+        return $result;
+    }
 }
