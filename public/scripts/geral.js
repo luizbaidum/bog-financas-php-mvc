@@ -45,7 +45,7 @@ $(document).on('click', '.limpar-pesquisa', function (e) {
     window.location.href = url_action;
 })
 
-$(document).on('change', '.exibir-objetivos', function (e) {
+$(document).on('change', '.exibir-objetivos', function () {
     try {
         let categoria = document.getElementById('idCategoria').value;
         let conta = document.getElementById('idContaInvest').value;
@@ -53,19 +53,26 @@ $(document).on('change', '.exibir-objetivos', function (e) {
         let div = document.getElementById('idSelectObjetivo');
 
         removeOptions(select);
-        div.classList.remove('d-block');
-        div.classList.add('d-none');
 
-        if (categoria != '' && conta != '') {
-            if (categoria == '10 - sinal: +' || categoria == '12 - sinal: -') {
-                div.classList.remove('d-none');
-                div.classList.add('d-block');
+        if (!document.getElementById('idTipoMovimento')) {
+            div.classList.remove('d-block');
+            div.classList.add('d-none');
+        }
 
-                insertOptions(select, options_obj, conta);
+        if (!document.getElementById('idTipoMovimento')) {
+            if (categoria != '' && conta != '') {
+                if (categoria == '10 - sinal: +' || categoria == '12 - sinal: -') {
+                    div.classList.remove('d-none');
+                    div.classList.add('d-block');
+    
+                    insertOptions(select, options_obj, conta);
+                }
             }
+        } else {
+            insertOptions(select, options_obj, conta);
         }
     } catch (error) {
-        console.error(error);
+        console.error('Erro -> ' + error);
     }
 })
 
@@ -196,4 +203,46 @@ $(document).on('click', '.vincular-mov-mensal', function (e) {
     $(`#id-content-return`).html(
         '<span class="bg-warning">Movimento mensal vinculado: ' + movimento_m.idMovMensal + '<button class="btn btn-sm" type="button" onclick="limparMovMensalVinculado()">Limpar</button></span><input type="hidden" name="idMovMensal" value="' + movimento_m.idMovMensal + '">'
     );
+})
+
+$(document).on('change', '.exibir-objetivos-origem', function () {
+    try {
+        let conta = document.getElementById('idContaInvestOrigem').value.split('@')[0];
+        let select = document.getElementById('idObjetivoOrigem');
+        let div = document.getElementById('idSelectObjetivoOrigem');
+
+        removeOptions(select);
+        div.classList.remove('d-block');
+        div.classList.add('d-none');
+
+        if (conta != '') {
+            div.classList.remove('d-none');
+            div.classList.add('d-block');
+
+            insertOptions(select, options_obj, conta);
+        }
+    } catch (error) {
+        console.error('Erro -> ' + error);
+    }
+})
+
+$(document).on('change', '.exibir-objetivos-destino', function () {
+    try {
+        let conta = document.getElementById('idContaInvestDestino').value.split('@')[0];
+        let select = document.getElementById('idObjetivoDestino');
+        let div = document.getElementById('idSelectObjetivoDestino');
+
+        removeOptions(select);
+        div.classList.remove('d-block');
+        div.classList.add('d-none');
+
+        if (conta != '') {
+            div.classList.remove('d-none');
+            div.classList.add('d-block');
+
+            insertOptions(select, options_obj, conta);
+        }
+    } catch (error) {
+        console.error('Erro -> ' + error);
+    }
 })

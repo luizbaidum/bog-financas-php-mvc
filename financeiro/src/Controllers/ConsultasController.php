@@ -345,5 +345,19 @@ class ConsultasController extends Controller {
 
         $this->renderSimple('ret_mov_mensais');
     }
+
+    public function definirMovimentoDoInvestimento()
+    {
+        $model = new Model();
+
+        $this->view->data['tipo_movimento'] = $_GET['action'];
+        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
+        $this->view->data['options_list'] = json_encode($model->selectAll(new ObjetivosEntity, [], [], []));
+        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
+        $this->view->data['url_buscar_mov_mensal'] = $this->index_route . '/buscaMovMensal?buscar=';
+        $this->view->data['div_buscar_mov_mensal'] = 'id-content-return';
+
+        $this->renderSimple('definido_movimento_investimento');
+    }
 }
 ?>
