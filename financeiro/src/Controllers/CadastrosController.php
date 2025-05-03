@@ -599,51 +599,19 @@ class CadastrosController extends Controller {
             try {
                 $ret = array();
 
-                //Resgate
-                list($id_invest, $proprietario) = explode('@', $_POST['idContaInvestOrigem']);
-                
-                $item = array(
-                            'nomeMovimento' => 'Resgate - movimento entre investimentos',
-                            'dataMovimento' => date("Y-m-d"),
-                            'idCategoria'   => 10, //Resgate
-                            'valor'         => $_POST['valor'],
-                            'proprietario'  => $proprietario,
-                            'idContaInvest' => $id_invest
-                        );
+                if ($_POST['tipoMovimento'] == 'pagamento') {
 
-                $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $item);
-
-                if (!$ret['result']) {
-                    throw new Exception($this->msg_retorno_falha);
                 }
 
-                $id_movimento = $ret['result'];
+                /**
+                 * testar se o throw exception q tem dentro da função funciona para capturar erros
+                 */
 
-                $this->inserirMovimentacaodeAplicacao($id_invest, $_POST['idObjetivoOrigem'], $id_movimento, '10', $_POST['valor'], date('Y-m-d'));
-
-                //Aplicação
-                list($id_invest, $proprietario) = explode('@', $_POST['idContaInvestDestino']);
-                
-                $item = array(
-                    'nomeMovimento' => 'Aplicação - movimento entre investimentos',
-                    'dataMovimento' => date("Y-m-d"),
-                    'idCategoria'   => 12, //Aplicação
-                    'valor'         => ($_POST['valor'] * -1),
-                    'proprietario'  => $proprietario,
-                    'idContaInvest' => $id_invest
-                );
-
-                $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $item);
-
-                if (!$ret['result']) {
-                    throw new Exception($this->msg_retorno_falha);
+                if ($_POST['tipoMovimento'] == 'transferencia') {
+                    $ret = $this->cadastrarTransferenciaEntreInvestimentos();
                 }
 
-                $id_movimento = $ret['result'];
-
-                $this->inserirMovimentacaodeAplicacao($id_invest, $_POST['idObjetivoDestino'], $id_movimento, '12', $_POST['valor'], date('Y-m-d'));
-
-                if (true) {
+                if (!in_array(false, $ret)) {
 					$array_retorno = array(
 						'result'   => $ret['result'],
 						'mensagem' => $this->msg_retorno_sucesso
@@ -676,6 +644,47 @@ class CadastrosController extends Controller {
         $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
 
         $this->renderPage(main_route: $this->index_route . '/investimentos_movimentar', conteudo: 'investimentos_movimentar', base_interna: 'base_cruds');
+    }
+
+    private function cadastrarTransferenciaEntreInvestimentos()
+    {
+        //Resgate
+        list($id_invest, $proprietario) = explode('@', $_POST['idContaInvestOrigem']);
+                        
+        $item = array(
+                    'nomeMovimento' => 'Resgate - movimento entre investimentos',
+                    'dataMovimento' => date("Y-m-d"),
+                    'idCategoria'   => 10, //Resgate
+                    'valor'         => $_POST['valor'],
+                    'proprietario'  => $proprietario,
+                    'idContaInvest' => $id_invest
+                );
+
+        $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $item);
+
+        $id_movimento = $ret['result'];
+
+        $this->inserirMovimentacaodeAplicacao($id_invest, $_POST['idObjetivoOrigem'], $id_movimento, '10', $_POST['valor'], date('Y-m-d'));
+
+        //Aplicação
+        list($id_invest, $proprietario) = explode('@', $_POST['idContaInvestDestino']);
+        
+        $item = array(
+            'nomeMovimento' => 'Aplicação - movimento entre investimentos',
+            'dataMovimento' => date("Y-m-d"),
+            'idCategoria'   => 12, //Aplicação
+            'valor'         => ($_POST['valor'] * -1),
+            'proprietario'  => $proprietario,
+            'idContaInvest' => $id_invest
+        );
+
+        $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $item);
+
+        $id_movimento = $ret['result'];
+
+        $this->inserirMovimentacaodeAplicacao($id_invest, $_POST['idObjetivoDestino'], $id_movimento, '12', $_POST['valor'], date('Y-m-d'));
+
+        return $ret;
     }
 }
 ?>
