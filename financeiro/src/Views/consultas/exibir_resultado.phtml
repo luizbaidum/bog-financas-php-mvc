@@ -57,7 +57,7 @@
                                         <td class="fw-bold">(-) Aplicação - (+) Resgates</td>
                                         <td>
                                             <span class="fs-6 fw-bold text-warning">
-                                                <?= NumbersHelper::formatUStoBR(abs(($total_aplicacao[$prop] ?? 0)) - abs(($total_resgate[$prop] ?? 0))); ?>
+                                                <?= NumbersHelper::formatUStoBR(abs(($total_resgate[$prop] ?? 0)) - abs(($total_aplicacao[$prop] ?? 0))); ?>
                                             </span>
                                         </td>
                                     </tr>
