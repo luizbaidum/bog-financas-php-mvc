@@ -4,6 +4,7 @@ namespace src\Controllers;
 
 use MF\Controller\Controller;
 use MF\Model\Model;
+use MF\View\SetButtons;
 use src\Models\Categorias\CategoriasEntity;
 use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Investimentos\InvestimentosEntity;
@@ -84,6 +85,7 @@ class ConsultasController extends Controller {
     public function orcamento()
     {
         $model_orcamento = new OrcamentoDAO();
+        $buttons = new SetButtons();
 
         $ano_filtro = $_GET['anoFiltro'] ?? '';
 		$mes_filtro = $_GET['mesFiltro'] ?? '';
@@ -100,6 +102,14 @@ class ConsultasController extends Controller {
             'title'      => 'Orçamento',
             'url_search' => $this->index_route . '/orcamento_index'
         ];
+
+        $buttons->setButton(
+            'Del',
+            $this->index_route . '/delete_itens_orcamento',
+            'px-2 btn btn-danger action-delete'
+        );
+
+        $this->view->buttons = $buttons->getButtons();
 
         $this->view->data['orcamentos'] = $orcamentos;
 

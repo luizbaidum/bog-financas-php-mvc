@@ -27,6 +27,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/investimentos_movimentar', 'controller' => 'CadastrosController', 'action' => 'movimentarInvestimentos');
 
 		$routes[] = array('route' => '/delete_movimentos', 'controller' => 'DelecoesController', 'action' => 'deletarMovimento');
+        $routes[] = array('route' => '/delete_itens_orcamento', 'controller' => 'DelecoesController', 'action' => 'deletarItensOrcamento');
 
 		$routes[] = array('route' => '/editar_objetivo', 'controller' => 'EdicoesController', 'action' => 'editarObjetivo');
 		$routes[] = array('route' => '/edit_movimento', 'controller' => 'EdicoesController', 'action' => 'editarMovimento');
