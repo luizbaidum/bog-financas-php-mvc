@@ -52,15 +52,51 @@ class OrcamentoDAO extends Model {
         $query = "SELECT movimentos.idCategoria,
                     $media,
                     categorias.categoria,
-                    categorias.sinal
+                    categorias.sinal,
+                    movimentos.proprietario
                     FROM movimentos
                     INNER JOIN categorias ON movimentos.idCategoria = categorias.idCategoria
                     WHERE $where
-                    GROUP BY movimentos.idCategoria";
+                    GROUP BY movimentos.proprietario, movimentos.idCategoria";
 
         $new_sql = new SQLActions();
         $result = $new_sql->executarQuery($query);
 
         return $result;
+    }
+
+    public function orcamentosPorProprietario($year = '', $month = '')
+    {
+        $where = 'WHERE (MONTH(orcamentos.dataOrcamento) = MONTH(CURRENT_DATE()))';
+        if ($month != '') {
+            if ($month == 'Todos') {
+                $where = 'WHERE orcamentos.dataOrcamento IS NOT NULL';
+            } else {
+                $where = "WHERE DATE_FORMAT(orcamentos.dataOrcamento, '%Y%b') = '$year$month'";
+            }
+        }
+
+        $query = "SELECT SUM(orcamentos.valor) AS totalOrcado, 
+                            orcamentos.proprietario,
+                            categorias.idCategoria, 
+                            categorias.categoria, 
+                            categorias.tipo, 
+                            MONTH(orcamentos.dataOrcamento) AS mesOrcado,
+                            GROUP_CONCAT(orcamentos.idOrcamento SEPARATOR ',') AS idOrcamento
+                    FROM orcamentos 
+                    INNER JOIN categorias ON categorias.idCategoria = orcamentos.idCategoria
+                    $where
+                    GROUP BY orcamentos.proprietario, orcamentos.idCategoria
+                    ORDER BY totalOrcado DESC";
+
+        $new_sql = new SQLActions();
+        $result = $new_sql->executarQuery($query);
+
+        $ret = [];
+        foreach ($result as $val) {
+            $ret[] = $val;
+        }
+
+        return $ret;
     }
 }

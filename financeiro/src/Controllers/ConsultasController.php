@@ -89,9 +89,9 @@ class ConsultasController extends Controller {
 		$mes_filtro = $_GET['mesFiltro'] ?? '';
 
         if ($mes_filtro != '') {
-            $orcamentos = $model_orcamento->orcamentos($ano_filtro, $mes_filtro);
+            $orcamentos = $model_orcamento->orcamentosPorProprietario($ano_filtro, $mes_filtro);
         } else {
-            $orcamentos = $model_orcamento->orcamentos();
+            $orcamentos = $model_orcamento->orcamentosPorProprietario();
         }
 
         $this->view->settings = [
