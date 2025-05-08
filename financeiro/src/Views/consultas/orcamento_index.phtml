@@ -4,40 +4,53 @@
 ?>
 
 <div class="container">
-    <div class="card mt-2">
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Mês</th>
-                        <th scope="col">Categoria</th>
-                        <th scope="col">Valor Orçado</th>
-                        <th scope="col">Excluir</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($orcamentos as $value): 
-                            $total_orcado += $value['totalOrcado']; ?>
+    <div class="card mt-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Orçamentos</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover mb-0">
+                    <thead class="table-light">
                         <tr>
-                            <td><?= $value['mesOrcado']; ?></td>
-                            <td><?= $value['categoria']; ?></td>
-                            <td><?= NumbersHelper::formatUStoBR($value['totalOrcado']); ?></td>
-                            <td>
-                                <button id="<?= $value['idOrcamento']; ?>" data-chave="<?= $value['idOrcamento']; ?>" data-table="orcamento" data-campo="idOrcamento" title="Excluir" class="acao-deletar">
-                                    &#10005;
-                                </button>
-                            </td>
+                            <th scope="col" class="ps-3 text-center">Mês</th>
+                            <th scope="col">Categoria</th>
+                            <th scope="col" class="text-right pe-4">Valor</th>
+                            <th scope="col" class="text-right pe-4">Proprietário</th>
+                            <th scope="col" class="text-center">Ações</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="2">Total</td>
-                        <td><?= NumbersHelper::formatUStoBR($total_orcado); ?></td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($orcamentos as $value): 
+                                $total_orcado += $value['totalOrcado']; ?>
+                            <tr>
+                                <td class="ps-3 text-center"><?= $value['mesOrcado']; ?></td>
+                                <td><?= $value['categoria']; ?></td>
+                                <td class="text-right pe-4">R$ <?= NumbersHelper::formatUStoBR($value['totalOrcado']); ?></td>
+                                <td><?= $value['proprietario'] == '2' ? 'Uepa' : ($value['proprietario'] == '1' ? 'Luiz' : 'Não vinculado.'); ?></td>
+                                <td class="text-center">
+                                    <button id="<?= $value['idOrcamento']; ?>" 
+                                            data-chave="<?= $value['idOrcamento']; ?>" 
+                                            data-table="orcamento" 
+                                            data-campo="idOrcamento" 
+                                            title="Excluir" 
+                                            class="btn btn-sm btn-outline-danger">
+                                        &#10005;
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot class="fw-bold bg-light">
+                        <tr>
+                            <td colspan="2" class="ps-3">Total</td>
+                            <td class="text-right pe-4">R$ <?= NumbersHelper::formatUStoBR($total_orcado); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
 </div>

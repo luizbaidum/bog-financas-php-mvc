@@ -404,6 +404,7 @@ class CadastrosController extends Controller {
 
                 foreach ($_POST['idCategoria'] as $k => $categoria) {
                     $item['idCategoria'] = $categoria;
+                    $item['proprietario'] = $_POST['proprietario'][$k];
                     $sinal = $_POST['sinal'][$k];
     
                     $item['valor'] = $_POST['valor'][$k];

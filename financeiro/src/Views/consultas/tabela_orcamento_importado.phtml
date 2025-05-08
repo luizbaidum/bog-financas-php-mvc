@@ -1,25 +1,33 @@
-<div class="table-responsive">
-    <table class="table table-sm">
-        <theader>
+<div class="table-responsive rounded border shadow-sm">
+    <table class="table table-sm table-hover align-middle mb-0">
+        <thead class="table-light">
             <tr>
-                <th>Remover</th>
+                <th width="80" class="text-center">Remover</th>
                 <th>Categoria</th>
-                <th>Valor</th>
+                <th>Proprietário</th>
+                <th width="200" class="text-end">Valor</th>
             </tr>
-        </theader>
+        </thead>
         <tbody>
             <?php foreach ($lista as $value): ?>
                 <tr>
-                    <td>
-                        <button type="button" onclick="deleteTr(this)">&#9747;</button>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteTr(this)">
+                            &#10005;
+                        </button>
                     </td>
-                    <td>
+                    <td class="fw-semibold">
                         <?= $value['idCategoria'] . ' - '  . $value['categoria']; ?>
                         <input type="hidden" name="idCategoria[]" value="<?= $value['idCategoria']; ?>">
                         <input type="hidden" name="sinal[]" value="<?= $value['sinal']; ?>">
+                        <input type="hidden" name="proprietario[]" value="<?= $value['proprietario']; ?>">
                     </td>
+                    <td><?= $value['proprietario'] == '2' ? 'Uepa' : ($value['proprietario'] == '1' ? 'Luiz' : 'Não vinculado.'); ?></td>
                     <td>
-                        <input type="number" class="form-control" name="valor[]" step=".01" value="<?= $value['valorOrcamento']; ?>">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">R$</span>
+                            <input type="number" class="form-control text-end" name="valor[]" step=".01" value="<?= $value['valorOrcamento']; ?>">
+                        </div>
                     </td>
                 </tr>
             <?php endforeach; ?>
