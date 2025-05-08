@@ -1,6 +1,8 @@
 <?php
     use MF\Helpers\NumbersHelper;
     $total_orcado = 0;
+    $total_orcado_2 = 0;
+    $total_orcado_1 = 0;
 ?>
 
 <div class="container">
@@ -22,7 +24,13 @@
                     </thead>
                     <tbody>
                         <?php foreach ($orcamentos as $value): 
-                                $total_orcado += $value['totalOrcado']; ?>
+                                $total_orcado += $value['totalOrcado']; 
+                                if ($value['proprietario'] == '2') {
+                                    $total_orcado_2 += $value['totalOrcado']; 
+                                } elseif ($value['proprietario'] == '1') {
+                                    $total_orcado_1 += $value['totalOrcado']; 
+                                }
+                        ?>
                             <tr>
                                 <td class="ps-3 text-center"><?= $value['mesOrcado']; ?></td>
                                 <td><?= $value['categoria']; ?></td>
@@ -42,6 +50,18 @@
                         <?php endforeach; ?>
                     </tbody>
                     <tfoot class="fw-bold bg-light">
+                        <tr>
+                            <td colspan="2" class="ps-3">Total Luiz</td>
+                            <td class="text-right pe-4">R$ <?= NumbersHelper::formatUStoBR($total_orcado_1); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="ps-3">Total Uepa</td>
+                            <td class="text-right pe-4">R$ <?= NumbersHelper::formatUStoBR($total_orcado_2); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                         <tr>
                             <td colspan="2" class="ps-3">Total</td>
                             <td class="text-right pe-4">R$ <?= NumbersHelper::formatUStoBR($total_orcado); ?></td>
