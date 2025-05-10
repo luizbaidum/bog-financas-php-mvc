@@ -38,19 +38,19 @@ class Routes extends Bootstrap {
 		$routes[] = array('route' => '/', 'controller' => 'LoginController', 'action' => 'login');
 		$routes[] = array('route' => '/logout', 'controller' => 'LoginController', 'action' => 'logout');
 
-		$routes[] = array('route' => '/buscar_orcamento_do_realizado', 'controller' => 'ConsultasController', 'action' => 'buscarOrcamentoDoRealizado');
-		$routes[] = array('route' => '/buscaMovMensal', 'controller' => 'ConsultasController', 'action' => 'buscarMovMensal');
-		$routes[] = array('route' => '/consultar_objetivos', 'controller' => 'ConsultasController', 'action' => 'consultarObjetivos');
-		$routes[] = array('route' => '/contas_investimentos_index', 'controller' => 'ConsultasController', 'action' => 'investimentos');
-		$routes[] = array('route' => '/evolucao_rendimentos', 'controller' => 'ConsultasController', 'action' => 'evolucaoRendimentos');
-		$routes[] = array('route' => '/exibir_resultado', 'controller' => 'ConsultasController', 'action' => 'exibirResultados');
-		$routes[] = array('route' => '/extrato_investimentos', 'controller' => 'ConsultasController', 'action' => 'extratoInvestimentos');
-		$routes[] = array('route' => '/indicadores_index', 'controller' => 'ConsultasController', 'action' => 'indicadores');
-		$routes[] = array('route' => '/movimentos', 'controller' => 'ConsultasController', 'action' => 'movimentos');
-		$routes[] = array('route' => '/movimentos_mensais_index', 'controller' => 'ConsultasController', 'action' => 'movimentosMensais');
-		$routes[] = array('route' => '/orcamento_index', 'controller' => 'ConsultasController','action' => 'orcamento');
-		$routes[] = array('route' => '/preferencias', 'controller' => 'ConsultasController', 'action' => 'preferencias');
-        $routes[] = array('route' => '/definir_movimento_investimento', 'controller' => 'ConsultasController', 'action' => 'definirMovimentoDoInvestimento');
+        $routes[] = array('route' => '/buscar_orcamento_do_realizado', 'controller' => 'OrcamentoController', 'action' => 'buscarOrcamentoDoRealizado');
+        $routes[] = array('route' => '/buscaMovMensal', 'controller' => 'MovimentosMensaisController', 'action' => 'buscarMovMensal');
+        $routes[] = array('route' => '/consultar_objetivos', 'controller' => 'InvestimentosController', 'action' => 'consultarObjetivos');
+        $routes[] = array('route' => '/contas_investimentos_index', 'controller' => 'InvestimentosController', 'action' => 'index');
+        $routes[] = array('route' => '/evolucao_rendimentos', 'controller' => 'RendimentosController', 'action' => 'index');
+        $routes[] = array('route' => '/exibir_resultado', 'controller' => 'MovimentosController', 'action' => 'exibirResultados');
+        $routes[] = array('route' => '/extrato_investimentos', 'controller' => 'ExtratoInvestimentosController', 'action' => 'index');
+        $routes[] = array('route' => '/indicadores_index', 'controller' => 'IndicadoresController', 'action' => 'index');
+        $routes[] = array('route' => '/movimentos', 'controller' => 'MovimentosController', 'action' => 'index');
+        $routes[] = array('route' => '/movimentos_mensais_index', 'controller' => 'MovimentosMensaisController', 'action' => 'index');
+        $routes[] = array('route' => '/orcamento_index', 'controller' => 'OrcamentoController', 'action' => 'index');
+        $routes[] = array('route' => '/preferencias', 'controller' => 'PreferenciasController', 'action' => 'index');
+        $routes[] = array('route' => '/definir_movimento_investimento', 'controller' => 'InvestimentosController', 'action' => 'definirMovimentoDoInvestimento');
 
 		$this->setRoutes($routes);
 	}
