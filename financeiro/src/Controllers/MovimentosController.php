@@ -1,13 +1,18 @@
 <?php
 namespace src\Controllers;
 
+use Exception;
 use MF\Controller\Controller;
 use MF\Model\Model;
 use src\Models\Movimentos\MovimentosDAO;
 use src\Models\Categorias\CategoriasEntity;
 use src\Models\Investimentos\InvestimentosEntity;
+use src\Models\Movimentos\MovimentosEntity;
 use src\Models\MovimentosMensais\MovimentosMensaisDAO;
+use src\Models\Objetivos\ObjetivosDAO;
 use src\Models\Objetivos\ObjetivosEntity;
+use src\Models\Rendimentos\RendimentosDAO;
+use src\Models\Rendimentos\RendimentosEntity;
 
 class MovimentosController extends Controller {
     public function index() {
@@ -118,5 +123,116 @@ class MovimentosController extends Controller {
         $this->view->data['total_aplicacao'] = $total_aplicacao;
 
         $this->renderInModal(titulo: 'Demonstrativo', conteudo: 'exibir_resultado');
+    }
+
+    public function editarMovimento()
+    {
+        $model_movimentos = new MovimentosDAO();
+        $model_rendimentos = new RendimentosDAO();
+        $model_objetivos = new ObjetivosDAO();
+
+        try {
+            $id_movimento = $_POST['idMovimento'];
+            $id_conta_invest = $_POST['idContaInvest'];
+            $id_objetivo = $_POST['idObjetivo'] ?? '';
+            $id_objetivo_old = $_POST['idObjOld'] ?? '0';
+
+            unset($_POST['idMovimento']);
+            unset($_POST['idObjetivo']);
+            unset($_POST['idObjOld']);
+
+            $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
+            $_POST['idCategoria'] = $arr_cat[0];
+            $sinal = $arr_cat[1];
+
+            if ($sinal == '-' && $_POST['valor'] > 0) {
+                $_POST['valor'] = $_POST['valor'] * -1;
+            } elseif ($sinal == '+' && $_POST['valor'] < 0) {
+                $_POST['valor'] = $_POST['valor'] * -1;
+            }
+
+            $values = $_POST;
+            $where = array(
+                'idMovimento' => $id_movimento
+            );
+
+            $ret = $model_movimentos->atualizar(new MovimentosEntity, $values, $where);
+
+            $rendimento = $model_rendimentos->selectAll(new RendimentosEntity, [['idMovimento', '=', $id_movimento]], [], []);
+
+            if (isset($rendimento[0]['idRendimento'])) {
+                $rendimento = $rendimento[0];
+                $old_id = $rendimento['idRendimento'];
+                $old_invest = $rendimento['idContaInvest'];
+                $old_valor = $rendimento['valorRendimento'];
+                $old_tipo = $rendimento['tipo'];
+                $old_data = $rendimento['dataRendimento'];
+                $old_movimento = $rendimento['idMovimento'];
+
+                $conta_invest = $model_rendimentos->selectAll(new InvestimentosEntity, [['idContaInvest', '=', $old_invest]], [], [])[0];
+
+                if ($old_tipo == '4' || $old_tipo == '2') {
+                    $saldo = $conta_invest['saldoAtual'] - $old_valor;
+                } elseif ($old_tipo == '3' || $old_tipo == '1') {
+                    $saldo = $conta_invest['saldoAtual'] + abs($old_valor);
+                }
+
+                $model_rendimentos->atualizar(
+                    new InvestimentosEntity, 
+                    ['saldoAtual' => $saldo], 
+                    ['idContaInvest' => $old_invest]
+                );
+
+                if (empty($id_objetivo_old)) {
+                    $objetivos = $model_objetivos->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $old_invest]], [], []);
+
+                    foreach ($objetivos as $value) {
+                        $item = [
+                            'saldoAtual' => ($saldo * ($value['percentObjContaInvest'] / 100))
+                        ];
+                        $item_where = ['idObj' => $value['idObj']];
+                        $model_objetivos->atualizar(new ObjetivosEntity, $item, $item_where);
+                    }
+                } else {
+                    $objetivo = $model_objetivos->selectAll(new ObjetivosEntity, [['idObj', '=', $id_objetivo_old]], [], [])[0];
+
+                    if ($old_tipo == '4' || $old_tipo == '2') {
+                        $saldo_obj = $objetivo['saldoAtual'] - $old_valor;
+                    } elseif ($old_tipo == '3' || $old_tipo == '1') {
+                        $saldo_obj = $objetivo['saldoAtual'] + abs($old_valor);
+                    }
+
+                    $item = [
+                        'saldoAtual' => $saldo_obj
+                    ];
+                    $item_where = ['idObj' => $id_objetivo_old];
+                    $model_objetivos->atualizar(new ObjetivosEntity, $item, $item_where);
+                }
+
+                $model_rendimentos->delete(new RendimentosEntity, 'idRendimento', $old_id);
+            }
+
+            if (!empty($id_conta_invest)) {
+                (new CadastrosController())->inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento, $_POST['idCategoria'], $_POST['valor'], $_POST['dataMovimento']);
+            }
+
+            if (!isset($ret['result']) || empty($ret['result'])) {
+                throw new Exception('O Movimento não foi atualizado.');
+            }
+
+            $array_retorno = array(
+                'result'   => true,
+                'mensagem' => 'Movimento id ' . $id_movimento . ' atualizado com sucesso.',
+            );
+
+            echo json_encode($array_retorno);
+        } catch (Exception $e) {
+            $array_retorno = array(
+                'result'   => false,
+                'mensagem' => $e->getMessage(),
+            );
+
+            echo json_encode($array_retorno);
+        }
     }
 }

@@ -1,7 +1,9 @@
 <?php
 namespace src\Controllers;
 
+use Exception;
 use MF\Controller\Controller;
+use MF\Helpers\NumbersHelper;
 use MF\Model\Model;
 use src\Models\Categorias\CategoriasEntity;
 use src\Models\Investimentos\InvestimentosDAO;
@@ -64,5 +66,72 @@ class InvestimentosController extends Controller {
         $this->view->data['lista_objetivos'] = $lista_objetivos;
 
         $this->renderInModal(titulo: 'Objetivos do investimento conta', conteudo: 'objetivos');
+    }
+
+    public function editarObjetivo()
+    {
+        $model_objetivos = new ObjetivosDAO();
+
+        if ($this->isSetPost()) {
+            try {
+                $id = $_POST['idObj'];
+                $_POST['vlrObj'] = NumbersHelper::formatBRtoUS($_POST['vlrObj']);
+                $_POST['percentObjContaInvest'] = NumbersHelper::formatBRtoUS($_POST['percentObjContaInvest']);
+
+                $conta_invest = $_POST['idContaInvest'];
+                $percentual_old = $_POST['percentObjContaInvestOLD'];
+
+                if (!isset($_POST['finalizado'])) {
+                    $_POST['finalizado'] = 'F';
+                }
+
+                unset($_POST['idObj']);
+                unset($_POST['idContaInvest']);
+                unset($_POST['percentObjContaInvestOLD']);
+
+                if ($_POST['percentObjContaInvest'] > $percentual_old) {
+                    $validation = $this->validarPercentualUso($conta_invest, ($_POST['percentObjContaInvest'] - $percentual_old));
+
+                    if (!$validation['status']) {
+                        throw new Exception($validation['msg']);
+                    }
+                }
+
+                $ret = $model_objetivos->atualizar(new ObjetivosEntity, $_POST, ['idObj' => $id]);
+
+                if (!isset($ret['result']) || empty($ret['result'])) {
+                    throw new Exception('O objetivo não foi atualizado.');
+                }
+
+                $array_retorno = array(
+					'result'   => true,
+					'mensagem' => 'Objetivo id ' . $id . ' atualizado com sucesso.',
+				);
+
+				echo json_encode($array_retorno);
+
+            } catch (Exception $e) {
+                $array_retorno = array(
+					'result'   => false,
+					'mensagem' => $e->getMessage(),
+				);
+
+				echo json_encode($array_retorno);
+            }
+        }
+    }
+
+    private function validarPercentualUso($id_conta_invest, $percentual)
+    {
+        $utilizado = (new ObjetivosDAO())->consultarPercentualDisponivel($id_conta_invest, $percentual);
+
+        if ($utilizado !== false && ($percentual + $utilizado) > 100) {
+            return [
+                'status' => false,
+                'msg'    => 'Atenção! A Conta Invest informada já está ' . $utilizado . '% comprometida.'
+            ];
+        }
+
+        return ['status' => true];
     }
 }
