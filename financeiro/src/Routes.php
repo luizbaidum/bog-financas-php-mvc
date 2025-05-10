@@ -26,9 +26,6 @@ class Routes extends Bootstrap {
 		$routes[] = array('route' => '/orcamento_do_realizado', 'controller' => 'CadastrosController', 'action' => 'orcamentoDoRealizado');
         $routes[] = array('route' => '/investimentos_movimentar', 'controller' => 'CadastrosController', 'action' => 'movimentarInvestimentos');
 
-		$routes[] = array('route' => '/delete_movimentos', 'controller' => 'DelecoesController', 'action' => 'deletarMovimento');
-        $routes[] = array('route' => '/delete_itens_orcamento', 'controller' => 'DelecoesController', 'action' => 'deletarItensOrcamento');
-
 		$routes[] = array('route' => '/home', 'controller' => 'HomeController', 'action' => 'home');
 
 		$routes[] = array('route' => '/', 'controller' => 'LoginController', 'action' => 'login');
@@ -50,6 +47,8 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/editar_objetivo', 'controller' => 'InvestimentosController', 'action' => 'editarObjetivo');
         $routes[] = array('route' => '/salvar_preferencias', 'controller' => 'PreferenciasController', 'action' => 'editarPreferencia');
         $routes[] = array('route' => '/edit_movimento', 'controller' => 'MovimentosController', 'action' => 'editarMovimento');
+        $routes[] = array('route' => '/delete_movimentos', 'controller' => 'MovimentosController', 'action' => 'deletarMovimento');
+        $routes[] = array('route' => '/delete_itens_orcamento', 'controller' => 'OrcamentoController', 'action' => 'deletarItensOrcamento');
 
 		$this->setRoutes($routes);
 	}
