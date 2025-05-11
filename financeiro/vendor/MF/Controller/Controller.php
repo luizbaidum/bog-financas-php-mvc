@@ -8,6 +8,9 @@ class Controller {
 
 	public string $index_route = '';
 
+    protected string $msg_retorno_falha = 'O cadastro não teve sucesso. Verifique os dados e tente novamente. Se o erro persistir, entre em contato com o suporte.';
+    protected string $msg_retorno_sucesso = 'Cadastro realizado.';
+
 	public function __construct(
 		public $view =  new \stdClass() /*conteudo, base_interna, route, titulo, text*/, 
 		public string $empresa = 'Bog Finanças'

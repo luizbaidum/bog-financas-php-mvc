@@ -20,7 +20,6 @@
                             <th scope="col">Categoria</th>
                             <th scope="col" class="text-right pe-4">Valor</th>
                             <th scope="col" class="text-right pe-4">Proprietário</th>
-                            <th scope="col" class="text-center">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,22 +33,12 @@
                         ?>
                             <tr>
                                 <td class="text-center">
-                                    <input class="mt-2" type="checkbox" name="selectedData[]" value="<?= $value['idOrcamento']; ?>">
+                                    <input class="mt-1" type="checkbox" name="selectedData[]" value="<?= $value['idOrcamento']; ?>">
                                 </td>
                                 <td class="text-center"><?= $value['mesOrcado']; ?></td>
                                 <td><?= $value['categoria']; ?></td>
                                 <td class="text-right pe-4">R$ <?= NumbersHelper::formatUStoBR($value['totalOrcado']); ?></td>
                                 <td><?= $value['proprietario'] == '2' ? 'Uepa' : ($value['proprietario'] == '1' ? 'Luiz' : 'Não vinculado.'); ?></td>
-                                <td class="text-center">
-                                    <button id="<?= $value['idOrcamento']; ?>" 
-                                            data-chave="<?= $value['idOrcamento']; ?>" 
-                                            data-table="orcamento" 
-                                            data-campo="idOrcamento" 
-                                            title="Excluir" 
-                                            class="btn btn-sm btn-outline-danger">
-                                        &#10005;
-                                    </button>
-                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -58,18 +47,16 @@
                             <td colspan="3" class="ps-3">Total Luiz</td>
                             <td class="text-right pe-4">R$ <?= NumbersHelper::formatUStoBR($total_orcado_1); ?></td>
                             <td></td>
-                            <td></td>
+
                         </tr>
                         <tr>
                             <td colspan="3" class="ps-3">Total Uepa</td>
                             <td class="text-right pe-4">R$ <?= NumbersHelper::formatUStoBR($total_orcado_2); ?></td>
                             <td></td>
-                            <td></td>
                         </tr>
                         <tr>
                             <td colspan="3" class="ps-3">Total</td>
                             <td class="text-right pe-4">R$ <?= NumbersHelper::formatUStoBR($total_orcado); ?></td>
-                            <td></td>
                             <td></td>
                         </tr>
                     </tfoot>
