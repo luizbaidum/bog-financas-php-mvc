@@ -70,4 +70,35 @@ class PreferenciasController extends Controller {
 			}
         }
     }
+
+    public function cadastrarPreferencia()
+    {
+        if ($this->isSetPost()) {
+            $model_preferencias = new PreferenciasDAO();
+
+            try {
+                $item = $_POST;
+                $item['status'] = 'T';
+                $ret = $model_preferencias->cadastrar(new PreferenciasEntity, $item);
+
+                if ($ret['result']) {
+					$array_retorno = array(
+						'result'   => $ret['result'],
+						'mensagem' => $this->msg_retorno_sucesso
+					);
+
+					echo json_encode($array_retorno);
+				} else {
+					throw new Exception($this->msg_retorno_falha);
+				}
+            } catch (Exception $e) {
+				$array_retorno = array(
+					'result'   => false,
+					'mensagem' => $e->getMessage(),
+				);
+
+				echo json_encode($array_retorno);
+			}
+        }
+    }
 }

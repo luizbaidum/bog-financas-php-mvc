@@ -8,7 +8,6 @@ use src\Models\Movimentos\MovimentosDAO;
 use src\Models\Categorias\CategoriasEntity;
 use src\Models\Investimentos\InvestimentosEntity;
 use src\Models\Movimentos\MovimentosEntity;
-use src\Models\MovimentosMensais\MovimentosMensaisDAO;
 use src\Models\Objetivos\ObjetivosDAO;
 use src\Models\Objetivos\ObjetivosEntity;
 use src\Models\Rendimentos\RendimentosDAO;
@@ -213,7 +212,7 @@ class MovimentosController extends Controller {
             }
 
             if (!empty($id_conta_invest)) {
-                (new CadastrosController())->inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento, $_POST['idCategoria'], $_POST['valor'], $_POST['dataMovimento']);
+                (new InvestimentosController())->inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento, $_POST['idCategoria'], $_POST['valor'], $_POST['dataMovimento']);
             }
 
             if (!isset($ret['result']) || empty($ret['result'])) {
@@ -274,6 +273,58 @@ class MovimentosController extends Controller {
 
 				echo json_encode($array_retorno);
             }
+        }
+    }
+
+    public function cadastrarMovimentos()
+    {
+        if ($this->isSetPost()) {
+            try {
+                if ($_POST['idCategoria'] == '') {
+                    throw new Exception('Por favor, escolher categoria.'); 
+                }
+
+                $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
+                $_POST['idCategoria'] = $arr_cat[0];
+                $sinal = $arr_cat[1];
+
+                $id_conta_invest = $_POST['idContaInvest'];
+                $id_objetivo = $_POST['idObjetivo'] ?? '';
+                unset($_POST['idObjetivo']);
+
+                //Inserção de Movimento
+                $_POST['valor'] = $sinal . $_POST['valor'];
+                $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $_POST);
+
+                if (!$ret['result']) {
+                    throw new Exception($this->msg_retorno_falha);
+                }
+
+                $id_movimento = $ret['result'];
+
+                //Inserção de Rendimento (invest ou retirada)
+                if (!empty($id_conta_invest)) {
+                    (new InvestimentosController())->inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento, $_POST['idCategoria'], $_POST['valor'], $_POST['dataMovimento']);
+                }
+
+                if ($ret['result']) {
+					$array_retorno = array(
+						'result'   => $ret['result'],
+						'mensagem' => $this->msg_retorno_sucesso
+					);
+
+					echo json_encode($array_retorno);
+				} else {
+					throw new Exception($this->msg_retorno_falha);
+				}
+            } catch (Exception $e) {
+				$array_retorno = array(
+					'result'   => false,
+					'mensagem' => $e->getMessage(),
+				);
+
+				echo json_encode($array_retorno);
+			}
         }
     }
 }

@@ -1,0 +1,69 @@
+<?php use MF\Helpers\NumbersHelper; ?>
+
+<div class="modal-header p-2">
+    <h1 class="modal-title fs-5" id="modal-conteudo-titulo"><?= $this->view->titulo; ?></h1>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="card m-2">
+    <div class="card-body">
+        <div class="row">
+            <?php 
+                $total = 0;
+                $total_obj = 0;
+                $total_percent = 0;
+                foreach ($lista_objetivos as $value): 
+                    $total += $value['saldoAtual'];
+                    $total_obj += $value['vlrObj'];
+                    $total_percent += $value['percentObjContaInvest'];
+                    $id = $value['idObj'];
+            ?>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="POST" data-action="<?= $action; ?>" class="submit-form-crud-ajax" data-div="" data-modal="true">
+                                <input type="hidden" name="idContaInvest" value="<?= $value['idContaInvest']; ?>">
+                                <input type="hidden" name="percentObjContaInvestOLD" value="<?= $value['percentObjContaInvest']; ?>">
+
+                                <div class="form-group">
+                                    <label for="idObj">id</label>
+                                    <input type="text" class="form-control" name="idObj" id="idObj" value="<?= $value['idObj']; ?>" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="idNomeObj-<?= $id; ?>">Nome</label>
+                                    <input type="text" class="form-control" name="nomeObj" id="idNomeObj-<?= $id; ?>" value="<?= $value['nomeObj']; ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label for="idVlrObj-<?= $id; ?>">Valor obj.</label>
+                                    <input type="text" class="form-control numero-br" name="vlrObj" id="idVlrObj-<?= $id; ?>" value="<?= NumbersHelper::formatUStoBR($value['vlrObj']); ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label for="idPercentObjContaInvest-<?= $id; ?>">% destinado ao obj.</label>
+                                    <input type="text" class="form-control calcular-percentual-completo numero-br" name="percentObjContaInvest" id="idPercentObjContaInvest-<?= $id; ?>" value="<?= NumbersHelper::formatUStoBR($value['percentObjContaInvest']); ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label for="idSaldoAtual">Saldo atual</label>
+                                    <input type="text" class="form-control" id="idSaldoAtual" value="<?= NumbersHelper::formatUStoBR($value['saldoAtual']); ?>" disabled>
+                                </div>
+
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" name="finalizado" class="form-check-input" id="idFinalizado" value="T" <?= $value['finalizado'] == 'T' ? ' checked ' : ''; ?>>
+                                    <label class="form-check-label" for="idFinalizado">Finalizado?</label>
+                                </div>
+
+                                <div class="row px-3 mt-2">
+                                    <button type="submit" class="btn btn-success mt-1">Salvar mudanças</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div><small>Saldo atual: R$ <?= NumbersHelper::formatUStoBR($total); ?></small></div>
+        <div><small>Vlr. objetivo total: R$ <?= NumbersHelper::formatUStoBR($total_obj); ?></small></div>
+        <div><small>Percentual do investimento: R$ <?= NumbersHelper::formatUStoBR($total_percent); ?></small></div>
+    </div>
+</div>
