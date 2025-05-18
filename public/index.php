@@ -9,9 +9,9 @@ session_start();
 /**
  * Alterar diretório
  */
-include ("C:\\Users\\luizb\\Desktop\\github\\web-financas-mvc\\financeiro\\vendor\\MF\\Security\\ErrorTreatment.php");
+include ("C:\\Users\\Acer\\Desktop\\GITHUB\\web-financas-mvc\\financeiro\\vendor\\MF\\Security\\ErrorTreatment.php");
 
-require_once ("C:\Users\\luizb\\Desktop\\github\\web-financas-mvc\\financeiro\\vendor\\autoload.php");
+require_once ("C:\Users\\Acer\\Desktop\\GITHUB\\web-financas-mvc\\financeiro\\vendor\\autoload.php");
 
 set_error_handler('errorHandler'); 
 set_exception_handler('exceptionHandler'); 

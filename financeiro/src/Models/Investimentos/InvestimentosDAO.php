@@ -23,20 +23,27 @@ class InvestimentosDAO extends Model {
 
     public function consultarExtrato($filtro)
     {
+        $ano = $filtro['extratoAno'] ?? '';
         $mes = $filtro['extratoMes'] ?? '';
         $invest = $filtro['extratoInvest'] ?? '';
         $acao = $filtro['acaoInvest'] ?? '';
 
         if ($mes == '') {
-            $hoje = date('Y-m-d');
-            $data_create = date_create($hoje);
+            if ($ano == date('Y') || $ano == '') {
+                $hoje = date('Y-m-d');
+                $data_create = date_create($hoje);
+            } else {
+                $hoje = "$ano-12-31";
+                $data_create = date_create($hoje);
+            }
+
             date_sub($data_create, date_interval_create_from_date_string('90 days'));
     
             $where = "AND `rendimentos`.`dataRendimento` BETWEEN '" . date_format($data_create, 'Y-m-01') . "' AND '$hoje'";
         } elseif ($mes == 'Todos') {
-            $where = '';
+            $where = "AND DATE_FORMAT(`rendimentos`.`dataRendimento`, '%Y') = '$ano'";
         } else {
-            $where = "AND DATE_FORMAT(`rendimentos`.`dataRendimento`, '%b') = '$mes'";
+            $where = "AND DATE_FORMAT(`rendimentos`.`dataRendimento`, '%Y%b') = '$ano$mes'";
         }
 
         if ($invest != '') {
