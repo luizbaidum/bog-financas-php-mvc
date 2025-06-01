@@ -3,11 +3,10 @@
 namespace src;
 
 abstract class Diretorio {
-
     /**
      * Alterar diretório
      */
-    const diretorio = 'C:\Users\Acer\Desktop\GITHUB\web-financas-mvc\\';
+    const diretorio = 'C:\Users\luizb\Desktop\github\web-financas-mvc\\';
 
     public static function getDiretorio()
     {
