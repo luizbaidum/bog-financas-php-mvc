@@ -3,7 +3,6 @@
 namespace src;
 
 abstract class Diretorio {
-
     /**
      * Alterar diretório
      */
