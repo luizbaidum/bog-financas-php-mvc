@@ -117,9 +117,9 @@ class MovimentosController extends Controller {
 
         $this->view->data['data'] = $data;
         $this->view->data['total_resgate'] = $total_resgate ?? 0;
-        $this->view->data['total_receita'] = $total_receita;
-        $this->view->data['total_despesa'] = $total_despesa;
-        $this->view->data['total_aplicacao'] = $total_aplicacao;
+        $this->view->data['total_receita'] = $total_receita ?? 0;
+        $this->view->data['total_despesa'] = $total_despesa ?? 0;
+        $this->view->data['total_aplicacao'] = $total_aplicacao ?? 0;
 
         $this->renderInModal(titulo: 'Demonstrativo', conteudo: 'exibir_resultado');
     }

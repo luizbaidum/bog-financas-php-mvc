@@ -106,49 +106,50 @@
             </div>
         </div>
     </div>
-    
-    <!-- Card de Aplicações/Resgates -->
-    <div class="card mt-2">
-        <div class="card-header d-flex justify-content-between align-items-center py-1">
-            <span><i class="bi bi-graph-up"></i>Investimentos</span>
-            <div>
-                <a href="contas_investimentos_index" class="link-offset-2 link-underline link-underline-opacity-0">
-                    <button class="btn btn-sm btn-light">Novo</button>
-                </a>
+
+    <?php if (empty($_GET['pesquisa'])): ?>
+        <div class="card mt-2">
+            <div class="card-header d-flex justify-content-between align-items-center py-1">
+                <span><i class="bi bi-graph-up"></i>Investimentos</span>
+                <div>
+                    <a href="contas_investimentos_index" class="link-offset-2 link-underline link-underline-opacity-0">
+                        <button class="btn btn-sm btn-light">Novo</button>
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover table-sm mb-1 align-middle">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Tipo</th>
-                            <th>Conta</th>
-                            <th>Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php 
-                            foreach ($mov_investimentos as $mov): 
-                                $resultado_invests += $mov['valor'];
-                        ?>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm mb-1 align-middle">
+                        <thead>
                             <tr>
-                                <td><?= DateHelper::convertUStoBR($mov['dataMovimento']); ?></td>
-                                <td><?= explode(' ', $mov['categoria'])[0]; ?></td>
-                                <td><?= $mov['invest']; ?></td>
-                                <td>R$ <?= NumbersHelper::formatUStoBR($mov['valor']); ?></td>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Conta</th>
+                                <th>Valor</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                    <tfoot>
-                        <tr class="table-info">
-                            <td colspan="3" style="text-align: right">Resultado</td>
-                            <td>R$ <?= NumbersHelper::formatUStoBR($resultado_invests); ?></td>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php 
+                                foreach ($mov_investimentos as $mov): 
+                                    $resultado_invests += $mov['valor'];
+                            ?>
+                                <tr>
+                                    <td><?= DateHelper::convertUStoBR($mov['dataMovimento']); ?></td>
+                                    <td><?= explode(' ', $mov['categoria'])[0]; ?></td>
+                                    <td><?= $mov['invest']; ?></td>
+                                    <td>R$ <?= NumbersHelper::formatUStoBR($mov['valor']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-info">
+                                <td colspan="3" style="text-align: right">Resultado</td>
+                                <td>R$ <?= NumbersHelper::formatUStoBR($resultado_invests); ?></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    <?php endif; ?>
 </div>
