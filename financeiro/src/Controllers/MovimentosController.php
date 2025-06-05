@@ -327,4 +327,13 @@ class MovimentosController extends Controller {
 			}
         }
     }
+
+    public function exibirObs()
+    {
+        $id_movimento = $_GET['idMovimento'];
+        $model_movimentos = new MovimentosDAO();
+        $this->view->data['observacao'] = $model_movimentos->consultarObservacao($id_movimento);
+
+        $this->renderInModal(titulo: 'Observação movimento ' . $id_movimento, conteudo: 'observacao');
+    }
 }

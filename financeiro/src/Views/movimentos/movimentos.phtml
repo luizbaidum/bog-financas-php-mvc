@@ -1,4 +1,3 @@
-
 <?php
     echo '<script>var options_obj = ' . $options_list . '</script>';
     $id_obj_old = 0;
@@ -81,10 +80,18 @@
                     <?php endif; ?>
                 </select>
             </div>
-            <!-- <div class="col-6 mt-4">
-                <label for="tipo">No Cartão?</label>
-                <input type="checkbox" id="idCartao" name="cartao" value="1">
-            </div> -->
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-12">
+            <label for="idObservacao">Observações</label>
+            <textarea 
+                class="form-control" 
+                id="idObservacao" 
+                name="observacao" 
+                rows="1"
+            ><?= $movimento['observacao'] ?? ''; ?></textarea>
         </div>
     </div>
 </div>
