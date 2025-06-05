@@ -123,4 +123,20 @@ class MovimentosDAO extends Model {
 
         return $result;
     }
+
+    public function consultarObservacao($id) : string
+    {
+        $params = [$id];
+
+        $query = 'SELECT movimentos.observacao FROM movimentos WHERE movimentos.idMovimento = ?';
+
+        $new_sql = new SQLActions();
+        $result = $new_sql->executarQuery($query, $params);
+
+        if (count($result) > 0) {
+            return $result[0]['observacao'];
+        }
+
+        return '';
+    }
 }

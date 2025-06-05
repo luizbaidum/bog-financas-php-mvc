@@ -55,13 +55,25 @@
                                 </td>
                                 <td>
                                     <a href="<?= $url_edit . $mov['idMovimento']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
-                                        <button title="Editar" data-table="movimento" class="btn btn-sm btn-outline-primary">
+                                        <button title="Editar" class="btn btn-sm btn-outline-primary">
                                             <i>&#9998;</i>
                                         </button>
                                     </a>
                                 </td>
                                 <td><?= DateHelper::convertUStoBR($mov['dataMovimento']); ?></td>
-                                <td><?= $mov['nomeMovimento']; ?></td>
+                                <td>
+                                    <?= $mov['nomeMovimento']; ?>
+                                    <?php if ($mov['observacao'] != ''): ?>
+                                        <button title="Observação" 
+                                                class="btn btn-sm btn-outline-primary render-ajax" 
+                                                data-url="<?= $url_obs . $mov['idMovimento']; ?>" 
+                                                data-div="" 
+                                                data-modal="true"
+                                        >
+                                            <i>&#33;</i>
+                                        </button>
+                                    <?php endif; ?>
+                                </td>
                                 <td><?= $mov['categoria']; ?></td>
                                 <td>R$ <?= NumbersHelper::formatUStoBR($mov['valor']); ?></td>
                                 <td>

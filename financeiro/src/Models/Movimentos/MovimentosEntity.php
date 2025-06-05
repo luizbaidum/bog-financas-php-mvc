@@ -16,4 +16,5 @@ class MovimentosEntity extends Entity {
     public int $proprietario;
     public int $idFamilia;
     public int $idContaInvest;
+    public string $observacao;
 }

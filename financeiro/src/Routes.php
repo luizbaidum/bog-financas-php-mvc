@@ -39,6 +39,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/edit_movimento', 'controller' => 'MovimentosController', 'action' => 'editarMovimento');
         $routes[] = array('route' => '/delete_movimentos', 'controller' => 'MovimentosController', 'action' => 'deletarMovimento');
         $routes[] = array('route' => '/cad_movimentos', 'controller' => 'MovimentosController', 'action' => 'cadastrarMovimentos');
+        $routes[] = array('route' => '/exibir_observacao', 'controller' => 'MovimentosController', 'action' => 'exibirObs');
 
         // OrcamentoController
         $routes[] = array('route' => '/buscar_orcamento_do_realizado', 'controller' => 'OrcamentoController', 'action' => 'buscarOrcamentoDoRealizado');
