@@ -8,7 +8,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title><?= $title ?? $this->empresa; ?></title>
+        <title><?= $this->view->settings['title'] ?? $this->empresa; ?></title>
 
         <link rel="stylesheet" href="<?= Diretorio::getBaseUrl() ?>/css/bootstrap.css">
         <link rel="stylesheet" href="<?= Diretorio::getBaseUrl() ?>/css/custom.css">
@@ -32,10 +32,13 @@
                         <input type="password" name="senha" id="pwd" placeholder="Senha">
                     </div>
                     <button type="submit" class="btn mt-3">Entrar</button>
-                    <div class="text-center mt-1">
-                        <?php if (isset($mensagem)): ?>
+                    <?php if (isset($mensagem)): ?>
+                        <div class="text-center mt-1">
                             <p class="fw-semibold"><?= $mensagem ?></p>
-                        <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+                    <div class="text-center mt-2">
+                        <small><?= $this->sys_version; ?></small>
                     </div>
                 </form>
             </div>

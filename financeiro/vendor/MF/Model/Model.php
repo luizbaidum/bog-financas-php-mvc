@@ -106,12 +106,6 @@ class Model {
 		}
 	}
 
-	public function getTime()
-	{
-		date_default_timezone_set('America/Sao_Paulo');
-		return $this->current_time = date('d-m-y h:i:s');
-	}
-
 	public function getAllColumns($entity_name)
     {
 		$entity_ns = "src\Models\\" . $entity_name . "\\" . $entity_name . "Entity";
@@ -134,7 +128,7 @@ class Model {
     }
 
 	 //selectAll(action: "movimento", where_conditions: [['valor', '>', '15000']], group_conditions: ['tabela', 'coluna', 'tabela2', 'coluna2'], order_conditions: ['dataMovimento' => 'DESC']);
-	public function selectAll(object $entity, array $where_conditions = [], array $group_conditions = [], array $order_conditions = [], bool $apply_security = true)
+	public function selectAll(object $entity, array $where_conditions = [], array $group_conditions = [], array $order_conditions = [])
 	{
 		$where = 'WHERE 0 = 0';
 		$group = '';
@@ -172,7 +166,7 @@ class Model {
 		$query = "SELECT $table.* FROM $table $where $group $order";
 
 		$new_sql = new SQLActions();
-        return $new_sql->executarQuery($query, [], $apply_security);
+        return $new_sql->executarQuery($query, []);
 	}
 
 	public function getSaldoAtual(object $entity, $id_where)

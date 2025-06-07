@@ -27,9 +27,9 @@ class SQLActions {
         $this->con = NULL;
     }
 
-    private function setFamilyUser($family)
+    private function setFamilyUser($family_user)
     {
-        $this->family_user = $family;
+        $this->family_user = $family_user;
 
         return $this->family_user;
     }
@@ -44,7 +44,7 @@ class SQLActions {
             if (isset($_SESSION['id_familia']) && !empty($_SESSION['id_familia'])) {
                 $this->setFamilyUser($_SESSION['id_familia']);
             } else {
-                $query = 'SELECT idFamilia FROM usuarios WHERE idUsuario = ?';
+                $query = 'SELECT usuarios.idFamilia FROM usuarios INNER JOIN familias ON usuarios.idFamilia = familias.idFamilia WHERE usuarios.idUsuario = ?';
                 $ret = $this->executarQuery($query, [$_SESSION['user']], false);
 
                 if (empty($ret)) {
@@ -66,9 +66,7 @@ class SQLActions {
     private function setWhereSecurity($operacao, $query)
     {
         $id_family = $this->defineFamilyUser();
-        /**
-         * TODO: falta delete e update;
-         */
+
         if ($operacao == 'SELECT' || $operacao == 'SHOW') {
             try {
                 $arr_query = explode(' ', $query);
@@ -115,9 +113,6 @@ class SQLActions {
 
         $operacao = strtok($query, ' ');
 
-        /**
-         * TODO: falta delete e update;
-         */
         if ($apply_security) {
             $query = $this->setWhereSecurity($operacao, $query);
         }

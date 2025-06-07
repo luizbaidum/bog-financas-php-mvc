@@ -53,7 +53,7 @@ class LoginController extends Controller {
 
         $this->view->settings = [
             'action' => $this->index_route . '/',
-            'title'  => 'Teste - Entre'
+            'title'  => 'Login - Bog Finanças'
         ];
 
         $this->renderLoginPage();
@@ -75,5 +75,6 @@ class LoginController extends Controller {
         $this->view->settings['action'] = '/';
 
         $this->renderLoginPage();
+        exit;
     }
 }
