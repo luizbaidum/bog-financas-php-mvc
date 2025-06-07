@@ -93,7 +93,6 @@ class Controller {
 	protected function renderizarModalAlerta($titulo = '', $texto = '')
 	{
 		$this->view->titulo = $titulo;
-
 		$this->view->texto = $texto;
 
 		$this->contentModal();

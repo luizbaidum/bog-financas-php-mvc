@@ -13,7 +13,7 @@ class UsuariosDAO extends Model {
 
         $query_params = array();
 
-        $query = 'SELECT idUsuario, idFamilia, nivel FROM usuarios WHERE usuarios.login = ? AND usuarios.senha = ?';
+        $query = 'SELECT usuarios.idUsuario, usuarios.idFamilia, usuarios.nivel FROM usuarios INNER JOIN familias ON usuarios.idFamilia = familias.idFamilia WHERE usuarios.login = ? AND usuarios.senha = ?';
 
         $query_params[] = $obj->login;
         $query_params[] = $obj->senha;

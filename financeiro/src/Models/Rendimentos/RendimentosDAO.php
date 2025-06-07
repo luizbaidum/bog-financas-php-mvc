@@ -21,7 +21,7 @@ class RendimentosDAO extends Model {
                 LEFT JOIN 
                     rendimentos 
                     ON rendimentos.idContaInvest = contas.idContaInvest
-                    AND DATE_FORMAT(rendimentos.dataRendimento, '%Y%m') = meses.mesAno
+                    AND DATE_FORMAT(rendimentos.dataRendimento, '%Y%m') = meses.mesAno AND rendimentos.idFamilia = $_SESSION[id_familia]
                 GROUP BY 
                     contas.idContaInvest, meses.mesAno
                 ORDER BY 
