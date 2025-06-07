@@ -12,8 +12,9 @@ class Controller {
     protected string $msg_retorno_sucesso = 'Cadastro realizado.';
 
 	public function __construct(
-		public $view =  new \stdClass() /*conteudo, base_interna, route, titulo, text*/, 
-		public string $empresa = 'Bog Finanças'
+		public $view = new \stdClass(), /*conteudo, base_interna, route, titulo, text*/
+		public string $empresa = 'Bog Finanças',
+        public string $sys_version = 'v1.5.06.07'
 	) {
 		if (isset($_SERVER)) {
 			$this->index_route = 'http://' . $_SERVER['HTTP_HOST'];
