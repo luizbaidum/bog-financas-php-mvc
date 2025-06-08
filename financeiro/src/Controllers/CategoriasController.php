@@ -8,7 +8,7 @@ use src\Models\Categorias\CategoriasDAO;
 use src\Models\Categorias\CategoriasEntity;
 
 class CategoriasController extends Controller {
-public function categorias()
+    public function categorias()
     {
         $this->view->settings = [
             'action'   => $this->index_route . '/cad_categorias',
@@ -36,23 +36,23 @@ public function categorias()
                 $ret = (new CategoriasDAO())->cadastrar(new CategoriasEntity, $_POST);
 
                 if ($ret['result']) {
-					$array_retorno = array(
-						'result'   => $ret['result'],
-						'mensagem' => $this->msg_retorno_sucesso
-					);
+                    $array_retorno = array(
+                        'result'   => $ret['result'],
+                        'mensagem' => $this->msg_retorno_sucesso
+                    );
 
-					echo json_encode($array_retorno);
-				} else {
-					throw new Exception($this->msg_retorno_falha);
-				}
+                    echo json_encode($array_retorno);
+                } else {
+                    throw new Exception($this->msg_retorno_falha);
+                }
             } catch (Exception $e) {
-				$array_retorno = array(
-					'result'   => false,
-					'mensagem' => $e->getMessage(),
-				);
+                $array_retorno = array(
+                    'result'   => false,
+                    'mensagem' => $e->getMessage(),
+                );
 
-				echo json_encode($array_retorno);
-			}
+                echo json_encode($array_retorno);
+            }
         }
     }
 }
