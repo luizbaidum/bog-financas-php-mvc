@@ -8,6 +8,7 @@ use src\Models\Orcamento\OrcamentoDAO;
 use MF\View\SetButtons;
 use src\Models\Categorias\CategoriasEntity;
 use src\Models\Orcamento\OrcamentoEntity;
+use src\Models\Proprietarios\ProprietariosEntity;
 
 class OrcamentoController extends Controller {
     public function index() {
@@ -105,6 +106,7 @@ class OrcamentoController extends Controller {
 
         $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['categoria' => 'ASC']);
         $this->view->data['months'] = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Todos');
+        $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
 
         $this->renderPage(main_route: $this->index_route . '/orcamento', conteudo: 'orcamento', base_interna: 'base_cruds');
     }

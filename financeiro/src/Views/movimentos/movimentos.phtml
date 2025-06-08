@@ -1,6 +1,8 @@
 <?php
     echo '<script>var options_obj = ' . $options_list . '</script>';
     $id_obj_old = 0;
+
+    $mov_proprietario = null;
 ?>
 
 <?php if (isset($movimento['idMovimento'])) { ?>
@@ -10,6 +12,10 @@
     <?php
         if (!empty($movimento['idObj'])) 
             $id_obj_old = $movimento['idObj']; $obj_old_name = $movimento['nomeObj'];
+
+        if (!empty($movimento['proprietario'])) {
+            $mov_proprietario = $movimento['proprietario'];
+        }
     } ?>
 
 <div class="form-group">
@@ -54,8 +60,13 @@
             <div class="col-12 col-sm-3">
                 <label for="idProprietario">Proprietário</label>
                 <select class="form-select" id="idProprietario" name="proprietario">
-                    <option value="1" <?= (!empty($movimento) && $movimento['proprietario'] == '1' ? ' selected ' : ''); ?>>Luiz</option>
-                    <option value="2" <?= (!empty($movimento) && $movimento['proprietario'] == '2' ? ' selected ' : ''); ?>>Uepa</option>
+                    <?php 
+                        foreach ($lista_proprietarios as $prop):
+                            $x = $prop['idProprietario'];
+                            $n = $prop['proprietario'];
+                    ?>
+                        <option value="<?= $x ?>" <?= $mov_proprietario == $x ? ' selected ' : ''; ?>> <?= $n; ?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <div class="col-12 col-sm-3">

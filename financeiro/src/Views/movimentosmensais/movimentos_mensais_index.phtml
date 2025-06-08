@@ -18,6 +18,7 @@
                     $ano_original = date('Y', strtotime($value['dataRepete']));
                     $mes_atual = date('m');
                     $ano_atual = date('Y');
+                    $mov_prop = $value['proprietario'];
 
                     $date = date_format(date_create("$ano_atual-$mes_atual-$dia_original"), 'Y-m-d');
             ?>
@@ -33,9 +34,14 @@
                         <input type="hidden" name="nomeMovimento[<?= $value['idMovMensal']; ?>]" value="<?= $value['nomeMovimento']; ?>">
                     </td>
                     <td>
-                        <select class="form-select" id="idProprietario" name="proprietario[<?= $value['idMovMensal']; ?>]">
-                            <option value="1">Luiz</option>
-                            <option value="2" <?= $value['proprietario'] == '2' ? ' selected ' : ''; ?>>Uepa</option>
+                        <select class="form-select" id="idProprietario-<?= $value['idMovMensal']; ?>" name="proprietario[<?= $value['idMovMensal']; ?>]">
+                            <?php 
+                                foreach ($lista_proprietarios as $prop): 
+                                    $x = $prop['idProprietario'];
+                                    $n = $prop['proprietario'];
+                            ?>
+                                <option value="<?= $x; ?>" <?= $x == $mov_prop ? ' selected ' : ''; ?>> <?= $n; ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </td>
                     <td>
