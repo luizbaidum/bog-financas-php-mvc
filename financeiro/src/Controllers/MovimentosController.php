@@ -10,6 +10,7 @@ use src\Models\Investimentos\InvestimentosEntity;
 use src\Models\Movimentos\MovimentosEntity;
 use src\Models\Objetivos\ObjetivosDAO;
 use src\Models\Objetivos\ObjetivosEntity;
+use src\Models\Proprietarios\ProprietariosEntity;
 use src\Models\Rendimentos\RendimentosDAO;
 use src\Models\Rendimentos\RendimentosEntity;
 
@@ -41,6 +42,7 @@ class MovimentosController extends Controller {
         $this->view->data['movimento'] = $mov[0] ?? null;
         $this->view->data['url_buscar_mov_mensal'] = $this->index_route . '/buscaMovMensal?buscar=';
         $this->view->data['div_buscar_mov_mensal'] = 'id-content-return';
+        $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
 
         $this->renderPage(
             main_route: $this->index_route . '/movimentos', 

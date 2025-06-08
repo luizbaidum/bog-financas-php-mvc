@@ -113,8 +113,9 @@
                 <div class="col-12 col-sm-3">
                     <label for="idProprietario">Proprietário</label>
                     <select class="form-select" id="idProprietario" name="proprietario">
-                        <option value="1">Luiz</option>
-                        <option value="2">Uepa</option>
+                        <?php foreach ($lista_proprietarios as $prop): ?>
+                            <option value="<?= $prop['idProprietario']; ?>"> <?= $prop['proprietario']; ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="col-12 col-sm-3">

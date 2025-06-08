@@ -8,6 +8,8 @@ use src\Models\Categorias\CategoriasEntity;
 use src\Models\Movimentos\MovimentosEntity;
 use src\Models\MovimentosMensais\MovimentosMensaisDAO;
 use src\Models\MovimentosMensais\MovimentosMensaisEntity;
+use src\Models\Proprietarios\ProprietariosDAO;
+use src\Models\Proprietarios\ProprietariosEntity;
 
 class MovimentosMensaisController extends Controller {
     public function index() {
@@ -20,6 +22,7 @@ class MovimentosMensaisController extends Controller {
         ];
 
         $this->view->data['arr_mensais'] = $model_movimentos_mensais->getMensais();
+        $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
         
         $this->renderPage(
             main_route: $this->index_route . '/movimentos_mensais_index', 
@@ -50,6 +53,7 @@ class MovimentosMensaisController extends Controller {
         ];
 
         $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
+        $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
 
         $this->renderPage(main_route: $this->index_route . '/movimentos_mensais', conteudo: 'movimentos_mensais', base_interna: 'base_cruds');
     }

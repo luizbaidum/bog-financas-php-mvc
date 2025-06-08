@@ -12,6 +12,8 @@ use src\Models\Movimentos\MovimentosDAO;
 use src\Models\Movimentos\MovimentosEntity;
 use src\Models\Objetivos\ObjetivosDAO;
 use src\Models\Objetivos\ObjetivosEntity;
+use src\Models\Proprietarios\ProprietariosDAO;
+use src\Models\Proprietarios\ProprietariosEntity;
 use src\Models\Rendimentos\RendimentosEntity;
 
 class InvestimentosController extends Controller {
@@ -53,6 +55,7 @@ class InvestimentosController extends Controller {
         $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
         $this->view->data['url_buscar_mov_mensal'] = $this->index_route . '/buscaMovMensal?buscar=';
         $this->view->data['div_buscar_mov_mensal'] = 'id-content-return';
+        $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
 
         $this->renderSimple('definido_movimento_investimento');
     }
@@ -149,6 +152,8 @@ class InvestimentosController extends Controller {
             'redirect' => $this->index_route . '/investimentos',
             'title'    => 'Cadastro de Investimentos',
         ];
+
+        $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
 
         $this->renderPage(main_route: $this->index_route . '/investimentos', conteudo: 'investimentos', base_interna: 'base_cruds');
     }

@@ -7,7 +7,8 @@ use src\Models\Investimentos\InvestimentosEntity;
 use src\Models\Rendimentos\RendimentosEntity;
 
 class ExtratoInvestimentosController extends Controller {
-    public function index() {
+    public function index() 
+    {
         $model_investimentos = new InvestimentosDAO();
 
         $this->view->settings = [
