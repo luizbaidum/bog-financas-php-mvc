@@ -1,4 +1,6 @@
 <?php
+    use MF\Helpers\NumbersHelper;
+
     echo '<script>var options_obj = ' . $options_list . '</script>';
     $id_obj_old = 0;
 
@@ -54,8 +56,8 @@
     <div class="form-group">
         <div class="row">
             <div class="col-12 col-sm-3">
-                <label for="tipo">Valor (EUA e apenas inteiro)</label>
-                <input type="number" class="form-control" id="idValor" name="valor" required value="<?= $movimento['valor'] ?? ''; ?>">
+                <label for="tipo">Valor</label>
+                <input type="text" class="form-control numero-br" id="idValor" name="valor" required value="<?= NumbersHelper::formatUStoBR($movimento['valor'] ?? '0,00'); ?>">
             </div>
             <div class="col-12 col-sm-3">
                 <label for="idProprietario">Proprietário</label>

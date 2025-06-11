@@ -74,70 +74,7 @@
             </div>
         </div>
     </div>
-<?php else: ?>
-    <div class="form-group">
-        <div class="row">
-            <div class="col-12 col-sm-6">
-                <label for="idNomeMovimento">Nome Movimento</label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    id="idNomeMovimento" 
-                    name="nomeMovimento" required 
-                    value=""
-                    data-action="<?= $url_buscar_mov_mensal; ?>"
-                    data-div="<?= $div_buscar_mov_mensal; ?>"
-                >
-                <div id="<?= $div_buscar_mov_mensal; ?>"></div>
-            </div>
-            <div class="col-12 col-sm-3">
-                <label for="idDataMovimento">Data Movimento (m/d/a)</label>
-                <input type="date" class="form-control" id="idDataMovimento" name="dataMovimento" required value="">
-            </div>
-            <div class="col-12 col-sm-3">
-                <label for="idCategoria">Categoria</label>
-                <select class="form-select exibir-objetivos" id="idCategoria" name="idCategoria" required>
-                    <option value="">Selecione</option>
-                    <?php foreach ($categorias as $cat): ?>
-                        <option value="<?= $cat['idCategoria'] . ' - sinal: ' . $cat['sinal']; ?>"><?= $cat['categoria'] . ' - ' . $cat['tipo']; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-12 col-sm-3">
-                    <label for="tipo">Valor (EUA e apenas inteiro)</label>
-                    <input type="number" class="form-control" id="idValor" name="valor" required value="">
-                </div>
-                <div class="col-12 col-sm-3">
-                    <label for="idProprietario">Proprietário</label>
-                    <select class="form-select" id="idProprietario" name="proprietario">
-                        <?php foreach ($lista_proprietarios as $prop): ?>
-                            <option value="<?= $prop['idProprietario']; ?>"> <?= $prop['proprietario']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-12 col-sm-3">
-                    <label for="idContaInvest">Conta Invest (se houver)</label>
-                    <select class="form-select exibir-objetivos" id="idContaInvest" name="idContaInvest">
-                        <option value="">Selecione</option>
-                        <?php foreach ($invests as $value): ?>
-                            <option value="<?= $value['idContaInvest']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-12 col-sm-3 d-block" id="idSelectObjetivo">
-                    <label for="idObjetivo">Objetivo (se houver)</label>
-                    <select class="form-select" id="idObjetivo" name="idObjetivo">
-                        <option value="">Selecione</option>
-                    </select>
-                </div>
-                <!-- <div class="col-6 mt-4">
-                    <label for="tipo">No Cartão?</label>
-                    <input type="checkbox" id="idCartao" name="cartao" value="1">
-                </div> -->
-            </div>
-        </div>
-    </div>
-<?php endif; ?>
+<?php else: 
+    $ds = DIRECTORY_SEPARATOR;
+    require __DIR__ . "..{$ds}..{$ds}movimentos{$ds}movimentos.phtml";
+endif; ?>

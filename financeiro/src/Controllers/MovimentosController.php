@@ -3,6 +3,7 @@ namespace src\Controllers;
 
 use Exception;
 use MF\Controller\Controller;
+use MF\Helpers\NumbersHelper;
 use MF\Model\Model;
 use src\Models\Movimentos\MovimentosDAO;
 use src\Models\Categorias\CategoriasEntity;
@@ -24,7 +25,7 @@ class MovimentosController extends Controller {
 
         $title = 'Cadastro de Movimento';
         $url_action = '/cad_movimentos';
-        if ($id != '') {
+        if ($action == 'edit') {
             $url_action = '/edit_movimento';
             $title = 'Edição de Movimento';
             $mov = $model_movimentos->consultarMovimento($id);
@@ -137,6 +138,7 @@ class MovimentosController extends Controller {
             $id_conta_invest = $_POST['idContaInvest'];
             $id_objetivo = $_POST['idObjetivo'] ?? '';
             $id_objetivo_old = $_POST['idObjOld'] ?? '0';
+            $_POST['valor'] = NumbersHelper::formatBRtoUS($_POST['valor']);
 
             unset($_POST['idMovimento']);
             unset($_POST['idObjetivo']);
@@ -294,7 +296,7 @@ class MovimentosController extends Controller {
                 $id_objetivo = $_POST['idObjetivo'] ?? '';
                 unset($_POST['idObjetivo']);
 
-                //Inserção de Movimento
+                $_POST['valor'] = NumbersHelper::formatBRtoUS($_POST['valor']);
                 $_POST['valor'] = $sinal . $_POST['valor'];
                 $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $_POST);
 

@@ -12,19 +12,36 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container px-4 px-lg-5">
         <a class="navbar-brand" href="<?= $home_url; ?>">Início</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 <?php foreach ($grupos as $v_g): ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?= $v_g; ?></a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <?php foreach ($titles[$v_g] as $k_t => $v_t): ?>
-                                <li>
-                                    <a class="dropdown-item" href="<?= $routes[$v_g][$k_t]; ?>"><?= $v_t; ?></a>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
+                        <div class="dropdown-menu p-0" aria-labelledby="navbarDropdown" style="min-width: 400px; max-width: 600px;">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <?php 
+                                        $items = $titles[$v_g];
+                                        $chunked_items = array_chunk($items, ceil(count($items) / 2), true);
+                                        
+                                        foreach ($chunked_items as $column): 
+                                    ?>
+                                        <div class="col-sm-6 p-0">
+                                            <div class="d-flex flex-column">
+                                                <?php foreach ($column as $k_t => $v_t): ?>
+                                                    <a class="dropdown-item py-2" href="<?= $routes[$v_g][$k_t]; ?>">
+                                                        <div class="text-wrap"><?= $v_t; ?></div>
+                                                    </a>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
                     </li>
                 <?php endforeach; ?>
                 <li class="nav-item">

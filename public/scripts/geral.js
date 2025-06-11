@@ -53,22 +53,20 @@ $(document).on('change', '.exibir-objetivos', function () {
         let div = document.getElementById('idSelectObjetivo');
 
         removeOptions(select);
+        div.classList.remove('d-block');
+        div.classList.add('d-none');
 
-        if (!document.getElementById('idTipoMovimento')) {
-            div.classList.remove('d-block');
-            div.classList.add('d-none');
-        }
+        if (categoria != '' && conta != '' && !document.getElementById('idTipoMovimento')) {
+            if (categoria == '10 - sinal: +' || categoria == '12 - sinal: -') {
+                div.classList.remove('d-none');
+                div.classList.add('d-block');
 
-        if (!document.getElementById('idTipoMovimento')) {
-            if (categoria != '' && conta != '') {
-                if (categoria == '10 - sinal: +' || categoria == '12 - sinal: -') {
-                    div.classList.remove('d-none');
-                    div.classList.add('d-block');
-    
-                    insertOptions(select, options_obj, conta);
-                }
+                insertOptions(select, options_obj, conta);
             }
-        } else {
+        } else if (document.getElementById('idTipoMovimento')) {
+            div.classList.remove('d-none');
+            div.classList.add('d-block');
+
             insertOptions(select, options_obj, conta);
         }
     } catch (error) {
