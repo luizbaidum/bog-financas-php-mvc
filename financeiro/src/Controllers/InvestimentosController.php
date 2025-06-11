@@ -240,13 +240,13 @@ class InvestimentosController extends Controller {
             try {
                 $ret = array();
 
-                if ($_POST['tipoMovimento'] == 'pagamento') {
+                if (isset($_POST['tipoMovimento']) && $_POST['tipoMovimento'] == 'pagamento') {
                     //Resgate
                     $item = array(
                         'nomeMovimento' => 'Resgate para pagar ' . $_POST['nomeMovimento'],
                         'dataMovimento' => $_POST['dataMovimento'],
                         'idCategoria'   => 10, //Resgate
-                        'valor'         => $_POST['valor'],
+                        'valor'         => NumbersHelper::formatBRtoUS($_POST['valor']),
                         'proprietario'  => $_POST['proprietario'],
                         'idContaInvest' => $_POST['idContaInvest']
                     );
@@ -254,13 +254,13 @@ class InvestimentosController extends Controller {
                     $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $item);
                     $id_movimento = $ret['result'];
 
-                    $this->inserirMovimentacaodeAplicacao($_POST['idContaInvest'], $_POST['idObjetivo'], $id_movimento, '10', $_POST['valor'], $_POST['dataMovimento']);
+                    $this->inserirMovimentacaodeAplicacao($_POST['idContaInvest'], $_POST['idObjetivo'], $id_movimento, '10', NumbersHelper::formatBRtoUS($_POST['valor']), $_POST['dataMovimento']);
 
                     //Movimento
                     $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
                     $_POST['idCategoria'] = $arr_cat[0];
                     $sinal = $arr_cat[1];
-                    $_POST['valor'] = $sinal . $_POST['valor'];
+                    $_POST['valor'] = $sinal . NumbersHelper::formatBRtoUS($_POST['valor']);
 
                     unset($_POST['idObjetivo']);
                     unset($_POST['tipoMovimento']);
