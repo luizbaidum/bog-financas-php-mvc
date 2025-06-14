@@ -65,4 +65,18 @@ class InvestimentosDAO extends Model {
 
         return [];
     }
+
+    public function getAllContas()
+    {
+        $query = "SELECT contas_investimentos.*, proprietarios.proprietario FROM contas_investimentos LEFT JOIN proprietarios ON proprietarios.idProprietario = contas_investimentos.idProprietario WHERE contas_investimentos.idContaInvest > 0";
+
+        $new_sql = new SQLActions();
+        $result = $new_sql->executarQuery($query);
+
+        if (count($result) > 0) {
+            return $result;
+        }
+
+        return [];
+    }
 }

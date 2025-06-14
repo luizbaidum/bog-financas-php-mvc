@@ -24,7 +24,7 @@ class InvestimentosController extends Controller {
     public function index() {
         $model_investimentos = new InvestimentosDAO();
 
-        $contas = $model_investimentos->selectAll(new InvestimentosEntity, [], [], []);
+        $contas = $model_investimentos->getAllContas();
         $invests = $model_investimentos->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC']);
         $objs = $model_investimentos->selectAll(new ObjetivosEntity, [], [], ['saldoAtual' => 'DESC']);
 
@@ -243,12 +243,12 @@ class InvestimentosController extends Controller {
                 if (isset($_POST['tipoMovimento']) && $_POST['tipoMovimento'] == 'pagamento') {
                     //Resgate
                     $item = array(
-                        'nomeMovimento' => 'Resgate para pagar ' . $_POST['nomeMovimento'],
-                        'dataMovimento' => $_POST['dataMovimento'],
-                        'idCategoria'   => 10, //Resgate
-                        'valor'         => NumbersHelper::formatBRtoUS($_POST['valor']),
-                        'proprietario'  => $_POST['proprietario'],
-                        'idContaInvest' => $_POST['idContaInvest']
+                        'nomeMovimento'   => 'Resgate para pagar ' . $_POST['nomeMovimento'],
+                        'dataMovimento'   => $_POST['dataMovimento'],
+                        'idCategoria'     => 10, //Resgate
+                        'valor'           => NumbersHelper::formatBRtoUS($_POST['valor']),
+                        'idProprietario'  => $_POST['idProprietario'],
+                        'idContaInvest'   => $_POST['idContaInvest']
                     );
     
                     $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $item);
@@ -312,15 +312,15 @@ class InvestimentosController extends Controller {
      private function cadastrarTransferenciaEntreInvestimentos()
     {
         //Resgate
-        list($id_invest, $proprietario) = explode('@', $_POST['idContaInvestOrigem']);
+        list($id_invest, $idProprietario) = explode('@', $_POST['idContaInvestOrigem']);
                         
         $item = array(
-                    'nomeMovimento' => 'Resgate - movimento entre investimentos',
-                    'dataMovimento' => date("Y-m-d"),
-                    'idCategoria'   => 10, //Resgate
-                    'valor'         => $_POST['valor'],
-                    'proprietario'  => $proprietario,
-                    'idContaInvest' => $id_invest
+                    'nomeMovimento'   => 'Resgate - movimento entre investimentos',
+                    'dataMovimento'   => date("Y-m-d"),
+                    'idCategoria'     => 10, //Resgate
+                    'valor'           => $_POST['valor'],
+                    'idProprietario'  => $idProprietario,
+                    'idContaInvest'   => $id_invest
                 );
 
         $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $item);
@@ -333,12 +333,12 @@ class InvestimentosController extends Controller {
         list($id_invest, $proprietario) = explode('@', $_POST['idContaInvestDestino']);
         
         $item = array(
-            'nomeMovimento' => 'Aplicação - movimento entre investimentos',
-            'dataMovimento' => date("Y-m-d"),
-            'idCategoria'   => 12, //Aplicação
-            'valor'         => ($_POST['valor'] * -1),
-            'proprietario'  => $proprietario,
-            'idContaInvest' => $id_invest
+            'nomeMovimento'   => 'Aplicação - movimento entre investimentos',
+            'dataMovimento'   => date("Y-m-d"),
+            'idCategoria'     => 12, //Aplicação
+            'valor'           => ($_POST['valor'] * -1),
+            'idProprietario'  => $idProprietario,
+            'idContaInvest'   => $id_invest
         );
 
         $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $item);

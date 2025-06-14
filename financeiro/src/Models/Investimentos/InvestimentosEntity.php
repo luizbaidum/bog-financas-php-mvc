@@ -16,6 +16,6 @@ class InvestimentosEntity extends Entity {
     public string $dataInicio;
     public float $saldoAnterior;
     public string $dataAnterior;
-    public int $proprietario;
+    public int $idProprietario;
     public int $idFamilia;
 }

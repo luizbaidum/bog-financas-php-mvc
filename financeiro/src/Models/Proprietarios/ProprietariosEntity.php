@@ -7,7 +7,7 @@ use MF\Entity\Entity;
 class ProprietariosEntity extends Entity {
     const main_table = 'proprietarios';
 
-    public int $idPro;
+    public int $idProprietario;
     public string $proprietario;
     public int $idFamilia; 
 }

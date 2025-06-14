@@ -97,12 +97,12 @@ class MovimentosMensaisController extends Controller {
                     $arr_cat = explode(' - sinal: ', $_POST['idCategoria'][$id]);
                     $sinal = $arr_cat[1];
 
-                    $item['idMovMensal'] = $id;
-                    $item['nomeMovimento'] = $_POST['nomeMovimento'][$id];
-                    $item['dataMovimento'] = $_POST['dataMovimento'][$id];
-                    $item['proprietario'] = $_POST['proprietario'][$id];
-                    $item['idCategoria'] = $arr_cat[0];
-                    $item['valor'] = $sinal . $_POST['valor'][$id];
+                    $item['idMovMensal']    = $id;
+                    $item['nomeMovimento']  = $_POST['nomeMovimento'][$id];
+                    $item['dataMovimento']  = $_POST['dataMovimento'][$id];
+                    $item['idProprietario'] = $_POST['idProprietario'][$id];
+                    $item['idCategoria']    = $arr_cat[0];
+                    $item['valor']          = $sinal . $_POST['valor'][$id];
 
                     $ret = $model_movimentos_mensais->cadastrar(new MovimentosEntity, $item);
 

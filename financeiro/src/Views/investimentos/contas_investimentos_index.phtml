@@ -5,8 +5,7 @@
 
     $total = 0;
     $resultado_ext = 0;
-    $total_uepa = 0;
-    $total_lb = 0;
+    $total_proprietarios = [];
 ?>
 
 <div class="container">
@@ -76,11 +75,12 @@
                         <?php 
                             foreach ($contas as $value): 
                                 $total += $value['saldoAtual'];
+                                $lista_prop[$value['idProprietario']] = $value['proprietario'];
 
-                                if ($value['proprietario'] == '1') {
-                                    $total_lb += $value['saldoAtual'];
-                                } elseif ($value['proprietario'] == '2') {
-                                    $total_uepa += $value['saldoAtual'];
+                                if (isset($total_proprietarios[$value['idProprietario']])) {
+                                    $total_proprietarios[$value['idProprietario']] += $value['saldoAtual'];
+                                } else {
+                                    $total_proprietarios[$value['idProprietario']] = $value['saldoAtual'];
                                 }
                         ?>
                             <tr>
@@ -104,7 +104,11 @@
                             <td colspan="3" style="text-align: right">Total</td>
                             <td>R$ <?= NumbersHelper::formatUStoBR($total); ?>
                             <td>
-                                <small>Luiz: <?= NumbersHelper::formatUStoBR($total_lb); ?> <br> Uepa: <?= NumbersHelper::formatUStoBR($total_uepa); ?></small>
+                                <?php foreach ($total_proprietarios as $id => $valor): ?>
+                                    <small>
+                                        <?= $lista_prop[$id]; ?>: <?= NumbersHelper::formatUStoBR($valor); ?>
+                                    </small> <br>
+                                <?php endforeach; ?>
                             </td>
                             <td></td>
                         </tr>
