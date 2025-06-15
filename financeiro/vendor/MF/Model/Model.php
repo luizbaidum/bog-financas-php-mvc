@@ -191,7 +191,7 @@ class Model {
         $new_sql = new SQLActions();
 		$result = $new_sql->executarQuery($query, $arr_values);
 
-        return $result[0]['saldoAtual'] ?? [];
+        return $result[0]['saldoAtual'] ?? 0;
     }
 
     public function delete(object $entity, string $field, string | int $id)
