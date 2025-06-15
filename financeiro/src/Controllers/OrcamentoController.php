@@ -166,7 +166,7 @@ class OrcamentoController extends Controller {
 
                 foreach ($_POST['idCategoria'] as $k => $categoria) {
                     $item['idCategoria'] = $categoria;
-                    $item['proprietario'] = $_POST['proprietario'][$k];
+                    $item['idProprietario'] = $_POST['idProprietario'][$k];
                     $sinal = $_POST['sinal'][$k];
     
                     $item['valor'] = $_POST['valor'][$k];

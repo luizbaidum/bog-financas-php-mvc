@@ -1,8 +1,8 @@
 <?php
     use MF\Helpers\NumbersHelper;
     $total_orcado = 0;
-    $total_orcado_2 = 0;
-    $total_orcado_1 = 0;
+    $total_proprietarios = [];
+    $lista_prop = [];
 ?>
 
 <div class="container">
@@ -25,10 +25,12 @@
                     <tbody>
                         <?php foreach ($orcamentos as $value): 
                                 $total_orcado += $value['totalOrcado']; 
-                                if ($value['proprietario'] == '2') {
-                                    $total_orcado_2 += $value['totalOrcado']; 
-                                } elseif ($value['proprietario'] == '1') {
-                                    $total_orcado_1 += $value['totalOrcado']; 
+                                $lista_prop[$value['idProprietario']] = $value['proprietario'];
+
+                                 if (isset($total_proprietarios[$value['idProprietario']])) {
+                                    $total_proprietarios[$value['idProprietario']] += $value['totalOrcado'];
+                                } else {
+                                    $total_proprietarios[$value['idProprietario']] = $value['totalOrcado'];
                                 }
                         ?>
                             <tr>
@@ -38,22 +40,20 @@
                                 <td class="text-center"><?= $value['mesOrcado']; ?></td>
                                 <td><?= $value['categoria']; ?></td>
                                 <td class="text-right pe-4">R$ <?= NumbersHelper::formatUStoBR($value['totalOrcado']); ?></td>
-                                <td><?= $value['proprietario'] == '2' ? 'Uepa' : ($value['proprietario'] == '1' ? 'Luiz' : 'Não vinculado.'); ?></td>
+                                <td><?= $lista_prop[$value['idProprietario']]; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                     <tfoot class="fw-bold bg-light">
-                        <tr>
-                            <td colspan="3" class="ps-3">Total Luiz</td>
-                            <td class="text-right pe-4">R$ <?= NumbersHelper::formatUStoBR($total_orcado_1); ?></td>
-                            <td></td>
-
-                        </tr>
-                        <tr>
-                            <td colspan="3" class="ps-3">Total Uepa</td>
-                            <td class="text-right pe-4">R$ <?= NumbersHelper::formatUStoBR($total_orcado_2); ?></td>
-                            <td></td>
-                        </tr>
+                         <?php foreach ($total_proprietarios as $id => $valor): ?>
+                            <tr>
+                                <td colspan="3" class="ps-3">Total <?= $lista_prop[$id]; ?></td>
+                                <td class="text-right pe-4">
+                                    <?= NumbersHelper::formatUStoBR($valor); ?>
+                                </td>
+                                <td></td>
+                            </tr>
+                        <?php endforeach; ?>
                         <tr>
                             <td colspan="3" class="ps-3">Total</td>
                             <td class="text-right pe-4">R$ <?= NumbersHelper::formatUStoBR($total_orcado); ?></td>

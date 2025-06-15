@@ -13,7 +13,7 @@ class MovimentosEntity extends Entity {
     public int $idCategoria;
     public float $valor;
     public int $cartao;
-    public int $proprietario;
+    public int $idProprietario;
     public int $idFamilia;
     public int $idContaInvest;
     public string $observacao;

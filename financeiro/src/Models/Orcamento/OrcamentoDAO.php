@@ -53,11 +53,13 @@ class OrcamentoDAO extends Model {
                     $media,
                     categorias.categoria,
                     categorias.sinal,
-                    movimentos.proprietario
+                    movimentos.idProprietario,
+                    proprietarios.proprietario
                     FROM movimentos
                     INNER JOIN categorias ON movimentos.idCategoria = categorias.idCategoria
+                    LEFT JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario
                     WHERE $where
-                    GROUP BY movimentos.proprietario, movimentos.idCategoria";
+                    GROUP BY movimentos.idProprietario, movimentos.idCategoria";
 
         $new_sql = new SQLActions();
         $result = $new_sql->executarQuery($query);
@@ -77,16 +79,18 @@ class OrcamentoDAO extends Model {
         }
 
         $query = "SELECT SUM(orcamentos.valor) AS totalOrcado, 
-                            orcamentos.proprietario,
+                            orcamentos.idProprietario,
                             categorias.idCategoria, 
                             categorias.categoria, 
                             categorias.tipo, 
                             MONTH(orcamentos.dataOrcamento) AS mesOrcado,
-                            GROUP_CONCAT(orcamentos.idOrcamento SEPARATOR ',') AS idOrcamento
+                            GROUP_CONCAT(orcamentos.idOrcamento SEPARATOR ',') AS idOrcamento,
+                            proprietarios.proprietario
                     FROM orcamentos 
                     INNER JOIN categorias ON categorias.idCategoria = orcamentos.idCategoria
+                    LEFT JOIN proprietarios ON proprietarios.idProprietario = orcamentos.idProprietario
                     $where
-                    GROUP BY orcamentos.proprietario, orcamentos.idCategoria
+                    GROUP BY orcamentos.idProprietario, orcamentos.idCategoria
                     ORDER BY totalOrcado DESC";
 
         $new_sql = new SQLActions();

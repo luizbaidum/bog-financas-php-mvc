@@ -12,6 +12,6 @@ class MovimentosMensaisEntity extends Entity {
     public float $valorDespesa;
     public int $idCategoria;
     public string $nomeMovimento;
-    public int $proprietario;
+    public int $idProprietario;
     public int $idFamilia;
 }

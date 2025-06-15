@@ -21,7 +21,7 @@
                                     <select class="form-select exibir-objetivos-origem" id="idContaInvestOrigem" name="idContaInvestOrigem">
                                         <option value="">Selecione</option>
                                         <?php foreach ($invests as $value): ?>
-                                            <option value="<?= $value['idContaInvest'] . '@' . $value['proprietario']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
+                                            <option value="<?= $value['idContaInvest'] . '@' . $value['idProprietario']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -57,7 +57,7 @@
                                     <select class="form-select exibir-objetivos-destino" id="idContaInvestDestino" name="idContaInvestDestino">
                                         <option value="">Selecione</option>
                                         <?php foreach ($invests as $value): ?>
-                                            <option value="<?= $value['idContaInvest'] . '@' . $value['proprietario']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
+                                            <option value="<?= $value['idContaInvest'] . '@' . $value['idProprietario']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>

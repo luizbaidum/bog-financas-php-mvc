@@ -4,9 +4,9 @@
 
     $resultado = 0;
     $acumulado = 0;
-    $result_lb = 0;
-    $result_uepa = 0;
     $resultado_invests = 0;
+    $result_por_prop = [];
+    $prop = [];
 ?>
 
 <div class="container">    
@@ -35,19 +35,13 @@
                         <?php 
                             foreach ($movimentos as $mov): 
                                 $resultado += $mov['valor'];
+                                $prop[$mov['idProprietario']] = $mov['proprietario'];
 
-                                switch ($mov['proprietario']) {
-                                    case '1':
-                                        $prop = 'Luiz';
-                                        $result_lb += $mov['valor'];
-                                        break;
-                                    case '2':
-                                        $prop = 'Uepa';
-                                        $result_uepa += $mov['valor'];
-                                        break;
-                                    default:
-                                        $prop = '';
-                            }
+                                if (isset($result_por_prop[$mov['idProprietario']])) {
+                                    $result_por_prop[$mov['idProprietario']] += $mov['valor'];
+                                } else {
+                                    $result_por_prop[$mov['idProprietario']] = $mov['valor'];
+                                }                                
                         ?>
                             <tr>
                                 <td>
@@ -77,7 +71,7 @@
                                 <td><?= $mov['categoria']; ?></td>
                                 <td>R$ <?= NumbersHelper::formatUStoBR($mov['valor']); ?></td>
                                 <td>
-                                    <?= $prop; ?>
+                                    <?= $prop[$mov['idProprietario']]; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -88,8 +82,10 @@
                             <td colspan="4" style="text-align: right">Resultado (Rec. - Des. - Apli.)</td>
                             <td>R$ <?= NumbersHelper::formatUStoBR($resultado); ?></td>
                             <td>
-                                <small>Luiz: <?= NumbersHelper::formatUStoBR($result_lb); ?> <br> Uepa: <?= NumbersHelper::formatUStoBR($result_uepa); ?></small>
-                            </td>
+                                <?php foreach ($result_por_prop as $id_prop => $valor): ?>
+                                    <small><?= $prop[$id_prop]; ?>: <?= NumbersHelper::formatUStoBR($valor); ?></small> <br>
+                                <?php endforeach; ?>
+                            </td>                            
                         </tr>
                         <?php 
                             if (!empty($saldos_anteriores)): 
