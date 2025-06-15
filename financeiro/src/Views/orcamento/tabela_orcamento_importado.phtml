@@ -20,9 +20,11 @@
                         <?= $value['idCategoria'] . ' - '  . $value['categoria']; ?>
                         <input type="hidden" name="idCategoria[]" value="<?= $value['idCategoria']; ?>">
                         <input type="hidden" name="sinal[]" value="<?= $value['sinal']; ?>">
-                        <input type="hidden" name="proprietario[]" value="<?= $value['proprietario']; ?>">
+                        <input type="hidden" name="idProprietario[]" value="<?= $value['idProprietario']; ?>">
                     </td>
-                    <td><?= $value['proprietario'] == '2' ? 'Uepa' : ($value['proprietario'] == '1' ? 'Luiz' : 'Não vinculado.'); ?></td>
+                    <td>
+                        <?= $value['proprietario']; ?>
+                    </td>
                     <td>
                         <div class="input-group input-group-sm">
                             <span class="input-group-text">R$</span>

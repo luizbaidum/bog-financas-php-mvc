@@ -53,9 +53,11 @@ class OrcamentoDAO extends Model {
                     $media,
                     categorias.categoria,
                     categorias.sinal,
-                    movimentos.idProprietario
+                    movimentos.idProprietario,
+                    proprietarios.proprietario
                     FROM movimentos
                     INNER JOIN categorias ON movimentos.idCategoria = categorias.idCategoria
+                    LEFT JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario
                     WHERE $where
                     GROUP BY movimentos.idProprietario, movimentos.idCategoria";
 

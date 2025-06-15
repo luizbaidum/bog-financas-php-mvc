@@ -6,6 +6,7 @@
     let arr_names = Array();
     let obj = Object();
     let final = Array();
+    let proprietarios_nome = Object();
 
     let obj_2 = Object();
     let final_2 = Array();
@@ -15,7 +16,9 @@
     for (const item of ret) {
         let index = mes_ano.indexOf(item.mesAno);
         let index2 = arr_valores.indexOf(item.idContaInvest);
-        let index3 = arr_proprietario.indexOf(item.proprietario);
+        let index3 = arr_proprietario.indexOf(item.idProprietario);
+        
+        proprietarios_nome[item.idProprietario] = item.proprietarioNome
 
         if (index == -1) {
             mes_ano.push(item.mesAno);
@@ -27,13 +30,13 @@
         }
 
         if (index3 == -1) {
-            arr_valores_2[`${item.proprietario}-${item.mesAno}`] = 0;
+            arr_valores_2[`${item.idProprietario}-${item.mesAno}`] = 0;
         }
     }
 
     for (const item of ret) {
         arr_valores[item.idContaInvest].push(item.valor);
-        arr_valores_2[`${item.proprietario}-${item.mesAno}`] += item.valor;
+        arr_valores_2[`${item.idProprietario}-${item.mesAno}`] += item.valor;
     }
 
     arr_valores.forEach(function (v, id) {
@@ -71,7 +74,7 @@
 
     for (const [key, value] of Object.entries(gerarDataPorProprietario)) {
         obj_2 = {
-            label: key + (key == 1 ? ' - Luiz' : ' - Uepa'),
+            label: key + ' - ' + proprietarios_nome[key],
             data: value
         };
 
