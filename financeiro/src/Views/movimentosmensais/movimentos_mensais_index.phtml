@@ -18,7 +18,7 @@
                     $ano_original = date('Y', strtotime($value['dataRepete']));
                     $mes_atual = date('m');
                     $ano_atual = date('Y');
-                    $mov_prop = $value['proprietario'];
+                    $mov_prop = $value['idProprietario'];
 
                     $date = date_format(date_create("$ano_atual-$mes_atual-$dia_original"), 'Y-m-d');
             ?>
