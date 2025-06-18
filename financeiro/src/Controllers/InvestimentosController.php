@@ -241,37 +241,51 @@ class InvestimentosController extends Controller {
                 $ret = array();
 
                 if (isset($_POST['tipoMovimento']) && $_POST['tipoMovimento'] == 'pagamento') {
-                    //Resgate
-                    $item = array(
-                        'nomeMovimento'   => 'Resgate para pagar ' . $_POST['nomeMovimento'],
-                        'dataMovimento'   => $_POST['dataMovimento'],
-                        'idCategoria'     => 10, //Resgate
-                        'valor'           => NumbersHelper::formatBRtoUS($_POST['valor']),
-                        'idProprietario'  => $_POST['idProprietario'],
-                        'idContaInvest'   => $_POST['idContaInvest']
-                    );
-    
-                    $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $item);
-                    $id_movimento = $ret['result'];
+                    $obj_movimento = new MovimentosEntity();
 
-                    $this->inserirMovimentacaodeAplicacao($_POST['idContaInvest'], $_POST['idObjetivo'], $id_movimento, '10', NumbersHelper::formatBRtoUS($_POST['valor']), $_POST['dataMovimento']);
-
-                    //Movimento
                     $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
-                    $_POST['idCategoria'] = $arr_cat[0];
                     $sinal = $arr_cat[1];
-                    $_POST['valor'] = $sinal . NumbersHelper::formatBRtoUS($_POST['valor']);
 
-                    unset($_POST['idObjetivo']);
-                    unset($_POST['tipoMovimento']);
-                    unset($_POST['idContaInvest']);
+                    $obj_movimento->nomeMovimento = 'Resgate para pagar ' . $_POST['nomeMovimento'];
+                    $obj_movimento->dataMovimento = $_POST['dataMovimento'];
+                    $obj_movimento->idCategoria = 10; //Resgate
+                    $obj_movimento->valor = NumbersHelper::formatBRtoUS($_POST['valor']);
+                    $obj_movimento->idProprietario = $_POST['idProprietario'];
+                    $obj_movimento->idContaInvest = !empty($_POST['idContaInvest']) ? $_POST['idContaInvest'] : 0;
+                    $obj_movimento->observacao = $_POST['observacao'];
+
+                    $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $obj_movimento);
+                    $obj_movimento->idMovimento = $ret['result'];
+
+                    $id_objetivo = $_POST['idObjetivo'] ?? '';
+
+                    $this->inserirMovimentacaodeAplicacao(
+                        $obj_movimento->idContaInvest, 
+                        $id_objetivo, 
+                        $obj_movimento->idMovimento, 
+                        $obj_movimento->idCategoria, 
+                        $obj_movimento->valor, 
+                        $obj_movimento->dataMovimento
+                    );
+
+                    $obj_movimento->nomeMovimento = $_POST['nomeMovimento'];
+                    $obj_movimento->idCategoria = $arr_cat[0]; //Definido pelo usuário
+                    $obj_movimento->valor = $sinal . NumbersHelper::formatBRtoUS($_POST['valor']);
+                    unset($obj_movimento->idContaInvest);
+                    unset($obj_movimento->idMovimento);
 
                     //Inserção de Movimento
-                    $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $_POST);
+                    $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $obj_movimento);
                 }
 
                 if (isset($_POST['tipoMovimento']) && $_POST['tipoMovimento'] == 'transferencia') {
-                    $ret = $this->cadastrarTransferenciaEntreInvestimentos();
+                    $ret = $this->cadastrarTransferenciaEntreInvestimentos(
+                        $_POST['idContaInvestOrigem'], 
+                        $_POST['idObjetivoOrigem'], 
+                        $_POST['valor'], 
+                        $_POST['idContaInvestDestino'], 
+                        $_POST['idObjetivoDestino']
+                    );
                 }
 
                 if (!in_array(false, $ret)) {
@@ -309,17 +323,17 @@ class InvestimentosController extends Controller {
         $this->renderPage(main_route: $this->index_route . '/investimentos_movimentar', conteudo: 'investimentos_movimentar', base_interna: 'base_cruds');
     }
 
-     private function cadastrarTransferenciaEntreInvestimentos()
+     private function cadastrarTransferenciaEntreInvestimentos($invest_origem, $objetivo_origem, $valor, $invest_destino, $objetivo_destino)
     {
         //Resgate
-        list($id_invest, $idProprietario) = explode('@', $_POST['idContaInvestOrigem']);
-                        
+        list($id_invest, $id_proprietario) = explode('@', $invest_origem);
+
         $item = array(
                     'nomeMovimento'   => 'Resgate - movimento entre investimentos',
                     'dataMovimento'   => date("Y-m-d"),
                     'idCategoria'     => 10, //Resgate
-                    'valor'           => $_POST['valor'],
-                    'idProprietario'  => $idProprietario,
+                    'valor'           => $valor,
+                    'idProprietario'  => $id_proprietario,
                     'idContaInvest'   => $id_invest
                 );
 
@@ -327,17 +341,17 @@ class InvestimentosController extends Controller {
 
         $id_movimento = $ret['result'];
 
-        $this->inserirMovimentacaodeAplicacao($id_invest, $_POST['idObjetivoOrigem'], $id_movimento, '10', $_POST['valor'], date('Y-m-d'));
+        $this->inserirMovimentacaodeAplicacao($id_invest, $objetivo_origem, $id_movimento, '10', $valor, date('Y-m-d'));
 
         //Aplicação
-        list($id_invest, $proprietario) = explode('@', $_POST['idContaInvestDestino']);
+        list($id_invest, $id_proprietario) = explode('@', $invest_destino);
         
         $item = array(
             'nomeMovimento'   => 'Aplicação - movimento entre investimentos',
             'dataMovimento'   => date("Y-m-d"),
             'idCategoria'     => 12, //Aplicação
-            'valor'           => ($_POST['valor'] * -1),
-            'idProprietario'  => $idProprietario,
+            'valor'           => ($valor * -1),
+            'idProprietario'  => $id_proprietario,
             'idContaInvest'   => $id_invest
         );
 
@@ -345,7 +359,7 @@ class InvestimentosController extends Controller {
 
         $id_movimento = $ret['result'];
 
-        $this->inserirMovimentacaodeAplicacao($id_invest, $_POST['idObjetivoDestino'], $id_movimento, '12', $_POST['valor'], date('Y-m-d'));
+        $this->inserirMovimentacaodeAplicacao($id_invest, $objetivo_destino, $id_movimento, '12', $valor, date('Y-m-d'));
 
         return $ret;
     }
@@ -363,7 +377,7 @@ class InvestimentosController extends Controller {
                     $valor_aplicado = ($valor_aplicado * -1); //veio negativo, pois aplicação é saída de dinheiro da conta corrente, mas é entrada em aplicações.
                 }
 
-                if ($id_objetivo != '' && $id_objetivo != '0') {
+                if (!empty($id_objetivo)) {
                     $objetivo = $model->selectAll(new ObjetivosEntity, [['idObj', '=', $id_objetivo]], [], [])[0];
 
                     $item = [
@@ -374,12 +388,15 @@ class InvestimentosController extends Controller {
                 } else {
                     $objetivos = $model->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $id_conta_invest]], [], []);
 
-                    foreach ($objetivos as $value) {
-                        $item = [
-                            'saldoAtual' => $value['saldoAtual'] + ($valor_aplicado * ($value['percentObjContaInvest'] / 100))
-                        ];
-                        $item_where = ['idObj' => $value['idObj']];
-                        $model->atualizar(new ObjetivosEntity, $item, $item_where);
+                    if (!empty($objetivos)) {
+                        foreach ($objetivos as $value) {
+                            $item = [
+                                'saldoAtual' => $value['saldoAtual'] + ($valor_aplicado * ($value['percentObjContaInvest'] / 100))
+                            ];
+                            $item_where = ['idObj' => $value['idObj']];
+
+                            $model->atualizar(new ObjetivosEntity, $item, $item_where);
+                        }
                     }
                 }
 
@@ -392,30 +409,46 @@ class InvestimentosController extends Controller {
                     $valor_aplicado = ($valor_aplicado * -1); //veio positivo, pois resgate é entrada de dinheiro da conta corrente, mas é saída em aplicações.
                 }
 
-                $saldo_atual = $model->getSaldoAtual(new ObjetivosEntity, $id_objetivo);
-                $item = [
-                    'saldoAtual' => ($saldo_atual + $valor_aplicado)
-                ];
-                $item_where = [
-                    'idObj' => $id_objetivo
-                ];
-                $model->atualizar(new ObjetivosEntity, $item, $item_where);
+                if (!empty($id_objetivo)) {
+                    $saldo_atual = $model->getSaldoAtual(new ObjetivosEntity, $id_objetivo);
+                    $item = [
+                        'saldoAtual' => ($saldo_atual + $valor_aplicado)
+                    ];
+                    $item_where = [
+                        'idObj' => $id_objetivo
+                    ];
+
+                    $model->atualizar(new ObjetivosEntity, $item, $item_where);
+                } else {
+                    $objetivos = $model->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $id_conta_invest]], [], []);
+
+                    if (!empty($objetivos)) {
+                        foreach ($objetivos as $value) {
+                            $item = [
+                                'saldoAtual' => $value['saldoAtual'] + ($valor_aplicado * ($value['percentObjContaInvest'] / 100))
+                            ];
+                            $item_where = ['idObj' => $value['idObj']];
+
+                            $model->atualizar(new ObjetivosEntity, $item, $item_where);
+                        }
+                    }
+                }
 
                 break;
             default:
                 $tipo = '';
         }
 
-        $item = [
-            'idContaInvest'   => $id_conta_invest,
-            'valorRendimento' => $valor_aplicado,
-            'dataRendimento'  => $data_rend,
-            'tipo'            => $tipo,
-            'idMovimento'     => $id_movimento,
-            'idObj'           => $id_objetivo
-        ];
+        $obj_rendimento = new RendimentosEntity();
 
-        $model->cadastrar(new RendimentosEntity, $item);
+        $obj_rendimento->idContaInvest = $id_conta_invest;
+        $obj_rendimento->valorRendimento = $valor_aplicado;
+        $obj_rendimento->tipo = $tipo;
+        $obj_rendimento->dataRendimento = $data_rend;
+        $obj_rendimento->idMovimento = $id_movimento;
+        $obj_rendimento->idObj = (empty($id_objetivo) ? 0 : $id_objetivo);
+
+        $model->cadastrar(new RendimentosEntity, $obj_rendimento);
 
         $saldo_atual = $model->getSaldoAtual(new InvestimentosEntity, $id_conta_invest);
         $item = [

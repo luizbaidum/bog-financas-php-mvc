@@ -1,3 +1,9 @@
+<div class="text-end">
+    <a href="<?= $this->view->settings['url_new']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
+        <button type="button" class="btn btn-sm btn-primary">Novo</button>
+    </a>
+</div>
+
 <div class="table-responsive">
     <table class="table table-sm">
         <thead>
@@ -34,7 +40,7 @@
                         <input type="hidden" name="nomeMovimento[<?= $value['idMovMensal']; ?>]" value="<?= $value['nomeMovimento']; ?>">
                     </td>
                     <td>
-                        <select class="form-select" id="idProprietario-<?= $value['idMovMensal']; ?>" name="proprietario[<?= $value['idMovMensal']; ?>]">
+                        <select class="form-select" id="idProprietario-<?= $value['idMovMensal']; ?>" name="idProprietario[<?= $value['idMovMensal']; ?>]">
                             <?php 
                                 foreach ($lista_proprietarios as $prop): 
                                     $x = $prop['idProprietario'];

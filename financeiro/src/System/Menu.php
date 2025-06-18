@@ -24,7 +24,7 @@ class Menu {
             'Categorias', 'Movimentos', 'Contas Invest', 'Movimentos Mensais', 'Objetivos', 'Orçamento', 'Orçamento do Realizado', 'Movimento entre Investimentos', 'Proprietarios'
         ],
         'Consultas' => [
-            'Indicadores', 'Lista Contas Invest', 'Extrato Contas Invest', 'Movimentos Mensais', 'Orçamento', 'Evolução Rendimentos'
+            'Indicadores', 'Lista Contas Invest', 'Extrato Contas Invest', 'Orçamento', 'Evolução Rendimentos'
         ],
         'Preferencias' => [
             'Preferencias'
@@ -33,10 +33,10 @@ class Menu {
 
     public array $routes = [
         'Cadastros' => [
-            'categorias', 'movimentos', 'investimentos', 'movimentos_mensais', 'objetivos', 'orcamento', 'orcamento_do_realizado', 'investimentos_movimentar', 'proprietarios'
+            'categorias', 'movimentos', 'investimentos', 'movimentos_mensais_index', 'objetivos', 'orcamento', 'orcamento_do_realizado', 'investimentos_movimentar', 'proprietarios'
         ],
         'Consultas' => [
-            'indicadores_index', 'contas_investimentos_index', 'extrato_investimentos', 'movimentos_mensais_index', 'orcamento_index', 'evolucao_rendimentos'
+            'indicadores_index', 'contas_investimentos_index', 'extrato_investimentos', 'orcamento_index', 'evolucao_rendimentos'
         ],
         'Preferencias' => [
             'preferencias'
@@ -44,8 +44,9 @@ class Menu {
     ];
 
     public array $niveis = [
-        'Cadastros' => [],
-        'Consultas' => []
+        'Cadastros'    => [],
+        'Consultas'    => [],
+        'Preferencias' => []
     ];
 }
 ?>
