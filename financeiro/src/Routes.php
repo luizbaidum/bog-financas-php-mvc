@@ -72,6 +72,8 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/primeiro-acesso', 'controller' => 'PrimeiroAcessoController', 'action' => 'primeiroAcesso');
         $routes[] = array('route' => '/cad-primeiro-acesso', 'controller' => 'PrimeiroAcessoController', 'action' => 'cadastrarPrimeiroAcesso');
 
+        $routes[] = array('route' => '/familia', 'controller' => 'FamiliaController', 'action' => 'index');
+
 		$this->setRoutes($routes);
 	}
 }
