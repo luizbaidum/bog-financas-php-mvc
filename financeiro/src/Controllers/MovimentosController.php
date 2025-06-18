@@ -292,27 +292,39 @@ class MovimentosController extends Controller {
                     throw new Exception('Por favor, escolher categoria.'); 
                 }
 
+                $obj_movimento = new MovimentosEntity();
+
                 $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
-                $_POST['idCategoria'] = $arr_cat[0];
                 $sinal = $arr_cat[1];
 
-                $id_conta_invest = $_POST['idContaInvest'];
-                $id_objetivo = $_POST['idObjetivo'] ?? '';
-                unset($_POST['idObjetivo']);
+                $obj_movimento->nomeMovimento = $_POST['nomeMovimento'];
+                $obj_movimento->dataMovimento = $_POST['dataMovimento'];
+                $obj_movimento->idCategoria = $arr_cat[0];
+                $obj_movimento->valor = $sinal . NumbersHelper::formatBRtoUS($_POST['valor']);
+                $obj_movimento->idProprietario = $_POST['idProprietario'];
+                $obj_movimento->idContaInvest = !empty($_POST['idContaInvest']) ? $_POST['idContaInvest'] : 0;
+                $obj_movimento->observacao = $_POST['observacao'];
 
-                $_POST['valor'] = NumbersHelper::formatBRtoUS($_POST['valor']);
-                $_POST['valor'] = $sinal . $_POST['valor'];
-                $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $_POST);
+                $id_objetivo = $_POST['idObjetivo'] ?? '';
+
+                $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $obj_movimento);
 
                 if (!$ret['result']) {
                     throw new Exception($this->msg_retorno_falha);
                 }
 
-                $id_movimento = $ret['result'];
+                $obj_movimento->idMovimento = $ret['result'];
 
                 //Inserção de Rendimento (invest ou retirada)
-                if (!empty($id_conta_invest)) {
-                    (new InvestimentosController())->inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento, $_POST['idCategoria'], $_POST['valor'], $_POST['dataMovimento']);
+                if (!empty($obj_movimento->idContaInvest)) {
+                    (new InvestimentosController())->inserirMovimentacaodeAplicacao(
+                        $obj_movimento->idContaInvest, 
+                        $id_objetivo, 
+                        $obj_movimento->idMovimento, 
+                        $obj_movimento->idCategoria, 
+                        $obj_movimento->valor, 
+                        $obj_movimento->dataMovimento
+                    );
                 }
 
                 if ($ret['result']) {

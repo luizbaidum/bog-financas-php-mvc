@@ -19,6 +19,7 @@ class MovimentosMensaisController extends Controller {
             'action'   => $this->index_route . '/cad_mov_mensal',
             'redirect' => $this->index_route . '/movimentos_mensais_index',
             'title'    => 'Movimentos Mensais',
+            'url_new'  => $this->index_route . '/movimentos_mensais',
         ];
 
         $this->view->data['arr_mensais'] = $model_movimentos_mensais->getMensais();

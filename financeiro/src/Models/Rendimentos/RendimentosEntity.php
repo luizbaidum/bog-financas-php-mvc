@@ -14,4 +14,5 @@ class RendimentosEntity extends Entity {
     public string $dataRendimento;
     public int $idMovimento;
     public int $idFamilia; 
+    public int $idObj;
 }
