@@ -3,6 +3,7 @@ namespace src\Controllers;
 
 use Exception;
 use MF\Controller\Controller;
+use MF\Helpers\NumbersHelper;
 use MF\Model\Model;
 use src\Models\Categorias\CategoriasEntity;
 use src\Models\Movimentos\MovimentosEntity;
@@ -16,17 +17,18 @@ class MovimentosMensaisController extends Controller {
         $model_movimentos_mensais = new MovimentosMensaisDAO();
 
         $this->view->settings = [
-            'action'   => $this->index_route . '/cad_mov_mensal',
-            'redirect' => $this->index_route . '/movimentos_mensais_index',
+            'action'   => $this->index_route . '/cad-mov-mensal',
+            'redirect' => $this->index_route . '/movimentos-mensais-index',
             'title'    => 'Movimentos Mensais',
-            'url_new'  => $this->index_route . '/movimentos_mensais',
+            'url_new'  => $this->index_route . '/movimentos-mensais',
+            'url_edit' => $this->index_route . '/movimentos-mensais?action=edit&idMovMensal=',
         ];
 
         $this->view->data['arr_mensais'] = $model_movimentos_mensais->getMensais();
         $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
         
         $this->renderPage(
-            main_route: $this->index_route . '/movimentos_mensais_index', 
+            main_route: $this->index_route . '/movimentos-mensais-index', 
             conteudo: 'movimentos_mensais_index', 
             base_interna: 'base_cruds'
         );
@@ -47,16 +49,28 @@ class MovimentosMensaisController extends Controller {
     {
         $model = new Model();
 
+        $action = $_GET['action'] ?? null;
+        $id = $_GET['idMovMensal'] ?? null;
+
+        $title = 'Cadastro de Mov. Mensal';
+        $url_action = '/cad-movimentos-mensais';
+        if ($action == 'edit') {
+            $url_action = '/edit-mov-mensal';
+            $title = 'Edição de Mov. Mensal';
+            $mov_m = $model->selectAll(new MovimentosMensaisEntity, [['idMovMensal', '=', $id]], [], []);
+        }
+
         $this->view->settings = [
-            'action'   => $this->index_route . '/cad_movimentos_mensais',
-            'redirect' => $this->index_route . '/movimentos_mensais',
-            'title'    => 'Cadastro de Mov. Mensais',
+            'action'   => $this->index_route . $url_action,
+            'redirect' => $this->index_route . '/movimentos-mensais',
+            'title'    => $title,
         ];
 
         $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
         $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
+        $this->view->data['mov_m'] = $mov_m[0] ?? null;
 
-        $this->renderPage(main_route: $this->index_route . '/movimentos_mensais', conteudo: 'movimentos_mensais', base_interna: 'base_cruds');
+        $this->renderPage(main_route: $this->index_route . '/movimentos-mensais', conteudo: 'movimentos_mensais', base_interna: 'base_cruds');
     }
 
     public function cadastrarMovimentosMensais()
@@ -131,5 +145,53 @@ class MovimentosMensaisController extends Controller {
 				echo json_encode($array_retorno);
             }
         }
-    }  
+    }
+
+    public function editarMovimentoMensal()
+    {
+        try {
+            $model = new Model();
+            $obj_mov_mensal = new MovimentosMensaisEntity();
+            $id_mov_m = $_POST['idMovMensal'];
+
+            $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
+            $sinal = $arr_cat[1];
+            $valor_despesa = NumbersHelper::formatBRtoUS($_POST['valorDespesa']);
+
+            $obj_mov_mensal->dataRepete = $_POST['dataRepete'];
+            $obj_mov_mensal->idCategoria = $arr_cat[0];
+            $obj_mov_mensal->nomeMovimento = $_POST['nomeMovimento'];
+            $obj_mov_mensal->idProprietario = $_POST['idProprietario'];
+
+            if ($sinal == '-' && $valor_despesa > 0) {
+                $obj_mov_mensal->valorDespesa = $valor_despesa;
+            } elseif ($sinal == '+' && $valor_despesa < 0) {
+                $obj_mov_mensal->valorDespesa = $valor_despesa;
+            }
+
+            $item_where = [
+                'idMovMensal' => $id_mov_m
+            ];
+
+            $ret = $model->atualizar(new MovimentosMensaisEntity, $obj_mov_mensal, $item_where);
+
+            if (!isset($ret['result']) || empty($ret['result'])) {
+                throw new Exception('O Movimento Mensal não foi atualizado.');
+            }
+
+            $array_retorno = array(
+                'result'   => true,
+                'mensagem' => 'Movimento Mensal id ' . $id_mov_m . ' atualizado com sucesso.',
+            );
+
+            echo json_encode($array_retorno);
+        } catch (Exception $e) {
+            $array_retorno = array(
+                'result'   => false,
+                'mensagem' => $e->getMessage(),
+            );
+
+            echo json_encode($array_retorno);
+        }
+    }
 }

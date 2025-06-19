@@ -1,64 +1,76 @@
-<div class="text-end">
+<div class="text-end my-2">
     <a href="<?= $this->view->settings['url_new']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
         <button type="button" class="btn btn-sm btn-primary">Novo</button>
     </a>
 </div>
 
-<div class="table-responsive">
-    <table class="table table-sm">
-        <thead>
-            <tr>
-                <th></th>
-                <th>Data</th>
-                <th>Descrição</th>
-                <th>Prop.</th>
-                <th>Valor</th>
-                <th>Categoria</th>
-            </tr>
-        </thead>
-        <tbody> 
-            <?php 
-                foreach ($arr_mensais as $value): 
-                    $dia_original = date('d', strtotime($value['dataRepete']));
-                    $mes_original = date('m', strtotime($value['dataRepete']));
-                    $ano_original = date('Y', strtotime($value['dataRepete']));
-                    $mes_atual = date('m');
-                    $ano_atual = date('Y');
-                    $mov_prop = $value['idProprietario'];
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-sm mb-1 align-middle">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Prop.</th>
+                        <th>Valor</th>
+                        <th>Categoria</th>
+                        <th style="width: 5%;">Editar</th>
+                        <th style="width: 3%;"></th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    <?php 
+                        foreach ($arr_mensais as $value): 
+                            $dia_original = date('d', strtotime($value['dataRepete']));
+                            $mes_original = date('m', strtotime($value['dataRepete']));
+                            $ano_original = date('Y', strtotime($value['dataRepete']));
+                            $mes_atual = date('m');
+                            $ano_atual = date('Y');
+                            $mov_prop = $value['idProprietario'];
 
-                    $date = date_format(date_create("$ano_atual-$mes_atual-$dia_original"), 'Y-m-d');
-            ?>
-                <tr class="<?= ($value['idPago'] > 0 ? ' bg-pago ' : (date('Y-m-d') >= $date ? ' bg-atencao ' : '')); ?>">
-                    <td>
-                        <input type="checkbox" value="<?= $value['idMovMensal']; ?>" name="idMovMensal[]" <?= ($value['idPago'] > 0 ? ' disabled ' : ''); ?>>
-                    </td>
-                    <td>
-                        <input type="date" id="idDataMovimento" name="dataMovimento[<?= $value['idMovMensal']; ?>]" value="<?= $date; ?>">
-                    </td>
-                    <td>
-                        <?= $value['nomeMovimento']; ?>
-                        <input type="hidden" name="nomeMovimento[<?= $value['idMovMensal']; ?>]" value="<?= $value['nomeMovimento']; ?>">
-                    </td>
-                    <td>
-                        <select class="form-select" id="idProprietario-<?= $value['idMovMensal']; ?>" name="idProprietario[<?= $value['idMovMensal']; ?>]">
-                            <?php 
-                                foreach ($lista_proprietarios as $prop): 
-                                    $x = $prop['idProprietario'];
-                                    $n = $prop['proprietario'];
-                            ?>
-                                <option value="<?= $x; ?>" <?= $x == $mov_prop ? ' selected ' : ''; ?>> <?= $n; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="number" class="form-control"  name="valor[<?= $value['idMovMensal']; ?>]" step=".01" value="<?= $value['valorDespesa']; ?>">
-                    </td>
-                    <td>
-                        <?= $value['idCategoria'] . ' - ' . $value['categoria'] . ' - ' . $value['tipo']; ?>
-                        <input type="hidden" name="idCategoria[<?= $value['idMovMensal']; ?>]" value="<?= $value['idCategoria'] . ' - sinal: ' . $value['sinal']; ?>">
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+                            $date = date_format(date_create("$ano_atual-$mes_atual-$dia_original"), 'Y-m-d');
+                    ?>
+                        <tr class="<?= ($value['idPago'] > 0 ? ' bg-pago ' : (date('Y-m-d') >= $date ? ' bg-atencao ' : '')); ?>">
+                            <td>
+                                <input type="date" id="idDataMovimento" name="dataMovimento[<?= $value['idMovMensal']; ?>]" value="<?= $date; ?>">
+                            </td>
+                            <td>
+                                <?= $value['nomeMovimento']; ?>
+                                <input type="hidden" name="nomeMovimento[<?= $value['idMovMensal']; ?>]" value="<?= $value['nomeMovimento']; ?>">
+                            </td>
+                            <td>
+                                <select class="form-select" id="idProprietario-<?= $value['idMovMensal']; ?>" name="idProprietario[<?= $value['idMovMensal']; ?>]">
+                                    <?php 
+                                        foreach ($lista_proprietarios as $prop): 
+                                            $x = $prop['idProprietario'];
+                                            $n = $prop['proprietario'];
+                                    ?>
+                                        <option value="<?= $x; ?>" <?= $x == $mov_prop ? ' selected ' : ''; ?>> <?= $n; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control"  name="valor[<?= $value['idMovMensal']; ?>]" step=".01" value="<?= $value['valorDespesa']; ?>">
+                            </td>
+                            <td>
+                                <?= $value['idCategoria'] . ' - ' . $value['categoria'] . ' - ' . $value['tipo']; ?>
+                                <input type="hidden" name="idCategoria[<?= $value['idMovMensal']; ?>]" value="<?= $value['idCategoria'] . ' - sinal: ' . $value['sinal']; ?>">
+                            </td>
+                            <td>
+                                <a href="<?= $url_edit . $value['idMovMensal']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
+                                    <button type="button" title="Editar" class="btn btn-sm btn-outline-primary">
+                                        <i>&#9998;</i>
+                                    </button>
+                                </a>
+                            </td>
+                            <td>
+                                <input type="checkbox" value="<?= $value['idMovMensal']; ?>" name="idMovMensal[]" <?= ($value['idPago'] > 0 ? ' disabled ' : ''); ?>>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
