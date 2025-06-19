@@ -13,11 +13,12 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/', 'controller' => 'LoginController', 'action' => 'login');
         $routes[] = array('route' => '/logout', 'controller' => 'LoginController', 'action' => 'logout');
 
-        $routes[] = array('route' => '/cad_mov_mensal', 'controller' => 'MovimentosMensaisController', 'action' => 'lancarMovimentoMensalComoMovimento');
+        $routes[] = array('route' => '/cad-mov-mensal', 'controller' => 'MovimentosMensaisController', 'action' => 'lancarMovimentoMensalComoMovimento');
         $routes[] = array('route' => '/buscaMovMensal', 'controller' => 'MovimentosMensaisController', 'action' => 'buscarMovMensal');
-        $routes[] = array('route' => '/movimentos_mensais_index', 'controller' => 'MovimentosMensaisController', 'action' => 'index');
-        $routes[] = array('route' => '/movimentos_mensais', 'controller' => 'MovimentosMensaisController', 'action' => 'movimentosMensais');
+        $routes[] = array('route' => '/movimentos-mensais-index', 'controller' => 'MovimentosMensaisController', 'action' => 'index');
+        $routes[] = array('route' => '/movimentos-mensais', 'controller' => 'MovimentosMensaisController', 'action' => 'movimentosMensais');
         $routes[] = array('route' => '/cad_movimentos_mensais', 'controller' => 'MovimentosMensaisController', 'action' => 'cadastrarMovimentosMensais');
+        $routes[] = array('route' => '/edit-mov-mensal', 'controller' => 'MovimentosMensaisController', 'action' => 'editarMovimentoMensal');
 
         $routes[] = array('route' => '/consultar_objetivos', 'controller' => 'InvestimentosController', 'action' => 'consultarObjetivos');
         $routes[] = array('route' => '/contas_investimentos_index', 'controller' => 'InvestimentosController', 'action' => 'index');

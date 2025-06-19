@@ -25,23 +25,23 @@
 			</div>
 
 			<?php if ($buttons): ?>
-				<div id="fixedBotton" class="bg-light">
-					<div class="container">
-						<?php foreach ($buttons as $btn): ?>
-							<button 
-								type="button"
-								title="<?= $btn['title']; ?>"
-								data-url="<?= $btn['action']; ?>"
-								class="<?= $btn['classes']; ?>"
+                <div id="fixedBotton" class="bg-light">
+                    <div class="container">
+                        <?php foreach ($buttons as $btn): ?>
+                            <button 
+                                type="button"
+                                title="<?= $btn['title']; ?>"
+                                data-url="<?= $btn['action']; ?>"
+                                class="<?= $btn['classes']; ?> <?= ($btn['position'] == 'right' ? 'float-end' : 'float-start') ?>"
                                 data-modal="<?= $btn['modal']; ?>"
-							>
-								<?= $btn['title']; ?>
-							</button>
-						<?php endforeach; ?>
-					</div>
-				</div>
-			<?php endif; ?>
-
+                            >
+                                <?= $btn['title']; ?>
+                            </button>
+                        <?php endforeach; ?>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            <?php endif; ?>
 		</main>
 
 		<?php include ('modal_alerta.phtml') ?>

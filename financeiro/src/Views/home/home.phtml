@@ -22,13 +22,13 @@
                 <table class="table table-striped table-hover table-sm mb-1 align-middle">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>Editar</th>
                             <th>Data</th>
                             <th>Movimento</th>
                             <th>Categoria</th>
                             <th>Valor</th>
                             <th>Prop.</th>
+                            <th style="width: 5%;">Editar</th>
+                            <th style="width: 3%;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,16 +44,6 @@
                                 }                                
                         ?>
                             <tr>
-                                <td>
-                                    <input type="checkbox" name="selectedData[]" value="<?= $mov['idMovimento']; ?>">
-                                </td>
-                                <td>
-                                    <a href="<?= $url_edit . $mov['idMovimento']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
-                                        <button title="Editar" class="btn btn-sm btn-outline-primary">
-                                            <i>&#9998;</i>
-                                        </button>
-                                    </a>
-                                </td>
                                 <td><?= DateHelper::convertUStoBR($mov['dataMovimento']); ?></td>
                                 <td>
                                     <?= $mov['nomeMovimento']; ?>
@@ -73,19 +63,29 @@
                                 <td>
                                     <?= $prop[$mov['idProprietario']]; ?>
                                 </td>
+                                <td>
+                                    <a href="<?= $url_edit . $mov['idMovimento']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
+                                        <button title="Editar" class="btn btn-sm btn-outline-primary">
+                                            <i>&#9998;</i>
+                                        </button>
+                                    </a>
+                                </td>
+                                <td>
+                                    <input type="checkbox" name="selectedData[]" value="<?= $mov['idMovimento']; ?>">
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                     <tfoot>
                         <tr class="table-info">
-                            <td></td>
-                            <td colspan="4" style="text-align: right">Resultado (Rec. - Des. - Apli.)</td>
+                            <td colspan="3" style="text-align: right">Resultado (Rec. - Des. - Apli.)</td>
                             <td>R$ <?= NumbersHelper::formatUStoBR($resultado); ?></td>
                             <td>
                                 <?php foreach ($result_por_prop as $id_prop => $valor): ?>
                                     <small><?= $prop[$id_prop]; ?>: <?= NumbersHelper::formatUStoBR($valor); ?></small> <br>
                                 <?php endforeach; ?>
-                            </td>                            
+                            </td>
+                            <td colspan="2"></td>                       
                         </tr>
                         <?php 
                             if (!empty($saldos_anteriores)): 
@@ -96,17 +96,15 @@
                                     $acumulado += $value['valor'];
                             ?>
                                 <tr class="table-info">
-                                    <td></td>
-                                    <td colspan="4" style="text-align: right">Resultado mês <?= $value['MES']; ?>:</td>
+                                    <td colspan="3" style="text-align: right">Resultado mês <?= $value['MES']; ?>:</td>
                                     <td>R$ <?= NumbersHelper::formatUStoBR($value['valor']); ?></td>
-                                    <td></td>
+                                    <td colspan="3"></td>
                                 </tr>
                             <?php endforeach; ?>
                                 <tr class="table-info">
-                                    <td></td>
-                                    <td colspan="4" style="text-align: right">Acumulado</td>
+                                    <td colspan="3" style="text-align: right">Acumulado</td>
                                     <td>R$ <?= NumbersHelper::formatUStoBR($acumulado); ?></td>
-                                    <td></td>
+                                    <td colspan="3"></td>
                                 </tr>
                         <?php endif; ?>
                     </tfoot>

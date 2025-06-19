@@ -60,7 +60,7 @@ class Model {
 		}
 	}
 
-	public function atualizar(object $entity, array $values, array $where_condition)
+	public function atualizar(object $entity, array|object $values, array $where_condition)
 	{
         $arr_values = array();
 

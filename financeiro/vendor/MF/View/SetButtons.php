@@ -5,13 +5,14 @@ namespace MF\View;
 class SetButtons {
     private array $arr_buttons = [];
 
-    public function setButton($title, $action, $classes, string $modal = 'false')
+    public function setButton($title, $action, $classes, string $position = 'left', string $modal = 'false')
     {
         $this->arr_buttons[] = [
-            'title'   => $title,
-            'action'  => $action,
-            'classes' => $classes,
-            'modal'   => $modal
+            'title'    => $title,
+            'action'   => $action,
+            'classes'  => $classes,
+            'position' => $position,
+            'modal'    => $modal
         ];
 
         return $this->arr_buttons;

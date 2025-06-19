@@ -42,13 +42,15 @@ class HomeController extends Controller {
 			$buttons->setButton(
 				'Del',
 				$this->index_route . '/delete_movimentos',
-				'px-2 btn btn-danger action-delete'
+				'px-2 btn btn-danger action-delete',
+                'right'
 			);
 
 			$buttons->setButton(
 				'Ver demonstrativo',
 				$this->index_route . '/exibir_resultado?anoFiltro=' . $ano_filtro . '&mesFiltro=' . $mes_filtro,
 				'px-2 btn btn-info render-ajax',
+                'left',
                 'true'
 			);
 
