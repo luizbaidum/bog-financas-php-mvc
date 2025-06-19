@@ -1,22 +1,29 @@
-<?php if (isset($mov_m['idMovMensal'])): ?>
+<?php
+
+use MF\Helpers\NumbersHelper;
+
+ if (isset($mov_m['idMovMensal'])): ?>
     <input type="hidden" name="idMovMensal" value="<?= $mov_m['idMovMensal']; ?>">
 <?php endif; ?>
 
 <div class="form-group">
     <div class="row">
+         <div class="col-12 col-sm-4">
+            <label for="idNomeMovimento">Nome Movimento</label>
+            <input type="text" class="form-control" id="idNomeMovimento" name="nomeMovimento" value="<?= isset($mov_m['nomeMovimento']) ? $mov_m['nomeMovimento'] : ''; ?>" required>
+        </div>
         <div class="col-12 col-sm-4">
             <label for="idDataRepete">Data Repetição (mensal)</label>
             <input type="date" class="form-control" id="idDataRepete" name="dataRepete" value="<?= isset($mov_m['dataRepete']) ? $mov_m['dataRepete'] : ''; ?>" required>
         </div>
         <div class="col-12 col-sm-4">
-            <label for="idValorDespesa">Valor (decimal com ponto)</label>
-            <input type="number" class="form-control" id="idValorDespesa" name="valorDespesa" step=".01" value="<?= isset($mov_m['valorDespesa']) ? $mov_m['valorDespesa'] : ''; ?>" required>
-        </div>
-        <div class="col-12 col-sm-4">
             <label for="idCategoria">Categoria</label>
             <select class="form-select" id="idCategoria" name="idCategoria" required>
                 <option value="">Selecione</option>
-                <?php foreach ($categorias as $cat): ?>
+                <?php 
+                    foreach ($categorias as $cat): 
+                        if ($cat['tipo'] == 'A') continue;
+                ?>
                     <option value="<?= $cat['idCategoria'] . ' - sinal: ' . $cat['sinal']; ?>" <?= (isset($mov_m['idCategoria']) && $mov_m['idCategoria'] == $cat['idCategoria']) ? 'selected' : ''; ?>>
                         <?= $cat['categoria'] . ' - ' . $cat['tipo']; ?>
                     </option>
@@ -27,9 +34,12 @@
 </div>
 <div class="form-group">
     <div class="row">
-        <div class="col-12 col-sm-6">
-            <label for="idNomeMovimento">Nome Movimento</label>
-            <input type="text" class="form-control" id="idNomeMovimento" name="nomeMovimento" value="<?= isset($mov_m['nomeMovimento']) ? $mov_m['nomeMovimento'] : ''; ?>" required>
+       <div class="col-12 col-sm-6">
+            <label for="idValorDespesa">Valor (decimal com ponto)</label>
+            <input type="text" 
+                class="form-control numero-br" id="idValorDespesa" name="valorDespesa" 
+                value="<?= isset($mov_m['valorDespesa']) ? NumbersHelper::formatUStoBR($mov_m['valorDespesa']) : ''; ?>" required
+            >
         </div>
         <div class="col-12 col-sm-6">
             <label for="idProprietario">Proprietário</label>

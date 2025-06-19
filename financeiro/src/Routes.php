@@ -17,7 +17,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/buscaMovMensal', 'controller' => 'MovimentosMensaisController', 'action' => 'buscarMovMensal');
         $routes[] = array('route' => '/movimentos-mensais-index', 'controller' => 'MovimentosMensaisController', 'action' => 'index');
         $routes[] = array('route' => '/movimentos-mensais', 'controller' => 'MovimentosMensaisController', 'action' => 'movimentosMensais');
-        $routes[] = array('route' => '/cad_movimentos_mensais', 'controller' => 'MovimentosMensaisController', 'action' => 'cadastrarMovimentosMensais');
+        $routes[] = array('route' => '/cad-movimentos-mensais', 'controller' => 'MovimentosMensaisController', 'action' => 'cadastrarMovimentosMensais');
         $routes[] = array('route' => '/edit-mov-mensal', 'controller' => 'MovimentosMensaisController', 'action' => 'editarMovimentoMensal');
 
         $routes[] = array('route' => '/consultar_objetivos', 'controller' => 'InvestimentosController', 'action' => 'consultarObjetivos');

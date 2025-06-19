@@ -53,7 +53,7 @@ class MovimentosMensaisController extends Controller {
         $id = $_GET['idMovMensal'] ?? null;
 
         $title = 'Cadastro de Mov. Mensal';
-        $url_action = '/cad-mov-mensal';
+        $url_action = '/cad-movimentos-mensais';
         if ($action == 'edit') {
             $url_action = '/edit-mov-mensal';
             $title = 'Edição de Mov. Mensal';
@@ -156,16 +156,17 @@ class MovimentosMensaisController extends Controller {
 
             $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
             $sinal = $arr_cat[1];
+            $valor_despesa = NumbersHelper::formatBRtoUS($_POST['valorDespesa']);
 
             $obj_mov_mensal->dataRepete = $_POST['dataRepete'];
             $obj_mov_mensal->idCategoria = $arr_cat[0];
             $obj_mov_mensal->nomeMovimento = $_POST['nomeMovimento'];
             $obj_mov_mensal->idProprietario = $_POST['idProprietario'];
 
-            if ($sinal == '-' && $_POST['valorDespesa'] > 0) {
-                $obj_mov_mensal->valorDespesa = NumbersHelper::formatBRtoUS($_POST['valorDespesa']);
-            } elseif ($sinal == '+' && $_POST['valorDespesa'] < 0) {
-                $obj_mov_mensal->valorDespesa = NumbersHelper::formatBRtoUS($_POST['valorDespesa']);
+            if ($sinal == '-' && $valor_despesa > 0) {
+                $obj_mov_mensal->valorDespesa = $valor_despesa;
+            } elseif ($sinal == '+' && $valor_despesa < 0) {
+                $obj_mov_mensal->valorDespesa = $valor_despesa;
             }
 
             $item_where = [
