@@ -4,7 +4,10 @@
             <div class="text-center">
                 Nenhum registro encontrado
             </div>
-        <?php else: ?> 
+        <?php 
+            else: 
+                $total_geral = 0;
+        ?> 
             <table class="table table-hover table-sm mb-1 align-middle">
                 <thead>
                     <tr>
@@ -16,7 +19,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($dados as $registro): ?>
+                    <?php 
+                        foreach ($dados as $registro): 
+                            $total_geral += $registro['valor'];
+                    ?>
                         <tr>
                             <td><?= $registro['dataMovimento']; ?></td>
                             <td><?= $registro['nomeMovimento']; ?></td>
@@ -26,6 +32,15 @@
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
+                <tfoot>
+                    <tr class="table-dark">
+                        <td colspan="2">Total</td>
+                        <td>
+                            <?= $total_geral; ?>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
             </table>
         <?php endif; ?>
     </div>
