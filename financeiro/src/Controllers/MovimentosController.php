@@ -356,4 +356,32 @@ class MovimentosController extends Controller {
 
         $this->renderInModal(titulo: 'Observação movimento ' . $id_movimento, conteudo: 'observacao');
     }
+
+    public function extratoProprietarios()
+    {
+        $model_movimentos = new MovimentosDAO();
+
+        $this->view->data['dados'] = $model_movimentos->extratoProprietarios([]);
+
+        $this->renderPage(
+            main_route: $this->index_route . '/extrato-proprietarios', 
+            conteudo: 'extrato_proprietarios_form'
+        );
+    }
+
+    public function processarExtratoProprietarios()
+    {
+        $model_movimentos = new MovimentosDAO();
+
+        $filtros = [
+
+        ];
+
+        $this->view->data['dados'] = $model_movimentos->extratoProprietarios($filtros);
+
+        $this->renderPage(
+            main_route: $this->index_route . '/extrato-proprietarios', 
+            conteudo: 'extrato_proprietarios_form'
+        );
+    }
 }

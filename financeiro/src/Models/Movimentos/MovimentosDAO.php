@@ -139,4 +139,14 @@ class MovimentosDAO extends Model {
 
         return '';
     }
+
+    public function extratoProprietarios(array $filtros) : array
+    {
+        $query = "SELECT movimentos.*, proprietarios.proprietario, categorias.categoria FROM movimentos LEFT JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria WHERE movimentos.idMovimento > 0 ORDER BY dataMovimento DESC";
+
+        $new_sql = new SQLActions();
+		$result = $new_sql->executarQuery($query);
+
+        return $result;
+    }
 }
