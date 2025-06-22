@@ -115,7 +115,7 @@ class OrcamentoController extends Controller {
     {
         $this->view->settings = [
             'action'   => $this->index_route . '/cad_orcamento_do_realizado',
-            'url_ajax' => $this->index_route . '/buscar_orcamento_do_realizado',
+            'url_ajax' => $this->index_route . '/buscar-orcamento-do-realizado',
             'redirect' => $this->index_route . '/orcamento_do_realizado',
             'title'    => 'Importação de Orçamento',
             'div_ajax' => 'id-content-importar'

@@ -142,10 +142,28 @@ class MovimentosDAO extends Model {
 
     public function extratoProprietarios(array $filtros) : array
     {
-        $query = "SELECT movimentos.*, proprietarios.proprietario, categorias.categoria FROM movimentos LEFT JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria WHERE movimentos.idMovimento > 0 ORDER BY dataMovimento DESC";
+        $where = '';
+        $params = array();
+        if (!empty($filtros['idCategoria'])) {
+            $where .= ' AND movimentos.idCategoria = ? ';
+            $params[] = $filtros['idCategoria'];
+        }
+
+        if (!empty($filtros['idProprietario'])) {
+            $where .= ' AND movimentos.idProprietario = ? ';
+            $params[] = $filtros['idProprietario'];
+        }
+
+        if ($filtros['data_inicio'] != '' && $filtros['data_fim'] != '') {
+            $where .= ' AND movimentos.dataMovimento >= ? AND movimentos.dataMovimento <= ? ';
+            $params[] = $filtros['data_inicio'];
+            $params[] = $filtros['data_fim'];
+        }
+
+        $query = "SELECT movimentos.*, proprietarios.proprietario, categorias.categoria FROM movimentos LEFT JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria WHERE movimentos.idMovimento > 0 $where ORDER BY dataMovimento DESC";
 
         $new_sql = new SQLActions();
-		$result = $new_sql->executarQuery($query);
+		$result = $new_sql->executarQuery($query, $params);
 
         return $result;
     }

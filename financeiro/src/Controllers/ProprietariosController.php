@@ -4,6 +4,8 @@ namespace src\Controllers;
 
 use Exception;
 use MF\Controller\Controller;
+use src\Models\Categorias\CategoriasEntity;
+use src\Models\Movimentos\MovimentosDAO;
 use src\Models\Proprietarios\ProprietariosEntity;
 use src\Models\Proprietarios\ProprietariosDAO;
 
@@ -45,5 +47,40 @@ class ProprietariosController extends Controller {
                 echo json_encode($array_retorno);
             }
         }
+    }
+
+    public function extratoProprietarios()
+    {
+        $model_movimentos = new MovimentosDAO();
+
+        $this->view->settings = [
+            'action'   => $this->index_route . '/processar-extrato-proprietarios',
+            'title'    => 'Extrato por Proprietário',
+            'div'      => 'content-extrato-proprietarios'
+        ];
+
+        $this->view->data['lista_proprietarios'] = $model_movimentos->selectAll(new ProprietariosEntity, [], [], []);
+        $this->view->data['lista_categorias'] = $model_movimentos->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
+
+        $this->renderPage(
+            main_route: $this->index_route . '/extrato-proprietarios', 
+            conteudo: 'extrato_proprietarios_form'
+        );
+    }
+
+    public function processarExtratoProprietarios()
+    {
+        $model_movimentos = new MovimentosDAO();
+
+        $filtros = [
+            'data_inicio'    => $_POST['data_inicio'],
+            'data_fim'       => $_POST['data_fim'],
+            'idCategoria'    => $_POST['idCategoria'],
+            'idProprietario' => $_POST['idProprietario'],
+        ];
+
+        $this->view->data['dados'] = $model_movimentos->extratoProprietarios($filtros);
+
+        $this->renderSimple('extrato_proprietarios');
     }
 }
