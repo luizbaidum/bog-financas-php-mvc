@@ -1,0 +1,47 @@
+<div class="card mt-2">
+    <div class="card-body">
+        <?php if (empty($dados)): ?>
+            <div class="text-center">
+                Nenhum registro encontrado
+            </div>
+        <?php 
+            else: 
+                $total_geral = 0;
+        ?> 
+            <table class="table table-hover table-sm mb-1 align-middle">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Nome</th>
+                        <th>Valor</th>
+                        <th>Categoria</th>
+                        <th>Proprietário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php 
+                        foreach ($dados as $registro): 
+                            $total_geral += $registro['valor'];
+                    ?>
+                        <tr>
+                            <td><?= $registro['dataMovimento']; ?></td>
+                            <td><?= $registro['nomeMovimento']; ?></td>
+                            <td><?= $registro['valor']; ?></td>
+                            <td><?= $registro['categoria']; ?></td>
+                            <td><?= $registro['proprietario']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr class="table-dark">
+                        <td colspan="2">Total</td>
+                        <td>
+                            <?= $total_geral; ?>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        <?php endif; ?>
+    </div>
+</div>

@@ -39,7 +39,8 @@ class Controller {
 	{
 		$this->view->conteudo = $conteudo;
 		$this->view->base_interna = $base_interna;
-		$this->view->route = $main_route;
+		//$this->view->route = $main_route;
+		//exluir se realmente não fizer diferençca
 
 		if ($this->isAjaxRequest()) {
 			ob_start();

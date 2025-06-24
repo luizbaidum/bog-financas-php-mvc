@@ -37,7 +37,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/cad_movimentos', 'controller' => 'MovimentosController', 'action' => 'cadastrarMovimentos');
         $routes[] = array('route' => '/exibir_observacao', 'controller' => 'MovimentosController', 'action' => 'exibirObs');
 
-        $routes[] = array('route' => '/buscar_orcamento_do_realizado', 'controller' => 'OrcamentoController', 'action' => 'buscarOrcamentoDoRealizado');
+        $routes[] = array('route' => '/buscar-orcamento-do-realizado', 'controller' => 'OrcamentoController', 'action' => 'buscarOrcamentoDoRealizado');
         $routes[] = array('route' => '/orcamento_index', 'controller' => 'OrcamentoController', 'action' => 'index');
         $routes[] = array('route' => '/delete_itens_orcamento', 'controller' => 'OrcamentoController', 'action' => 'deletarItensOrcamento');
         $routes[] = array('route' => '/orcamento', 'controller' => 'OrcamentoController', 'action' => 'orcamento');
@@ -61,6 +61,8 @@ class Routes extends Bootstrap {
 
         $routes[] = array('route' => '/proprietarios', 'controller' => 'ProprietariosController', 'action' => 'proprietarios');
         $routes[] = array('route' => '/cad_proprietarios', 'controller' => 'ProprietariosController', 'action' => 'cadastrarProprietarios');
+        $routes[] = array('route' => '/extrato-proprietarios', 'controller' => 'ProprietariosController', 'action' => 'extratoProprietarios');
+        $routes[] = array('route' => '/processar-extrato-proprietarios', 'controller' => 'ProprietariosController', 'action' => 'processarExtratoProprietarios');
 
 		$this->setRoutes($routes);
 	}
