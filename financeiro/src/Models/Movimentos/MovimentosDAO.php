@@ -17,7 +17,7 @@ class MovimentosDAO extends Model {
         }
 
         if ($pesquisa != '') {
-            $where .= ' AND (categorias.categoria LIKE "%' . $pesquisa . '%" OR movimentos.nomeMovimento LIKE "%' . $pesquisa . '%")';
+            $where .= ' AND (categorias.categoria LIKE "%' . $pesquisa . '%" OR movimentos.nomeMovimento LIKE "%' . $pesquisa . '%" OR proprietarios.proprietario = "' . $pesquisa . '")';
         }
 
         $query = "SELECT movimentos.*, categorias.categoria, categorias.tipo, proprietarios.proprietario FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria LEFT JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario $where ORDER BY dataMovimento DESC";
@@ -113,10 +113,11 @@ class MovimentosDAO extends Model {
         }
 
         if ($pesquisa != '') {
-            $where .= ' AND (categorias.categoria LIKE "%' . $pesquisa . '%" OR movimentos.nomeMovimento LIKE "%' . $pesquisa . '%")';
+            //$where .= ' AND (categorias.categoria LIKE "%' . $pesquisa . '%" OR movimentos.nomeMovimento LIKE "%' . $pesquisa . '%" OR proprietarios.proprietario = "' . $pesquisa . '")';
+            $where .= ' AND (proprietarios.proprietario = "' . $pesquisa . '")';
         }
 
-        $query = "SELECT movimentos.*, categorias.categoria, CONCAT(contas_investimentos.nomeBanco, ' - ', contas_investimentos.tituloInvest) AS invest FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria INNER JOIN contas_investimentos ON contas_investimentos.idContaInvest = movimentos.idContaInvest WHERE movimentos.idContaInvest > 0 AND categorias.idCategoria IN (12, 10) AND $where ORDER BY dataMovimento DESC";
+        $query = "SELECT movimentos.*, categorias.categoria, CONCAT(contas_investimentos.nomeBanco, ' - ', contas_investimentos.tituloInvest) AS invest FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria INNER JOIN contas_investimentos ON contas_investimentos.idContaInvest = movimentos.idContaInvest INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario WHERE movimentos.idContaInvest > 0 AND categorias.idCategoria IN (12, 10) AND $where ORDER BY dataMovimento DESC";
 
         $new_sql = new SQLActions();
 		$result = $new_sql->executarQuery($query);
