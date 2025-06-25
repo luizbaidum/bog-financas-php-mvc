@@ -1,3 +1,5 @@
+<?php use MF\Helpers\NumbersHelper; ?>
+
 <div class="table-responsive rounded border shadow-sm">
     <table class="table table-sm table-hover align-middle mb-0">
         <thead class="table-light">
@@ -28,7 +30,7 @@
                     <td>
                         <div class="input-group input-group-sm">
                             <span class="input-group-text">R$</span>
-                            <input type="number" class="form-control text-end" name="valor[]" step=".01" value="<?= $value['valorOrcamento']; ?>">
+                            <input type="text" class="form-control text-end numero-br" name="valor[]" value="<?= NumbersHelper::formatUStoBR($value['valorOrcamento']); ?>">
                         </div>
                     </td>
                 </tr>

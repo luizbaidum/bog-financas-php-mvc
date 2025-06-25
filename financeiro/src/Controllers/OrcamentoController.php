@@ -3,6 +3,7 @@ namespace src\Controllers;
 
 use Exception;
 use MF\Controller\Controller;
+use MF\Helpers\NumbersHelper;
 use MF\Model\Model;
 use src\Models\Orcamento\OrcamentoDAO;
 use MF\View\SetButtons;
@@ -129,13 +130,21 @@ class OrcamentoController extends Controller {
         if ($this->isSetPost()) {
             try {
                 $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
-                $_POST['idCategoria'] = $arr_cat[0];
                 $sinal = $arr_cat[1];
+
+                $valor = NumbersHelper::formatBRtoUS($_POST['valor']);
+
+                if ($sinal == '-' && !strpos($valor, '-'))
+                    $valor = $sinal . $valor;
+
+                $item = [
+                    'dataOrcamento' => $_POST['dataOrcamento'],
+                    'idCategoria'   => $arr_cat[0],
+                    'idProprietario'=> $_POST['idProprietario'],
+                    'valor'         => $valor
+                ];
     
-                if ($sinal == '-' && !strpos($_POST['valor'], '-'))
-                    $_POST['valor'] = $sinal . $_POST['valor'];
-    
-                $ret = (new OrcamentoDAO())->cadastrar(new OrcamentoEntity(), $_POST);
+                $ret = (new OrcamentoDAO())->cadastrar(new OrcamentoEntity(), $item);
 
                 if ($ret['result']) {
 					$array_retorno = array(
@@ -169,7 +178,7 @@ class OrcamentoController extends Controller {
                     $item['idProprietario'] = $_POST['idProprietario'][$k];
                     $sinal = $_POST['sinal'][$k];
     
-                    $item['valor'] = $_POST['valor'][$k];
+                    $item['valor'] = NumbersHelper::formatBRtoUS($_POST['valor'][$k]);
                     if ($sinal == '-' && $item['valor'] > 0) {
                         $item['valor'] = $item['valor'] * -1;
                     }

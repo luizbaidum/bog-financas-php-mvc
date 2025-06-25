@@ -15,9 +15,9 @@ class NumbersHelper {
             return '';
 
         $numero = str_replace('.', '', $num);
-        $numero = str_replace(',', '.', $numero);
-        
-        return $numero;
+        $formated = str_replace(',', '.', $numero);
+
+        return $formated;
     }
     
     public static function formatUStoBR($num)
