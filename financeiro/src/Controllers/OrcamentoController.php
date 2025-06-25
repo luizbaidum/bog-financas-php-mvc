@@ -178,7 +178,7 @@ class OrcamentoController extends Controller {
                     $item['idProprietario'] = $_POST['idProprietario'][$k];
                     $sinal = $_POST['sinal'][$k];
     
-                    $item['valor'] = $_POST['valor'][$k];
+                    $item['valor'] = NumbersHelper::formatBRtoUS($_POST['valor'][$k]);
                     if ($sinal == '-' && $item['valor'] > 0) {
                         $item['valor'] = $item['valor'] * -1;
                     }
