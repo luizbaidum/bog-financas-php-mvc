@@ -38,26 +38,20 @@
                                 </tbody>
                                 <tfoot class="table-group-divider">
                                     <tr class="table-active">
-                                        <td class="fw-bold">(+) Receitas - (-) Despesas - (+) Resgates</td>
-                                        <td>
-                                            <span class="fs-6 fw-bold text-info">
-                                                <?= NumbersHelper::formatUStoBR(abs(($total_receita[$prop] ?? 0)) - abs(($total_despesa[$prop] ?? 0)) - abs(($total_resgate[$prop] ?? 0))); ?>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr class="table-active">
                                         <td class="fw-bold">(+) Receitas - (-) Despesas</td>
                                         <td>
-                                            <span class="fs-6 fw-bold text-success">
-                                                <?= NumbersHelper::formatUStoBR(abs(($total_receita[$prop] ?? 0)) - abs(($total_despesa[$prop] ?? 0))); ?>
+                                            <?php $resultado = abs($total_receita[$prop] ?? 0) - abs($total_despesa[$prop] ?? 0); ?>
+                                            <span class="fs-6 fw-bold <?= $resultado > 0 ? 'text-success' : 'text-danger'; ?>">
+                                                <?= NumbersHelper::formatUStoBR($resultado); ?>
                                             </span>
                                         </td>
                                     </tr>
                                     <tr class="table-active">
                                         <td class="fw-bold">(-) Aplicação - (+) Resgates</td>
                                         <td>
-                                            <span class="fs-6 fw-bold text-warning">
-                                                <?= NumbersHelper::formatUStoBR(abs(($total_resgate[$prop] ?? 0)) - abs(($total_aplicacao[$prop] ?? 0))); ?>
+                                            <?php $resultado = abs($total_resgate[$prop] ?? 0) - abs($total_aplicacao[$prop] ?? 0); ?>
+                                            <span class="fs-6 fw-bold <?= $resultado < 0 ? 'text-success' : 'text-danger'; ?>">
+                                                <?= NumbersHelper::formatUStoBR($resultado); ?>
                                             </span>
                                         </td>
                                     </tr>

@@ -57,7 +57,7 @@ class OrcamentoDAO extends Model {
                     proprietarios.proprietario
                     FROM movimentos
                     INNER JOIN categorias ON movimentos.idCategoria = categorias.idCategoria
-                    LEFT JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario
+                    INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario
                     WHERE $where
                     GROUP BY movimentos.idProprietario, movimentos.idCategoria";
 
@@ -88,7 +88,7 @@ class OrcamentoDAO extends Model {
                             proprietarios.proprietario
                     FROM orcamentos 
                     INNER JOIN categorias ON categorias.idCategoria = orcamentos.idCategoria
-                    LEFT JOIN proprietarios ON proprietarios.idProprietario = orcamentos.idProprietario
+                    INNER JOIN proprietarios ON proprietarios.idProprietario = orcamentos.idProprietario
                     $where
                     GROUP BY orcamentos.idProprietario, orcamentos.idCategoria
                     ORDER BY totalOrcado DESC";
