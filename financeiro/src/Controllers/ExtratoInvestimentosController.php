@@ -4,6 +4,7 @@ namespace src\Controllers;
 use MF\Controller\Controller;
 use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Investimentos\InvestimentosEntity;
+use src\Models\Proprietarios\ProprietariosEntity;
 use src\Models\Rendimentos\RendimentosEntity;
 
 class ExtratoInvestimentosController extends Controller {
@@ -28,6 +29,7 @@ class ExtratoInvestimentosController extends Controller {
         $this->view->data['months'] = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Todos');
         $this->view->data['years'] = array('2023', '2024', '2025', '2026', '2027');
         $this->view->data['lista_acao'] = $model_investimentos->selectAll(new RendimentosEntity, [], ['rendimentos', 'tipo'], []);
+        $this->view->data['lista_proprietarios'] = $model_investimentos->selectAll(new ProprietariosEntity, [], [], []);
 
         $this->renderPage(
             main_route: $this->index_route . '/extrato_investimentos', 
