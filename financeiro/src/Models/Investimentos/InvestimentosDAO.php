@@ -27,6 +27,7 @@ class InvestimentosDAO extends Model {
         $mes = $filtro['extratoMes'] ?? '';
         $invest = $filtro['extratoInvest'] ?? '';
         $acao = $filtro['acaoInvest'] ?? '';
+        $proprietario = $filtro['idProprietario'] ?? '';
 
         if ($mes == '') {
             if ($ano == date('Y') || $ano == '') {
@@ -54,7 +55,11 @@ class InvestimentosDAO extends Model {
             $where .= "AND `rendimentos`.`tipo` = '$acao'";
         }
 
-        $query = "SELECT `rendimentos`.*, CONCAT(`contas_investimentos`.`nomeBanco`, ' - ', `contas_investimentos`.`tituloInvest`) AS conta FROM `rendimentos` INNER JOIN `contas_investimentos` ON `rendimentos`.`idContaInvest` = `contas_investimentos`.`idContaInvest` WHERE `rendimentos`.`idRendimento` > 0 $where ORDER BY `rendimentos`.`dataRendimento` DESC";
+        if ($proprietario != '') {
+            $where .= "AND `contas_investimentos`.`idProprietario` = '$proprietario'";
+        }
+
+        $query = "SELECT `rendimentos`.*, CONCAT(`contas_investimentos`.`nomeBanco`, ' - ', `contas_investimentos`.`tituloInvest`) AS conta FROM `rendimentos` INNER JOIN `contas_investimentos` ON `rendimentos`.`idContaInvest` = `contas_investimentos`.`idContaInvest` INNER JOIN `proprietarios` ON `proprietarios`.`idProprietario` = `contas_investimentos`.`idProprietario` WHERE `rendimentos`.`idRendimento` > 0 $where ORDER BY `rendimentos`.`dataRendimento` DESC";
 
         $new_sql = new SQLActions();
         $result = $new_sql->executarQuery($query);
@@ -68,7 +73,7 @@ class InvestimentosDAO extends Model {
 
     public function getAllContas()
     {
-        $query = "SELECT contas_investimentos.*, proprietarios.proprietario FROM contas_investimentos LEFT JOIN proprietarios ON proprietarios.idProprietario = contas_investimentos.idProprietario WHERE contas_investimentos.idContaInvest > 0";
+        $query = "SELECT contas_investimentos.*, proprietarios.proprietario FROM contas_investimentos INNER JOIN proprietarios ON proprietarios.idProprietario = contas_investimentos.idProprietario WHERE contas_investimentos.idContaInvest > 0";
 
         $new_sql = new SQLActions();
         $result = $new_sql->executarQuery($query);
