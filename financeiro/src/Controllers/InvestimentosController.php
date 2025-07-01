@@ -5,6 +5,7 @@ use Exception;
 use MF\Controller\Controller;
 use MF\Helpers\NumbersHelper;
 use MF\Model\Model;
+use src\Models\Categorias\CategoriasDAO;
 use src\Models\Categorias\CategoriasEntity;
 use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Investimentos\InvestimentosEntity;
@@ -18,8 +19,27 @@ use src\Models\Rendimentos\RendimentosEntity;
 
 class InvestimentosController extends Controller {
 
-    const APLICACAO = '12';
-    const RESGATE = '10';
+    private $categoria_A;
+    private $categoria_RA;
+
+    //SQL:
+    // ALTER TABLE `categorias` CHANGE `tipo` `tipo` VARCHAR(2) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+    // UPDATE `categorias` SET `tipo` = 'RA' WHERE `categoria` LIKE '%Resgate%';
+
+    public function __construct() 
+    {
+        $categorias = (new CategoriasDAO())->selecionarCategoriasTipoAeRA();
+
+        foreach ($categorias as $v) {
+            if ($v['tipo'] == 'A') {
+                $this->categoria_A = $v['idCategoria'];
+            } else if ($v['tipo'] == 'RA') {
+                $this->categoria_RA = $v['idCategoria'];
+            }
+        }
+
+        parent::__construct();
+    }
 
     public function index() {
         $model_investimentos = new InvestimentosDAO();
@@ -369,7 +389,7 @@ class InvestimentosController extends Controller {
         $model = new Model();
 
         switch ($id_categoria) {
-            case self::APLICACAO:
+            case $this->categoria_A:
                 $tipo = 4;
 
                 $valor_aplicado = $valor; 
@@ -401,7 +421,7 @@ class InvestimentosController extends Controller {
                 }
 
                 break;
-            case self::RESGATE:
+            case $this->categoria_RA:
                 $tipo = 3;
 
                 $valor_aplicado = $valor; 
