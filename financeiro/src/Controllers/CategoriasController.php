@@ -43,6 +43,10 @@ class CategoriasController extends Controller {
                     } 
                 }
 
+                if ($_POST['regularidade'] == '') {
+                    throw new Exception("Atenção: Escolher uma opção para 'Regularidade'");
+                }
+
                 $ret = (new CategoriasDAO())->cadastrar(new CategoriasEntity, $_POST);
 
                 if ($ret['result']) {

@@ -2,32 +2,46 @@
     <div class="row">
         <div class="col-sm-6 col-12">
             <div class="row">
-                <div class="col-12">
-                    <label for="categoria">Nome Categoria</label>
+                <div class="col-sm-6 col-12">
+                    <label for="categoria">Nome/Título</label>
                     <input type="text" class="form-control" id="categoria" name="categoria" required>
+                </div>
+                <div class="col-sm-6 col-12">
+                    <label for="idRegularidade">Regularidade</label>
+                    <select class="form-control" id="idRegularidade" name="regularidade" required>
+                        <option value="">Selecione</option>
+                        <option value="f">F (Fixa)</option>
+                        <option value="v">V (Variável)</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
                 <div class="row">
                     <div class="col-sm-6 col-12">
                         <label for="tipo">Tipo</label>
-                        <input type="text" class="form-control" id="tipo" placeholder="(R, D, A ou RA)" name="tipo" required>
+                        <select class="form-control" id="tipo" name="tipo" required>
+                            <option value="">Selecione</option>
+                            <option value="R">R (Receita)</option>
+                            <option value="D">D (Despesa)</option>
+                            <option value="A">A (Aplicação)</option>
+                            <option value="RA">RA (Resgate de Aplicação)</option>
+                        </select>
                     </div>
                     <div class="col-sm-6 col-12">
-                        <label for="tipo">Sinal</label>
-                        <input type="text" class="form-control" id="sinal" placeholder="(+ ou -)" name="sinal" required>
+                        <label for="sinal">Sinal</label>
+                        <select class="form-control" id="sinal" name="sinal" required>
+                            <option value="">Selecione</option>
+                            <option value="+">+ (Entradas)</option>
+                            <option value="-">- (Saídas)</option>
+                        </select>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-sm-6 col-12">
             <small class="text-muted">
-                <strong>Tipo +</strong> para entradas (Receitas ou Resgates)<br>
-                <strong>Tipo -</strong> para saídas (Despesas ou Aplicações)<br>
-                <strong>R</strong> para Receita<br>
-                <strong>D</strong> para Despesa<br>
-                <strong>A</strong> para Aplicação<br>
-                <strong>RA</strong> para Resgate de Aplicação
+                Regularidade <strong>Fixa</strong> para Categorias onde o valor não sofre alteração mês-a-mês, ou sofre pequenas alterações. <br>
+                Regularidade <strong>Variável</strong> para Categorias onde o valor tem grandes alterações a cada mês. 
             </small>
         </div>
     </div>

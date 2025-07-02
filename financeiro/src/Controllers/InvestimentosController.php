@@ -25,6 +25,7 @@ class InvestimentosController extends Controller {
     //SQL:
     // ALTER TABLE `categorias` CHANGE `tipo` `tipo` VARCHAR(2) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
     // UPDATE `categorias` SET `tipo` = 'RA' WHERE `categoria` LIKE '%Resgate%';
+    // ALTER TABLE `categorias` ADD COLUMN IF NOT EXISTS `regularidade` ENUM('F', 'V') NOT NULL;
 
     public function __construct() 
     {
