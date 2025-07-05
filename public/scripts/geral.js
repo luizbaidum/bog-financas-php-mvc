@@ -87,22 +87,41 @@ $(document).on('submit', '.submit-form-crud-ajax', function (e) {
     switch (pathname) {
         case '/movimentos':
             import('./exportValidations.js')
-            .then((file) => {
-                const validar = new file.default
-                let ret = validar.movimento(data)
-    
-                if (ret.length == 0) {
-                    requireAjaxOperation({
-                        action: url_action, 
-                        data: data, 
-                        redirect: redirect,
-                        id_form: id_form,
-                        modal: modal
-                    })
-                } else {
-                    modalAlerta('Atenção!', ret.join('<br>'))
-                }
-            });
+                .then(async (file) => {
+                    const validar = new file.default
+                    let ret = await validar.movimento(data)
+        
+                    if (ret.length == 0) {
+                        requireAjaxOperation({
+                            action: url_action, 
+                            data: data, 
+                            redirect: redirect,
+                            id_form: id_form,
+                            modal: modal
+                        })
+                    } else {
+                        modalAlerta('Atenção!', ret.join('<br>'))
+                    }
+                });
+        break
+        case '/categorias':
+            import('./exportValidations.js')
+                .then(async (file) => {
+                    const validar = new file.default
+                    let ret = await validar.categoria(data)
+        
+                    if (ret.length == 0) {
+                        requireAjaxOperation({
+                            action: url_action, 
+                            data: data, 
+                            redirect: redirect,
+                            id_form: id_form,
+                            modal: modal
+                        })
+                    } else {
+                        modalAlerta('Atenção!', ret.join('<br>'))
+                    }
+                });
         break
         default:
             requireAjaxOperation({

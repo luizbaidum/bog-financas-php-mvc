@@ -8,6 +8,13 @@ use src\Models\Categorias\CategoriasDAO;
 use src\Models\Categorias\CategoriasEntity;
 
 class CategoriasController extends Controller {
+
+    public function consultarCategoriasInvestimentos()
+    {
+        $categorias = (new CategoriasDAO())->selecionarCategoriasTipoAeRA();
+        echo json_encode($categorias);
+    }
+
     public function categorias()
     {
         $this->view->settings = [
@@ -25,12 +32,26 @@ class CategoriasController extends Controller {
             try {
                 $_POST['tipo'] = strtoupper($_POST['tipo']);
 
-                if ($_POST['tipo'] != 'R' && $_POST['tipo'] != 'D' && $_POST['tipo'] != 'A') {
-                    throw new Exception('Atenção: Definir tipo como R, D ou A.');
+                if ($_POST['tipo'] != 'R' && $_POST['tipo'] != 'D' && $_POST['tipo'] != 'A' && $_POST['tipo'] != 'RA') {
+                    throw new Exception('Atenção: Definir tipo como R, D, A ou RA.');
                 }
 
                 if ($_POST['sinal'] != '+' && $_POST['sinal'] != '-') {
                     throw new Exception('Atenção: Definir sinal como + ou -.');
+                }
+
+                if ($_POST['tipo'] == 'R' || $_POST['tipo'] == 'RA') {
+                    if ($_POST['sinal'] != '+') {
+                        throw new Exception("Atenção: Definir sinal como '+', pois 'Receita' ou 'Resgate de Aplicação' são entradas.");
+                    }
+                } else {
+                   if ($_POST['sinal'] != '-') {
+                        throw new Exception("Atenção: Definir sinal como '-', pois 'Aplicação' ou 'Despesa' são saídas.");
+                    } 
+                }
+
+                if ($_POST['regularidade'] == '') {
+                    throw new Exception("Atenção: Escolher uma opção para 'Regularidade'");
                 }
 
                 $ret = (new CategoriasDAO())->cadastrar(new CategoriasEntity, $_POST);

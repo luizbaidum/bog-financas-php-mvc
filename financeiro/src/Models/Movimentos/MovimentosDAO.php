@@ -80,7 +80,7 @@ class MovimentosDAO extends Model {
             $where = "DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$year$month'";
         }
 
-        $query = "SELECT SUM(movimentos.valor) AS total, movimentos.idProprietario, categorias.tipo, categorias.categoria, proprietarios.proprietario FROM movimentos INNER JOIN categorias ON movimentos.idCategoria = categorias.idCategoria INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario WHERE $where GROUP BY movimentos.idProprietario, categorias.idCategoria";
+        $query = "SELECT SUM(movimentos.valor) AS total, movimentos.idProprietario, categorias.tipo, proprietarios.proprietario FROM movimentos INNER JOIN categorias ON movimentos.idCategoria = categorias.idCategoria INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario WHERE $where GROUP BY movimentos.idProprietario, categorias.idCategoria";
 
         $new_sql = new SQLActions();
         $result = $new_sql->executarQuery($query);
