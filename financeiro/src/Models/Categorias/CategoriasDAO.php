@@ -13,10 +13,11 @@ class CategoriasDAO extends Model {
         $new_sql = new SQLActions();
         $result = $new_sql->executarQuery($query);
 
-        if (count($result) > 0) {
-            return $result;
+        $array = [];
+        foreach ($result as $v) {
+            $array[$v['tipo']] = $v['idCategoria'];
         }
 
-        return [];
+        return $array;
     }
 }

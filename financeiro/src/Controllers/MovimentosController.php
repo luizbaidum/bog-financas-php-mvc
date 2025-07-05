@@ -67,31 +67,29 @@ class MovimentosController extends Controller {
             foreach ($ret as $val) {
                 $lista_id_prop[$val['idProprietario']] = $val['proprietario'];
 
-                if ($val['tipo'] == 'R') {
-                    if (strpos($val['categoria'], 'Resgate') !== false) {
-                        if (isset($total_resgate[$val['idProprietario']])) {
-                            $total_resgate[$val['idProprietario']] += $val['total'];
-                        } else {
-                            $total_resgate[$val['idProprietario']] = $val['total'];
-                        }
-
-                        if (isset($data[$val['idProprietario']]['Resgate'])) {
-                            $data[$val['idProprietario']]['Resgate'] += $val['total'];
-                        } else {
-                            $data[$val['idProprietario']]['Resgate'] = $val['total'];
-                        }
+                if ($val['tipo'] == 'RA') {
+                    if (isset($total_resgate[$val['idProprietario']])) {
+                        $total_resgate[$val['idProprietario']] += $val['total'];
                     } else {
-                        if (isset($total_receita[$val['idProprietario']])) {
-                            $total_receita[$val['idProprietario']] += $val['total'];
-                        } else {
-                            $total_receita[$val['idProprietario']] = $val['total'];
-                        }
+                        $total_resgate[$val['idProprietario']] = $val['total'];
+                    }
 
-                        if (isset($data[$val['idProprietario']]['Receitas'])) {
-                            $data[$val['idProprietario']]['Receitas'] += $val['total'];
-                        } else {
-                            $data[$val['idProprietario']]['Receitas'] = $val['total'];
-                        }
+                    if (isset($data[$val['idProprietario']]['Resgate'])) {
+                        $data[$val['idProprietario']]['Resgate'] += $val['total'];
+                    } else {
+                        $data[$val['idProprietario']]['Resgate'] = $val['total'];
+                    }
+                } elseif ($val['tipo'] == 'R') {
+                    if (isset($total_receita[$val['idProprietario']])) {
+                        $total_receita[$val['idProprietario']] += $val['total'];
+                    } else {
+                        $total_receita[$val['idProprietario']] = $val['total'];
+                    }
+
+                    if (isset($data[$val['idProprietario']]['Receitas'])) {
+                        $data[$val['idProprietario']]['Receitas'] += $val['total'];
+                    } else {
+                        $data[$val['idProprietario']]['Receitas'] = $val['total'];
                     }
                 } elseif ($val['tipo'] == 'D') {
                     if (isset($total_despesa[$val['idProprietario']])) {

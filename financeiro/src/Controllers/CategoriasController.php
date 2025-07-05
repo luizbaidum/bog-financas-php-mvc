@@ -8,6 +8,13 @@ use src\Models\Categorias\CategoriasDAO;
 use src\Models\Categorias\CategoriasEntity;
 
 class CategoriasController extends Controller {
+
+    public function consultarCategoriasInvestimentos()
+    {
+        $categorias = (new CategoriasDAO())->selecionarCategoriasTipoAeRA();
+        echo json_encode($categorias);
+    }
+
     public function categorias()
     {
         $this->view->settings = [

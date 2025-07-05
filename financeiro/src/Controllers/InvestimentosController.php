@@ -22,22 +22,12 @@ class InvestimentosController extends Controller {
     private $categoria_A;
     private $categoria_RA;
 
-    //SQL:
-    // ALTER TABLE `categorias` CHANGE `tipo` `tipo` VARCHAR(2) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
-    // UPDATE `categorias` SET `tipo` = 'RA' WHERE `categoria` LIKE '%Resgate%';
-    // ALTER TABLE `categorias` ADD COLUMN IF NOT EXISTS `regularidade` ENUM('F', 'V') NOT NULL;
-
     public function __construct() 
     {
         $categorias = (new CategoriasDAO())->selecionarCategoriasTipoAeRA();
 
-        foreach ($categorias as $v) {
-            if ($v['tipo'] == 'A') {
-                $this->categoria_A = $v['idCategoria'];
-            } else if ($v['tipo'] == 'RA') {
-                $this->categoria_RA = $v['idCategoria'];
-            }
-        }
+        $this->categoria_A = $categorias['A'];
+        $this->categoria_RA = $categorias['RA'];
 
         parent::__construct();
     }
@@ -269,7 +259,7 @@ class InvestimentosController extends Controller {
 
                     $obj_movimento->nomeMovimento = 'Resgate para pagar ' . $_POST['nomeMovimento'];
                     $obj_movimento->dataMovimento = $_POST['dataMovimento'];
-                    $obj_movimento->idCategoria = 10; //Resgate
+                    $obj_movimento->idCategoria = $this->categoria_A;
                     $obj_movimento->valor = NumbersHelper::formatBRtoUS($_POST['valor']);
                     $obj_movimento->idProprietario = $_POST['idProprietario'];
                     $obj_movimento->idContaInvest = !empty($_POST['idContaInvest']) ? $_POST['idContaInvest'] : 0;
@@ -344,7 +334,7 @@ class InvestimentosController extends Controller {
         $this->renderPage(main_route: $this->index_route . '/investimentos_movimentar', conteudo: 'investimentos_movimentar', base_interna: 'base_cruds');
     }
 
-     private function cadastrarTransferenciaEntreInvestimentos($invest_origem, $objetivo_origem, $valor, $invest_destino, $objetivo_destino)
+    private function cadastrarTransferenciaEntreInvestimentos($invest_origem, $objetivo_origem, $valor, $invest_destino, $objetivo_destino)
     {
         //Resgate
         list($id_invest, $id_proprietario) = explode('@', $invest_origem);
@@ -352,7 +342,7 @@ class InvestimentosController extends Controller {
         $item = array(
                     'nomeMovimento'   => 'Resgate - movimento entre investimentos',
                     'dataMovimento'   => date("Y-m-d"),
-                    'idCategoria'     => 10, //Resgate
+                    'idCategoria'     => $this->categoria_RA,
                     'valor'           => $valor,
                     'idProprietario'  => $id_proprietario,
                     'idContaInvest'   => $id_invest
@@ -362,7 +352,7 @@ class InvestimentosController extends Controller {
 
         $id_movimento = $ret['result'];
 
-        $this->inserirMovimentacaodeAplicacao($id_invest, $objetivo_origem, $id_movimento, '10', $valor, date('Y-m-d'));
+        $this->inserirMovimentacaodeAplicacao($id_invest, $objetivo_origem, $id_movimento, $this->categoria_RA, $valor, date('Y-m-d'));
 
         //Aplicação
         list($id_invest, $id_proprietario) = explode('@', $invest_destino);
@@ -370,7 +360,7 @@ class InvestimentosController extends Controller {
         $item = array(
             'nomeMovimento'   => 'Aplicação - movimento entre investimentos',
             'dataMovimento'   => date("Y-m-d"),
-            'idCategoria'     => 12, //Aplicação
+            'idCategoria'     => $this->categoria_A,
             'valor'           => ($valor * -1),
             'idProprietario'  => $id_proprietario,
             'idContaInvest'   => $id_invest
@@ -380,7 +370,7 @@ class InvestimentosController extends Controller {
 
         $id_movimento = $ret['result'];
 
-        $this->inserirMovimentacaodeAplicacao($id_invest, $objetivo_destino, $id_movimento, '12', $valor, date('Y-m-d'));
+        $this->inserirMovimentacaodeAplicacao($id_invest, $objetivo_destino, $id_movimento, $this->categoria_A, $valor, date('Y-m-d'));
 
         return $ret;
     }
