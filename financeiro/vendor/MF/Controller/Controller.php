@@ -46,7 +46,7 @@ class Controller {
 			ob_start();
 
 			include (Diretorio::diretorio . 'financeiro/vendor/MF/View/DataExtract.php');
-			
+
 			if ($base_interna == '') {
 				$this->carregarConteudo();
 				$resultado = ob_get_contents();
