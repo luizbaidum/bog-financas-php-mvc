@@ -18,14 +18,14 @@ class Validations {
             });
     }
 
-    
     async movimento(form_data) {
         try {
             let categoria = form_data.get('idCategoria');
             let investimento = form_data.get('idContaInvest');
             let objetivo = form_data.get('idObjetivo');
             let proprietario = form_data.get('idProprietario');
-            const categorias_investimentos = await this.buscar_categorias_investimentos();
+            let categorias_investimentos = await this.buscar_categorias_investimentos();
+
             this.aplicacao = categorias_investimentos.A;
             this.resgate = categorias_investimentos.RA;
 
@@ -43,11 +43,11 @@ class Validations {
                     this.msg.push('Por favor, selecionar conta investimento.');
                 }
 
-                if (categoria == this.resgate && (objetivo == '' || objetivo == null)) {
+                if (id_categoria_post == this.resgate && (objetivo == '' || objetivo == null)) {
                     this.msg.push('Por favor, selecionar objetivo do investimento.');
                 }
 
-                if (categoria != this.resgate && categoria != this.aplicacao && investimento != '' && investimento != null) {
+                if (id_categoria_post != this.resgate && id_categoria_post != this.aplicacao && investimento != '' && investimento != null) {
                     this.msg.push('Por favor, limpar o campo Conta Invest, pois a categoria escolhida não necessita de conta investimento.');
                 }
             }
@@ -62,7 +62,7 @@ class Validations {
     async categoria(form_data) {
         try {
             let tipo = form_data.get('tipo');
-            const categorias_investimentos = await this.buscar_categorias_investimentos();
+            let categorias_investimentos = await this.buscar_categorias_investimentos();
             this.aplicacao = categorias_investimentos.A;
             this.resgate = categorias_investimentos.RA;
 
