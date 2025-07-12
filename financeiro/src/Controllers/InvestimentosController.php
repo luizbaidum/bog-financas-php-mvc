@@ -51,7 +51,6 @@ class InvestimentosController extends Controller {
         $this->view->data['objs'] = $objs;
 
         $this->renderPage(
-            main_route: $this->index_route . '/contas_investimentos_index', 
             conteudo: 'contas_investimentos_index'
         );
     }
@@ -166,7 +165,7 @@ class InvestimentosController extends Controller {
 
         $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
 
-        $this->renderPage(main_route: $this->index_route . '/investimentos', conteudo: 'investimentos', base_interna: 'base_cruds');
+        $this->renderPage(conteudo: 'investimentos', base_interna: 'base_cruds');
     }
 
     public function cadastrarInvestimentos()
@@ -176,7 +175,7 @@ class InvestimentosController extends Controller {
                 if (isset($_POST['cadContaInvest'])) {
                     unset($_POST['cadContaInvest']);
                 }
-        
+
                 $_POST['saldoAtual'] = $_POST['saldoInicial'];
                 $ret = (new InvestimentosDAO())->cadastrar(new InvestimentosEntity, $_POST);
 
@@ -213,7 +212,7 @@ class InvestimentosController extends Controller {
 
         $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
 
-        $this->renderPage(main_route: $this->index_route . '/objetivos', conteudo: 'objetivos', base_interna: 'base_cruds');
+        $this->renderPage( conteudo: 'objetivos', base_interna: 'base_cruds');
     }
 
     public function cadastrarObjetivos()
@@ -331,7 +330,7 @@ class InvestimentosController extends Controller {
 
         $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
 
-        $this->renderPage(main_route: $this->index_route . '/investimentos_movimentar', conteudo: 'investimentos_movimentar', base_interna: 'base_cruds');
+        $this->renderPage(conteudo: 'investimentos_movimentar', base_interna: 'base_cruds');
     }
 
     private function cadastrarTransferenciaEntreInvestimentos($invest_origem, $objetivo_origem, $valor, $invest_destino, $objetivo_destino)

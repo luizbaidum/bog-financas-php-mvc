@@ -23,7 +23,7 @@ class CategoriasController extends Controller {
             'title'    => 'Cadastro de Categoria',
         ];
 
-        $this->renderPage(main_route: $this->index_route . '/categorias', conteudo: 'categorias', base_interna: 'base_cruds');
+        $this->renderPage(conteudo: 'categorias', base_interna: 'base_cruds');
     }
 
     public function cadastrarCategorias()

@@ -33,7 +33,7 @@ class IndicadoresController extends Controller {
         foreach ($indicadores as $value) {
             if ($value['tipo'] == 'R' && $value['idCategoria'] != 10)
                 $receitas += $value['total'];
-            
+
             if ($value['idCategoria'] == 12 || $value['idCategoria'] == 10)
                 $aplicado += $value['total'];
         }
@@ -44,7 +44,6 @@ class IndicadoresController extends Controller {
         $this->view->data['aplicado'] = $aplicado;
 
         $this->renderPage(
-            main_route: $this->index_route . '/indicadores_index', 
             conteudo: 'indicadores_index'
         );
     }

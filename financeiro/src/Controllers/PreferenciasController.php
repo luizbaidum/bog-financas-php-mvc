@@ -20,7 +20,6 @@ class PreferenciasController extends Controller {
 
         $this->view->data['prefs'] = $prefs;
         $this->renderPage(
-            main_route: $this->index_route . '/preferencias', 
             conteudo: 'preferencias'
         );
     }
@@ -34,7 +33,7 @@ class PreferenciasController extends Controller {
                 foreach ($_POST['idPreferencia'] as $id) {
                     $status = $_POST['status'][$id] ?? 'F';
                     $item['status'] = $status;
-     
+
                     $ret = $model_preferencias->atualizar(new PreferenciasEntity, $item, ['idPreferencia' => $id]);
 
                     if (isset($ret['result']) && $ret['result'] > 0) {

@@ -18,7 +18,7 @@ class ProprietariosController extends Controller {
             'title'    => 'Cadastro de Proprietario',
         ];
 
-        $this->renderPage(main_route: $this->index_route . '/proprietarios', conteudo: 'proprietarios', base_interna: 'base_cruds');
+        $this->renderPage(conteudo: 'proprietarios', base_interna: 'base_cruds');
     }
 
     public function cadastrarProprietarios()
@@ -63,7 +63,6 @@ class ProprietariosController extends Controller {
         $this->view->data['lista_categorias'] = $model_movimentos->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
 
         $this->renderPage(
-            main_route: $this->index_route . '/extrato-proprietarios', 
             conteudo: 'extrato_proprietarios_form'
         );
     }

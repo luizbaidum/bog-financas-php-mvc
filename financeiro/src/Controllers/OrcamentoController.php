@@ -42,7 +42,6 @@ class OrcamentoController extends Controller {
         $this->view->data['orcamentos'] = $orcamentos;
 
         $this->renderPage(
-            main_route: $this->index_route . '/orcamento_index', 
             conteudo: 'orcamento_index'
         );
     }
@@ -109,7 +108,7 @@ class OrcamentoController extends Controller {
         $this->view->data['months'] = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Todos');
         $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
 
-        $this->renderPage(main_route: $this->index_route . '/orcamento', conteudo: 'orcamento', base_interna: 'base_cruds');
+        $this->renderPage(conteudo: 'orcamento', base_interna: 'base_cruds');
     }
 
     public function orcamentoDoRealizado()
@@ -122,7 +121,7 @@ class OrcamentoController extends Controller {
             'div_ajax' => 'id-content-importar'
         ];
 
-        $this->renderPage(main_route: $this->index_route . '/orcamento_do_realizado', conteudo: 'orcamento_do_realizado', base_interna: 'base_cruds');
+        $this->renderPage(conteudo: 'orcamento_do_realizado', base_interna: 'base_cruds');
     }
 
     public function cadastrarOrcamento()

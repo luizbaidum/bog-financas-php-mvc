@@ -35,10 +35,9 @@ class RendimentosController extends Controller {
                 $rendi[$k]['valor'] = $r['valor'] + $valor;
             }
         }
-        
+
         $this->view->data['ret'] = json_encode($rendi);
         $this->renderPage(
-            main_route: $this->index_route . '/evolucao_rendimentos', 
             conteudo: 'evolucao_rendimentos'
         );
     }
