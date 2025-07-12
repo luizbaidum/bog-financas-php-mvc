@@ -6,7 +6,7 @@ use MF\Model\Model;
 use MF\Model\SQLActions;
 
 class OrcamentoDAO extends Model {
-    public function orcamentos($year = '', $month = '')
+    public function orcamentosIndicadores($year = '', $month = '')
     {
         $where = 'WHERE (MONTH(orcamentos.dataOrcamento) = MONTH(CURRENT_DATE()))';
         if ($month != '') {
@@ -20,14 +20,12 @@ class OrcamentoDAO extends Model {
         $query = "SELECT SUM(orcamentos.valor) AS totalOrcado, 
                             categorias.idCategoria, 
                             categorias.categoria, 
-                            categorias.tipo, 
-                            MONTH(orcamentos.dataOrcamento) AS mesOrcado,
-                            GROUP_CONCAT(orcamentos.idOrcamento SEPARATOR ',') AS idOrcamento
+                            categorias.tipo
                     FROM orcamentos 
                     INNER JOIN categorias ON categorias.idCategoria = orcamentos.idCategoria
                     $where
                     GROUP BY orcamentos.idCategoria
-                    ORDER BY totalOrcado DESC";
+                    ORDER BY categorias.tipo DESC";
 
         $new_sql = new SQLActions();
         $result = $new_sql->executarQuery($query);

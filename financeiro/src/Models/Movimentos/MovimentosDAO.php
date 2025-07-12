@@ -44,7 +44,7 @@ class MovimentosDAO extends Model {
         return $result;
     }
 
-    public function indicadores($year = '', $month = '')
+    public function indicadoresRelatorio($year = '', $month = '')
     {
         $where = 'WHERE (DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = DATE_FORMAT(CURRENT_DATE(), "%Y%m"))';
         if (!empty($month)) {
@@ -60,7 +60,7 @@ class MovimentosDAO extends Model {
                     INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria
                     $where
                     GROUP BY movimentos.idCategoria
-                    ORDER BY total DESC";
+                    ORDER BY categorias.tipo DESC";
 
         $new_sql = new SQLActions();
         $result = $new_sql->executarQuery($query);
