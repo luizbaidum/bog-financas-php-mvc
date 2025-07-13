@@ -20,12 +20,36 @@ class IndicadoresController extends Controller {
             'url_search' => $this->index_route . '/indicadores_index'
         ];
 
-        $indicadores = $model_movimentos->indicadoresRelatorio();
+        $arr_receitas = [];
+        $arr_despesas = [];
+        $arr_aplica = [];
+        $arr_resgata = [];
+
+        $indicadores_original = $model_movimentos->indicadoresRelatorio();
         $orcamentos = $model_orcamento->orcamentosIndicadores();
         if ($mes_filtro != '') {
-            $indicadores = $model_movimentos->indicadoresRelatorio($ano_filtro, $mes_filtro);
+            $indicadores_original = $model_movimentos->indicadoresRelatorio($ano_filtro, $mes_filtro);
             $orcamentos = $model_orcamento->orcamentosIndicadores($ano_filtro, $mes_filtro);
         }
+
+        foreach ($indicadores_original as $x => $v) {
+            switch ($v['tipo']) {
+                case 'R':
+                    $arr_receitas[$x] = $v;
+                break;
+                case 'D':
+                    $arr_despesas[$x] = $v;
+                break;
+                case 'A':
+                    $arr_aplica[$x] = $v;
+                break;
+                case 'RA':
+                    $arr_resgata[$x] = $v;
+                break;
+            }
+        }
+
+        $indicadores = ($arr_receitas + $arr_despesas + $arr_aplica + $arr_resgata);
 
         $this->view->data['indicadores'] = $indicadores;
         $this->view->data['orcamentos'] = $orcamentos;

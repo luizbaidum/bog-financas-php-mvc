@@ -2,9 +2,12 @@
     use MF\Helpers\NumbersHelper;
     $total_real_por_tipo = 0;
     $total_orcado_por_tipo = 0;
+
+    $total_real_geral = array_sum(array_column($indicadores, 'total'));
+    $total_orcado_geral = array_sum(array_column($orcamentos, 'totalOrcado'));
 ?>
 
-<div class="container mt-2">
+<div class="container mt-3">
     <div class="mt-2 mb-2">
 		<div class="card p-2">
 			<div class="text-center">
@@ -13,17 +16,17 @@
 		</div>
 	</div>
 
-    <div class="card p-1">
-        <div class="row">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
+                <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>Categoria</th>
-                            <th class="text-end">Realizado</th>
-                            <th class="text-end">Orçado</th>
-                            <th class="text-end">Diferença</th>
-                            <th class="text-end">% Atingido</th>
+                            <th class="ps-4">Categoria</th>
+                            <th class="text-end pe-4">Realizado</th>
+                            <th class="text-end pe-4">Orçado</th>
+                            <th class="text-end pe-4">Diferença</th>
+                            <th class="text-end pe-4">% Atingido</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,24 +35,37 @@
                                 $tipo_categoria = $value['tipo'];
                                 $proximo = next($indicadores);
                                 $total_real_por_tipo += $value['total'];
-                                $total_orcado_por_tipo += $orcamentos[$id]['totalOrcado'] ?? 0
+                                $total_orcado_por_tipo += $orcamentos[$id]['totalOrcado'] ?? 0;
+                                $diferença = isset($orcamentos[$id]) ? ($value['total'] - $orcamentos[$id]['totalOrcado']) : 0;
                         ?>
                             <tr>
-                                <td><?= $value['categoria']; ?></td>
-                                <td class="text-end fw-bold"><?= NumbersHelper::formatUStoBR($value['total']); ?></td>
+                                <td class="ps-4"><?= $value['categoria']; ?></td>
+                                <td class="text-end fw-bold pe-4"><?= NumbersHelper::formatUStoBR($value['total']); ?></td>
                                 <?php if (isset($orcamentos[$id])): ?>
-                                    <td class="text-end fw-bold"><?= NumbersHelper::formatUStoBR($orcamentos[$id]['totalOrcado']); ?></td>
-                                    <td class="text-end"><?= NumbersHelper::formatUStoBR($value['total'] - $orcamentos[$id]['totalOrcado']); ?></td>
-                                    <td class="text-end"><?= NumbersHelper::formatUStoBR($value['total'] / $orcamentos[$id]['totalOrcado']); ?></td>
+                                    <td class="text-end fw-bold pe-4"><?= NumbersHelper::formatUStoBR($orcamentos[$id]['totalOrcado']); ?></td>
+                                    <td class="text-end pe-4"><?= NumbersHelper::formatUStoBR($diferença); ?></td>
+                                    <td class="text-end pe-4">
+                                        <?= (isset($orcamentos[$id]) ? ($orcamentos[$id]['totalOrcado'] > 0 ? NumbersHelper::formatUStoBR(($value['total'] / $orcamentos[$id]['totalOrcado']) * 100) . '%' : '0%') : '0%'); ?>
+                                    </td>
                                 <?php else: ?>
-                                    <td class="text-end">0</td>
-                                    <td class="text-end">0</td>
-                                    <td class="text-end">0</td>
+                                    <td class="text-end pe-4">-</td>
+                                    <td class="text-end pe-4">-</td>
+                                    <td class="text-end pe-4">-</td>
                                 <?php endif; ?>
                             </tr>
-                            <?php if (is_array($proximo) && $proximo['tipo'] != $tipo_categoria): ?>
-                                <tr>
-                                    <td>Subtotal <?= $tipo_categoria . ' - ' . $total_real_por_tipo . ' - ' . $total_orcado_por_tipo; ?></td>
+                            <?php if (is_array($proximo) && $proximo['tipo'] != $tipo_categoria && $tipo_categoria != 'RA' && $tipo_categoria != 'A'): ?>
+                                <tr class="table-light fw-bold">
+                                    <td class="ps-4">
+                                        Subtotal <?= ($tipo_categoria == 'R' ? 'Receita' : ($tipo_categoria == 'D' ? 'Despesa' : '')); ?>
+                                    </td>
+                                    <td class="text-end pe-4"><?= NumbersHelper::formatUStoBR($total_real_por_tipo) ?></td>
+                                    <td class="text-end pe-4"><?= NumbersHelper::formatUStoBR($total_orcado_por_tipo) ?></td>
+                                    <td class="text-end pe-4">
+                                        <?= NumbersHelper::formatUStoBR($total_real_por_tipo - $total_orcado_por_tipo) ?>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <?= ($total_orcado_por_tipo != 0 ? NumbersHelper::formatUStoBR(($total_real_por_tipo / $total_orcado_por_tipo) * 100) . '%' : '0%'); ?>
+                                    </td>
                                 </tr>
                             <?php
                                     $total_real_por_tipo = 0;
@@ -57,177 +73,24 @@
                                 endif;
                         endforeach; ?>
                     </tbody>
+                    <tfoot>
+                        <?php
+                            $divisao = $total_orcado_geral != 0 ? $total_real_geral / $total_orcado_geral : 0;
+                        ?>
+                        <tr class="table-active fw-bolder">
+                            <td class="ps-4">Total Geral</td>
+                            <td class="text-end <?= $total_real_geral <= 0 ? 'text-danger' : 'text-success'; ?> fw-bold pe-4"><?= NumbersHelper::formatUStoBR($total_real_geral); ?></td>
+                            <td class="text-end <?= $total_orcado_geral <= 0 ? 'text-danger' : 'text-success'; ?> fw-bold pe-4"><?= NumbersHelper::formatUStoBR($total_orcado_geral); ?></td>
+                            <td class="text-end pe-4">
+                                <?= NumbersHelper::formatUStoBR($total_real_geral - $total_orcado_geral); ?>
+                            </td>
+                            <td class="text-end <?= ($divisao > 0.8 && $divisao < 1.2 ? 'text-success' : 'text-danger'); ?> pe-4">
+                                <?= NumbersHelper::formatUStoBR(($divisao) * 100) . '%'; ?>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
     </div>
 </div>
-
-
-
-
-
-    <!-- <div class="container-fluid py-4">
-     
-        <div class="row">
-            <div class="col-12">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-table"></i> Detalhamento Financeiro - Janeiro/2025
-                        </h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Categoria</th>
-                                        <th class="text-end">Orçado</th>
-                                        <th class="text-end">Realizado</th>
-                                        <th class="text-end">Diferença</th>
-                                        <th class="text-end">% Atingido</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                 
-                                    <tr class="table-secondary fw-bold">
-                                        <td colspan="5">RECEITAS</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>Salário</td>
-                                        <td class="text-end text-success fw-bold">R$ 5.000,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 5.000,00</td>
-                                        <td class="text-end">R$ 0,00</td>
-                                        <td class="text-end">100%</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>Freelance</td>
-                                        <td class="text-end text-success fw-bold">R$ 1.000,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 1.500,00</td>
-                                        <td class="text-end text-success">+R$ 500,00</td>
-                                        <td class="text-end">150%</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>Investimentos</td>
-                                        <td class="text-end text-success fw-bold">R$ 300,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 350,00</td>
-                                        <td class="text-end text-success">+R$ 50,00</td>
-                                        <td class="text-end">117%</td>
-                                    </tr>
-                                    
-                                    <tr class="table-light fw-bold">
-                                        <td>Subtotal Receitas</td>
-                                        <td class="text-end text-success fw-bold">R$ 6.300,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 6.850,00</td>
-                                        <td class="text-end text-success">+R$ 550,00</td>
-                                        <td class="text-end">109%</td>
-                                    </tr>
-                          
-                                    <tr class="table-secondary fw-bold">
-                                        <td colspan="5">DESPESAS</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>Moradia</td>
-                                        <td class="text-end text-success fw-bold">R$ 1.500,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 1.500,00</td>
-                                        <td class="text-end">R$ 0,00</td>
-                                        <td class="text-end">100%</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>Alimentação</td>
-                                        <td class="text-end text-success fw-bold">R$ 1.000,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 1.200,00</td>
-                                        <td class="text-end text-danger">-R$ 200,00</td>
-                                        <td class="text-end">120%</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>Transporte</td>
-                                        <td class="text-end text-success fw-bold">R$ 600,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 500,00</td>
-                                        <td class="text-end text-success">+R$ 100,00</td>
-                                        <td class="text-end">83%</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>Lazer</td>
-                                        <td class="text-end text-success fw-bold">R$ 400,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 300,00</td>
-                                        <td class="text-end text-success">+R$ 100,00</td>
-                                        <td class="text-end">75%</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>Saúde</td>
-                                        <td class="text-end text-success fw-bold">R$ 300,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 250,00</td>
-                                        <td class="text-end text-success">+R$ 50,00</td>
-                                        <td class="text-end">83%</td>
-                                    </tr>
-                                    
-                                    <tr class="table-light fw-bold">
-                                        <td>Subtotal Despesas</td>
-                                        <td class="text-end text-success fw-bold">R$ 3.800,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 3.750,00</td>
-                                        <td class="text-end text-success">+R$ 50,00</td>
-                                        <td class="text-end">99%</td>
-                                    </tr>
-                              
-                                    <tr class="table-secondary fw-bold">
-                                        <td colspan="5">APLICAÇÕES FINANCEIRAS</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>Reserva de Emergência</td>
-                                        <td class="text-end text-success fw-bold">R$ 1.000,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 1.000,00</td>
-                                        <td class="text-end">R$ 0,00</td>
-                                        <td class="text-end">100%</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>Investimentos Longo Prazo</td>
-                                        <td class="text-end text-success fw-bold">R$ 500,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 500,00</td>
-                                        <td class="text-end">R$ 0,00</td>
-                                        <td class="text-end">100%</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>Previdência Privada</td>
-                                        <td class="text-end text-success fw-bold">R$ 300,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 300,00</td>
-                                        <td class="text-end">R$ 0,00</td>
-                                        <td class="text-end">100%</td>
-                                    </tr>
-                                    
-                                    <tr class="table-light fw-bold">
-                                        <td>Subtotal Aplicações</td>
-                                        <td class="text-end text-success fw-bold">R$ 1.800,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 1.800,00</td>
-                                        <td class="text-end">R$ 0,00</td>
-                                        <td class="text-end">100%</td>
-                                    </tr>
-                                    
-                               
-                                    <tr class="table-active fw-bolder">
-                                        <td>TOTAL GERAL</td>
-                                        <td class="text-end text-success fw-bold">R$ 11.900,00</td>
-                                        <td class="text-end text-danger fw-bold">R$ 12.400,00</td>
-                                        <td class="text-end text-success">+R$ 500,00</td>
-                                        <td class="text-end">104%</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->

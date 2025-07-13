@@ -25,7 +25,7 @@ class OrcamentoDAO extends Model {
                     INNER JOIN categorias ON categorias.idCategoria = orcamentos.idCategoria
                     $where
                     GROUP BY orcamentos.idCategoria
-                    ORDER BY categorias.tipo DESC";
+                    ORDER BY categorias.tipo, totalOrcado DESC";
 
         $new_sql = new SQLActions();
         $result = $new_sql->executarQuery($query);

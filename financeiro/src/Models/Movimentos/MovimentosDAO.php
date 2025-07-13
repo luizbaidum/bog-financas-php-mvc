@@ -60,7 +60,7 @@ class MovimentosDAO extends Model {
                     INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria
                     $where
                     GROUP BY movimentos.idCategoria
-                    ORDER BY categorias.tipo DESC";
+                    ORDER BY categorias.tipo, total DESC";
 
         $new_sql = new SQLActions();
         $result = $new_sql->executarQuery($query);
