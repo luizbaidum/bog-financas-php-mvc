@@ -35,12 +35,10 @@ class Controller {
 		exit;
 	}
 
-	protected function renderPage($main_route, $conteudo, $base_interna = '')
+	protected function renderPage($conteudo, $base_interna = '')
 	{
 		$this->view->conteudo = $conteudo;
 		$this->view->base_interna = $base_interna;
-		//$this->view->route = $main_route;
-		//exluir se realmente não fizer diferençca
 
 		if ($this->isAjaxRequest()) {
 			ob_start();
@@ -106,7 +104,7 @@ class Controller {
 				}
 			</script>";
 	}
-	
+
 	protected function carregarConteudo()
 	{
 		$classe_atual = get_class($this);

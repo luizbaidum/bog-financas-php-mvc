@@ -32,7 +32,6 @@ class ExtratoInvestimentosController extends Controller {
         $this->view->data['lista_proprietarios'] = $model_investimentos->selectAll(new ProprietariosEntity, [], [], []);
 
         $this->renderPage(
-            main_route: $this->index_route . '/extrato_investimentos', 
             conteudo: 'extrato_investimentos'
         );
     }

@@ -46,7 +46,6 @@ class MovimentosController extends Controller {
         $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
 
         $this->renderPage(
-            main_route: $this->index_route . '/movimentos', 
             conteudo: 'movimentos', 
             base_interna: 'base_cruds'
         );

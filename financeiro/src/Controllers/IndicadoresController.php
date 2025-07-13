@@ -20,31 +20,41 @@ class IndicadoresController extends Controller {
             'url_search' => $this->index_route . '/indicadores_index'
         ];
 
-        $indicadores = $model_movimentos->indicadores(); 
-        $orcamentos = $model_orcamento->orcamentos();
+        $arr_receitas = [];
+        $arr_despesas = [];
+        $arr_aplica = [];
+        $arr_resgata = [];
 
+        $indicadores_original = $model_movimentos->indicadoresRelatorio();
+        $orcamentos = $model_orcamento->orcamentosIndicadores();
         if ($mes_filtro != '') {
-            $indicadores = $model_movimentos->indicadores($ano_filtro, $mes_filtro); 
-            $orcamentos = $model_orcamento->orcamentos($ano_filtro, $mes_filtro);
+            $indicadores_original = $model_movimentos->indicadoresRelatorio($ano_filtro, $mes_filtro);
+            $orcamentos = $model_orcamento->orcamentosIndicadores($ano_filtro, $mes_filtro);
         }
 
-        $receitas = 0;
-        $aplicado = 0;
-        foreach ($indicadores as $value) {
-            if ($value['tipo'] == 'R' && $value['idCategoria'] != 10)
-                $receitas += $value['total'];
-            
-            if ($value['idCategoria'] == 12 || $value['idCategoria'] == 10)
-                $aplicado += $value['total'];
+        foreach ($indicadores_original as $x => $v) {
+            switch ($v['tipo']) {
+                case 'R':
+                    $arr_receitas[$x] = $v;
+                break;
+                case 'D':
+                    $arr_despesas[$x] = $v;
+                break;
+                case 'A':
+                    $arr_aplica[$x] = $v;
+                break;
+                case 'RA':
+                    $arr_resgata[$x] = $v;
+                break;
+            }
         }
+
+        $indicadores = ($arr_receitas + $arr_despesas + $arr_aplica + $arr_resgata);
 
         $this->view->data['indicadores'] = $indicadores;
         $this->view->data['orcamentos'] = $orcamentos;
-        $this->view->data['receitas'] = $receitas;
-        $this->view->data['aplicado'] = $aplicado;
 
         $this->renderPage(
-            main_route: $this->index_route . '/indicadores_index', 
             conteudo: 'indicadores_index'
         );
     }

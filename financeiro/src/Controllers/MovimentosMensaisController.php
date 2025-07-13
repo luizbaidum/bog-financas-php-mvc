@@ -26,9 +26,8 @@ class MovimentosMensaisController extends Controller {
 
         $this->view->data['arr_mensais'] = $model_movimentos_mensais->getMensais();
         $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
-        
+
         $this->renderPage(
-            main_route: $this->index_route . '/movimentos-mensais-index', 
             conteudo: 'movimentos_mensais_index', 
             base_interna: 'base_cruds'
         );
@@ -70,7 +69,7 @@ class MovimentosMensaisController extends Controller {
         $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
         $this->view->data['mov_m'] = $mov_m[0] ?? null;
 
-        $this->renderPage(main_route: $this->index_route . '/movimentos-mensais', conteudo: 'movimentos_mensais', base_interna: 'base_cruds');
+        $this->renderPage(conteudo: 'movimentos_mensais', base_interna: 'base_cruds');
     }
 
     public function cadastrarMovimentosMensais()

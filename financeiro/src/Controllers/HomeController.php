@@ -60,7 +60,7 @@ class HomeController extends Controller {
             $this->view->data['mov_investimentos'] = $mov_investimentos;
             $this->view->data['url_obs'] = $this->index_route . '/exibir_observacao?idMovimento=';
 
-			$this->renderPage(main_route: $this->index_route, conteudo: 'home');
+			$this->renderPage(conteudo: 'home');
 		} catch (Exception $e) {
 			echo $e->getMessage();
 		}
