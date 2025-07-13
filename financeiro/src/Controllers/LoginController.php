@@ -14,7 +14,7 @@ class LoginController extends Controller {
                 if (!empty($_POST['login']) && !empty($_POST['senha'])) {
 
                     $_SESSION['logado'] = false;
-    
+
                     $model_usuarios = new UsuariosDAO();
                     $logon = $model_usuarios->idUsuarioPorLoginSenha($_POST);
 
@@ -22,12 +22,12 @@ class LoginController extends Controller {
                         $_GET['incorrect'] = 'true';
                         $this->logout();
                     }
-    
+
                     if (count($logon) > 1) {
                         $this->view->data['mensagem'] = 'Erro ao realizar login. Favor entrar em contato com suporte.';
                         $this->renderNullPage();
                     }
-    
+
                     if (!empty($logon) && count($logon) == 1) {
                         $_SESSION['user'] = $logon[0]['idUsuario'];
                         $_SESSION['nivel'] = $logon[0]['nivel'];

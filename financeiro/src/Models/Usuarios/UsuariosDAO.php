@@ -40,4 +40,14 @@ class UsuariosDAO extends Model {
 
         return $result;
     }
+
+    public function buscarIdFamiliaUsuarioSemSeguranca(string|int $id_usuario) : string
+    {
+        $query = 'SELECT usuarios.idFamilia FROM usuarios INNER JOIN familias ON usuarios.idFamilia = familias.idFamilia WHERE usuarios.idUsuario = ?';
+
+        $new_sql = new SQLActions();
+        $result = $new_sql->executarQuery($query, [$id_usuario], false);
+
+        return (string) $result[0]['idFamilia'] ?? '';
+    }
 };

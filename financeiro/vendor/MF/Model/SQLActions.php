@@ -4,6 +4,7 @@ namespace MF\Model;
 
 use Exception;
 use src\Conexao;
+use src\Models\Usuarios\UsuariosDAO;
 
 class SQLActions {
 
@@ -37,22 +38,17 @@ class SQLActions {
     private function defineFamilyUser()
     {
         try {
-            // if (!isset($_SESSION)) {
-            //     session_start();
-            // }
-    
             if (isset($_SESSION['id_familia']) && !empty($_SESSION['id_familia'])) {
                 $this->setFamilyUser($_SESSION['id_familia']);
             } else {
-                $query = 'SELECT usuarios.idFamilia FROM usuarios INNER JOIN familias ON usuarios.idFamilia = familias.idFamilia WHERE usuarios.idUsuario = ?';
-                $ret = $this->executarQuery($query, [$_SESSION['user']], false);
+                $ret_id_familia = (new UsuariosDAO())->buscarIdFamiliaUsuarioSemSeguranca($_SESSION['user']);
 
-                if (empty($ret)) {
+                if (empty($ret_id_familia)) {
                     throw new Exception('idFamilia não encontrado.');
                 }
-    
-                $_SESSION['id_familia'] = $ret[0]['idFamilia'];
-                $this->setFamilyUser($ret[0]['idFamilia']);
+
+                $_SESSION['id_familia'] = $ret_id_familia;
+                $this->setFamilyUser($ret_id_familia);
             }
 
             return $this->getFamilyUser();
