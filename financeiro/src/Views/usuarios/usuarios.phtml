@@ -1,0 +1,90 @@
+
+<div class="container mt-3">
+    <div class="mt-2 mb-2">
+		<div class="card p-2">
+			<div class="text-center">
+				<?= $title; ?>
+			</div>
+		</div>
+	</div>
+
+    <?php if ($is_gestor): ?>
+        <div class="card mt-2 mb-2">
+            <div class="card-header">
+                <button class="btn btn-light btn-sm nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCadUsuario" aria-expanded="false" aria-controls="collapseCadUsuario">
+                    Cadastrar Usuário
+                </button>
+            </div>
+            <div class="collapse" id="collapseCadUsuario">
+                <div class="card-body p-1">
+                    <form data-action="<?= $action; ?>" id="idform-usuario" class="submit-form-crud-ajax">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="idNome" class="form-label">Nome</label>
+                                    <input type="text" class="form-control" id="idNome" name="nome" required 
+                                        placeholder="Digite o nome simples do usuário">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="idLogin" class="form-label">Login</label>
+                                    <input type="text" class="form-control" id="idLogin" name="login" required 
+                                        placeholder="Digite login">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="idSenha" class="form-label">Senha</label>
+                                    <input type="password" class="form-control" id="idSenha" name="senha" required 
+                                        placeholder="Digite uma senha segura">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="idConfirmaSenha" class="form-label">Confirmar Senha</label>
+                                    <input type="password" class="form-control" id="idConfirmaSenha" name="confirmaSenha" required 
+                                        placeholder="Repita a senha digitada">
+                                </div>
+                            </div>
+                        </div>
+                        <button id="salvar" type="submit" class="btn btn-success m-1">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col" class="text-center">#</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col" class="text-center">Tipo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($lista_usuarios as $usuario): ?>
+                    <?php if ($usuario['gestor'] == 'T'): ?>
+                        <tr class="bg-primary bg-opacity-10">
+                            <th scope="row" class="text-center fw-bold"><?= $usuario['idUsuario']; ?></th>
+                            <td class="fw-bold">
+                                <i class="bi bi-person-badge text-primary me-2"></i>
+                                <?= $usuario['nome']; ?>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-primary rounded-pill">Gestor</span>
+                            </td>
+                        </tr>
+                    <?php else: ?>
+                        <tr>
+                            <th scope="row" class="text-center"><?= $usuario['idUsuario']; ?></th>
+                            <td>
+                                <i class="bi bi-person text-muted me-2"></i>
+                                <?= $usuario['nome']; ?>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-secondary rounded-pill">Membro</span>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -72,12 +72,12 @@ class SQLActions {
                 if ($from_key == false) {
                     throw new Exception('FROM clause not found');
                 }
-    
+
                 $where_key = array_search('WHERE', $arr_query);
                 if ($where_key !== false) {
                     $id_into_where = " ($table.idFamilia = $id_family) AND ";
                     $arr_query[$where_key] .= $id_into_where;
-    
+
                     $query = implode(' ', $arr_query);
                 } else {
                     throw new Exception('WHERE clause not found');

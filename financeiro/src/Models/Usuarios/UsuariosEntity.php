@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace src\Models\Usuarios;
 
@@ -12,4 +12,6 @@ class UsuariosEntity extends Entity {
     public string $login;
     public string $senha;
     public int $idFamilia;
+    public string $gestor;
+    public string $nome;
 }

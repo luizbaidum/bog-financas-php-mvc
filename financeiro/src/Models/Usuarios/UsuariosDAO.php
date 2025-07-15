@@ -30,7 +30,7 @@ class UsuariosDAO extends Model {
 
     public function detalhar($id)
     {
-        $query = 'SELECT usuarios.* FROM usuarios WHERE usuarios.id = ?';
+        $query = 'SELECT usuarios.* FROM usuarios WHERE usuarios.idUsuario = ?';
 
         $query_params[] = $id;
 
@@ -48,6 +48,6 @@ class UsuariosDAO extends Model {
         $new_sql = new SQLActions();
         $result = $new_sql->executarQuery($query, [$id_usuario], false);
 
-        return (string) $result[0]['idFamilia'] ?? '';
+        return (string) isset($result[0]) ? $result[0]['idFamilia'] : '';
     }
 };
