@@ -250,52 +250,54 @@ class InvestimentosController extends Controller {
             try {
                 $ret = array();
 
-                if (isset($_POST['tipoMovimento']) && $_POST['tipoMovimento'] == 'pagamento') {
-                    $obj_movimento = new MovimentosEntity();
+                if (isset($_POST['tipoMovimento'])) {
+                    if ($_POST['tipoMovimento'] == 'pagamento') {
+                        $obj_movimento = new MovimentosEntity();
 
-                    $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
-                    $sinal = $arr_cat[1];
+                        $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
+                        $sinal = $arr_cat[1];
 
-                    $obj_movimento->nomeMovimento = 'Resgate para pagar ' . $_POST['nomeMovimento'];
-                    $obj_movimento->dataMovimento = $_POST['dataMovimento'];
-                    $obj_movimento->idCategoria = $this->categoria_A;
-                    $obj_movimento->valor = NumbersHelper::formatBRtoUS($_POST['valor']);
-                    $obj_movimento->idProprietario = $_POST['idProprietario'];
-                    $obj_movimento->idContaInvest = !empty($_POST['idContaInvest']) ? $_POST['idContaInvest'] : 0;
-                    $obj_movimento->observacao = $_POST['observacao'];
+                        $obj_movimento->nomeMovimento = 'Resgate para pagar ' . $_POST['nomeMovimento'];
+                        $obj_movimento->dataMovimento = $_POST['dataMovimento'];
+                        $obj_movimento->idCategoria = $this->categoria_RA;
+                        $obj_movimento->valor = NumbersHelper::formatBRtoUS($_POST['valor']);
+                        $obj_movimento->idProprietario = $_POST['idProprietario'];
+                        $obj_movimento->idContaInvest = !empty($_POST['idContaInvest']) ? $_POST['idContaInvest'] : 0;
+                        $obj_movimento->observacao = $_POST['observacao'];
 
-                    $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $obj_movimento);
-                    $obj_movimento->idMovimento = $ret['result'];
+                        $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $obj_movimento);
+                        $obj_movimento->idMovimento = $ret['result'];
 
-                    $id_objetivo = $_POST['idObjetivo'] ?? '';
+                        $id_objetivo = $_POST['idObjetivo'] ?? '';
 
-                    $this->inserirMovimentacaodeAplicacao(
-                        $obj_movimento->idContaInvest, 
-                        $id_objetivo, 
-                        $obj_movimento->idMovimento, 
-                        $obj_movimento->idCategoria, 
-                        $obj_movimento->valor, 
-                        $obj_movimento->dataMovimento
-                    );
+                        $this->inserirMovimentacaodeAplicacao(
+                            $obj_movimento->idContaInvest, 
+                            $id_objetivo, 
+                            $obj_movimento->idMovimento, 
+                            $obj_movimento->idCategoria, 
+                            $obj_movimento->valor, 
+                            $obj_movimento->dataMovimento
+                        );
 
-                    $obj_movimento->nomeMovimento = $_POST['nomeMovimento'];
-                    $obj_movimento->idCategoria = $arr_cat[0]; //Definido pelo usuário
-                    $obj_movimento->valor = $sinal . NumbersHelper::formatBRtoUS($_POST['valor']);
-                    unset($obj_movimento->idContaInvest);
-                    unset($obj_movimento->idMovimento);
+                        $obj_movimento->nomeMovimento = $_POST['nomeMovimento'];
+                        $obj_movimento->idCategoria = $arr_cat[0]; //Definido pelo usuário
+                        $obj_movimento->valor = $sinal . NumbersHelper::formatBRtoUS($_POST['valor']);
+                        unset($obj_movimento->idContaInvest);
+                        unset($obj_movimento->idMovimento);
 
-                    //Inserção de Movimento
-                    $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $obj_movimento);
-                }
+                        //Inserção de Movimento
+                        $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $obj_movimento);
+                    }
 
-                if (isset($_POST['tipoMovimento']) && $_POST['tipoMovimento'] == 'transferencia') {
-                    $ret = $this->cadastrarTransferenciaEntreInvestimentos(
-                        $_POST['idContaInvestOrigem'], 
-                        $_POST['idObjetivoOrigem'], 
-                        $_POST['valor'], 
-                        $_POST['idContaInvestDestino'], 
-                        $_POST['idObjetivoDestino']
-                    );
+                    if ($_POST['tipoMovimento'] == 'transferencia') {
+                        $ret = $this->cadastrarTransferenciaEntreInvestimentos(
+                            $_POST['idContaInvestOrigem'], 
+                            $_POST['idObjetivoOrigem'], 
+                            $_POST['valor'], 
+                            $_POST['idContaInvestDestino'], 
+                            $_POST['idObjetivoDestino']
+                        );
+                    }
                 }
 
                 if (!in_array(false, $ret)) {
@@ -321,8 +323,8 @@ class InvestimentosController extends Controller {
         }
 
         $this->view->settings = [
-            'action'   => $this->index_route . '/investimentos_movimentar',
-            'redirect' => $this->index_route . '/investimentos_movimentar',
+            'action'   => $this->index_route . '/investimentos-movimentar',
+            'redirect' => $this->index_route . '/investimentos-movimentar',
             'url_ajax' => $this->index_route . '/definir_movimento_investimento?action=',
             'title'    => 'Movimento entre Investimentos',
             'div_ajax' => 'id-destino'
@@ -355,7 +357,7 @@ class InvestimentosController extends Controller {
 
         //Aplicação
         list($id_invest, $id_proprietario) = explode('@', $invest_destino);
-        
+
         $item = array(
             'nomeMovimento'   => 'Aplicação - movimento entre investimentos',
             'dataMovimento'   => date("Y-m-d"),
