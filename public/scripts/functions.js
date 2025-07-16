@@ -82,7 +82,7 @@ function requireAjaxRender(user_options) {
                     $('#id-modal-conteudo').modal('show'); 
                 } else {
                     if (defined.div_destino == undefined) {
-    
+
                     } else {
                         $(`#${defined.div_destino}`).html(html);
                     }
@@ -123,7 +123,7 @@ function modalAlerta(titulo, texto) {
     $('#id-modal-alerta .modal-title').text(titulo);
     $('#modal-alerta-conteudo').html(texto);
 
-    $('#id-modal-alerta').modal('show');    
+    $('#id-modal-alerta').modal('show');
 }
 
 function insertOptions(select_element, options, comparator) {

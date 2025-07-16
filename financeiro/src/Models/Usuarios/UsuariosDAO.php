@@ -50,4 +50,14 @@ class UsuariosDAO extends Model {
 
         return (string) isset($result[0]) ? $result[0]['idFamilia'] : '';
     }
+
+    public function consultarUsuarioPorLogin(string $login) : array
+    {
+        $query = 'SELECT usuarios.* FROM usuarios WHERE usuarios.login = ?';
+
+        $new_sql = new SQLActions();
+        $result = $new_sql->executarQuery($query, [$login], false);
+
+        return $result;
+    }
 };
