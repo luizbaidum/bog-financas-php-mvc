@@ -1,0 +1,74 @@
+
+
+<div class="container first-access-container">
+    <div class="text-center mb-4">
+        <h1 class="display-6">Bog Finanças - Bem-vindo(a)!</h1>
+        <p class="lead">Parece que é seu primeiro acesso. Vamos configurar sua conta.</p>
+    </div>
+
+    <div class="alert alert-info mb-4">
+        <h4 class="alert-heading">Informações importantes</h4>
+        <p>Como é seu primeiro acesso, você precisará criar um login e senha para acessar o sistema.</p>
+        <p>Após essa etapa, você deverá definir sua família no sistema.</p>
+    </div>
+
+    <form id="firstAccessForm">
+        <div class="mb-3">
+            <label for="name" class="form-label">Nome</label>
+            <input type="text" class="form-control" id="name" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="login" class="form-label">Login</label>
+            <input type="text" class="form-control" id="login" required>
+            <div class="form-text">Escolha um nome de usuário para acessar o sistema</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Senha</label>
+            <input type="password" class="form-control" id="password" required>
+        </div>
+
+        <div class="mb-4">
+            <label for="confirmPassword" class="form-label">Repita a senha</label>
+            <input type="password" class="form-control" id="confirmPassword" required>
+            <span class="password-match">✔ As senhas coincidem</span>
+            <span class="password-mismatch">✖ As senhas não coincidem</span>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">Continuar</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const navbar = document.getElementsByClassName('navbar')[0];
+        navbar.style.display = 'none';
+
+        // Verificar correspondência de senhas
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const passwordMatch = document.querySelector('.password-match');
+        const passwordMismatch = document.querySelector('.password-mismatch');
+
+        function checkPasswordMatch() {
+            if (password.value && confirmPassword.value) {
+                if (password.value === confirmPassword.value) {
+                    passwordMatch.style.display = 'inline';
+                    passwordMismatch.style.display = 'none';
+                } else {
+                    passwordMatch.style.display = 'none';
+                    passwordMismatch.style.display = 'inline';
+                }
+            } else {
+                passwordMatch.style.display = 'none';
+                passwordMismatch.style.display = 'none';
+            }
+        }
+
+        password.addEventListener('input', checkPasswordMatch);
+        confirmPassword.addEventListener('input', checkPasswordMatch);
+    });
+</script>

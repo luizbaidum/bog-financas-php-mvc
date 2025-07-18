@@ -52,8 +52,9 @@ class LoginController extends Controller {
         }
 
         $this->view->settings = [
-            'action' => $this->index_route . '/',
-            'title'  => 'Login - Bog Finanças'
+            'action'              => $this->index_route . '/',
+            'title'               => 'Login - Bog Finanças',
+            'url_primeiro_acesso' => $this->index_route . '/primeiro-acesso',
         ];
 
         $this->renderLoginPage();
@@ -73,6 +74,7 @@ class LoginController extends Controller {
             $this->view->data['mensagem'] = 'Usuário e/ou senha incorreto(s).';
 
         $this->view->settings['action'] = '/';
+        $this->view->settings['url_primeiro_acesso'] = $this->index_route . '/primeiro-acesso';
 
         $this->renderLoginPage();
         exit;

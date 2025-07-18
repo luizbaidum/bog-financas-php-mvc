@@ -59,7 +59,6 @@
 
                                 <div class="d-grid gap-2">
                                     <button type="submit" class="btn btn-primary btn-lg fw-bold">Entrar</button>
-                                    <a href="#" class="btn btn-outline-secondary">Primeiro Acesso?</a>
                                 </div>
 
                                 <?php if (isset($mensagem)): ?>
@@ -73,6 +72,11 @@
                                 </div>
                             </form>
                         </div>
+                    </div>
+                    <div class="text-center mt-2">
+                        <a href="<?= $url_primeiro_acesso; ?>">
+                            <button type="button" class="btn btn-outline-secondary">Primeiro acesso?</button>
+                        </a>
                     </div>
                 </div>
             </div>

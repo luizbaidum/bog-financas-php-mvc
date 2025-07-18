@@ -10,9 +10,12 @@ class UsuariosController extends Controller {
     private $idFamilia;
     private $isGestor = false;
 
-    function __construct() 
+    function __construct()
     {
-        $this->getIdFamiliaActualUser();
+        if (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/primeiro-acesso') {
+            $this->getIdFamiliaActualUser();
+        }
+
         parent::__construct();
     }
 
@@ -117,5 +120,18 @@ class UsuariosController extends Controller {
         }
 
         return ['result' => $status, 'mensagem' => $mensagem];
+    }
+
+    public function primeiroAcesso()
+    {
+        $this->view->settings = [
+            'action'     => '',
+            'redirect'   => '',
+            'title'      => 'Primeiro Acesso'
+        ];
+
+        $this->renderPage(
+            conteudo: 'primeiro_acesso'
+        );
     }
 }

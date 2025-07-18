@@ -2,7 +2,6 @@
 
 namespace MF\Init;
 
-use MF\View\Buttons;
 
 abstract class Bootstrap {
 
