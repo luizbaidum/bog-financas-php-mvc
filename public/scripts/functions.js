@@ -43,7 +43,7 @@ function requireAjaxOperation(user_options) {
 
                         if (defined.modal == 'false') {
                             if ($(id_modal_str).hasClass('show')) {
-                                $(id_modal_str).modal('hide');                       
+                                $(id_modal_str).modal('hide');
                             }
                         } else {
                             $(id_modal_str + ' .modal-content .card').html(texto);
@@ -164,7 +164,7 @@ function createPostData(formulario) {
     new FormData(formulario).forEach((value, key) => {
         post_data.append(key, value);
     });
- 
+
     return post_data;
 }
 

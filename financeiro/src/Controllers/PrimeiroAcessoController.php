@@ -6,57 +6,8 @@ use MF\Controller\Controller;
 use src\Models\Usuarios\UsuariosDAO;
 use src\Models\Usuarios\UsuariosEntity;
 
-class UsuariosController extends Controller {
-    private $idFamilia;
-    private $isGestor = false;
-
-    function __construct()
-    {
-        $this->getIdFamiliaActualUser();
-        parent::__construct();
-    }
-
-    private function getIdFamiliaActualUser()
-    {
-        $model_usuarios = new UsuariosDAO();
-        $id_usuario = $_SESSION['user'];
-
-        if (empty($_SESSION['user'])) {
-            $this->renderNullPage();
-            exit;
-        }
-
-        $select_id_familia = $model_usuarios->buscarIdFamiliaUsuarioSemSeguranca($id_usuario);
-        $is_gestor = $model_usuarios->detalhar($id_usuario)[0]['gestor'] == 'T' ? true : false;
-
-        if ($select_id_familia == $_SESSION['id_familia']) {
-            $this->idFamilia = $select_id_familia;
-            $this->isGestor = $is_gestor;
-        } else {
-            $this->renderNullPage();
-            exit;
-        }
-    }
-
-    public function index()
-    {
-        $this->view->settings = [
-            'action'     => $this->index_route . '/cad-usuario',
-            'redirect'   => $this->index_route . '/usuarios',
-            'title'      => 'Família/Usuários',
-            'is_gestor'  => $this->isGestor
-        ];
-
-        $usuarios = (new UsuariosDAO())->selectAll(new UsuariosEntity, [], [], []);
-
-        $this->view->data['lista_usuarios'] = $usuarios;
-
-        $this->renderPage(
-            conteudo: 'usuarios'
-        );
-    }
-
-    public function cadastrarUsuario()
+class PrimeiroAcessoController extends Controller {
+    public function cadastrarPrimeiroAcesso()
     {
         $obj_usuario = new UsuariosEntity();
         $model_usuario = new UsuariosDAO();
@@ -79,7 +30,7 @@ class UsuariosController extends Controller {
         }
 
         try {
-            $ret = $model_usuario->cadastrar(new UsuariosEntity, $obj_usuario);
+            $ret = $model_usuario->cadastrarUsuarioSemFamilia($obj_usuario);
 
             if (empty($ret)) {
                 throw new Exception($this->msg_retorno_falha);
@@ -117,5 +68,18 @@ class UsuariosController extends Controller {
         }
 
         return ['result' => $status, 'mensagem' => $mensagem];
+    }
+
+    public function primeiroAcesso()
+    {
+        $this->view->settings = [
+            'action'     => $this->index_route . '/cad-primeiro-acesso',
+            'redirect'   => $this->index_route,
+            'title'      => 'Primeiro Acesso'
+        ];
+
+        $this->renderPage(
+            conteudo: 'primeiro_acesso'
+        );
     }
 }

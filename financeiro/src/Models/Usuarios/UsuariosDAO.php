@@ -60,4 +60,54 @@ class UsuariosDAO extends Model {
 
         return $result;
     }
+
+    public function cadastrarUsuarioSemFamilia($data)
+    {
+        $arr_values = array();
+
+		try {
+			$table = UsuariosEntity::main_table;
+			$query = "INSERT INTO $table (";
+
+			foreach ($data as $k => $v)
+				$query .= "$k, ";
+
+			$query = rtrim($query, ', ') . ', idFamilia) ';
+
+			$query .= 'VALUES (';
+
+			foreach ($data as $k => $v) {
+				$query .= '?, ';
+				$arr_values[] = $v;
+			}
+
+            $query .= '?, ';
+            $arr_values[] = 0;
+
+			$query = rtrim($query, ', ') . ')';
+
+			$new_sql = new SQLActions();
+			$result = $new_sql->executarQuery($query, $arr_values, false);
+
+			if ($result) {
+				return array(
+					'result' => $result
+				);
+			} else {
+				throw new \Exception('Erro ao cadastrar.');
+			}
+		} catch (\Exception $e) {
+			errorHandler(
+				1, 
+				$e->getMessage(),
+				$e->getFile(),
+				$e->getLine()
+			);
+
+			return array(
+				'result'   => false,
+				'mensagem' => $e->getMessage()
+			);
+		}
+    }
 };
