@@ -10,7 +10,8 @@ class Routes extends Bootstrap {
 	{
         $routes[] = array('route' => '/home', 'controller' => 'HomeController', 'action' => 'home');
 
-        $routes[] = array('route' => '/', 'controller' => 'LoginController', 'action' => 'login');
+        $routes[] = array('route' => '/', 'controller' => 'LoginController', 'action' => 'telaLogin');
+        $routes[] = array('route' => '/login', 'controller' => 'LoginController', 'action' => 'executarLogin');
         $routes[] = array('route' => '/logout', 'controller' => 'LoginController', 'action' => 'logout');
 
         $routes[] = array('route' => '/cad-mov-mensal', 'controller' => 'MovimentosMensaisController', 'action' => 'lancarMovimentoMensalComoMovimento');

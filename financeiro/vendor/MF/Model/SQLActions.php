@@ -38,17 +38,21 @@ class SQLActions {
     private function defineFamilyUser()
     {
         try {
-            if (isset($_SESSION['id_familia']) && !empty($_SESSION['id_familia'])) {
-                $this->setFamilyUser($_SESSION['id_familia']);
-            } else {
-                $ret_id_familia = (new UsuariosDAO())->buscarIdFamiliaUsuarioSemSeguranca($_SESSION['user']);
+            if (!empty($_SESSION['user'])) {
+                if (isset($_SESSION['id_familia']) && !empty($_SESSION['id_familia'])) {
+                    $this->setFamilyUser($_SESSION['id_familia']);
+                } else {
+                    $ret_id_familia = (new UsuariosDAO())->buscarIdFamiliaUsuarioSemSeguranca($_SESSION['user']);
 
-                if (empty($ret_id_familia)) {
-                    throw new Exception('idFamilia não encontrado.');
+                    if (empty($ret_id_familia)) {
+                        throw new Exception('idFamilia não encontrado.');
+                    }
+
+                    $_SESSION['id_familia'] = $ret_id_familia;
+                    $this->setFamilyUser($ret_id_familia);
                 }
-
-                $_SESSION['id_familia'] = $ret_id_familia;
-                $this->setFamilyUser($ret_id_familia);
+            } else {
+                $this->setFamilyUser(0);
             }
 
             return $this->getFamilyUser();
@@ -70,7 +74,7 @@ class SQLActions {
                 $table = $arr_query[$from_key + 1];
 
                 if ($from_key == false) {
-                    throw new Exception('FROM clause not found');
+                    throw new Exception('FROM clause not found.');
                 }
 
                 $where_key = array_search('WHERE', $arr_query);
@@ -80,7 +84,7 @@ class SQLActions {
 
                     $query = implode(' ', $arr_query);
                 } else {
-                    throw new Exception('WHERE clause not found');
+                    throw new Exception('WHERE clause not found..');
                 }
             } catch (Exception $e) {
                 echo 'Security fail: ' . $e->getMessage();

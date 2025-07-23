@@ -6,8 +6,18 @@ use MF\Controller\Controller;
 use src\Models\Usuarios\UsuariosDAO;
 
 class LoginController extends Controller {
+    public function telaLogin()
+    {
+        $this->view->settings = [
+            'action'              => $this->index_route . '/login',
+            'title'               => 'Login - Bog Finanças',
+            'url_primeiro_acesso' => $this->index_route . '/primeiro-acesso',
+        ];
 
-    public function login()
+        $this->renderLoginPage();
+    }
+
+    public function executarLogin()
     {
         if ($this->isSetPost()) {
             try {
@@ -50,14 +60,6 @@ class LoginController extends Controller {
 				echo json_encode($array_retorno);
             }
         }
-
-        $this->view->settings = [
-            'action'              => $this->index_route . '/',
-            'title'               => 'Login - Bog Finanças',
-            'url_primeiro_acesso' => $this->index_route . '/primeiro-acesso',
-        ];
-
-        $this->renderLoginPage();
     }
 
     public function logout()
@@ -73,7 +75,7 @@ class LoginController extends Controller {
         if (isset($_GET['incorrect']))
             $this->view->data['mensagem'] = 'Usuário e/ou senha incorreto(s).';
 
-        $this->view->settings['action'] = '/';
+        $this->view->settings['action'] = '/login';
         $this->view->settings['url_primeiro_acesso'] = $this->index_route . '/primeiro-acesso';
 
         $this->renderLoginPage();
