@@ -16,37 +16,37 @@ class Menu {
     }
 
     public array $grupos = [
-        'Cadastros', 'Consultas', 'Preferencias'
+        'Cadastros', 'Consultas', 'Configs'
     ];
 
     public array $titles = [
         'Cadastros' => [
-            'Categorias', 'Movimentos', 'Contas Investimentos', 'Movimentos Mensais', 'Objetivos', 'Orçamento', 'Orçamento do Realizado', 'Movimento entre Investimentos', 'Proprietarios'
+            'Categorias', 'Movimentos', 'Contas Investimentos', 'Movimentos Mensais', 'Objetivos', 'Orçamento', 'Orçamento do Realizado', 'Movimento entre Investimentos'
         ],
         'Consultas' => [
             'Indicadores', 'Contas Investimentos', 'Extrato Contas Invest', 'Orçamento', 'Evolução Rendimentos', 'Extrato por Proprietário'
         ],
-        'Preferencias' => [
-            'Preferencias'
+        'Configs' => [
+            'Preferencias', 'Proprietarios', 'Usuarios'
         ]
     ];
 
     public array $routes = [
         'Cadastros' => [
-            'categorias', 'movimentos', 'investimentos', 'movimentos-mensais-index', 'objetivos', 'orcamento', 'orcamento_do_realizado', 'investimentos-movimentar', 'proprietarios'
+            'categorias', 'movimentos', 'investimentos', 'movimentos-mensais-index', 'objetivos', 'orcamento', 'orcamento_do_realizado', 'investimentos-movimentar',
         ],
         'Consultas' => [
             'indicadores_index', 'contas_investimentos_index', 'extrato_investimentos', 'orcamento_index', 'evolucao_rendimentos', 'extrato-proprietarios'
         ],
-        'Preferencias' => [
-            'preferencias'
+        'Configs' => [
+            'preferencias', 'proprietarios', 'usuarios'
         ]
     ];
 
     public array $niveis = [
         'Cadastros'    => [],
         'Consultas'    => [],
-        'Preferencias' => []
+        'Configs' => []
     ];
 }
 ?>

@@ -1,0 +1,50 @@
+
+
+<div class="container first-access-container">
+    <div class="text-center mb-4">
+        <h1 class="display-6">Bog Finanças - Bem-vindo(a)!</h1>
+        <p class="lead">Parece que é seu primeiro acesso. Vamos configurar sua conta.</p>
+    </div>
+
+    <div class="alert alert-info mb-4">
+        <h4 class="alert-heading">Informações importantes</h4>
+        <p>Como é seu primeiro acesso, você precisará criar um login e senha para acessar o sistema.</p>
+        <p>Após essa etapa, você deverá definir sua família no sistema.</p>
+    </div>
+
+    <form 
+        class="form-inline submit-form-crud-ajax-pa" 
+        method="POST" 
+        name="form-crud" 
+        id="idform-crud" 
+        data-action="<?= $action; ?>" 
+        data-redirect="<?= $redirect; ?>"
+    >
+        <div class="mb-3">
+            <label for="name" class="form-label">Nome</label>
+            <input type="text" class="form-control" name="nome" id="name" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="login" class="form-label">Login</label>
+            <input type="text" class="form-control" name="login" id="login" required>
+            <div class="form-text">Escolha um nome de usuário para acessar o sistema</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Senha</label>
+            <input type="password" class="form-control" name="senha" id="password" required>
+        </div>
+
+        <div class="mb-4">
+            <label for="confirmPassword" class="form-label">Repita a senha</label>
+            <input type="password" name="confirmaSenha" class="form-control" id="confirmPassword" required>
+            <span class="password-match">✔ As senhas coincidem</span>
+            <span class="password-mismatch">✖ As senhas não coincidem</span>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">Continuar</button>
+        </div>
+    </form>
+</div>

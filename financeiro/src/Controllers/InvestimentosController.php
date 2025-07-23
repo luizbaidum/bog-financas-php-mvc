@@ -32,7 +32,8 @@ class InvestimentosController extends Controller {
         parent::__construct();
     }
 
-    public function index() {
+    public function index() 
+    {
         $model_investimentos = new InvestimentosDAO();
 
         $contas = $model_investimentos->getAllContas();

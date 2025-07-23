@@ -4,6 +4,7 @@ namespace MF\Model;
 
 use Exception;
 use src\Conexao;
+use src\Models\Usuarios\UsuariosDAO;
 
 class SQLActions {
 
@@ -37,22 +38,21 @@ class SQLActions {
     private function defineFamilyUser()
     {
         try {
-            // if (!isset($_SESSION)) {
-            //     session_start();
-            // }
-    
-            if (isset($_SESSION['id_familia']) && !empty($_SESSION['id_familia'])) {
-                $this->setFamilyUser($_SESSION['id_familia']);
-            } else {
-                $query = 'SELECT usuarios.idFamilia FROM usuarios INNER JOIN familias ON usuarios.idFamilia = familias.idFamilia WHERE usuarios.idUsuario = ?';
-                $ret = $this->executarQuery($query, [$_SESSION['user']], false);
+            if (!empty($_SESSION['user'])) {
+                if (isset($_SESSION['id_familia']) && !empty($_SESSION['id_familia'])) {
+                    $this->setFamilyUser($_SESSION['id_familia']);
+                } else {
+                    $ret_id_familia = (new UsuariosDAO())->buscarIdFamiliaUsuarioSemSeguranca($_SESSION['user']);
 
-                if (empty($ret)) {
-                    throw new Exception('idFamilia não encontrado.');
+                    if (empty($ret_id_familia)) {
+                        throw new Exception('idFamilia não encontrado.');
+                    }
+
+                    $_SESSION['id_familia'] = $ret_id_familia;
+                    $this->setFamilyUser($ret_id_familia);
                 }
-    
-                $_SESSION['id_familia'] = $ret[0]['idFamilia'];
-                $this->setFamilyUser($ret[0]['idFamilia']);
+            } else {
+                $this->setFamilyUser(0);
             }
 
             return $this->getFamilyUser();
@@ -74,17 +74,17 @@ class SQLActions {
                 $table = $arr_query[$from_key + 1];
 
                 if ($from_key == false) {
-                    throw new Exception('FROM clause not found');
+                    throw new Exception('FROM clause not found.');
                 }
-    
+
                 $where_key = array_search('WHERE', $arr_query);
                 if ($where_key !== false) {
                     $id_into_where = " ($table.idFamilia = $id_family) AND ";
                     $arr_query[$where_key] .= $id_into_where;
-    
+
                     $query = implode(' ', $arr_query);
                 } else {
-                    throw new Exception('WHERE clause not found');
+                    throw new Exception('WHERE clause not found..');
                 }
             } catch (Exception $e) {
                 echo 'Security fail: ' . $e->getMessage();

@@ -10,7 +10,8 @@ class Routes extends Bootstrap {
 	{
         $routes[] = array('route' => '/home', 'controller' => 'HomeController', 'action' => 'home');
 
-        $routes[] = array('route' => '/', 'controller' => 'LoginController', 'action' => 'login');
+        $routes[] = array('route' => '/', 'controller' => 'LoginController', 'action' => 'telaLogin');
+        $routes[] = array('route' => '/login', 'controller' => 'LoginController', 'action' => 'executarLogin');
         $routes[] = array('route' => '/logout', 'controller' => 'LoginController', 'action' => 'logout');
 
         $routes[] = array('route' => '/cad-mov-mensal', 'controller' => 'MovimentosMensaisController', 'action' => 'lancarMovimentoMensalComoMovimento');
@@ -58,12 +59,18 @@ class Routes extends Bootstrap {
 
         $routes[] = array('route' => '/categorias', 'controller' => 'CategoriasController', 'action' => 'categorias');
         $routes[] = array('route' => '/cad_categorias', 'controller' => 'CategoriasController', 'action' => 'cadastrarCategorias');
-        $routes[] = array('route' => '/consultar-categorias-investimentos', 'controller' => 'CategoriasController', 'action' => 'consultarCategoriasInvestimentos');        
+        $routes[] = array('route' => '/consultar-categorias-investimentos', 'controller' => 'CategoriasController', 'action' => 'consultarCategoriasInvestimentos');
 
         $routes[] = array('route' => '/proprietarios', 'controller' => 'ProprietariosController', 'action' => 'proprietarios');
         $routes[] = array('route' => '/cad_proprietarios', 'controller' => 'ProprietariosController', 'action' => 'cadastrarProprietarios');
         $routes[] = array('route' => '/extrato-proprietarios', 'controller' => 'ProprietariosController', 'action' => 'extratoProprietarios');
         $routes[] = array('route' => '/processar-extrato-proprietarios', 'controller' => 'ProprietariosController', 'action' => 'processarExtratoProprietarios');
+
+        $routes[] = array('route' => '/usuarios', 'controller' => 'UsuariosController', 'action' => 'index');
+        $routes[] = array('route' => '/cad-usuario', 'controller' => 'UsuariosController', 'action' => 'cadastrarUsuario');
+
+        $routes[] = array('route' => '/primeiro-acesso', 'controller' => 'PrimeiroAcessoController', 'action' => 'primeiroAcesso');
+        $routes[] = array('route' => '/cad-primeiro-acesso', 'controller' => 'PrimeiroAcessoController', 'action' => 'cadastrarPrimeiroAcesso');
 
 		$this->setRoutes($routes);
 	}

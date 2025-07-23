@@ -2,8 +2,6 @@
 
 namespace MF\Init;
 
-use MF\View\Buttons;
-
 abstract class Bootstrap {
 
 	private $routes;
@@ -28,6 +26,8 @@ abstract class Bootstrap {
 
 	protected function run($url)
 	{
+        $this->validarLogado();
+
 		foreach ($this->getRoutes() as $value) {
 			if ($url == $value['route'] || $url == $value['route'] . '/') {
 
@@ -74,4 +74,15 @@ abstract class Bootstrap {
 
 		$route = ltrim($route, "/");
 	}
+
+    private function validarLogado()
+    {
+        if (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/primeiro-acesso' && 
+            parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/logout' && 
+            parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/' && 
+            parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/login' && 
+            (empty($_SESSION) || !isset($_SESSION['logado']) || !$_SESSION['logado'])) {
+                header ('location: logout?erro=true');
+        }
+    }
 }
