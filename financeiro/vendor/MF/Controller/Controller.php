@@ -14,7 +14,7 @@ class Controller {
 	public function __construct(
 		public $view = new \stdClass(),
 		public string $empresa = 'Bog Finanças',
-        public string $sys_version = 'v2.0722'
+        public string $sys_version = 'v2.0724'
 	) {
 		if (isset($_SERVER)) {
 			$this->index_route = 'http://' . $_SERVER['HTTP_HOST'];
