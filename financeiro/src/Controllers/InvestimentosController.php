@@ -283,6 +283,7 @@ class InvestimentosController extends Controller {
                         $obj_movimento->nomeMovimento = $_POST['nomeMovimento'];
                         $obj_movimento->idCategoria = $arr_cat[0]; //Definido pelo usuário
                         $obj_movimento->valor = $sinal . NumbersHelper::formatBRtoUS($_POST['valor']);
+                        $obj_movimento->idMovMensal = $_POST['idMovMensal'] ?? 0;
                         unset($obj_movimento->idContaInvest);
                         unset($obj_movimento->idMovimento);
 

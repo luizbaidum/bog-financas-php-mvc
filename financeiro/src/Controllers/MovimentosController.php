@@ -301,6 +301,7 @@ class MovimentosController extends Controller {
                 $obj_movimento->idProprietario = $_POST['idProprietario'];
                 $obj_movimento->idContaInvest = !empty($_POST['idContaInvest']) ? $_POST['idContaInvest'] : 0;
                 $obj_movimento->observacao = $_POST['observacao'];
+                $obj_movimento->idMovMensal = $_POST['idMovMensal'] ?? 0;
 
                 $id_objetivo = $_POST['idObjetivo'] ?? '';
 
