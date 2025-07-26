@@ -4,6 +4,7 @@ namespace MF\Model;
 
 use Exception;
 use src\Conexao;
+use src\Controllers\PrimeiroAcessoController;
 use src\Models\Usuarios\UsuariosDAO;
 
 class SQLActions {
@@ -58,7 +59,7 @@ class SQLActions {
             return $this->getFamilyUser();
 
         } catch (Exception $e) {
-            echo 'Security fail: ' . $e->getMessage();
+            (new PrimeiroAcessoController())->primeiraFamilia();
             exit;
         }
     }

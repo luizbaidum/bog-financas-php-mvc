@@ -6,6 +6,7 @@ class PrimeiroAcesso {
         fetch(url_action, {
             method: 'POST',
             body: data,
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
         }).then(response => {
             if (response.ok) {
                 response.text()

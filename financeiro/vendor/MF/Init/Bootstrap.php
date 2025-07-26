@@ -2,6 +2,9 @@
 
 namespace MF\Init;
 
+use MF\Controller\Controller;
+use src\Controllers\PrimeiroAcessoController;
+
 abstract class Bootstrap {
 
 	private $routes;
@@ -27,6 +30,7 @@ abstract class Bootstrap {
 	protected function run($url)
 	{
         $this->validarLogado();
+        $this->validarExisteFamilia();
 
 		foreach ($this->getRoutes() as $value) {
 			if ($url == $value['route'] || $url == $value['route'] . '/') {
@@ -78,11 +82,23 @@ abstract class Bootstrap {
     private function validarLogado()
     {
         if (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/primeiro-acesso' && 
+            parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/cad-primeiro-acesso' && 
             parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/logout' && 
             parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/' && 
             parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/login' && 
             (empty($_SESSION) || !isset($_SESSION['logado']) || !$_SESSION['logado'])) {
                 header ('location: logout?erro=true');
+        }
+    }
+
+    private function validarExisteFamilia()
+    {
+        if (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/logout' 
+            && !Controller::isAjaxRequest() 
+            && !empty($_SESSION['logado']) 
+            && empty($_SESSION['id_familia'])
+        ) {
+            (new PrimeiroAcessoController())->primeiraFamilia();
         }
     }
 }

@@ -1,0 +1,52 @@
+<div class="container mt-3">
+    <div class="row">
+        <!-- Card explicativo -->
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-people-fill me-2"></i>Sobre Famílias
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Cadastre uma nova família para agrupar usuários com relacionamentos ou objetivos comuns.</p>
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item">• Você terá acesso ao sistema somente após ter uma família cadastrada e vinculada</li>
+                        <li class="list-group-item">• Cada família pode ter vários membros</li>
+                        <li class="list-group-item">• Você será o gestor (usuário principal da família)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulário de cadastro -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-house-add me-2"></i>Cadastrar Nova Família
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="form-cadastro-familia" class="submit-form-crud-ajax" data-action="<?= $action ?>">
+                        <div class="mb-3">
+                            <label for="nomeFamilia" class="form-label">Nome da Família*</label>
+                            <input type="text" class="form-control" id="nomeFamilia" name="nomeFamilia" required
+                                placeholder="Ex: Família Silva, Grupo de Trabalho X, Turma 2023">
+                            <div class="form-text">Use um nome que identifique claramente o grupo</div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-x-circle me-1"></i>Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i>Salvar Família
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

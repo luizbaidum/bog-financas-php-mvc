@@ -23,18 +23,18 @@ class Model {
 
 			foreach ($data as $k => $v)
 				$query .= "$k, ";
-	
+
 			$query = rtrim($query, ', ') . ')';
-	
+
 			$query .= 'VALUES (';
-	
+
 			foreach ($data as $k => $v) {
 				$query .= '?, ';
 				$arr_values[] = $v;
 			}
-	
+
 			$query = rtrim($query, ', ') . ')';
-	
+
 			$new_sql = new SQLActions();
 			$result = $new_sql->executarQuery($query, $arr_values);
 

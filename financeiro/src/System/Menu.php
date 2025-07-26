@@ -44,9 +44,9 @@ class Menu {
     ];
 
     public array $niveis = [
-        'Cadastros'    => [],
-        'Consultas'    => [],
-        'Configs' => []
+        'Cadastros' => [],
+        'Consultas' => [],
+        'Configs'   => []
     ];
 }
 ?>
