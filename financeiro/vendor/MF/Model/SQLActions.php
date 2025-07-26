@@ -59,7 +59,7 @@ class SQLActions {
             return $this->getFamilyUser();
 
         } catch (Exception $e) {
-            (new PrimeiroAcessoController())->primeiraFamilia($_SESSION['user']);
+            (new PrimeiroAcessoController())->primeiraFamilia();
             exit;
         }
     }

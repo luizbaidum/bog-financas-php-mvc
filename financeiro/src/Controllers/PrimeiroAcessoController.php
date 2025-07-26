@@ -83,7 +83,7 @@ class PrimeiroAcessoController extends Controller {
         );
     }
 
-    public function primeiraFamilia($id_usuario)
+    public function primeiraFamilia()
     {
         $this->view->settings = [
             'action'     => $this->index_route . '/cad-primeira-familia',

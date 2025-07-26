@@ -4,50 +4,33 @@ namespace src\Controllers;
 use Exception;
 use MF\Controller\Controller;
 use src\Models\Familia\FamiliaDAO;
+use src\Models\Familia\FamiliaEntity;
 use src\Models\Usuarios\UsuariosDAO;
 use src\Models\Usuarios\UsuariosEntity;
 
 class FamiliaUsuariosController extends Controller {
-    private $idFamilia;
-    private $isGestor = false;
-
-    function __construct()
-    {
-        $this->getIdFamiliaActualUser();
-        parent::__construct();
-    }
-
-    private function getIdFamiliaActualUser()
-    {
-        $model_usuarios = new UsuariosDAO();
-        $id_usuario = $_SESSION['user'];
-
-        if (empty($_SESSION['user'])) {
-            $this->renderNullPage();
-            exit;
-        }
-
-        $select_id_familia = $model_usuarios->buscarIdFamiliaUsuarioSemSeguranca($id_usuario);
-        $is_gestor = $model_usuarios->detalhar($id_usuario)[0]['gestor'] == 'T' ? true : false;
-
-        if ($select_id_familia == $_SESSION['id_familia']) {
-            $this->idFamilia = $select_id_familia;
-            $this->isGestor = $is_gestor;
-        } else {
-            $this->renderNullPage();
-            exit;
-        }
-    }
-
     public function index()
     {
-        $nome_familia = (new FamiliaDAO())->consultarNomeFamilia($this->idFamilia);
+        $id_usuario = $_SESSION['user'];
+        $id_familia = $_SESSION['id_familia'];
+
+        $model_usuarios = new UsuariosDAO();
+
+        $nome_familia = (new FamiliaDAO())->consultarNomeFamilia($id_familia);
+        $is_gestor = $model_usuarios->detalhar($id_usuario)[0]['gestor'] == 'T' ? true : false;
+
+        $select_id_familia = $model_usuarios->buscarIdFamiliaUsuarioSemSeguranca($id_usuario);
+
+        if ($id_familia != $select_id_familia) {
+            $this->renderNullPage();
+            exit;
+        }
 
         $this->view->settings = [
             'action'     => $this->index_route . '/cad-usuario',
             'redirect'   => $this->index_route . '/usuarios',
             'title'      => 'Família/Usuários',
-            'is_gestor'  => $this->isGestor
+            'is_gestor'  => $is_gestor
         ];
 
         $usuarios = (new UsuariosDAO())->selectAll(new UsuariosEntity, [], [], []);
@@ -121,5 +104,46 @@ class FamiliaUsuariosController extends Controller {
         }
 
         return ['result' => $status, 'mensagem' => $mensagem];
+    }
+
+    public function cadastrarFamilia()
+    {
+        try {
+            $id_usuario = $_SESSION['user'];
+
+            $familia_obj = new FamiliaEntity();
+            $familia_obj->nomeFamilia = $_POST['nomeFamilia'];
+
+            $novo_id_familia = (new FamiliaDAO())->cadastrarFamilia(new FamiliaEntity, $familia_obj)['result'] ?? 0;
+
+            $_SESSION['id_familia'] = $novo_id_familia;
+
+            $ret = (new UsuariosDAO())->atualizar(
+                new UsuariosEntity, 
+                [
+                    'idFamilia' => $novo_id_familia,
+                    'gestor'    => 'T'
+                ],
+                ['idUsuario' =>  $id_usuario]
+            );
+
+            if (empty($ret['result'])) {
+                throw new Exception($this->msg_retorno_falha);
+            }
+
+            $array_retorno = array(
+                'result'   => $ret['result'],
+                'mensagem' => $this->msg_retorno_sucesso
+            );
+
+            echo json_encode($array_retorno);
+        } catch (Exception $e) {
+            $array_retorno = array(
+                'result'   => false,
+                'mensagem' => $e->getMessage()
+            );
+
+            echo json_encode($array_retorno);
+        }
     }
 }

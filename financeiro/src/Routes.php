@@ -68,6 +68,7 @@ class Routes extends Bootstrap {
 
         $routes[] = array('route' => '/usuarios', 'controller' => 'FamiliaUsuariosController', 'action' => 'index');
         $routes[] = array('route' => '/cad-usuario', 'controller' => 'FamiliaUsuariosController', 'action' => 'cadastrarUsuario');
+        $routes[] = array('route' => '/cad-primeira-familia', 'controller' => 'FamiliaUsuariosController', 'action' => 'cadastrarFamilia');
 
         $routes[] = array('route' => '/primeiro-acesso', 'controller' => 'PrimeiroAcessoController', 'action' => 'primeiroAcesso');
         $routes[] = array('route' => '/cad-primeiro-acesso', 'controller' => 'PrimeiroAcessoController', 'action' => 'cadastrarPrimeiroAcesso');

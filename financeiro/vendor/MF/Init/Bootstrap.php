@@ -98,7 +98,7 @@ abstract class Bootstrap {
             && !empty($_SESSION['logado']) 
             && empty($_SESSION['id_familia'])
         ) {
-            (new PrimeiroAcessoController())->primeiraFamilia($_SESSION['user']);
+            (new PrimeiroAcessoController())->primeiraFamilia();
         }
     }
 }
