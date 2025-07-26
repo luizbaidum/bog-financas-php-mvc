@@ -1,0 +1,106 @@
+<div class="container mt-2">
+    <div class="mt-2 mb-2">
+        <div class="card p-2">
+            <div class="text-center">
+                <?= $title; ?>
+            </div>
+        </div>
+    </div>
+
+    <?php if ($is_gestor): ?>
+        <div class="card mt-2 mb-2">
+            <div class="card-header">
+                <button class="btn btn-light btn-sm nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCadUsuario" aria-expanded="false" aria-controls="collapseCadUsuario">
+                    Cadastrar Usuário
+                </button>
+            </div>
+            <div class="collapse" id="collapseCadUsuario">
+                <div class="card-body p-1">
+                    <form data-action="<?= $action; ?>" id="idform-usuario" class="submit-form-crud-ajax">
+                        <div class="form-group">
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <label for="idNome" class="form-label">Nome</label>
+                                    <input type="text" class="form-control form-control-sm" id="idNome" name="nome" required 
+                                        placeholder="Nome do usuário">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="idLogin" class="form-label">Login</label>
+                                    <input type="text" class="form-control form-control-sm" id="idLogin" name="login" required 
+                                        placeholder="Login">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="idSenha" class="form-label">Senha</label>
+                                    <input type="password" class="form-control form-control-sm" id="idSenha" name="senha" required 
+                                        placeholder="Senha segura">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="idConfirmaSenha" class="form-label">Confirmar</label>
+                                    <input type="password" class="form-control form-control-sm" id="idConfirmaSenha" name="confirmaSenha" required 
+                                        placeholder="Repita a senha">
+                                </div>
+                            </div>
+                        </div>
+                        <button id="salvar" type="submit" class="btn btn-success btn-sm m-1">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <div class="row">
+        <div class="col-3">
+            <div class="card mb-3">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">Família <?= $familia; ?></h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Total de Membros: <?= count($lista_usuarios); ?></li>
+                        <li class="list-group-item">Gestores: <?= array_reduce($lista_usuarios, function($carry, $item) { return $carry + ($item['gestor'] == 'T' ? 1 : 0); }, 0); ?></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="text-center" style="width: 10%;">ID</th>
+                            <th scope="col" style="width: 70%;">Nome</th>
+                            <th scope="col" class="text-center" style="width: 20%;">Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($lista_usuarios as $usuario): ?>
+                            <?php if ($usuario['gestor'] == 'T'): ?>
+                                <tr class="bg-primary bg-opacity-10">
+                                    <th scope="row" class="text-center fw-bold"><?= $usuario['idUsuario']; ?></th>
+                                    <td class="fw-bold">
+                                        <i class="bi bi-person-badge text-primary me-2"></i>
+                                        <?= $usuario['nome']; ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-primary rounded-pill">Gestor</span>
+                                    </td>
+                                </tr>
+                            <?php else: ?>
+                                <tr>
+                                    <th scope="row" class="text-center"><?= $usuario['idUsuario']; ?></th>
+                                    <td>
+                                        <i class="bi bi-person text-muted me-2"></i>
+                                        <?= $usuario['nome']; ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-secondary rounded-pill">Membro</span>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

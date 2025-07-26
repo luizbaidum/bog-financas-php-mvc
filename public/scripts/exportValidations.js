@@ -5,8 +5,9 @@ class Validations {
     msg = [];
 
     buscar_categorias_investimentos() {
-        return fetch('/consultar-categorias-investimentos')
-            .then(response => {
+        return fetch('/consultar-categorias-investimentos', {
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        }).then(response => {
                 if (!response.ok) {
                     throw new Error(`Erro HTTP: ${response.status}`);
                 }

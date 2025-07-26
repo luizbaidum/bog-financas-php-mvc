@@ -82,7 +82,7 @@ class Controller {
 		return false;
 	}
 
-	protected function isAjaxRequest()
+	public static function isAjaxRequest()
 	{
 		if (strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'xmlhttprequest')
 			return true;

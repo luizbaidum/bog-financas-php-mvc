@@ -3,10 +3,11 @@ namespace src\Controllers;
 
 use Exception;
 use MF\Controller\Controller;
+use src\Models\Familia\FamiliaDAO;
 use src\Models\Usuarios\UsuariosDAO;
 use src\Models\Usuarios\UsuariosEntity;
 
-class UsuariosController extends Controller {
+class FamiliaUsuariosController extends Controller {
     private $idFamilia;
     private $isGestor = false;
 
@@ -40,6 +41,8 @@ class UsuariosController extends Controller {
 
     public function index()
     {
+        $nome_familia = (new FamiliaDAO())->consultarNomeFamilia($this->idFamilia);
+
         $this->view->settings = [
             'action'     => $this->index_route . '/cad-usuario',
             'redirect'   => $this->index_route . '/usuarios',
@@ -50,6 +53,7 @@ class UsuariosController extends Controller {
         $usuarios = (new UsuariosDAO())->selectAll(new UsuariosEntity, [], [], []);
 
         $this->view->data['lista_usuarios'] = $usuarios;
+        $this->view->data['familia'] = $nome_familia;
 
         $this->renderPage(
             conteudo: 'usuarios'

@@ -18,6 +18,7 @@ function requireAjaxOperation(user_options) {
     fetch(defined.action, {
         method: defined.method,
         body: defined.data,
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
     })
     .then(response => {
         if (response.ok) {
@@ -70,6 +71,7 @@ function requireAjaxRender(user_options) {
     fetch(defined.action, {
         method: defined.method,
         body: defined.data,
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
     })
     .then(response => {
         if (response.ok) {
