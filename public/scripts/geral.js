@@ -86,7 +86,7 @@ $(document).on('submit', '.submit-form-crud-ajax', function (e) {
 
     switch (pathname) {
         case '/movimentos':
-            import('./exportValidations.js')
+            import('./exportValidations.mjs')
                 .then(async (file) => {
                     const validar = new file.default
                     let ret = await validar.movimento(data)
@@ -105,7 +105,7 @@ $(document).on('submit', '.submit-form-crud-ajax', function (e) {
                 });
         break
         case '/categorias':
-            import('./exportValidations.js')
+            import('./exportValidations.mjs')
                 .then(async (file) => {
                     const validar = new file.default
                     let ret = await validar.categoria(data)

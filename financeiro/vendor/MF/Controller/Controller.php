@@ -3,10 +3,13 @@
 namespace MF\Controller;
 
 use src\Diretorio;
+use MF\API\GitHub;
 
 class Controller {
 
 	public string $index_route = '';
+    public string $sys_version;
+    public string $sys_version_msg;
 
     protected string $msg_retorno_falha = 'O cadastro não teve sucesso. Verifique os dados e tente novamente. Se o erro persistir, entre em contato com o suporte.';
     protected string $msg_retorno_sucesso = 'Cadastro realizado.';
@@ -14,12 +17,32 @@ class Controller {
 	public function __construct(
 		public $view = new \stdClass(),
 		public string $empresa = 'Bog Finanças',
-        public string $sys_version = 'v2.0726'
 	) {
 		if (isset($_SERVER)) {
 			$this->index_route = 'http://' . $_SERVER['HTTP_HOST'];
 		}
+
+        $git_hub_infos = $this->getGitHubInfos();
+
+        $this->sys_version = $git_hub_infos['sys_version'];
+        $this->sys_version_msg = $git_hub_infos['release_name'];
 	}
+
+    protected function getGitHubInfos()
+    {
+        $ret = [];
+
+        $get_tag = (new GitHub())->getRepoRelease();
+
+        $ret['sys_version'] = '>= v2.07';
+        $ret['release_name'] = '';
+        if ($get_tag['status'] == '200' || $get_tag['status'] == '201') {
+            $ret['sys_version'] = $get_tag['tag'];
+            $ret['release_name'] = $get_tag['name'];
+        }
+
+        return $ret;
+    }
 
 	protected function renderInModal($titulo, $conteudo)
 	{
