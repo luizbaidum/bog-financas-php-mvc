@@ -6,7 +6,7 @@ abstract class Diretorio {
     /**
      * Alterar diretório
      */
-    const diretorio = 'C:\Users\luizb\Desktop\github\web-financas-mvc\\';
+    const diretorio = 'C:\Users\luizb\Desktop\github\bog-financas-php-mvc\\';
 
     public static function getDiretorio()
     {
