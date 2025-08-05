@@ -150,7 +150,7 @@ class Model {
 			$total = count($group_conditions);
 
 			for ($i = 0; $i < $total; $i += 2)
-				$group .= $group_conditions[$i] . '.' . $group_conditions[$i + 1] . ', ';                
+				$group .= $group_conditions[$i] . '.' . $group_conditions[$i + 1] . ', ';
 
 			$group = rtrim($group, ', ');
 		}

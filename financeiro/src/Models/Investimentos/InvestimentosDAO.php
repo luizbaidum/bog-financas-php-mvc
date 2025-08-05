@@ -73,7 +73,7 @@ class InvestimentosDAO extends Model {
 
     public function getAllContas()
     {
-        $query = "SELECT contas_investimentos.*, proprietarios.proprietario FROM contas_investimentos INNER JOIN proprietarios ON proprietarios.idProprietario = contas_investimentos.idProprietario WHERE contas_investimentos.idContaInvest > 0";
+        $query = "SELECT contas_investimentos.*, proprietarios.proprietario FROM contas_investimentos INNER JOIN proprietarios ON proprietarios.idProprietario = contas_investimentos.idProprietario WHERE contas_investimentos.idContaInvest > 0 ORDER BY contas_investimentos.nomeBanco, contas_investimentos.tituloInvest, contas_investimentos.idProprietario";
 
         $new_sql = new SQLActions();
         $result = $new_sql->executarQuery($query);
