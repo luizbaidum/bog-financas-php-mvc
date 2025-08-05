@@ -37,7 +37,7 @@ class InvestimentosController extends Controller {
         $model_investimentos = new InvestimentosDAO();
 
         $contas = $model_investimentos->getAllContas();
-        $invests = $model_investimentos->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC']);
+        $invests = $model_investimentos->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
         $objs = $model_investimentos->selectAll(new ObjetivosEntity, [], [], ['saldoAtual' => 'DESC']);
 
         $this->view->settings = [
