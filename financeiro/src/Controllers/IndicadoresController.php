@@ -8,7 +8,6 @@ use src\Models\Orcamento\OrcamentoDAO;
 class IndicadoresController extends Controller {
     public function index() {
         $model_movimentos = new MovimentosDAO();
-        $model_orcamento = new OrcamentoDAO();
 
         $ano_filtro = $_GET['anoFiltro'] ?? '';
         $mes_filtro = $_GET['mesFiltro'] ?? '';
@@ -20,39 +19,23 @@ class IndicadoresController extends Controller {
             'url_search' => $this->index_route . '/indicadores_index'
         ];
 
-        $arr_receitas = [];
-        $arr_despesas = [];
-        $arr_aplica = [];
-        $arr_resgata = [];
+        $arr_totais_por_tipo = [];
+        $arr_totais_por_tipo_orcado = [];
 
-        $indicadores_original = $model_movimentos->indicadoresRelatorio();
-        $orcamentos = $model_orcamento->orcamentosIndicadores();
         if ($mes_filtro != '') {
-            $indicadores_original = $model_movimentos->indicadoresRelatorio($ano_filtro, $mes_filtro);
-            $orcamentos = $model_orcamento->orcamentosIndicadores($ano_filtro, $mes_filtro);
+            $indicadores = $model_movimentos->gerarRelatorioIndicadores($ano_filtro, $mes_filtro);
+        } else {
+            $indicadores = $model_movimentos->gerarRelatorioIndicadores();
         }
 
-        foreach ($indicadores_original as $x => $v) {
-            switch ($v['tipo']) {
-                case 'R':
-                    $arr_receitas[$x] = $v;
-                break;
-                case 'D':
-                    $arr_despesas[$x] = $v;
-                break;
-                case 'A':
-                    $arr_aplica[$x] = $v;
-                break;
-                case 'RA':
-                    $arr_resgata[$x] = $v;
-                break;
-            }
+        foreach ($indicadores as $v) {
+            isset($arr_totais_por_tipo[$v['tipo']]) ? $arr_totais_por_tipo[$v['tipo']] += $v['totalRealizado'] : $arr_totais_por_tipo[$v['tipo']] = $v['totalRealizado'];
+            isset($arr_totais_por_tipo_orcado[$v['tipo']]) ? $arr_totais_por_tipo_orcado[$v['tipo']] += $v['totalOrcado'] : $arr_totais_por_tipo_orcado[$v['tipo']] = $v['totalOrcado'];
         }
-
-        $indicadores = ($arr_receitas + $arr_despesas + $arr_aplica + $arr_resgata);
 
         $this->view->data['indicadores'] = $indicadores;
-        $this->view->data['orcamentos'] = $orcamentos;
+        $this->view->data['arr_totais_por_tipo'] = $arr_totais_por_tipo;
+        $this->view->data['arr_totais_por_tipo_orcado'] = $arr_totais_por_tipo_orcado;
 
         $this->renderPage(
             conteudo: 'indicadores_index'

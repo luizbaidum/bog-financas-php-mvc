@@ -19,12 +19,12 @@ class NumbersHelper {
 
         return $formated;
     }
-    
+
     public static function formatUStoBR($num)
 	{
         if ($num == null || $num == '')
-            return '';
-            
+            return '0,00';
+
         $num = str_replace(',', '', $num);
         $formated = number_format($num, 2, ',', '.');
 
