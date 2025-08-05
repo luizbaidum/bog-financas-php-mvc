@@ -19,14 +19,14 @@
     <div class="card border-0 shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0 table-sm">
                     <thead class="table-light">
                         <tr>
                             <th class="ps-4 fw-bold">Categoria</th>
                             <th class="text-end pe-4 fw-bold">Realizado</th>
                             <th class="text-end pe-4 fw-bold">Orçado</th>
                             <th class="text-end pe-4 fw-bold">Diferença</th>
-                            <th class="text-end pe-4 fw-bold">% Atingido</th>
+                            <th class="text-end pe-4 fw-bold">% Acerto</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,18 +43,18 @@
                         ?>
                             <tr class="<?= $tipo_categoria != $next_tipo_categoria ? 'border-bottom border-dark' : '' ?>">
                                 <td class="ps-4"><?= $v['categoria']; ?></td>
-                                <td class="text-end fw-bold pe-4"><?= NumbersHelper::formatUStoBR($realizado); ?></td>
-                                <td class="text-end fw-bold pe-4"><?= NumbersHelper::formatUStoBR($orcado); ?></td>
+                                <td class="text-end pe-4">R$ <?= NumbersHelper::formatUStoBR($realizado); ?></td>
+                                <td class="text-end pe-4">R$ <?= NumbersHelper::formatUStoBR($orcado); ?></td>
                                 <td class="text-end pe-4"><?= NumbersHelper::formatUStoBR($diferença); ?></td>
                                 <td class="text-end pe-4">
                                     <?= (abs($realizado) > 0 && abs($orcado) > 0 ? NumbersHelper::formatUStoBR($realizado / $orcado * 100) . '%' : '0,00%'); ?>
                                 </td>
                             </tr>
-                            <?php if ($tipo_categoria != $next_tipo_categoria): ?>
+                            <?php if ($tipo_categoria != $next_tipo_categoria && ($tipo_categoria == 'R' || $tipo_categoria == 'D')): ?>
                                 <tr class="table-info">
                                     <td class="ps-4 fw-bold">Total <?= $tipo_categoria; ?></td>
-                                    <td class="ps-4 fw-bold text-end"><?= $arr_totais_por_tipo[$tipo_categoria]; ?></td>
-                                    <td class="ps-4 fw-bold text-end"><?= $arr_totais_por_tipo_orcado[$tipo_categoria]; ?></td>
+                                    <td class="ps-4 fw-bold text-end"><?= NumbersHelper::formatUStoBR($arr_totais_por_tipo[$tipo_categoria]); ?></td>
+                                    <td class="ps-4 fw-bold text-end"><?= NumbersHelper::formatUStoBR($arr_totais_por_tipo_orcado[$tipo_categoria]); ?></td>
                                     <td colspan="2"></td>
                                 </tr>
                             <?php endif; ?>
@@ -68,9 +68,7 @@
                             <td class="ps-4">Total Geral</td>
                             <td class="text-end <?= $total_real_geral <= 0 ? 'text-danger' : 'text-success'; ?> fw-bold pe-4"><?= NumbersHelper::formatUStoBR($total_real_geral); ?></td>
                             <td class="text-end <?= $total_orcado_geral <= 0 ? 'text-danger' : 'text-success'; ?> fw-bold pe-4"><?= NumbersHelper::formatUStoBR($total_orcado_geral); ?></td>
-                            <td class="text-end pe-4">
-                                <?= NumbersHelper::formatUStoBR($total_real_geral - $total_orcado_geral); ?>
-                            </td>
+                            <td class="text-end pe-4"></td>
                             <td class="text-end <?= ($divisao > 0.8 && $divisao < 1.2 ? 'text-success' : 'text-danger'); ?> pe-4">
                                 <?= NumbersHelper::formatUStoBR(($divisao) * 100) . '%'; ?>
                             </td>
