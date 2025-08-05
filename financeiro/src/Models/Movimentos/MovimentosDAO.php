@@ -44,35 +44,6 @@ class MovimentosDAO extends Model {
         return $result;
     }
 
-    public function indicadoresRelatorio($year = '', $month = '')
-    {
-        $where = 'WHERE (DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = DATE_FORMAT(CURRENT_DATE(), "%Y%m"))';
-        if (!empty($month)) {
-            if ($month == 'Todos') {
-                $where = 'WHERE movimentos.dataMovimento IS NOT NULL';
-            } else {
-                $where = "WHERE DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$year$month'";
-            }
-        }
-
-        $query = "SELECT SUM(movimentos.valor) AS total, categorias.idCategoria, categorias.categoria, categorias.tipo
-                    FROM movimentos 
-                    INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria
-                    $where
-                    GROUP BY movimentos.idCategoria
-                    ORDER BY categorias.tipo, total DESC";
-
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query);
-
-        $ret = [];
-        foreach ($result as $val) {
-            $ret[$val['idCategoria']] = $val;
-        }
-
-        return $ret;
-    }
-
     public function getResultado($year = '', $month = '')
     {
         $where = '(DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = DATE_FORMAT(CURRENT_DATE(), "%Y%m"))';
@@ -167,5 +138,57 @@ class MovimentosDAO extends Model {
 		$result = $new_sql->executarQuery($query, $params);
 
         return $result;
+    }
+
+    public function gerarRelatorioIndicadores($year = '', $month = '')
+    {
+        $where_realizado = ' (DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = DATE_FORMAT(CURRENT_DATE(), "%Y%m"))';
+        if ($month != '') {
+            if ($month == 'Todos') {
+                $where_realizado = ' movimentos.dataMovimento IS NOT NULL';
+            } else {
+                $where_realizado = " DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$year$month'";
+            }
+        }
+
+        $where_orcado = ' (MONTH(orcamentos.dataOrcamento) = MONTH(CURRENT_DATE()))';
+        if ($month != '') {
+            if ($month == 'Todos') {
+                $where_orcado = ' orcamentos.dataOrcamento IS NOT NULL';
+            } else {
+                $where_orcado = " DATE_FORMAT(orcamentos.dataOrcamento, '%Y%b') = '$year$month'";
+            }
+        }
+
+        $query  = "SELECT 
+                    categorias.idCategoria,
+                    categorias.categoria,
+                    categorias.tipo,
+                    (
+                        SELECT IFNULL(SUM(movimentos.valor), 0)
+                        FROM movimentos
+                        WHERE movimentos.idCategoria = categorias.idCategoria AND movimentos.idFamilia = $_SESSION[id_familia]
+                        AND $where_realizado
+                    ) AS totalRealizado,
+                    (
+                        SELECT IFNULL(SUM(orcamentos.valor), 0)
+                        FROM orcamentos
+                        WHERE orcamentos.idCategoria = categorias.idCategoria AND orcamentos.idFamilia = $_SESSION[id_familia]
+                        AND $where_orcado
+                    ) AS totalOrcado
+                    FROM categorias 
+                    WHERE categorias.idCategoria > 0 AND categorias.idFamilia = $_SESSION[id_familia]
+                    HAVING (totalRealizado <> 0 OR totalOrcado <> 0)
+                    ORDER BY categorias.tipo DESC, totalRealizado DESC";
+
+        $new_sql = new SQLActions();
+        $result = $new_sql->executarQuery($query, [], false);
+
+        $ret = [];
+        foreach ($result as $val) {
+            $ret[$val['idCategoria']] = $val;
+        }
+
+        return $ret;
     }
 }

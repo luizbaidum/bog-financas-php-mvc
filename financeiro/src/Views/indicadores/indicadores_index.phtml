@@ -3,8 +3,8 @@
     $total_real_por_tipo = 0;
     $total_orcado_por_tipo = 0;
 
-    $total_real_geral = array_sum(array_column($indicadores, 'total'));
-    $total_orcado_geral = array_sum(array_column($orcamentos, 'totalOrcado'));
+    $total_real_geral = 0;
+    $total_orcado_geral = 0;
 ?>
 
 <div class="container mt-3">
@@ -22,62 +22,49 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-4">Categoria</th>
-                            <th class="text-end pe-4">Realizado</th>
-                            <th class="text-end pe-4">Orçado</th>
-                            <th class="text-end pe-4">Diferença</th>
-                            <th class="text-end pe-4">% Atingido</th>
+                            <th class="ps-4 fw-bold">Categoria</th>
+                            <th class="text-end pe-4 fw-bold">Realizado</th>
+                            <th class="text-end pe-4 fw-bold">Orçado</th>
+                            <th class="text-end pe-4 fw-bold">Diferença</th>
+                            <th class="text-end pe-4 fw-bold">% Atingido</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                            foreach ($indicadores as $id => $value):
-                                $tipo_categoria = $value['tipo'];
-                                $proximo = next($indicadores);
-                                $total_real_por_tipo += $value['total'];
-                                $total_orcado_por_tipo += $orcamentos[$id]['totalOrcado'] ?? 0;
-                                $diferença = isset($orcamentos[$id]) ? ($value['total'] - $orcamentos[$id]['totalOrcado']) : 0;
+                            foreach ($indicadores as $id => $v):
+                                $realizado = $v['totalRealizado'];
+                                $orcado = $v['totalOrcado'];
+                                $tipo_categoria = $v['tipo'];
+                                $next_tipo_categoria = next($indicadores)['tipo'] ?? '';
+                                $diferença = abs($realizado) - abs($orcado);
+
+                                $total_real_geral += $realizado;
+                                $total_orcado_geral += $orcado;
                         ?>
-                            <tr>
-                                <td class="ps-4"><?= $value['categoria']; ?></td>
-                                <td class="text-end fw-bold pe-4"><?= NumbersHelper::formatUStoBR($value['total']); ?></td>
-                                <?php if (isset($orcamentos[$id])): ?>
-                                    <td class="text-end fw-bold pe-4"><?= NumbersHelper::formatUStoBR($orcamentos[$id]['totalOrcado']); ?></td>
-                                    <td class="text-end pe-4"><?= NumbersHelper::formatUStoBR($diferença); ?></td>
-                                    <td class="text-end pe-4">
-                                        <?= (isset($orcamentos[$id]) ? ($orcamentos[$id]['totalOrcado'] > 0 ? NumbersHelper::formatUStoBR(($value['total'] / $orcamentos[$id]['totalOrcado']) * 100) . '%' : '0%') : '0%'); ?>
-                                    </td>
-                                <?php else: ?>
-                                    <td class="text-end pe-4">-</td>
-                                    <td class="text-end pe-4">-</td>
-                                    <td class="text-end pe-4">-</td>
-                                <?php endif; ?>
+                            <tr class="<?= $tipo_categoria != $next_tipo_categoria ? 'border-bottom border-dark' : '' ?>">
+                                <td class="ps-4"><?= $v['categoria']; ?></td>
+                                <td class="text-end fw-bold pe-4"><?= NumbersHelper::formatUStoBR($realizado); ?></td>
+                                <td class="text-end fw-bold pe-4"><?= NumbersHelper::formatUStoBR($orcado); ?></td>
+                                <td class="text-end pe-4"><?= NumbersHelper::formatUStoBR($diferença); ?></td>
+                                <td class="text-end pe-4">
+                                    <?= (abs($realizado) > 0 && abs($orcado) > 0 ? NumbersHelper::formatUStoBR($realizado / $orcado * 100) . '%' : '0,00%'); ?>
+                                </td>
                             </tr>
-                            <?php if (is_array($proximo) && $proximo['tipo'] != $tipo_categoria && $tipo_categoria != 'RA' && $tipo_categoria != 'A'): ?>
-                                <tr class="table-light fw-bold">
-                                    <td class="ps-4">
-                                        Subtotal <?= ($tipo_categoria == 'R' ? 'Receita' : ($tipo_categoria == 'D' ? 'Despesa' : '')); ?>
-                                    </td>
-                                    <td class="text-end pe-4"><?= NumbersHelper::formatUStoBR($total_real_por_tipo) ?></td>
-                                    <td class="text-end pe-4"><?= NumbersHelper::formatUStoBR($total_orcado_por_tipo) ?></td>
-                                    <td class="text-end pe-4">
-                                        <?= NumbersHelper::formatUStoBR($total_real_por_tipo - $total_orcado_por_tipo) ?>
-                                    </td>
-                                    <td class="text-end pe-4">
-                                        <?= ($total_orcado_por_tipo != 0 ? NumbersHelper::formatUStoBR(($total_real_por_tipo / $total_orcado_por_tipo) * 100) . '%' : '0%'); ?>
-                                    </td>
+                            <?php if ($tipo_categoria != $next_tipo_categoria): ?>
+                                <tr class="table-info">
+                                    <td class="ps-4 fw-bold">Total <?= $tipo_categoria; ?></td>
+                                    <td class="ps-4 fw-bold text-end"><?= $arr_totais_por_tipo[$tipo_categoria]; ?></td>
+                                    <td class="ps-4 fw-bold text-end"><?= $arr_totais_por_tipo_orcado[$tipo_categoria]; ?></td>
+                                    <td colspan="2"></td>
                                 </tr>
-                            <?php
-                                    $total_real_por_tipo = 0;
-                                    $total_orcado_por_tipo = 0;
-                                endif;
-                        endforeach; ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
                     </tbody>
                     <tfoot>
                         <?php
                             $divisao = $total_orcado_geral != 0 ? $total_real_geral / $total_orcado_geral : 0;
                         ?>
-                        <tr class="table-active fw-bolder">
+                        <tr class="table-dark fw-bolder">
                             <td class="ps-4">Total Geral</td>
                             <td class="text-end <?= $total_real_geral <= 0 ? 'text-danger' : 'text-success'; ?> fw-bold pe-4"><?= NumbersHelper::formatUStoBR($total_real_geral); ?></td>
                             <td class="text-end <?= $total_orcado_geral <= 0 ? 'text-danger' : 'text-success'; ?> fw-bold pe-4"><?= NumbersHelper::formatUStoBR($total_orcado_geral); ?></td>
