@@ -2,14 +2,11 @@
     use MF\Helpers\DateHelper;
     use MF\Helpers\NumbersHelper;
 
-    $resultado = 0;
     $acumulado = 0;
     $resultado_invests = 0;
-    $result_por_prop = [];
-    $prop = [];
 ?>
 
-<div class="container">    
+<div class="container">
     <div class="card mt-1">
         <div class="card-header d-flex justify-content-between align-items-center py-1">
             <span><i class="bi bi-list-check"></i>Todos</span>
@@ -22,7 +19,6 @@
                 <table class="table table-striped table-hover table-sm mb-1 align-middle">
                     <thead>
                         <tr>
-                            <th>Data</th>
                             <th>Movimento</th>
                             <th>Categoria</th>
                             <th>Valor</th>
@@ -32,60 +28,54 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
-                            foreach ($movimentos as $mov): 
-                                $resultado += $mov['valor'];
-                                $prop[$mov['idProprietario']] = $mov['proprietario'];
-
-                                if (isset($result_por_prop[$mov['idProprietario']])) {
-                                    $result_por_prop[$mov['idProprietario']] += $mov['valor'];
-                                } else {
-                                    $result_por_prop[$mov['idProprietario']] = $mov['valor'];
-                                }
-                        ?>
-                            <tr>
-                                <td><?= DateHelper::convertUStoBR($mov['dataMovimento']); ?></td>
-                                <td>
-                                    <?= $mov['nomeMovimento']; ?>
-                                    <?php if ($mov['observacao'] != ''): ?>
-                                        <button title="Observação" 
-                                                class="btn btn-sm btn-outline-primary render-ajax" 
-                                                data-url="<?= $url_obs . $mov['idMovimento']; ?>" 
-                                                data-div="" 
-                                                data-modal="true"
-                                        >
-                                            <i>&#33;</i>
-                                        </button>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?= $mov['categoria']; ?></td>
-                                <td>R$ <?= NumbersHelper::formatUStoBR($mov['valor']); ?></td>
-                                <td>
-                                    <?= $prop[$mov['idProprietario']]; ?>
-                                </td>
-                                <td>
-                                    <a href="<?= $url_edit . $mov['idMovimento']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
-                                        <button title="Editar" class="btn btn-sm btn-outline-primary">
-                                            <i>&#9998;</i>
-                                        </button>
-                                    </a>
-                                </td>
-                                <td>
-                                    <input type="checkbox" name="selectedData[]" value="<?= $mov['idMovimento']; ?>">
+                        <?php foreach ($movimentos_agrupados as $data => $lancamentosDoDia): ?>
+                            <tr class="bg-light bg-opacity-50 lh-1">
+                                <td colspan="6" class="p-1 text-white bg-dark small">
+                                    <?= $data ?>
                                 </td>
                             </tr>
+
+                            <?php foreach ($lancamentosDoDia as $mov): ?>
+                                <tr>
+                                    <td>
+                                        <?= $mov['nomeMovimento']; ?>
+                                        <?php if ($mov['observacao'] != ''): ?>
+                                            <button title="Observação" 
+                                                    class="btn btn-sm btn-outline-primary render-ajax" 
+                                                    data-url="<?= $url_obs . $mov['idMovimento']; ?>" 
+                                                    data-div="" 
+                                                    data-modal="true">
+                                                <i>&#33;</i>
+                                            </button>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?= $mov['categoria']; ?></td>
+                                    <td>R$ <?= NumbersHelper::formatUStoBR($mov['valor']); ?></td>
+                                    <td><?= $prop[$mov['idProprietario']]; ?></td>
+                                    <td>
+                                        <a href="<?= $url_edit . $mov['idMovimento']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
+                                            <button title="Editar" class="btn btn-sm btn-outline-primary">
+                                                <i>&#9998;</i>
+                                            </button>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="selectedData[]" value="<?= $mov['idMovimento']; ?>">
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         <?php endforeach; ?>
                     </tbody>
                     <tfoot>
                         <tr class="table-info">
-                            <td colspan="3" style="text-align: right">Resultado (Rec. - Des. - Apli.)</td>
+                            <td colspan="2" style="text-align: right">Resultado (Rec. - Des. - Apli.)</td>
                             <td>R$ <?= NumbersHelper::formatUStoBR($resultado); ?></td>
                             <td>
                                 <?php foreach ($result_por_prop as $id_prop => $valor): ?>
                                     <small><?= $prop[$id_prop]; ?>: <?= NumbersHelper::formatUStoBR($valor); ?></small> <br>
                                 <?php endforeach; ?>
                             </td>
-                            <td colspan="2"></td>                       
+                            <td colspan="2"></td>
                         </tr>
                         <?php 
                             if (!empty($saldos_anteriores)): 
@@ -96,13 +86,13 @@
                                     $acumulado += $value['valor'];
                             ?>
                                 <tr class="table-info">
-                                    <td colspan="3" style="text-align: right">Resultado mês <?= $value['MES']; ?>:</td>
+                                    <td colspan="2" style="text-align: right">Resultado mês <?= $value['MES']; ?>:</td>
                                     <td>R$ <?= NumbersHelper::formatUStoBR($value['valor']); ?></td>
                                     <td colspan="3"></td>
                                 </tr>
                             <?php endforeach; ?>
                                 <tr class="table-info">
-                                    <td colspan="3" style="text-align: right">Acumulado</td>
+                                    <td colspan="2" style="text-align: right">Acumulado</td>
                                     <td>R$ <?= NumbersHelper::formatUStoBR($acumulado); ?></td>
                                     <td colspan="3"></td>
                                 </tr>
