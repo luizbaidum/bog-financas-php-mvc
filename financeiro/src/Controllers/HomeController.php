@@ -4,6 +4,7 @@ namespace src\Controllers;
 
 use Exception;
 use MF\Controller\Controller;
+use MF\Helpers\DateHelper;
 use src\Models\Movimentos\MovimentosDAO;
 use MF\View\SetButtons;
 
@@ -21,6 +22,7 @@ class HomeController extends Controller {
 
 			$model_movimentos = new MovimentosDAO();
 			$buttons = new SetButtons();
+            $resultado = 0;
 
 			$saldos_anteriores = array();
 
@@ -33,6 +35,22 @@ class HomeController extends Controller {
                 $mov_investimentos = $model_movimentos->indexTableInvestimentos();
 			}
 
+            $movimentos_agrupados = [];
+            $result_por_prop = [];
+            foreach ($movimentos as $mov) {
+                $dataBR = DateHelper::convertUStoBR($mov['dataMovimento']);
+                $movimentos_agrupados[$dataBR][] = $mov;
+
+                $resultado += $mov['valor'];
+                $prop[$mov['idProprietario']] = $mov['proprietario'];
+
+                if (isset($result_por_prop[$mov['idProprietario']])) {
+                    $result_por_prop[$mov['idProprietario']] += $mov['valor'];
+                } else {
+                    $result_por_prop[$mov['idProprietario']] = $mov['valor'];
+                }
+            }
+
 			$this->view->settings = [
 				'url_edit'   => $this->index_route . '/movimentos?action=edit&idMovimento=',
 				'redirect'   => $this->index_route . '/home',
@@ -40,7 +58,7 @@ class HomeController extends Controller {
 			];
 
 			$buttons->setButton(
-				'Del',
+				'Apagar',
 				$this->index_route . '/delete_movimentos',
 				'px-2 btn btn-danger action-delete',
                 'right'
@@ -55,10 +73,13 @@ class HomeController extends Controller {
 			);
 
 			$this->view->buttons = $buttons->getButtons();
-			$this->view->data['movimentos'] = $movimentos;
+			$this->view->data['movimentos_agrupados'] = $movimentos_agrupados;
 			$this->view->data['saldos_anteriores'] = $saldos_anteriores;
             $this->view->data['mov_investimentos'] = $mov_investimentos;
             $this->view->data['url_obs'] = $this->index_route . '/exibir_observacao?idMovimento=';
+            $this->view->data['result_por_prop'] = $result_por_prop;
+            $this->view->data['resultado'] = $resultado;
+            $this->view->data['prop'] = $prop;
 
 			$this->renderPage(conteudo: 'home');
 		} catch (Exception $e) {

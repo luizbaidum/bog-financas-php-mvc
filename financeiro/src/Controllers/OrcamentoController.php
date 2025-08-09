@@ -33,7 +33,7 @@ class OrcamentoController extends Controller {
         ];
 
         $buttons->setButton(
-            'Del',
+            'Apagar',
             $this->index_route . '/delete_itens_orcamento',
             'px-2 btn btn-danger action-delete'
         );
