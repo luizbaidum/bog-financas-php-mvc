@@ -14,8 +14,8 @@ class PrimeiroAcessoController extends Controller {
 
         $obj_usuario->nome = $_POST['nome'];
         $obj_usuario->login = $_POST['login'];
-        $obj_usuario->senha = $_POST['senha'];
-        $senha_confirmar = $_POST['confirmaSenha'];
+        $obj_usuario->senha = md5($_POST['senha']);
+        $senha_confirmar = md5($_POST['confirmaSenha']);
 
         $ret_validacao = $this->validacoesPreInsercao($model_usuario, $obj_usuario, $senha_confirmar);
 
