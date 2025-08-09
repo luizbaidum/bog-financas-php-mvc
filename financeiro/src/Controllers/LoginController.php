@@ -2,6 +2,7 @@
 
 namespace src\Controllers;
 
+use MF\API\GitHub;
 use MF\Controller\Controller;
 use src\Models\Usuarios\UsuariosDAO;
 
@@ -13,6 +14,11 @@ class LoginController extends Controller {
             'title'               => 'Login - Bog Finanças',
             'url_primeiro_acesso' => $this->index_route . '/primeiro-acesso',
         ];
+
+        $git_hub_infos = $this->getGitHubInfos();
+
+        $this->view->settings['sys_version'] = $git_hub_infos['sys_version'];
+        $this->view->settings['sys_version_msg'] = $git_hub_infos['release_name'];
 
         $this->renderLoginPage();
     }
@@ -78,7 +84,28 @@ class LoginController extends Controller {
         $this->view->settings['action'] = '/login';
         $this->view->settings['url_primeiro_acesso'] = $this->index_route . '/primeiro-acesso';
 
+        $git_hub_infos = $this->getGitHubInfos();
+
+        $this->view->settings['sys_version'] = $git_hub_infos['sys_version'];
+        $this->view->settings['sys_version_msg'] = $git_hub_infos['release_name'];
+
         $this->renderLoginPage();
         exit;
+    }
+
+    private function getGitHubInfos()
+    {
+        $ret = [];
+
+        $get_tag = (new GitHub())->getRepoRelease();
+
+        $ret['sys_version'] = '>= v2.07';
+        $ret['release_name'] = '';
+        if ($get_tag['status'] == '200' || $get_tag['status'] == '201') {
+            $ret['sys_version'] = $get_tag['tag'];
+            $ret['release_name'] = $get_tag['name'];
+        }
+
+        return $ret;
     }
 }
