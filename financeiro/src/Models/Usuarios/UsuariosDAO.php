@@ -16,7 +16,7 @@ class UsuariosDAO extends Model {
         $query = 'SELECT usuarios.idUsuario, usuarios.idFamilia, usuarios.nivel FROM usuarios WHERE usuarios.login = ? AND usuarios.senha = ?';
 
         $query_params[] = $obj->login;
-        $query_params[] = $obj->senha;
+        $query_params[] = md5($obj->senha);
 
 		$new_sql = new SQLActions();
 		$dados = $new_sql->executarQuery($query, $query_params, false);
