@@ -1,3 +1,5 @@
+var isLoading = false;
+
 addEventListener('popstate', () => {
     let url = window.location.href;
     window.location.href = url;
@@ -15,6 +17,8 @@ function requireAjaxOperation(user_options) {
 
     let defined = Object.assign(default_options, user_options);
 
+    startLoading();
+
     fetch(defined.action, {
         method: defined.method,
         body: defined.data,
@@ -25,6 +29,8 @@ function requireAjaxOperation(user_options) {
             response.text()
             .then((text) => {
                 let resposta = responseTreatment(text);
+
+                stopLoading();
 
                 if (resposta != undefined) {
                     if (defined.callback != null) {
@@ -196,5 +202,33 @@ function limparMovMensalVinculado() {
         $('#id-content-return').html('');
     } catch (error) {
         console.log('Error -> ' + error)
+    }
+}
+
+function startLoading() {
+    isLoading = true;
+
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    loadingOverlay.style.display = 'flex';
+
+    document.addEventListener('click', preventClicks, true);
+}
+
+function stopLoading() {
+    isLoading = false;
+
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    loadingOverlay.style.display = 'none';
+
+    document.removeEventListener('click', preventClicks, true);
+}
+
+function preventClicks(event) {
+    if (isLoading) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
+        return false;
     }
 }
