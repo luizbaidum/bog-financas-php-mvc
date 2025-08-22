@@ -46,7 +46,7 @@ class PreferenciasController extends Controller {
                 if (isset($arr_atualizado) && count($arr_atualizado) > 0) {
                     $msg = 'Preferências atualizadas: ' . implode(', ', $arr_atualizado);
 
-                    if (count($arr_nao_atualizado) > 0) {
+                    if (isset($arr_nao_atualizado) && count($arr_nao_atualizado) > 0) {
                         $msg .= '<br> Não atualizadas: ' . implode(', ', $arr_nao_atualizado);
                     }
 
@@ -54,7 +54,7 @@ class PreferenciasController extends Controller {
                         'result'   => true,
                         'mensagem' => $msg,
                     );
-    
+
                     echo json_encode($array_retorno);
 				} else {
 					throw new Exception('Nenhuma preferência foi atualizada.');

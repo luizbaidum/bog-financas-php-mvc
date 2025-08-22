@@ -89,7 +89,7 @@ class Model {
 					'result' => $result
 				);
 			} else {
-				throw new Exception('O processo de atualização não foi realizado.');
+				throw new Exception('O processo de atualização foi realizado, mas não existem mudanças para atualizar.');
 			}
 		} catch (Exception $e) {
 			errorHandler(
