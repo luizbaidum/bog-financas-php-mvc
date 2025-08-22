@@ -38,17 +38,18 @@ function requireAjaxOperation(user_options) {
                     } else {
                         let texto = resposta.mensagem;
                         let titulo = 'Atenção!';
-
-                        if (defined.modal == false && resposta.result != null && resposta.result != false) {
-                            titulo = 'Sucesso!';
-                            limparForm(defined.id_form);
-                            limparMovMensalVinculado();
-                            modalAlerta(titulo, texto);
-                        }
-
                         let id_modal_str = '#id-modal-conteudo';
 
-                        if (defined.modal == 'false') {
+                        if (!defined.modal || defined.modal == 'false') {
+                            if (resposta.result || resposta.result == 'true') {
+                                titulo = 'Sucesso!';
+                                limparForm(defined.id_form);
+                                limparMovMensalVinculado();
+                                modalAlerta(titulo, texto);
+                            } else {
+                                modalAlerta(titulo, texto);
+                            }
+
                             if ($(id_modal_str).hasClass('show')) {
                                 $(id_modal_str).modal('hide');
                             }
