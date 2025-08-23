@@ -93,7 +93,7 @@ class Model {
 			}
 		} catch (Exception $e) {
 			errorHandler(
-				1, 
+				1,
 				$e->getMessage(),
 				$e->getFile(),
 				$e->getLine()

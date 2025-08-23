@@ -118,7 +118,7 @@
         </div>
     </div>
 
-    <?php   
+    <?php
         $arr = [];
         $total = 0;
         foreach ($objs as $value) {
@@ -131,7 +131,7 @@
             }
 
             $total += $value['saldoAtual'];
-        } 
+        }
     ?>
     <div class="card mt-1">
         <div class="card-body">
@@ -151,8 +151,8 @@
                             foreach ($arr as $k => $val): ?>
                             <tr>
                                 <td><?= $k; ?></td>
-                                <td><?= NumbersHelper::formatUStoBR($val['saldo']); ?></td>
-                                <td><?= NumbersHelper::formatUStoBR($val['meta']); ?></td>
+                                <td>R$ <?= NumbersHelper::formatUStoBR($val['saldo']); ?></td>
+                                <td>R$ <?= NumbersHelper::formatUStoBR($val['meta']); ?></td>
                                 <td><?= NumbersHelper::formatUStoBR(number_format(($val['saldo'] / $val['meta']) * 100, 2)); ?>%</td>
                             </tr>
                         <?php endforeach; ?>
@@ -160,14 +160,14 @@
                         <tfoot>
                             <tr class="table-dark">
                                 <td>Total:</td>
-                                <td><?= NumbersHelper::formatUStoBR($total); ?></td>
+                                <td>R$ <?= NumbersHelper::formatUStoBR($total); ?></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                         </tfoot>
-                    </table>   
+                    </table>
                 </div>
-            </div>       
+            </div>
         </div>
     </div>
 </div>

@@ -4,7 +4,7 @@ class Validations {
     resgate = ''
     msg = [];
 
-    buscar_categorias_investimentos() {
+    buscarCategoriasInvestimentos() {
         return fetch('/consultar-categorias-investimentos', {
             headers: {'X-Requested-With': 'XMLHttpRequest'}
         }).then(response => {
@@ -25,7 +25,7 @@ class Validations {
             let investimento = form_data.get('idContaInvest');
             let objetivo = form_data.get('idObjetivo');
             let proprietario = form_data.get('idProprietario');
-            let categorias_investimentos = await this.buscar_categorias_investimentos();
+            let categorias_investimentos = await this.buscarCategoriasInvestimentos();
 
             this.aplicacao = categorias_investimentos.A;
             this.resgate = categorias_investimentos.RA;
@@ -44,9 +44,14 @@ class Validations {
                     this.msg.push('Por favor, selecionar conta investimento.');
                 }
 
-                if (id_categoria_post == this.resgate && (objetivo == '' || objetivo == null)) {
-                    this.msg.push('Por favor, selecionar objetivo do investimento.');
-                }
+                //Estou comentando esta validação pois o php sabe lidar com o resgate mesmo quando existem objetivos, mas nenhum é selecionado.
+                // if (id_categoria_post == this.resgate && (objetivo == '' || objetivo == null)) {
+                //     let select_obj = document.querySelector('select[name="idObjetivo"]');
+
+                //     if (select_obj.options.length > 1) {
+                //         this.msg.push('Por favor, selecionar objetivo do investimento.');
+                //     }
+                // }
 
                 if (id_categoria_post != this.resgate && id_categoria_post != this.aplicacao && investimento != '' && investimento != null) {
                     this.msg.push('Por favor, limpar o campo Conta Invest, pois a categoria escolhida não necessita de conta investimento.');
@@ -63,7 +68,7 @@ class Validations {
     async categoria(form_data) {
         try {
             let tipo = form_data.get('tipo');
-            let categorias_investimentos = await this.buscar_categorias_investimentos();
+            let categorias_investimentos = await this.buscarCategoriasInvestimentos();
             this.aplicacao = categorias_investimentos.A;
             this.resgate = categorias_investimentos.RA;
 
