@@ -22,7 +22,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/edit-mov-mensal', 'controller' => 'MovimentosMensaisController', 'action' => 'editarMovimentoMensal');
 
         $routes[] = array('route' => '/consultar_objetivos', 'controller' => 'InvestimentosController', 'action' => 'consultarObjetivos');
-        $routes[] = array('route' => '/contas_investimentos_index', 'controller' => 'InvestimentosController', 'action' => 'index');
+        $routes[] = array('route' => '/contas-investimentos-index', 'controller' => 'InvestimentosController', 'action' => 'index');
         $routes[] = array('route' => '/definir_movimento_investimento', 'controller' => 'InvestimentosController', 'action' => 'definirMovimentoDoInvestimento');
         $routes[] = array('route' => '/editar_objetivo', 'controller' => 'InvestimentosController', 'action' => 'editarObjetivo');
         $routes[] = array('route' => '/investimentos', 'controller' => 'InvestimentosController', 'action' => 'investimentos');

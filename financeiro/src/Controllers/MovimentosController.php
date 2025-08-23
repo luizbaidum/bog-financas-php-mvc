@@ -46,7 +46,7 @@ class MovimentosController extends Controller {
         $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
 
         $this->renderPage(
-            conteudo: 'movimentos', 
+            conteudo: 'movimentos',
             base_interna: 'base_cruds'
         );
     }
@@ -128,41 +128,44 @@ class MovimentosController extends Controller {
         $this->renderInModal(titulo: 'Demonstrativo', conteudo: 'exibir_resultado');
     }
 
-    public function editarMovimento()
+    public function editarMovimento()//depurar
     {
         $model_movimentos = new MovimentosDAO();
         $model_rendimentos = new RendimentosDAO();
         $model_objetivos = new ObjetivosDAO();
 
         try {
-            $id_movimento = $_POST['idMovimento'];
-            $id_conta_invest = $_POST['idContaInvest'];
-            $id_objetivo = $_POST['idObjetivo'] ?? '';
-            $id_objetivo_old = $_POST['idObjOld'] ?? '0';
-            $_POST['valor'] = NumbersHelper::formatBRtoUS($_POST['valor']);
-
-            unset($_POST['idMovimento']);
-            unset($_POST['idObjetivo']);
-            unset($_POST['idObjOld']);
+            $obj_movimento = new MovimentosEntity();
 
             $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
-            $_POST['idCategoria'] = $arr_cat[0];
             $sinal = $arr_cat[1];
 
-            if ($sinal == '-' && $_POST['valor'] > 0) {
-                $_POST['valor'] = $_POST['valor'] * -1;
-            } elseif ($sinal == '+' && $_POST['valor'] < 0) {
-                $_POST['valor'] = $_POST['valor'] * -1;
+            $id_objetivo_old = $_POST['idObjOld'] ?? 0;
+            $id_objetivo_new = $_POST['idObjetivo'] ?? 0;
+
+            $obj_movimento->idMovimento = $_POST['idMovimento'];
+            $obj_movimento->nomeMovimento = $_POST['nomeMovimento'];
+            $obj_movimento->dataMovimento = $_POST['dataMovimento'];
+            $obj_movimento->idCategoria = $arr_cat[0];
+            $obj_movimento->valor = NumbersHelper::formatBRtoUS($_POST['valor']);
+            $obj_movimento->idProprietario = $_POST['idProprietario'];
+            $obj_movimento->idContaInvest = !empty($_POST['idContaInvest']) ? $_POST['idContaInvest'] : 0;
+            $obj_movimento->observacao = $_POST['observacao'];
+            $obj_movimento->idMovMensal = $_POST['idMovMensal'] ?? 0;
+
+            if ($sinal == '-' && $obj_movimento->valor > 0) {
+                $obj_movimento->valor = $obj_movimento->valor * -1;
+            } elseif ($sinal == '+' && $obj_movimento->valor < 0) {
+                $obj_movimento->valor = $obj_movimento->valor * -1;
             }
 
-            $values = $_POST;
             $where = array(
-                'idMovimento' => $id_movimento
+                'idMovimento' => $obj_movimento->idMovimento
             );
 
-            $ret = $model_movimentos->atualizar(new MovimentosEntity, $values, $where);
+            $ret = $model_movimentos->atualizar(new MovimentosEntity, $obj_movimento, $where);
 
-            $rendimento = $model_rendimentos->selectAll(new RendimentosEntity, [['idMovimento', '=', $id_movimento]], [], []);
+            $rendimento = $model_rendimentos->selectAll(new RendimentosEntity, [['idMovimento', '=', $obj_movimento->idMovimento]], [], []);
 
             if (isset($rendimento[0]['idRendimento'])) {
                 $rendimento = $rendimento[0];
@@ -175,15 +178,15 @@ class MovimentosController extends Controller {
 
                 $conta_invest = $model_rendimentos->selectAll(new InvestimentosEntity, [['idContaInvest', '=', $old_invest]], [], [])[0];
 
-                if ($old_tipo == '4' || $old_tipo == '2') {
-                    $saldo = $conta_invest['saldoAtual'] - $old_valor;
-                } elseif ($old_tipo == '3' || $old_tipo == '1') {
+                if ($old_tipo == '4' || $old_tipo == '2') { //aplicação ou lucro
+                    $saldo = $conta_invest['saldoAtual'] - abs($old_valor);
+                } elseif ($old_tipo == '3' || $old_tipo == '1') { //resgate ou prejuízo
                     $saldo = $conta_invest['saldoAtual'] + abs($old_valor);
                 }
 
                 $model_rendimentos->atualizar(
-                    new InvestimentosEntity, 
-                    ['saldoAtual' => $saldo], 
+                    new InvestimentosEntity,
+                    ['saldoAtual' => $saldo],
                     ['idContaInvest' => $old_invest]
                 );
 
@@ -200,9 +203,9 @@ class MovimentosController extends Controller {
                 } else {
                     $objetivo = $model_objetivos->selectAll(new ObjetivosEntity, [['idObj', '=', $id_objetivo_old]], [], [])[0];
 
-                    if ($old_tipo == '4' || $old_tipo == '2') {
-                        $saldo_obj = $objetivo['saldoAtual'] - $old_valor;
-                    } elseif ($old_tipo == '3' || $old_tipo == '1') {
+                    if ($old_tipo == '4' || $old_tipo == '2') { //aplicação ou lucro
+                        $saldo_obj = $objetivo['saldoAtual'] - abs($old_valor);
+                    } elseif ($old_tipo == '3' || $old_tipo == '1') { //resgate ou prejuízo
                         $saldo_obj = $objetivo['saldoAtual'] + abs($old_valor);
                     }
 
@@ -216,8 +219,15 @@ class MovimentosController extends Controller {
                 $model_rendimentos->delete(new RendimentosEntity, 'idRendimento', $old_id);
             }
 
-            if (!empty($id_conta_invest)) {
-                (new InvestimentosController())->inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento, $_POST['idCategoria'], $_POST['valor'], $_POST['dataMovimento']);
+            if (!empty($obj_movimento->idContaInvest)) {
+                (new InvestimentosController())->inserirMovimentacaodeAplicacao(
+                    $obj_movimento->idContaInvest,
+                    $id_objetivo_new,
+                    $obj_movimento->idMovimento,
+                    $obj_movimento->idCategoria,
+                    $obj_movimento->valor,
+                    $obj_movimento->dataMovimento
+                );
             }
 
             if (!isset($ret['result']) || empty($ret['result'])) {
@@ -226,7 +236,7 @@ class MovimentosController extends Controller {
 
             $array_retorno = array(
                 'result'   => true,
-                'mensagem' => 'Movimento id ' . $id_movimento . ' atualizado com sucesso.',
+                'mensagem' => 'Movimento id ' . $obj_movimento->idMovimento . ' atualizado com sucesso.',
             );
 
             echo json_encode($array_retorno);
@@ -286,7 +296,7 @@ class MovimentosController extends Controller {
         if ($this->isSetPost()) {
             try {
                 if ($_POST['idCategoria'] == '') {
-                    throw new Exception('Por favor, escolher categoria.'); 
+                    throw new Exception('Por favor, escolher categoria.');
                 }
 
                 $obj_movimento = new MovimentosEntity();
@@ -316,11 +326,11 @@ class MovimentosController extends Controller {
                 //Inserção de Rendimento (invest ou retirada)
                 if (!empty($obj_movimento->idContaInvest)) {
                     (new InvestimentosController())->inserirMovimentacaodeAplicacao(
-                        $obj_movimento->idContaInvest, 
-                        $id_objetivo, 
-                        $obj_movimento->idMovimento, 
-                        $obj_movimento->idCategoria, 
-                        $obj_movimento->valor, 
+                        $obj_movimento->idContaInvest,
+                        $id_objetivo,
+                        $obj_movimento->idMovimento,
+                        $obj_movimento->idCategoria,
+                        $obj_movimento->valor,
                         $obj_movimento->dataMovimento
                     );
                 }

@@ -42,8 +42,8 @@ class InvestimentosController extends Controller {
 
         $this->view->settings = [
             'action'   => $this->index_route . '/cadastrar_rendimento',
-            'redirect' => $this->index_route . '/contas_investimentos_index',
-            'title'    => 'Indicadores',
+            'redirect' => $this->index_route . '/contas-investimentos-index',
+            'title'    => 'Investimentos',
             'url_obj'  => $this->index_route . '/consultar_objetivos?idContaInvest=',
         ];
 
@@ -386,7 +386,7 @@ class InvestimentosController extends Controller {
             case $this->categoria_A:
                 $tipo = 4;
 
-                $valor_aplicado = $valor; 
+                $valor_aplicado = $valor;
                 if ($valor_aplicado < 0) {
                     $valor_aplicado = ($valor_aplicado * -1); //veio negativo, pois aplicação é saída de dinheiro da conta corrente, mas é entrada em aplicações.
                 }
