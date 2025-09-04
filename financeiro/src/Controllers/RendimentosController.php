@@ -1,6 +1,9 @@
 <?php
 namespace src\Controllers;
 
+use DateInterval;
+use DatePeriod;
+use DateTime;
 use Exception;
 use MF\Controller\Controller;
 use src\Models\Rendimentos\RendimentosDAO;
@@ -89,6 +92,8 @@ class RendimentosController extends Controller {
                     }
                 }
 
+                $this->calcularTxRendimentoAM($_POST['idContaInvest'], $_POST['dataRendimento'], $model_rendimentos);
+
                 if ($ret_a['result'] > 0 && $ret_b['result'] > 0) {
                     $array_retorno = array(
 						'result'   => true,
@@ -104,6 +109,46 @@ class RendimentosController extends Controller {
 				);
 
 				echo json_encode($array_retorno);
+            }
+        }
+    }
+
+    private function calcularTxRendimentoAM(string $id_conta_invest, string $data_rend, RendimentosDAO $model) : void
+    {
+        $rendimentos = $model->selecionarDoisUltimosRendimentos($id_conta_invest, $data_rend);
+
+        if (count($rendimentos) > 1) {
+            $data_ultima = new DateTime($rendimentos[0]['dataRendimento']);
+            $data_anterior = new DateTime($rendimentos[1]['dataRendimento']);
+            $intervalo = new DateInterval('P1D');
+            $periodo = new DatePeriod($data_anterior, $intervalo, $data_ultima);
+
+            if (!empty($periodo)) {
+                $fds = 0;
+                foreach ($periodo as $data) {
+                    //6 é sábado e 7 é domingo
+                    if ($data->format('N') >= 6) {
+                        $fds++;
+                    }
+                }
+
+                $intervalo_total = ($data_anterior->diff($data_ultima))->days;
+                $uteis = $intervalo_total - $fds;
+
+                $rendimento_total = $rendimentos[0]['valorRendimento'];
+
+                if ($rendimento_total != 0 && $uteis > 0) {
+                    $rendimento_mes = ($rendimento_total / $uteis) * 22;
+
+                    $item = [
+                        'ultimoRendimentoAM' => $rendimento_mes
+                    ];
+                    $item_where = [
+                        'idContaInvest' => $id_conta_invest
+                    ];
+
+                    $model->atualizar(new InvestimentosEntity, $item, $item_where);
+                }
             }
         }
     }

@@ -96,7 +96,7 @@ class MovimentosDAO extends Model {
         return $result;
     }
 
-    public function consultarObservacao($id) : string
+    public function consultarObservacao($id): string
     {
         $params = [$id];
 
@@ -112,7 +112,7 @@ class MovimentosDAO extends Model {
         return '';
     }
 
-    public function extratoProprietarios(array $filtros) : array
+    public function extratoProprietarios(array $filtros): array
     {
         $where = '';
         $params = array();
