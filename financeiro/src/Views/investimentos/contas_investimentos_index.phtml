@@ -170,4 +170,30 @@
             </div>
         </div>
     </div>
+
+    <div class="card mt-1">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-9">
+                    <table class="table table-sm">
+                        <theader>
+                            <tr>
+                                <th>Investimento</th>
+                                <th>Projeção rendimento AM R$</th>
+                            </tr>
+                        </theader>
+                        <tbody>
+                        <?php 
+                            foreach ($arr_projecao as $val): ?>
+                            <tr>
+                                <td><?= $val['nomeBanco'] . ' ' . $val['tituloInvest']; ?></td>
+                                <td>R$ <?= NumbersHelper::formatUStoBR($val['ultimoRendimentoAM']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -50,6 +50,7 @@ class InvestimentosController extends Controller {
         $this->view->data['contas'] = $contas;
         $this->view->data['invests'] = $invests;
         $this->view->data['objs'] = $objs;
+        $this->view->data['arr_projecao'] = $invests;
 
         $this->renderPage(
             conteudo: 'contas_investimentos_index'

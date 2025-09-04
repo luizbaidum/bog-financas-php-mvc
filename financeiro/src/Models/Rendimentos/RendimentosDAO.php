@@ -40,4 +40,17 @@ class RendimentosDAO extends Model {
 
         return [];
     }
+
+    public function selecionarDoisUltimosRendimentos(string $id_conta_invest, string $data_rend): array
+    {
+        $query = "SELECT idRendimento, idContaInvest, valorRendimento, tipo, dataRendimento FROM rendimentos WHERE (tipo = '1' OR tipo = '2') AND idContaInvest = ? AND dataRendimento <= ? ORDER BY idRendimento DESC LIMIT 0, 2";
+
+        $params[] = $id_conta_invest;
+        $params[] = $data_rend;
+
+        $new_sql = new SQLActions();
+        $result = $new_sql->executarQuery(query: $query, arr_values: $params);
+
+        return $result;
+    }
 }
