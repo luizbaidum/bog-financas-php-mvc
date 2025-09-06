@@ -4,7 +4,7 @@
     echo '<script>var options_obj = ' . $options_list . '</script>';
     $id_obj_old = 0;
 
-    $mov_proprietario = null;
+    $mov_id_proprietario = null;
 ?>
 
 <?php if (isset($movimento['idMovimento'])) { ?>
@@ -15,8 +15,8 @@
         if (!empty($movimento['idObj'])) 
             $id_obj_old = $movimento['idObj']; $obj_old_name = $movimento['nomeObj'];
 
-        if (!empty($movimento['proprietario']))
-            $mov_proprietario = $movimento['proprietario'];
+        if (!empty($movimento['idProprietario']))
+            $mov_id_proprietario = $movimento['idProprietario'];
 } ?>
 
 <div class="form-group">
@@ -66,7 +66,7 @@
                             $x = $prop['idProprietario'];
                             $n = $prop['proprietario'];
                     ?>
-                        <option value="<?= $x ?>" <?= $mov_proprietario == $x ? ' selected ' : ''; ?>> <?= $n; ?></option>
+                        <option value="<?= $x ?>" <?= $mov_id_proprietario == $x ? ' selected ' : ''; ?>> <?= $n; ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
