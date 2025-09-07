@@ -233,3 +233,12 @@ function preventClicks(event) {
         return false;
     }
 }
+
+function atualizarStatus(elemento_select) {
+    let url = elemento_select.dataset.url;
+    let novo_status = elemento_select.value
+
+    requireAjaxOperation({
+        action: url + '&status=' + novo_status
+    })
+}
