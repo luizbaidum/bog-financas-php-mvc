@@ -37,7 +37,7 @@ class InvestimentosController extends Controller {
         $model_investimentos = new InvestimentosDAO();
 
         $contas = $model_investimentos->getAllContas();
-        $invests = $model_investimentos->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
+        $invests = $model_investimentos->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
         $objs = $model_investimentos->selectAll(new ObjetivosEntity, [], [], ['saldoAtual' => 'DESC']);
 
         $this->view->settings = [
@@ -62,9 +62,9 @@ class InvestimentosController extends Controller {
         $model = new Model();
 
         $this->view->data['tipo_movimento'] = $_GET['action'];
-        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
+        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
         $this->view->data['options_list'] = json_encode($model->selectAll(new ObjetivosEntity, [], [], []));
-        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
+        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '"1"']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
         $this->view->data['url_buscar_mov_mensal'] = $this->index_route . '/buscaMovMensal?buscar=';
         $this->view->data['div_buscar_mov_mensal'] = 'id-content-return';
         $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
@@ -212,7 +212,7 @@ class InvestimentosController extends Controller {
             'title'    => 'Cadastro de Objetivos',
         ];
 
-        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
+        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '1']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
 
         $this->renderPage( conteudo: 'objetivos', base_interna: 'base_cruds');
     }
@@ -333,7 +333,7 @@ class InvestimentosController extends Controller {
             'div_ajax' => 'id-destino'
         ];
 
-        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
+        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '1']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
 
         $this->renderPage(conteudo: 'investimentos_movimentar', base_interna: 'base_cruds');
     }

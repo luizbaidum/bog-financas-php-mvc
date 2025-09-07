@@ -19,4 +19,5 @@ class InvestimentosEntity extends Entity {
     public int $idProprietario;
     public int $idFamilia;
     public float $ultimoRendimentoAM;
+    public string $status;
 }

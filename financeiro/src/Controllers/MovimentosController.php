@@ -38,8 +38,8 @@ class MovimentosController extends Controller {
         ];
 
         $this->view->data['options_list'] = json_encode($model->selectAll(new ObjetivosEntity, [], [], []));
-        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
-        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
+        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '"1"']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
+        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
         $this->view->data['movimento'] = $mov[0] ?? null;
         $this->view->data['url_buscar_mov_mensal'] = $this->index_route . '/buscaMovMensal?buscar=';
         $this->view->data['div_buscar_mov_mensal'] = 'id-content-return';
