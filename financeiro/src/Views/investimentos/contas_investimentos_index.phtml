@@ -10,9 +10,9 @@
 
 <div class="container">
     <div class="card mt-2">
-        <div class="card-header">
-            <button class="btn btn-light btn-sm nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCadRendimento" aria-expanded="false" aria-controls="collapseCadRendimento">
-                Cadastrar Rendimento
+        <div class="card-header bg-primary text-white">
+            <button class="btn btn-sm nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCadRendimento" aria-expanded="false" aria-controls="collapseCadRendimento">
+                <h6 class="card-title mb-0">Cadastrar Rendimento</h6>
             </button>
         </div>
         <div class="collapse" id="collapseCadRendimento">
@@ -57,7 +57,10 @@
         </div>
     </div>
 
-    <div class="card mt-1">
+    <div class="card mt-2 mb-2">
+        <div class="card-header bg-primary text-white">
+            <h6 class="card-title mb-0">Investimentos ativos</h6>
+        </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-sm">
@@ -67,13 +70,17 @@
                             <th>Título</th>
                             <th>Objetivos</th>
                             <th>Saldo atual</th>
-                            <th class="bg-secondary">Saldo anterior</th>
-                            <th class="bg-secondary">Data anterior</th>
+                            <th>Saldo anterior</th>
+                            <th>Data anterior</th>
                         </tr>
                     </theader>
                     <tbody>
                         <?php 
-                            foreach ($contas as $value): 
+                            foreach ($todas_contas as $value): 
+                                if ($value['status'] != '1') {
+                                    continue;
+                                }
+
                                 $total += $value['saldoAtual'];
                                 $lista_prop[$value['idProprietario']] = $value['proprietario'];
 
@@ -100,7 +107,7 @@
                         <?php endforeach; ?>
                     </tbody>
                     <tfoot>
-                        <tr class="table-dark">
+                        <tr class="table-info">
                             <td colspan="3" style="text-align: right">Total</td>
                             <td>R$ <?= NumbersHelper::formatUStoBR($total); ?>
                             <td>
@@ -118,81 +125,123 @@
         </div>
     </div>
 
-    <?php
-        $arr = [];
-        $total = 0;
-        foreach ($objs as $value) {
-            if (isset($arr[$value['nomeObj']])) {
-                $arr[$value['nomeObj']]['saldo'] += $value['saldoAtual'];
-                $arr[$value['nomeObj']]['meta'] += $value['vlrObj'];
-            } else {
-                $arr[$value['nomeObj']]['saldo'] = $value['saldoAtual'];
-                $arr[$value['nomeObj']]['meta'] = $value['vlrObj'];
-            }
+    <div class="row">
+        <div class="col-sm-6 col-12">
+            <?php
+                $arr = [];
+                $total = 0;
+                foreach ($objs as $value) {
+                    if (isset($arr[$value['nomeObj']])) {
+                        $arr[$value['nomeObj']]['saldo'] += $value['saldoAtual'];
+                        $arr[$value['nomeObj']]['meta'] += $value['vlrObj'];
+                    } else {
+                        $arr[$value['nomeObj']]['saldo'] = $value['saldoAtual'];
+                        $arr[$value['nomeObj']]['meta'] = $value['vlrObj'];
+                    }
 
-            $total += $value['saldoAtual'];
-        }
-    ?>
-    <div class="card mt-1">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-9">
-                    <table class="table table-sm">
-                        <theader>
-                            <tr>
-                                <th>Objetivo</th>
-                                <th>Valor</th>
-                                <th>Meta</th>
-                                <th>% ating.</th>
-                            </tr>
-                        </theader>
-                        <tbody>
-                        <?php 
-                            foreach ($arr as $k => $val): ?>
-                            <tr>
-                                <td><?= $k; ?></td>
-                                <td>R$ <?= NumbersHelper::formatUStoBR($val['saldo']); ?></td>
-                                <td>R$ <?= NumbersHelper::formatUStoBR($val['meta']); ?></td>
-                                <td><?= NumbersHelper::formatUStoBR(number_format(($val['saldo'] / $val['meta']) * 100, 2)); ?>%</td>
-                            </tr>
-                        <?php endforeach; ?>
-                        </tbody>
-                        <tfoot>
-                            <tr class="table-dark">
-                                <td>Total:</td>
-                                <td>R$ <?= NumbersHelper::formatUStoBR($total); ?></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                    $total += $value['saldoAtual'];
+                }
+            ?>
+            <div class="card mb-2">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="card-title mb-0">Objetivos</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <table class="table table-sm">
+                            <theader>
+                                <tr>
+                                    <th>Objetivo</th>
+                                    <th>Valor</th>
+                                    <th>Meta</th>
+                                    <th>% ating.</th>
+                                </tr>
+                            </theader>
+                            <tbody>
+                            <?php 
+                                foreach ($arr as $k => $val): ?>
+                                <tr>
+                                    <td><?= $k; ?></td>
+                                    <td>R$ <?= NumbersHelper::formatUStoBR($val['saldo']); ?></td>
+                                    <td>R$ <?= NumbersHelper::formatUStoBR($val['meta']); ?></td>
+                                    <td><?= NumbersHelper::formatUStoBR(number_format(($val['saldo'] / $val['meta']) * 100, 2)); ?>%</td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-info">
+                                    <td>Total</td>
+                                    <td>R$ <?= NumbersHelper::formatUStoBR($total); ?></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-12">
+            <div class="card mb-2">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="card-title mb-0">Rendimento projetado</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <table class="table table-sm">
+                            <theader>
+                                <tr>
+                                    <th>Investimento</th>
+                                    <th>Projeção rendimento AM R$</th>
+                                </tr>
+                            </theader>
+                            <tbody>
+                            <?php 
+                                foreach ($arr_projecao as $val): ?>
+                                <tr>
+                                    <td><?= $val['nomeBanco'] . ' ' . $val['tituloInvest']; ?></td>
+                                    <td>R$ <?= NumbersHelper::formatUStoBR($val['ultimoRendimentoAM']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card mt-1">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h6 class="card-title mb-0">Lista</h6>
+        </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-9">
-                    <table class="table table-sm">
-                        <theader>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Banco</th>
+                            <th>Título</th>
+                            <th>Proprietário</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($todas_contas as $k => $v): ?>
                             <tr>
-                                <th>Investimento</th>
-                                <th>Projeção rendimento AM R$</th>
-                            </tr>
-                        </theader>
-                        <tbody>
-                        <?php 
-                            foreach ($arr_projecao as $val): ?>
-                            <tr>
-                                <td><?= $val['nomeBanco'] . ' ' . $val['tituloInvest']; ?></td>
-                                <td>R$ <?= NumbersHelper::formatUStoBR($val['ultimoRendimentoAM']); ?></td>
+                                <td><?= $v['nomeBanco']; ?></td>
+                                <td><?= $v['tituloInvest']; ?></td>
+                                <td><?= $v['proprietario']; ?></td>
+                                <td>
+                                    <select data-url="<?= $extra_url . $v['idContaInvest']; ?>" class="form-control" id="status-<?= $k; ?>" name="status[]" onchange="atualizarStatus(this)">
+                                        <option value="1" <?= $v['status'] == '1' ? ' selected ' : ''; ?>>Ativo</option>
+                                        <option value="0" <?= $v['status'] == '0' ? ' selected ' : ''; ?>>Inativo</option>
+                                    </select>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
