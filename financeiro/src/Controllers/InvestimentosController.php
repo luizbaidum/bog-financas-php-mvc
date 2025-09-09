@@ -36,21 +36,22 @@ class InvestimentosController extends Controller {
     {
         $model_investimentos = new InvestimentosDAO();
 
-        $contas = $model_investimentos->getAllContas();
-        $invests = $model_investimentos->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
+        $invests = $model_investimentos->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
         $objs = $model_investimentos->selectAll(new ObjetivosEntity, [], [], ['saldoAtual' => 'DESC']);
+        $todas_contas = $model_investimentos->getAllContas();
 
         $this->view->settings = [
-            'action'   => $this->index_route . '/cadastrar_rendimento',
-            'redirect' => $this->index_route . '/contas-investimentos-index',
-            'title'    => 'Investimentos',
-            'url_obj'  => $this->index_route . '/consultar_objetivos?idContaInvest=',
+            'action'    => $this->index_route . '/cadastrar_rendimento',
+            'redirect'  => $this->index_route . '/contas-investimentos-index',
+            'title'     => 'Investimentos',
+            'url_obj'   => $this->index_route . '/consultar_objetivos?idContaInvest=',
+            'extra_url' => $this->index_route . '/edit-status-investimento?id=',
         ];
 
-        $this->view->data['contas'] = $contas;
         $this->view->data['invests'] = $invests;
         $this->view->data['objs'] = $objs;
         $this->view->data['arr_projecao'] = $invests;
+        $this->view->data['todas_contas'] = $todas_contas;
 
         $this->renderPage(
             conteudo: 'contas_investimentos_index'
@@ -62,9 +63,9 @@ class InvestimentosController extends Controller {
         $model = new Model();
 
         $this->view->data['tipo_movimento'] = $_GET['action'];
-        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
+        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
         $this->view->data['options_list'] = json_encode($model->selectAll(new ObjetivosEntity, [], [], []));
-        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
+        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '"1"']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
         $this->view->data['url_buscar_mov_mensal'] = $this->index_route . '/buscaMovMensal?buscar=';
         $this->view->data['div_buscar_mov_mensal'] = 'id-content-return';
         $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
@@ -212,7 +213,7 @@ class InvestimentosController extends Controller {
             'title'    => 'Cadastro de Objetivos',
         ];
 
-        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
+        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '1']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
 
         $this->renderPage( conteudo: 'objetivos', base_interna: 'base_cruds');
     }
@@ -333,7 +334,7 @@ class InvestimentosController extends Controller {
             'div_ajax' => 'id-destino'
         ];
 
-        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
+        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '1']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
 
         $this->renderPage(conteudo: 'investimentos_movimentar', base_interna: 'base_cruds');
     }
@@ -473,5 +474,38 @@ class InvestimentosController extends Controller {
             'idContaInvest' => $id_conta_invest
         ];
         $model->atualizar(new InvestimentosEntity, $item, $item_where);
+    }
+
+    public function editarStatus()
+    {
+        $id_conta_invest = $_GET['id'];
+        $status = $_GET['status'];
+
+        if (!empty($id_conta_invest) && $status != '') {
+            try {
+                $ret = (new InvestimentosDAO())->atualizar(new InvestimentosEntity,
+                            ['status' => $status],
+                            ['idContaInvest' =>  $id_conta_invest]
+                        );
+
+                if ($ret['result']) {
+                    $array_retorno = array(
+                        'result'   => $ret['result'],
+                        'mensagem' => 'idContaInvest ' . $id_conta_invest . ' alterada com sucesso.'
+                    );
+
+                    echo json_encode($array_retorno);
+                } else {
+                    throw new Exception('Erro ao alterar idContaInvest ' . $id_conta_invest . '.');
+                }
+            } catch (Exception $e) {
+                $array_retorno = array(
+                    'result'   => false,
+                    'mensagem' => $e->getMessage(),
+                );
+
+                echo json_encode($array_retorno);
+            }
+        }
     }
 }

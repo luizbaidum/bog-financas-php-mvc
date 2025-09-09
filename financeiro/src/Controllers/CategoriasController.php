@@ -18,12 +18,15 @@ class CategoriasController extends Controller {
     public function categorias()
     {
         $this->view->settings = [
-            'action'   => $this->index_route . '/cad_categorias',
-            'redirect' => $this->index_route . '/categorias',
-            'title'    => 'Cadastro de Categoria',
+            'action'    => $this->index_route . '/cad_categorias',
+            'redirect'  => $this->index_route . '/categorias',
+            'title'     => 'Categorias',
+            'extra_url' => $this->index_route . '/edit-status-categoria?id=',
         ];
 
-        $this->renderPage(conteudo: 'categorias', base_interna: 'base_cruds');
+        $this->view->data['lista_todas_categorias'] = (new CategoriasDAO())->selectAll(new CategoriasEntity, [], [], ['idCategoria' => 'ASC']);
+
+        $this->renderPage(conteudo: 'categorias', base_interna: 'base_cruds', extra: 'lista_todas');
     }
 
     public function cadastrarCategorias()
@@ -65,6 +68,39 @@ class CategoriasController extends Controller {
                     echo json_encode($array_retorno);
                 } else {
                     throw new Exception($this->msg_retorno_falha);
+                }
+            } catch (Exception $e) {
+                $array_retorno = array(
+                    'result'   => false,
+                    'mensagem' => $e->getMessage(),
+                );
+
+                echo json_encode($array_retorno);
+            }
+        }
+    }
+
+    public function editarStatus()
+    {
+        $id_categoria = $_GET['id'];
+        $status = $_GET['status'];
+
+        if (!empty($id_categoria) && $status != '') {
+            try {
+                $ret = (new CategoriasDAO())->atualizar(new CategoriasEntity,
+                            ['status' => $status],
+                            ['idCategoria' =>  $id_categoria]
+                        );
+
+                if ($ret['result']) {
+                    $array_retorno = array(
+                        'result'   => $ret['result'],
+                        'mensagem' => 'idCategoria ' . $id_categoria . ' alterado com sucesso.'
+                    );
+
+                    echo json_encode($array_retorno);
+                } else {
+                    throw new Exception('Erro ao alterar idCategoria ' . $id_categoria . '.');
                 }
             } catch (Exception $e) {
                 $array_retorno = array(

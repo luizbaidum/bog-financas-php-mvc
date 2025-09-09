@@ -65,7 +65,7 @@ class MovimentosMensaisController extends Controller {
             'title'    => $title,
         ];
 
-        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
+        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '1']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
         $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
         $this->view->data['mov_m'] = $mov_m[0] ?? null;
 

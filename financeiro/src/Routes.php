@@ -30,6 +30,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/objetivos', 'controller' => 'InvestimentosController', 'action' => 'objetivos');
         $routes[] = array('route' => '/cad_objetivos', 'controller' => 'InvestimentosController', 'action' => 'cadastrarObjetivos');
         $routes[] = array('route' => '/investimentos-movimentar', 'controller' => 'InvestimentosController', 'action' => 'movimentarInvestimentos');
+        $routes[] = array('route' => '/edit-status-investimento', 'controller' => 'InvestimentosController', 'action' => 'editarStatus');
 
         $routes[] = array('route' => '/exibir_resultado', 'controller' => 'MovimentosController', 'action' => 'exibirResultados');
         $routes[] = array('route' => '/movimentos', 'controller' => 'MovimentosController', 'action' => 'index');
@@ -60,6 +61,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/categorias', 'controller' => 'CategoriasController', 'action' => 'categorias');
         $routes[] = array('route' => '/cad_categorias', 'controller' => 'CategoriasController', 'action' => 'cadastrarCategorias');
         $routes[] = array('route' => '/consultar-categorias-investimentos', 'controller' => 'CategoriasController', 'action' => 'consultarCategoriasInvestimentos');
+        $routes[] = array('route' => '/edit-status-categoria', 'controller' => 'CategoriasController', 'action' => 'editarStatus');
 
         $routes[] = array('route' => '/proprietarios', 'controller' => 'ProprietariosController', 'action' => 'proprietarios');
         $routes[] = array('route' => '/cad_proprietarios', 'controller' => 'ProprietariosController', 'action' => 'cadastrarProprietarios');

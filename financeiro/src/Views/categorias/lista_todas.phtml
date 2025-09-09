@@ -1,0 +1,34 @@
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h6 class="card-title mb-0">Lista</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-sm table-hover">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Tipo</th>
+                        <th>Regularidade</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($lista_todas_categorias as $k => $v): ?>
+                        <tr>
+                            <td><?= $v['categoria']; ?></td>
+                            <td><?= $v['tipo']; ?></td>
+                            <td><?= $v['regularidade']; ?></td>
+                            <td>
+                                <select data-url="<?= $extra_url . $v['idCategoria']; ?>" class="form-control" id="status-<?= $k; ?>" name="status[]" onchange="atualizarStatus(this)">
+                                    <option value="1" <?= $v['status'] == '1' ? ' selected ' : ''; ?>>Ativo</option>
+                                    <option value="0" <?= $v['status'] == '0' ? ' selected ' : ''; ?>>Inativo</option>
+                                </select>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

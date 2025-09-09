@@ -44,10 +44,11 @@ class Controller {
 		exit;
 	}
 
-	protected function renderPage($conteudo, $base_interna = '')
+	protected function renderPage($conteudo, $base_interna = '', $extra = '')
 	{
 		$this->view->conteudo = $conteudo;
 		$this->view->base_interna = $base_interna;
+        $this->view->conteudo_extra = $extra;
 
 		if ($this->isAjaxRequest()) {
 			ob_start();
@@ -123,6 +124,19 @@ class Controller {
 
 		include (Diretorio::diretorio . 'financeiro/vendor/MF/View/DataExtract.php');
 		require_once (Diretorio::getDiretorio() . '/Views/' . $classe_atual . '/' . $this->view->conteudo . '.phtml');
+	}
+
+    protected function carregarConteudoExtra()
+	{
+        if ($this->view->conteudo_extra != '') {
+            $classe_atual = get_class($this);
+            $classe_atual = str_replace('src\Controllers\\', '', $classe_atual);
+            $classe_atual = str_replace('Controller', '', $classe_atual);
+            $classe_atual = lcfirst($classe_atual);
+
+            include (Diretorio::diretorio . 'financeiro/vendor/MF/View/DataExtract.php');
+            require_once (Diretorio::getDiretorio() . '/Views/' . $classe_atual . '/' . $this->view->conteudo_extra . '.phtml');
+        }
 	}
 
 	protected function carregarBaseInterna()

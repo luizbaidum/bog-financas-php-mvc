@@ -14,4 +14,5 @@ class CategoriasEntity extends Entity {
     public string $sinal;
     public int $idFamilia;
     public string $regularidade;
+    public string $status;
 }
