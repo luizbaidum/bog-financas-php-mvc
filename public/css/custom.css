@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Nunito';
+    src: url('../fonts/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,6 +13,7 @@
 
 body {
     background-color: #b9f9f7;
+    font-family: 'Nunito', sans-serif;
 }
 
 .wrapper {
