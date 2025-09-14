@@ -1,33 +1,40 @@
-<div class="form-group">
-    <div class="row">
-        <div class="col-12 col-sm-3">
-            <label for="idDataOrcamento">Mês Movimento Orçado</label>
-            <select class="form-select" id="idDataOrcamento" name="dataOrcamento" required>
-                <?php foreach ($months as $k => $v): ?>
-                    <option value="<?= date('y') . "-" . ($k + 1) . "-01"; ?>" <?= ((date('m') + 1) == ($k + 1) ? "selected" : ""); ?>><?= $v; ?></option>
-                <?php endforeach;?>
-            </select>
-        </div>
-        <div class="col-12 col-sm-3">
-            <label for="idCategoria">Categoria Orçamento</label>
-            <select class="form-select" id="idCategoria" name="idCategoria" required>
-                <option value="">Selecione</option>
-                <?php foreach ($categorias as $cat): ?>
-                    <option value="<?= $cat['idCategoria'] . ' - sinal: ' . $cat['sinal']; ?>"><?= $cat['categoria'] . ' - ' . $cat['tipo']; ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div class="col-12 col-sm-3">
-            <label for="idProprietario">Proprietário</label>
-            <select class="form-select" id="idProprietario" name="idProprietario">
-                <?php foreach ($lista_proprietarios as $prop): ?>
-                    <option value="<?= $prop['idProprietario']; ?>"> <?= $prop['proprietario']; ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div class="col-12 col-sm-3">
-            <label for="tipo">Valor (EUA e apenas inteiro)</label>
-            <input type="text" class="form-control numero-br" id="idValor" name="valor" required value="0,00">
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h6 class="card-title mb-0">Cadastro</h6>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-12 col-sm-3">
+                    <label for="idDataOrcamento">Mês Movimento Orçado</label>
+                    <select class="form-select" id="idDataOrcamento" name="dataOrcamento" required>
+                        <?php foreach ($months as $k => $v): ?>
+                            <option value="<?= date('y') . "-" . ($k + 1) . "-01"; ?>" <?= ((date('m') + 1) == ($k + 1) ? "selected" : ""); ?>><?= $v; ?></option>
+                        <?php endforeach;?>
+                    </select>
+                </div>
+                <div class="col-12 col-sm-3">
+                    <label for="idCategoria">Categoria Orçamento</label>
+                    <select class="form-select" id="idCategoria" name="idCategoria" required>
+                        <option value="">Selecione</option>
+                        <?php foreach ($categorias as $cat): ?>
+                            <option value="<?= $cat['idCategoria'] . ' - sinal: ' . $cat['sinal']; ?>"><?= $cat['categoria'] . ' - ' . $cat['tipo']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-12 col-sm-3">
+                    <label for="idProprietario">Proprietário</label>
+                    <select class="form-select" id="idProprietario" name="idProprietario">
+                        <?php foreach ($lista_proprietarios as $prop): ?>
+                            <option value="<?= $prop['idProprietario']; ?>"> <?= $prop['proprietario']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-12 col-sm-3">
+                    <label for="tipo">Valor (EUA e apenas inteiro)</label>
+                    <input type="text" class="form-control numero-br" id="idValor" name="valor" required value="0,00">
+                </div>
+            </div>
         </div>
     </div>
 </div>

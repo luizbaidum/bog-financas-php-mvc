@@ -51,23 +51,22 @@ class MovimentosMensaisController extends Controller {
         $action = $_GET['action'] ?? null;
         $id = $_GET['idMovMensal'] ?? null;
 
-        $title = 'Cadastro de Mov. Mensal';
         $url_action = '/cad-movimentos-mensais';
         if ($action == 'edit') {
             $url_action = '/edit-mov-mensal';
-            $title = 'Edição de Mov. Mensal';
             $mov_m = $model->selectAll(new MovimentosMensaisEntity, [['idMovMensal', '=', $id]], [], []);
         }
 
         $this->view->settings = [
             'action'   => $this->index_route . $url_action,
             'redirect' => $this->index_route . '/movimentos-mensais',
-            'title'    => $title,
+            'title'    => 'Mov. Mensal',
         ];
 
         $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '1']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
         $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
         $this->view->data['mov_m'] = $mov_m[0] ?? null;
+        $this->view->data['titulo_card'] = $action == 'edit' ? 'Edição' : 'Cadastro';
 
         $this->renderPage(conteudo: 'movimentos_mensais', base_interna: 'base_cruds');
     }
