@@ -69,6 +69,7 @@ class InvestimentosController extends Controller {
         $this->view->data['url_buscar_mov_mensal'] = $this->index_route . '/buscaMovMensal?buscar=';
         $this->view->data['div_buscar_mov_mensal'] = 'id-content-return';
         $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
+        $this->view->data['titulo_card'] = 'Cadastro';
 
         $this->renderSimple('definido_movimento_investimento');
     }
@@ -163,7 +164,7 @@ class InvestimentosController extends Controller {
         $this->view->settings = [
             'action'   => $this->index_route . '/cad_investimentos',
             'redirect' => $this->index_route . '/investimentos',
-            'title'    => 'Cadastro de Investimentos',
+            'title'    => 'Investimentos',
         ];
 
         $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
@@ -210,7 +211,7 @@ class InvestimentosController extends Controller {
         $this->view->settings = [
             'action'   => $this->index_route . '/cad_objetivos',
             'redirect' => $this->index_route . '/objetivos',
-            'title'    => 'Cadastro de Objetivos',
+            'title'    => 'Objetivos',
         ];
 
         $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '1']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);

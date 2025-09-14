@@ -23,18 +23,16 @@ class MovimentosController extends Controller {
         $action = $_GET['action'] ?? null;
         $id = $_GET['idMovimento'] ?? null;
 
-        $title = 'Cadastro de Movimento';
         $url_action = '/cad_movimentos';
         if ($action == 'edit') {
             $url_action = '/edit_movimento';
-            $title = 'Edição de Movimento';
             $mov = $model_movimentos->consultarMovimento($id);
         }
 
         $this->view->settings = [
             'action'   => $this->index_route . $url_action,
             'redirect' => $this->index_route . '/home',
-            'title'    => $title,
+            'title'    => 'Movimento',
         ];
 
         $this->view->data['options_list'] = json_encode($model->selectAll(new ObjetivosEntity, [], [], []));
@@ -44,6 +42,7 @@ class MovimentosController extends Controller {
         $this->view->data['url_buscar_mov_mensal'] = $this->index_route . '/buscaMovMensal?buscar=';
         $this->view->data['div_buscar_mov_mensal'] = 'id-content-return';
         $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
+        $this->view->data['titulo_card'] = $action == 'edit' ? 'Edição' : 'Cadastro';
 
         $this->renderPage(
             conteudo: 'movimentos',

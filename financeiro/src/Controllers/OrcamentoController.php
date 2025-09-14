@@ -101,7 +101,7 @@ class OrcamentoController extends Controller {
         $this->view->settings = [
             'action'   => $this->index_route . '/cad_orcamento',
             'redirect' => $this->index_route . '/orcamento',
-            'title'    => 'Cadastro de Orçamento por Categoria',
+            'title'    => 'Orçamento por Categoria',
         ];
 
         $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '1']], [], ['categoria' => 'ASC']);

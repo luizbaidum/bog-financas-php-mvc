@@ -19,91 +19,98 @@
             $mov_id_proprietario = $movimento['idProprietario'];
 } ?>
 
-<div class="form-group">
-    <div class="row">
-        <div class="col-12 col-sm-6">
-            <label for="idNomeMovimento">Nome Movimento</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                id="idNomeMovimento" 
-                name="nomeMovimento" required 
-                value="<?= $movimento['nomeMovimento'] ?? ''; ?>"
-                data-action="<?= $url_buscar_mov_mensal; ?>"
-                data-div="<?= $div_buscar_mov_mensal; ?>"
-            >
-            <div id="<?= $div_buscar_mov_mensal; ?>"></div>
-        </div>
-        <div class="col-12 col-sm-3">
-            <label for="idDataMovimento">Data Movimento (m/d/a)</label>
-            <input type="date" class="form-control" id="idDataMovimento" name="dataMovimento" required value="<?= $movimento['dataMovimento'] ?? ''; ?>">
-        </div>
-        <div class="col-12 col-sm-3">
-            <label for="idCategoria">Categoria</label>
-            <select class="form-select exibir-objetivos" id="idCategoria" name="idCategoria" required>
-                <option value="">Selecione</option>
-                <?php foreach ($categorias as $cat): ?>
-                    <?php if (!empty($movimento) && $movimento['idCategoria'] == $cat['idCategoria']): ?>
-                        <option value="<?= $cat['idCategoria'] . ' - sinal: ' . $cat['sinal']; ?>" selected><?= $cat['categoria'] . ' - ' . $cat['tipo']; ?></option>
-                    <?php else: ?>
-                        <option value="<?= $cat['idCategoria'] . ' - sinal: ' . $cat['sinal']; ?>"><?= $cat['categoria'] . ' - ' . $cat['tipo']; ?></option>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            </select>
-        </div>
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h6 class="card-title mb-0"><?= $titulo_card; ?></h6>
     </div>
-    <div class="form-group">
-        <div class="row">
-            <div class="col-12 col-sm-3">
-                <label for="tipo">Valor</label>
-                <input type="text" class="form-control numero-br" id="idValor" name="valor" required value="<?= NumbersHelper::formatUStoBR($movimento['valor'] ?? '0,00'); ?>">
+    <div class="card-body">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-12 col-sm-6">
+                    <label for="idNomeMovimento">Nome Movimento</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="idNomeMovimento" 
+                        name="nomeMovimento" required 
+                        value="<?= $movimento['nomeMovimento'] ?? ''; ?>"
+                        data-action="<?= $url_buscar_mov_mensal; ?>"
+                        data-div="<?= $div_buscar_mov_mensal; ?>"
+                    >
+                    <div id="<?= $div_buscar_mov_mensal; ?>"></div>
+                </div>
+                <div class="col-12 col-sm-3">
+                    <label for="idDataMovimento">Data Movimento (m/d/a)</label>
+                    <input type="date" class="form-control" id="idDataMovimento" name="dataMovimento" required value="<?= $movimento['dataMovimento'] ?? ''; ?>">
+                </div>
+                <div class="col-12 col-sm-3">
+                    <label for="idCategoria">Categoria</label>
+                    <select class="form-select exibir-objetivos" id="idCategoria" name="idCategoria" required>
+                        <option value="">Selecione</option>
+                        <?php foreach ($categorias as $cat): ?>
+                            <?php if (!empty($movimento) && $movimento['idCategoria'] == $cat['idCategoria']): ?>
+                                <option value="<?= $cat['idCategoria'] . ' - sinal: ' . $cat['sinal']; ?>" selected><?= $cat['categoria'] . ' - ' . $cat['tipo']; ?></option>
+                            <?php else: ?>
+                                <option value="<?= $cat['idCategoria'] . ' - sinal: ' . $cat['sinal']; ?>"><?= $cat['categoria'] . ' - ' . $cat['tipo']; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
             </div>
-            <div class="col-12 col-sm-3">
-                <label for="idProprietario">Proprietário</label>
-                <select class="form-select" id="idProprietario" name="idProprietario">
-                    <?php 
-                        foreach ($lista_proprietarios as $prop):
-                            $x = $prop['idProprietario'];
-                            $n = $prop['proprietario'];
-                    ?>
-                        <option value="<?= $x ?>" <?= $mov_id_proprietario == $x ? ' selected ' : ''; ?>> <?= $n; ?></option>
-                    <?php endforeach; ?>
-                </select>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 col-sm-3">
+                        <label for="tipo">Valor</label>
+                        <input type="text" class="form-control numero-br" id="idValor" name="valor" required value="<?= NumbersHelper::formatUStoBR($movimento['valor'] ?? '0,00'); ?>">
+                    </div>
+                    <div class="col-12 col-sm-3">
+                        <label for="idProprietario">Proprietário</label>
+                        <select class="form-select" id="idProprietario" name="idProprietario">
+                            <?php 
+                                foreach ($lista_proprietarios as $prop):
+                                    $x = $prop['idProprietario'];
+                                    $n = $prop['proprietario'];
+                            ?>
+                                <option value="<?= $x ?>" <?= $mov_id_proprietario == $x ? ' selected ' : ''; ?>> <?= $n; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-3">
+                        <label for="idContaInvest">Conta Invest (se houver)</label>
+                        <select class="form-select exibir-objetivos" id="idContaInvest" name="idContaInvest">
+                            <option value="">Selecione</option>
+                            <?php foreach ($invests as $value): ?>
+                                <?php if (!empty($movimento) && $movimento['idContaInvest'] == $value['idContaInvest']): ?>
+                                    <option value="<?= $value['idContaInvest']; ?>" selected><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
+                                <?php else: ?>
+                                    <option value="<?= $value['idContaInvest']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-3 <?= $id_obj_old != 0 ? 'd-block' : 'd-none'; ?>" id="idSelectObjetivo">
+                        <label for="idObjetivo">Objetivo (se houver)</label>
+                        <select class="form-select" id="idObjetivo" name="idObjetivo">
+                            <option value="">Selecione</option>
+                            <?php if ($id_obj_old != 0): ?>
+                                <option value="<?= $id_obj_old; ?>" selected><?= $id_obj_old . ' - ' . $obj_old_name; ?></option>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="col-12 col-sm-3">
-                <label for="idContaInvest">Conta Invest (se houver)</label>
-                <select class="form-select exibir-objetivos" id="idContaInvest" name="idContaInvest">
-                    <option value="">Selecione</option>
-                    <?php foreach ($invests as $value): ?>
-                        <?php if (!empty($movimento) && $movimento['idContaInvest'] == $value['idContaInvest']): ?>
-                            <option value="<?= $value['idContaInvest']; ?>" selected><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
-                        <?php else: ?>
-                            <option value="<?= $value['idContaInvest']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="col-12 col-sm-3 <?= $id_obj_old != 0 ? 'd-block' : 'd-none'; ?>" id="idSelectObjetivo">
-                <label for="idObjetivo">Objetivo (se houver)</label>
-                <select class="form-select" id="idObjetivo" name="idObjetivo">
-                    <option value="">Selecione</option>
-                    <?php if ($id_obj_old != 0): ?>
-                        <option value="<?= $id_obj_old; ?>" selected><?= $id_obj_old . ' - ' . $obj_old_name; ?></option>
-                    <?php endif; ?>
-                </select>
-            </div>
-        </div>
-    </div>
 
-    <div class="row mt-2">
-        <div class="col-12">
-            <label for="idObservacao">Observações</label>
-            <textarea 
-                class="form-control" 
-                id="idObservacao" 
-                name="observacao" 
-                rows="1"
-            ><?= $movimento['observacao'] ?? ''; ?></textarea>
+            <div class="row mt-2">
+                <div class="col-12">
+                    <label for="idObservacao">Observações</label>
+                    <textarea 
+                        class="form-control" 
+                        id="idObservacao" 
+                        name="observacao" 
+                        rows="1"
+                    ><?= $movimento['observacao'] ?? ''; ?></textarea>
+                </div>
+            </div>
         </div>
     </div>
 </div>
