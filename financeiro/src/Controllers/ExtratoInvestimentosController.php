@@ -25,7 +25,7 @@ class ExtratoInvestimentosController extends Controller {
         }
 
         $this->view->data['extrato'] = $model_investimentos->consultarExtrato([]);
-        $this->view->data['lista_invest'] = $model_investimentos->selectAll(new InvestimentosEntity, [['status', '=', '1']], [], []);
+        $this->view->data['lista_invest'] = $model_investimentos->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], []);
         $this->view->data['months'] = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Todos');
         $this->view->data['years'] = array('2023', '2024', '2025', '2026', '2027');
         $this->view->data['lista_acao'] = $model_investimentos->selectAll(new RendimentosEntity, [], ['rendimentos', 'tipo'], []);
