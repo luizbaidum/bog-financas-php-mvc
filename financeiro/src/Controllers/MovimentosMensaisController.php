@@ -115,7 +115,7 @@ class MovimentosMensaisController extends Controller {
                     $item['dataMovimento']  = $_POST['dataMovimento'][$id];
                     $item['idProprietario'] = $_POST['idProprietario'][$id];
                     $item['idCategoria']    = $arr_cat[0];
-                    $item['valor']          = $sinal . $_POST['valor'][$id];
+                    $item['valor']          = $sinal . NumbersHelper::formatBRtoUS($_POST['valor'][$id]);
 
                     $ret = $model_movimentos_mensais->cadastrar(new MovimentosEntity, $item);
 

@@ -20,7 +20,10 @@
                     </tr>
                 </thead>
                 <tbody> 
-                    <?php 
+                    <?php
+
+                use MF\Helpers\NumbersHelper;
+
                         foreach ($arr_mensais as $value): 
                             $dia_original = date('d', strtotime($value['dataRepete']));
                             $mes_original = date('m', strtotime($value['dataRepete']));
@@ -51,7 +54,7 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="number" class="form-control"  name="valor[<?= $value['idMovMensal']; ?>]" step=".01" value="<?= $value['valorDespesa']; ?>">
+                                <input type="text" class="form-control numero-br"  name="valor[<?= $value['idMovMensal']; ?>]" value="<?= NumbersHelper::formatUStoBR($value['valorDespesa']); ?>">
                             </td>
                             <td>
                                 <?= $value['idCategoria'] . ' - ' . $value['categoria'] . ' - ' . $value['tipo']; ?>
