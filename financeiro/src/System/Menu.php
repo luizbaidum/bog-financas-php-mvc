@@ -24,7 +24,7 @@ class Menu {
             'Categorias', 'Movimentos', 'Contas Investimentos', 'Movimentos Mensais', 'Objetivos', 'Orçamento', 'Orçamento do Realizado', 'Movimento entre Investimentos'
         ],
         'Consultas' => [
-            'Indicadores', 'Contas Investimentos', 'Extrato Contas Invest', 'Orçamento', 'Evolução Rendimentos', 'Extrato por Proprietário'
+            'Indicadores', 'Investimentos', 'Extrato Contas Invest', 'Orçamento', 'Evolução Rendimentos', 'Extrato por Proprietário'
         ],
         'Configs' => [
             'Preferencias', 'Proprietarios', 'Usuarios'
