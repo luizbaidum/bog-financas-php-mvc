@@ -13,7 +13,7 @@ include ("C:\\Users\\luizb\\Desktop\\github\\bog-financas-php-mvc\\financeiro\\v
 
 require_once ("C:\Users\\luizb\\Desktop\\github\\bog-financas-php-mvc\\financeiro\\vendor\\autoload.php");
 
-set_error_handler('errorHandler'); 
-set_exception_handler('exceptionHandler'); 
+set_error_handler('errorHandler');
+set_exception_handler('exceptionHandler');
 
 $route = new \src\Routes;

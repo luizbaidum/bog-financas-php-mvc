@@ -51,7 +51,12 @@ function exceptionHandler($exception)
 
     $logger->error($exception->getMessage(), ['local' => $exception->getFile(), 'linha' => $exception->getLine(), 'type' => 'ERROR']);
 
-    echo '<br><h4>Aconteceu um erro fatal. Entre em contato com o dev do sistema.</h4><br>';
+    $array_retorno = array(
+        'result'   => false,
+        'mensagem' => '<br><b>Aconteceu um erro inesperado. Por favor entrar em contato com o desenvolvedor.</b><br>',
+    );
+
+    echo json_encode($array_retorno);
 
    /**
     * Para visualizar, descomente.

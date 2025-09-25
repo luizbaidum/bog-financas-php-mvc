@@ -50,7 +50,7 @@ class CategoriasController extends Controller {
                 } else {
                    if ($_POST['sinal'] != '-') {
                         throw new Exception("Atenção: Definir sinal como '-', pois 'Aplicação' ou 'Despesa' são saídas.");
-                    } 
+                    }
                 }
 
                 if ($_POST['regularidade'] == '') {
