@@ -162,6 +162,13 @@ class SQLActions {
 				$e->getLine()
 			);
 
+            $array_retorno = array(
+                'result'   => false,
+                'mensagem' => 'O banco de dados encontrou um erro. Por favor entrar em contato com o desenvolvedor.'
+            );
+
+            echo json_encode($array_retorno);
+
             exit;
         }
     }

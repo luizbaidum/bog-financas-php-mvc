@@ -6,6 +6,7 @@ use DateTime;
 use Exception;
 use src\Models\Investimentos\InvestimentosEntity;
 use src\Models\Objetivos\ObjetivosEntity;
+use Throwable;
 
 class Model {
 
@@ -45,18 +46,17 @@ class Model {
 			} else {
 				throw new Exception('Erro ao cadastrar.');
 			}
-		} catch (Exception $e) {
+		} catch (Throwable $e) {
 			errorHandler(
-				1, 
+				1,
 				$e->getMessage(),
 				$e->getFile(),
 				$e->getLine()
 			);
 
 			return array(
-				'result'   => false,
-				'mensagem' => $e->getMessage()
-			);
+                'result' => false
+            );
 		}
 	}
 
