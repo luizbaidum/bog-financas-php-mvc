@@ -63,6 +63,32 @@ class MovimentosDAO extends Model {
         return false;
     }
 
+    public function detalharMovimento($id)
+    {
+        $query = "SELECT movimentos.*, 
+            objetivos_invest.nomeObj, 
+            objetivos_invest.idObj,
+            categorias.categoria, 
+            categorias.tipo, 
+            movprop.proprietario AS proprietarioMov,
+            investprop.proprietario AS proprietarioContaInvest,
+            contas_investimentos.tituloInvest,
+            contas_investimentos.nomeBanco
+            FROM movimentos 
+            LEFT JOIN rendimentos ON movimentos.idMovimento = rendimentos.idMovimento 
+            LEFT JOIN objetivos_invest ON rendimentos.idObj = objetivos_invest.idObj 
+            INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria 
+            INNER JOIN proprietarios movprop ON movprop.idProprietario = movimentos.idProprietario 
+            LEFT JOIN contas_investimentos ON movimentos.idContaInvest = contas_investimentos.idContaInvest 
+            LEFT JOIN proprietarios investprop ON investprop.idProprietario = contas_investimentos.idProprietario 
+            WHERE movimentos.idMovimento = ?";
+
+        $new_sql = new SQLActions();
+		$result = $new_sql->executarQuery($query, [$id]);
+
+        return $result;
+    }
+
     public function consultarMovimento($id)
     {
         $query = "SELECT movimentos.*, rendimentos.idRendimento, rendimentos.idObj, objetivos_invest.nomeObj FROM movimentos LEFT JOIN rendimentos ON movimentos.idMovimento = rendimentos.idMovimento LEFT JOIN objetivos_invest ON rendimentos.idObj = objetivos_invest.idObj WHERE movimentos.idMovimento = ?";

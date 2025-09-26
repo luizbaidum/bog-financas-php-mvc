@@ -19,6 +19,7 @@
                 <table class="table table-striped table-hover table-sm mb-1 align-middle">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Movimento</th>
                             <th>Categoria</th>
                             <th>Valor</th>
@@ -30,7 +31,7 @@
                     <tbody>
                         <?php foreach ($movimentos_agrupados as $data => $lancamentosDoDia): ?>
                             <tr class="bg-light bg-opacity-50 lh-1">
-                                <td colspan="6" class="p-1 text-white bg-dark small">
+                                <td colspan="7" class="p-1 text-white bg-dark small">
                                     <?= $data ?>
                                 </td>
                             </tr>
@@ -38,16 +39,16 @@
                             <?php foreach ($lancamentosDoDia as $mov): ?>
                                 <tr>
                                     <td>
+                                        <button title="Detalhes" 
+                                                class="btn btn-sm btn-outline-primary render-ajax" 
+                                                data-url="<?= $url_detail . $mov['idMovimento']; ?>" 
+                                                data-div=""
+                                                data-modal="true">
+                                            <i>&#33;</i>
+                                        </button>
+                                    </td>
+                                    <td>
                                         <?= $mov['nomeMovimento']; ?>
-                                        <?php if ($mov['observacao'] != ''): ?>
-                                            <button title="Observação" 
-                                                    class="btn btn-sm btn-outline-primary render-ajax" 
-                                                    data-url="<?= $url_obs . $mov['idMovimento']; ?>" 
-                                                    data-div="" 
-                                                    data-modal="true">
-                                                <i>&#33;</i>
-                                            </button>
-                                        <?php endif; ?>
                                     </td>
                                     <td><?= $mov['categoria']; ?></td>
                                     <td>R$ <?= NumbersHelper::formatUStoBR($mov['valor']); ?></td>
@@ -68,6 +69,7 @@
                     </tbody>
                     <tfoot>
                         <tr class="table-info">
+                            <td></td>
                             <td colspan="2" style="text-align: right">Resultado (Rec. - Des. - Apli.)</td>
                             <td>R$ <?= NumbersHelper::formatUStoBR($resultado); ?></td>
                             <td>
@@ -86,12 +88,14 @@
                                     $acumulado += $value['valor'];
                             ?>
                                 <tr class="table-info">
+                                    <td></td>
                                     <td colspan="2" style="text-align: right">Resultado mês <?= $value['MES']; ?>:</td>
                                     <td>R$ <?= NumbersHelper::formatUStoBR($value['valor']); ?></td>
                                     <td colspan="3"></td>
                                 </tr>
                             <?php endforeach; ?>
                                 <tr class="table-info">
+                                    <td></td>
                                     <td colspan="2" style="text-align: right">Acumulado</td>
                                     <td>R$ <?= NumbersHelper::formatUStoBR($acumulado); ?></td>
                                     <td colspan="3"></td>
