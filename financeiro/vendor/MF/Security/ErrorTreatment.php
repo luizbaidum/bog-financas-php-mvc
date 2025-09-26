@@ -53,7 +53,7 @@ function exceptionHandler($exception)
 
     $array_retorno = array(
         'result'   => false,
-        'mensagem' => '<br><b>Aconteceu um erro inesperado. Por favor entrar em contato com o desenvolvedor.</b><br>',
+        'mensagem' => '<div style="margin: 20px;">Aconteceu um erro inesperado. Por favor entrar em contato com o desenvolvedor.</div>',
     );
 
     echo json_encode($array_retorno);

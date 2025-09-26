@@ -1,0 +1,62 @@
+<?php
+    use MF\Helpers\DateHelper;
+    use MF\Helpers\NumbersHelper;
+?>
+
+<div class="modal-header p-2">
+    <h5 class="modal-title" id="modal-conteudo-titulo"><?= $this->view->titulo; ?></h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body p-0">
+    <div class="row g-0">
+        <div class="col-12">
+            <div class="p-2">
+                <div class="row align-items-center">
+                    <div class="col-sm-4"><b>Movimento:</b></div>
+                    <div class="col-sm-8"><?= $detalhes['nomeMovimento']; ?></div>
+                </div>
+
+                <div class="row align-items-center">
+                    <div class="col-sm-4"><b>Data:</b></div>
+                    <div class="col-sm-8"><?= DateHelper::convertUStoBR($detalhes['dataMovimento']); ?></div>
+                </div>
+
+                <div class="row align-items-center">
+                    <div class="col-sm-4"><b>Categoria:</b></div>
+                    <div class="col-sm-8">
+                        <span class="badge bg-primary"><?= $detalhes['categoria']; ?></span>
+                    </div>
+                </div>
+
+                <div class="row align-items-center">
+                    <div class="col-sm-4"><b>Valor:</b></div>
+                    <div class="col-sm-8">
+                        <span class="fw-bold">R$ <?= NumbersHelper::formatUStoBR($detalhes['valor']); ?></span>
+                    </div>
+                </div>
+
+                <div class="row align-items-center">
+                    <div class="col-sm-4"><b>ID Conta Investimento:</b></div>
+                    <div class="col-sm-8">
+                        <?= !empty($detalhes['idContaInvest']) ? $detalhes['idContaInvest'] . ' - ' . $detalhes['nomeBanco'] . ': ' . $detalhes['tituloInvest'] . ' (' . $detalhes['proprietarioContaInvest'] . ') <b>Obj:</b> ' . (!empty($detalhes['idObj']) ? $detalhes['idObj'] . ' - ' . $detalhes['nomeObj'] : '-') : '-'; ?>
+                    </div>
+                </div>
+
+                <div class="row align-items-center">
+                    <div class="col-sm-4"><b>Proprietário:</b></div>
+                    <div class="col-sm-8"><?= $detalhes['proprietarioMov']; ?></div>
+                </div>
+
+                <div class="row detail-row">
+                    <div class="col-12">
+                        <div class="mb-1"><b>Observação:</b></div>
+                        <div>
+                            <span><?= $detalhes['observacao']; ?></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

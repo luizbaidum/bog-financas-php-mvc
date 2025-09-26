@@ -355,12 +355,12 @@ class MovimentosController extends Controller {
         }
     }
 
-    public function exibirObs()
+    public function exibirDetalhes()
     {
         $id_movimento = $_GET['idMovimento'];
-        $model_movimentos = new MovimentosDAO();
-        $this->view->data['observacao'] = $model_movimentos->consultarObservacao($id_movimento);
 
-        $this->renderInModal(titulo: 'Observação movimento ' . $id_movimento, conteudo: 'observacao');
+        $this->view->data['detalhes'] = (new MovimentosDAO())->detalharMovimento($id_movimento)[0];
+
+        $this->renderInModal(titulo: 'Detalhes mov. ' . $id_movimento, conteudo: 'detalhes');
     }
 }

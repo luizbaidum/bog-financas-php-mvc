@@ -76,7 +76,7 @@ class HomeController extends Controller {
 			$this->view->data['movimentos_agrupados'] = $movimentos_agrupados;
 			$this->view->data['saldos_anteriores'] = $saldos_anteriores;
             $this->view->data['mov_investimentos'] = $mov_investimentos;
-            $this->view->data['url_obs'] = $this->index_route . '/exibir_observacao?idMovimento=';
+            $this->view->data['url_detail'] = $this->index_route . '/exibir-detalhes?idMovimento=';
             $this->view->data['result_por_prop'] = $result_por_prop;
             $this->view->data['resultado'] = $resultado;
             $this->view->data['prop'] = $prop;
