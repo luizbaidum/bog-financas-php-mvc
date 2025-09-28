@@ -210,12 +210,14 @@ class InvestimentosController extends Controller {
         $model = new Model();
 
         $this->view->settings = [
-            'action'   => $this->index_route . '/cad_objetivos',
-            'redirect' => $this->index_route . '/objetivos',
-            'title'    => 'Objetivos',
+            'action'    => $this->index_route . '/cad_objetivos',
+            'redirect'  => $this->index_route . '/objetivos',
+            'title'     => 'Objetivos',
+            'extra_url' => $this->index_route . '/edit-status-objetivo?id=',
         ];
 
         $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '1']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
+        $this->view->data['lista_obj'] = $model->selectAll(new ObjetivosEntity, [], [], []);
 
         $this->renderPage(conteudo: 'objetivos', base_interna: 'base_cruds', extra: 'listagem_objetivos');
     }
@@ -499,6 +501,39 @@ class InvestimentosController extends Controller {
                     echo json_encode($array_retorno);
                 } else {
                     throw new Exception('Erro ao alterar idContaInvest ' . $id_conta_invest . '.');
+                }
+            } catch (Exception $e) {
+                $array_retorno = array(
+                    'result'   => false,
+                    'mensagem' => $e->getMessage(),
+                );
+
+                echo json_encode($array_retorno);
+            }
+        }
+    }
+
+    public function editarStatusObjetivo()
+    {
+        $id_obj = $_GET['id'];
+        $status = $_GET['status'];
+
+        if (!empty($id_obj) && $status != '') {
+            try {
+                $ret = (new ObjetivosDAO())->atualizar(new ObjetivosEntity,
+                            ['finalizado' => $status],
+                            ['idObj' => $id_obj]
+                        );
+
+                if ($ret['result']) {
+                    $array_retorno = array(
+                        'result'   => $ret['result'],
+                        'mensagem' => 'idObjetivo ' . $id_obj . ' alterado com sucesso.'
+                    );
+
+                    echo json_encode($array_retorno);
+                } else {
+                    throw new Exception('Erro ao alterar idObjetivo ' . $id_obj . '.');
                 }
             } catch (Exception $e) {
                 $array_retorno = array(

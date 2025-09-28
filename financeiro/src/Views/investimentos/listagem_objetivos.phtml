@@ -1,3 +1,5 @@
+<?php use MF\Helpers\NumbersHelper; ?>
+
 <div class="card">
     <div class="card-header bg-primary text-white">
         <h6 class="card-title mb-0">Lista</h6>
@@ -9,13 +11,28 @@
                     <tr>
                         <th>Objetivo</th>
                         <th>Vlr. Final</th>
+                        <th>Saldo</th>
                         <th>Conta Invest</th>
                         <th>% da conta atrelado</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    
+                    <?php foreach ($lista_obj as $k => $v): ?>
+                        <tr>
+                            <td><?= $v['idObj'] . ' - ' . $v['nomeObj']; ?></td>
+                            <td><?= NumbersHelper::formatUStoBR($v['vlrObj']); ?></td>
+                            <td><?= NumbersHelper::formatUStoBR($v['saldoAtual']); ?></td>
+                            <td><?= $v['idContaInvest']; ?></td>
+                            <td><?= NumbersHelper::formatUStoBR($v['percentObjContaInvest']); ?></td>
+                            <td>
+                                <select data-url="<?= $extra_url . $v['idObj']; ?>" class="form-control" id="status-<?= $k; ?>" name="finalizado[]" onchange="atualizarStatus(this)">
+                                    <option value="F" <?= $v['finalizado'] == 'F' ? ' selected ' : ''; ?>>Em andamento</option>
+                                    <option value="T" <?= $v['finalizado'] == 'T' ? ' selected ' : ''; ?>>Concluído</option>
+                                </select>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
