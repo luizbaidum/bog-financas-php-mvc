@@ -19,6 +19,22 @@ class Validations {
             });
     }
 
+    buscarPercentualInvestEmUso(id_invest, percentual) {
+        return fetch('/validar-percentual-uso-json?idContaInvest=' + id_invest + '&percentual=' + percentual, {
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        }).then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+
+                return response.json();
+            })
+            .catch(error => {
+                console.error('Falha ao buscar uso da conta investimento:', error);
+                throw error;
+            });
+    }
+
     async movimento(form_data) {
         try {
             let categoria = form_data.get('idCategoria');
@@ -82,6 +98,23 @@ class Validations {
         } catch (error) {
             console.error('Erro ao buscar categorias: ', error);
             this.msg.push('Erro ao carregar categorias de investimento.');
+        }
+
+        return this.msg
+    }
+
+    async objetivo(form_data) {
+        try {
+            let id_conta_invest = form_data.get('idContaInvest');
+            let percentual_submit = form_data.get('percentObjContaInvest');
+
+            let retorno = await this.buscarPercentualInvestEmUso(id_conta_invest, percentual_submit);
+            if (!retorno.status) {
+                this.msg.push(retorno.msg)
+            }
+        } catch (error) {
+            console.error('Erro ao buscar uso do investimento:', error);
+            this.msg.push('Erro ao carregar uso do investimento.');
         }
 
         return this.msg

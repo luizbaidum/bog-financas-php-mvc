@@ -123,6 +123,25 @@ $(document).on('submit', '.submit-form-crud-ajax', function (e) {
                     }
                 });
         break
+        case '/objetivos':
+            import('./exportValidations.js')
+                .then(async (file) => {
+                    const validar = new file.default
+                    let ret = await validar.objetivo(data)
+
+                    if (ret.length == 0) {
+                        requireAjaxOperation({
+                            action: url_action, 
+                            data: data, 
+                            redirect: redirect,
+                            id_form: id_form,
+                            modal: modal
+                        })
+                    } else {
+                        modalAlerta('Atenção!', ret.join('<br>'))
+                    }
+                });
+        break
         default:
             requireAjaxOperation({
                 action: url_action, 
