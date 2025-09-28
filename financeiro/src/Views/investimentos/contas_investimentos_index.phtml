@@ -83,11 +83,7 @@
                     </theader>
                     <tbody>
                         <?php 
-                            foreach ($todas_contas as $value): 
-                                if ($value['status'] != '1') {
-                                    continue;
-                                }
-
+                            foreach ($invests as $value): 
                                 $total += $value['saldoAtual'];
                                 $lista_prop[$value['idProprietario']] = $value['proprietario'];
 
@@ -175,14 +171,6 @@
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
-                            <tfoot>
-                                <tr class="table-info">
-                                    <td>Total</td>
-                                    <td>R$ <?= NumbersHelper::formatUStoBR($total); ?></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -214,41 +202,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h6 class="card-title mb-0">Lista</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-sm table-hover">
-                    <thead class="table-primary">
-                        <tr>
-                            <th>Banco</th>
-                            <th>Título</th>
-                            <th>Proprietário</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($todas_contas as $k => $v): ?>
-                            <tr>
-                                <td><?= $v['nomeBanco']; ?></td>
-                                <td><?= $v['tituloInvest']; ?></td>
-                                <td><?= $v['proprietario']; ?></td>
-                                <td>
-                                    <select data-url="<?= $extra_url . $v['idContaInvest']; ?>" class="form-control" id="status-<?= $k; ?>" name="status[]" onchange="atualizarStatus(this)">
-                                        <option value="1" <?= $v['status'] == '1' ? ' selected ' : ''; ?>>Ativo</option>
-                                        <option value="0" <?= $v['status'] == '0' ? ' selected ' : ''; ?>>Inativo</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
