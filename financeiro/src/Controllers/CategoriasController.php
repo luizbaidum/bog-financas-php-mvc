@@ -26,7 +26,7 @@ class CategoriasController extends Controller {
 
         $this->view->data['lista_todas_categorias'] = (new CategoriasDAO())->selectAll(new CategoriasEntity, [], [], ['idCategoria' => 'ASC']);
 
-        $this->renderPage(conteudo: 'categorias', base_interna: 'base_cruds', extra: 'lista_todas');
+        $this->renderPage(conteudo: 'categorias', base_interna: 'base_cruds', extra: 'listagem_categorias');
     }
 
     public function cadastrarCategorias()

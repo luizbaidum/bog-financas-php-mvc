@@ -36,22 +36,19 @@ class InvestimentosController extends Controller {
     {
         $model_investimentos = new InvestimentosDAO();
 
-        $invests = $model_investimentos->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
         $objs = $model_investimentos->selectAll(new ObjetivosEntity, [], [], ['saldoAtual' => 'DESC']);
-        $todas_contas = $model_investimentos->getAllContas();
+        $invests = $model_investimentos->getAllContas(true);
 
         $this->view->settings = [
             'action'    => $this->index_route . '/cadastrar_rendimento',
             'redirect'  => $this->index_route . '/contas-investimentos-index',
             'title'     => 'Investimentos',
-            'url_obj'   => $this->index_route . '/consultar_objetivos?idContaInvest=',
-            'extra_url' => $this->index_route . '/edit-status-investimento?id=',
+            'url_obj'   => $this->index_route . '/consultar_objetivos?idContaInvest='
         ];
 
         $this->view->data['invests'] = $invests;
         $this->view->data['objs'] = $objs;
         $this->view->data['arr_projecao'] = $invests;
-        $this->view->data['todas_contas'] = $todas_contas;
 
         $this->renderPage(
             conteudo: 'contas_investimentos_index'
@@ -162,14 +159,18 @@ class InvestimentosController extends Controller {
     public function investimentos()
     {
         $this->view->settings = [
-            'action'   => $this->index_route . '/cad_investimentos',
-            'redirect' => $this->index_route . '/investimentos',
-            'title'    => 'Investimentos',
+            'action'    => $this->index_route . '/cad_investimentos',
+            'redirect'  => $this->index_route . '/investimentos',
+            'title'     => 'Investimentos',
+            'extra_url' => $this->index_route . '/edit-status-investimento?id=',
         ];
 
-        $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
+        $todas_contas = (new InvestimentosDAO())->getAllContas();
 
-        $this->renderPage(conteudo: 'investimentos', base_interna: 'base_cruds');
+        $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
+        $this->view->data['todas_contas'] = $todas_contas;
+
+        $this->renderPage(conteudo: 'investimentos', base_interna: 'base_cruds', extra: 'listagem_investimentos');
     }
 
     public function cadastrarInvestimentos()
@@ -216,7 +217,7 @@ class InvestimentosController extends Controller {
 
         $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '1']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
 
-        $this->renderPage( conteudo: 'objetivos', base_interna: 'base_cruds');
+        $this->renderPage(conteudo: 'objetivos', base_interna: 'base_cruds', extra: 'listagem_objetivos');
     }
 
     public function cadastrarObjetivos()

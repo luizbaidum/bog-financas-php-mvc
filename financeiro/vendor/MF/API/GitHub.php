@@ -8,6 +8,7 @@ use MF\API\ProtectedInfos\GitHubInfos;
 class GitHub {
     public function getRepoRelease() {
         try {
+
             $infos = new GitHubInfos();
 
             $owner = $infos->getOwner();
