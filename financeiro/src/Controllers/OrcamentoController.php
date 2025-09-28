@@ -104,7 +104,7 @@ class OrcamentoController extends Controller {
             'title'    => 'Orçamento por Categoria',
         ];
 
-        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '1']], [], ['categoria' => 'ASC']);
+        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '"1"']], [], ['categoria' => 'ASC']);
         $this->view->data['months'] = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Todos');
         $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
 

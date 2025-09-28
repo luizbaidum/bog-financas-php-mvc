@@ -60,7 +60,7 @@ class ProprietariosController extends Controller {
         ];
 
         $this->view->data['lista_proprietarios'] = $model_movimentos->selectAll(new ProprietariosEntity, [], [], []);
-        $this->view->data['lista_categorias'] = $model_movimentos->selectAll(new CategoriasEntity, [['status', '=', '1']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
+        $this->view->data['lista_categorias'] = $model_movimentos->selectAll(new CategoriasEntity, [['status', '=', '"1"']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
 
         $this->renderPage(
             conteudo: 'extrato_proprietarios_form'

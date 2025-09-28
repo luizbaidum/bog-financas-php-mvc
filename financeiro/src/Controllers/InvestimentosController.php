@@ -36,7 +36,7 @@ class InvestimentosController extends Controller {
     {
         $model_investimentos = new InvestimentosDAO();
 
-        $objs = $model_investimentos->selectAll(new ObjetivosEntity, [], [], ['saldoAtual' => 'DESC']);
+        $objs = $model_investimentos->selectAll(new ObjetivosEntity, [['finalizado', '=', '"F"']], [], ['saldoAtual' => 'DESC']);
         $invests = $model_investimentos->getAllContas(true);
 
         $this->view->settings = [
@@ -86,7 +86,7 @@ class InvestimentosController extends Controller {
 
         $this->view->data['lista_objetivos'] = $lista_objetivos;
 
-        $this->renderInModal(titulo: 'Objetivos do investimento conta', conteudo: 'objetivos_modal');
+        $this->renderInModal(titulo: 'Objetivos do investimento', conteudo: 'objetivos_modal');
     }
 
     public function editarObjetivo()
@@ -216,7 +216,7 @@ class InvestimentosController extends Controller {
             'extra_url' => $this->index_route . '/edit-status-objetivo?id=',
         ];
 
-        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '1']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
+        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
         $this->view->data['lista_obj'] = $model->selectAll(new ObjetivosEntity, [], [], []);
 
         $this->renderPage(conteudo: 'objetivos', base_interna: 'base_cruds', extra: 'listagem_objetivos');
@@ -338,7 +338,7 @@ class InvestimentosController extends Controller {
             'div_ajax' => 'id-destino'
         ];
 
-        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '1']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
+        $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '"1"']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
 
         $this->renderPage(conteudo: 'investimentos_movimentar', base_interna: 'base_cruds');
     }
