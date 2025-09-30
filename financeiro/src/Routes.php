@@ -28,10 +28,11 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/investimentos', 'controller' => 'InvestimentosController', 'action' => 'investimentos');
         $routes[] = array('route' => '/cad_investimentos', 'controller' => 'InvestimentosController', 'action' => 'cadastrarInvestimentos');
         $routes[] = array('route' => '/objetivos', 'controller' => 'InvestimentosController', 'action' => 'objetivos');
-        $routes[] = array('route' => '/cad_objetivos', 'controller' => 'InvestimentosController', 'action' => 'cadastrarObjetivos');
+        $routes[] = array('route' => '/cad-objetivos', 'controller' => 'InvestimentosController', 'action' => 'cadastrarObjetivos');
         $routes[] = array('route' => '/investimentos-movimentar', 'controller' => 'InvestimentosController', 'action' => 'movimentarInvestimentos');
         $routes[] = array('route' => '/edit-status-investimento', 'controller' => 'InvestimentosController', 'action' => 'editarStatus');
         $routes[] = array('route' => '/edit-status-objetivo', 'controller' => 'InvestimentosController', 'action' => 'editarStatusObjetivo');
+        $routes[] = array('route' => '/validar-percentual-uso-json', 'controller' => 'InvestimentosController', 'action' => 'validarPercentualUsoJson');
 
         $routes[] = array('route' => '/exibir_resultado', 'controller' => 'MovimentosController', 'action' => 'exibirResultados');
         $routes[] = array('route' => '/movimentos', 'controller' => 'MovimentosController', 'action' => 'index');

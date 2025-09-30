@@ -98,13 +98,10 @@ class InvestimentosController extends Controller {
                 $id = $_POST['idObj'];
                 $_POST['vlrObj'] = NumbersHelper::formatBRtoUS($_POST['vlrObj']);
                 $_POST['percentObjContaInvest'] = NumbersHelper::formatBRtoUS($_POST['percentObjContaInvest']);
+                $_POST['finalizado'] = isset($_POST['finalizado'][$id]) && $_POST['finalizado'][$id] == 'T' ? 'T' : 'F';
 
                 $conta_invest = $_POST['idContaInvest'];
                 $percentual_old = $_POST['percentObjContaInvestOLD'];
-
-                if (!isset($_POST['finalizado'])) {
-                    $_POST['finalizado'] = 'F';
-                }
 
                 unset($_POST['idObj']);
                 unset($_POST['idContaInvest']);
@@ -144,16 +141,36 @@ class InvestimentosController extends Controller {
 
     private function validarPercentualUso($id_conta_invest, $percentual)
     {
-        $utilizado = (new ObjetivosDAO())->consultarPercentualDisponivel($id_conta_invest, $percentual);
+        $utilizado = (new ObjetivosDAO())->consultarPercentualDisponivel($id_conta_invest);
 
         if ($utilizado !== false && ($percentual + $utilizado) > 100) {
-            return [
-                'status' => false,
-                'msg'    => 'Atenção! A Conta Invest informada já está ' . $utilizado . '% comprometida.'
-            ];
+            return ['status' => false,
+                    'msg'    => 'Atenção! A Conta Invest informada já está ' . $utilizado . '% comprometida.'];
         }
 
         return ['status' => true];
+    }
+
+    public function validarPercentualUsoJson()
+    {
+        $id_conta_invest = $_GET['idContaInvest'];
+        $percentual = $_GET['percentual'];
+
+        if (empty($_GET['idContaInvest'])) {
+            echo json_encode(['status' => false,
+                              'msg'    => 'O id da conta investimento não foi encontrado.']);
+            exit;
+        }
+
+        $utilizado = (new ObjetivosDAO())->consultarPercentualDisponivel($id_conta_invest);
+
+        if ($utilizado !== false && ($percentual + $utilizado) > 100) {
+            echo json_encode(['status' => false,
+                              'msg'    => 'A Conta Invest informada já está ' . NumbersHelper::formatUStoBR($utilizado) . '% comprometida.']);
+            exit;
+        }
+
+        echo json_encode(['status' => true]);
     }
 
     public function investimentos()
@@ -210,7 +227,7 @@ class InvestimentosController extends Controller {
         $model = new Model();
 
         $this->view->settings = [
-            'action'    => $this->index_route . '/cad_objetivos',
+            'action'    => $this->index_route . '/cad-objetivos',
             'redirect'  => $this->index_route . '/objetivos',
             'title'     => 'Objetivos',
             'extra_url' => $this->index_route . '/edit-status-objetivo?id=',
