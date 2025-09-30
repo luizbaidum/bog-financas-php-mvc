@@ -255,7 +255,7 @@ $(document).on('change', '.exibir-objetivos-origem', function () {
             div.classList.remove('d-none');
             div.classList.add('d-block');
 
-            insertOptions(select, options_obj, conta);
+            insertOptions(select, options_obj_origem, conta);
         }
     } catch (error) {
         console.error('Erro -> ' + error);
@@ -276,7 +276,7 @@ $(document).on('change', '.exibir-objetivos-destino', function () {
             div.classList.remove('d-none');
             div.classList.add('d-block');
 
-            insertOptions(select, options_obj, conta);
+            insertOptions(select, options_obj_destino, conta);
         }
     } catch (error) {
         console.error('Erro -> ' + error);

@@ -78,19 +78,7 @@ class RendimentosController extends Controller {
                     throw new Exception($this->msg_retorno_falha);
                 }
 
-                $objetivos = $model_objetivos->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $_POST['idContaInvest']]], [], []);
-
-                foreach ($objetivos as $value) {
-                    $item = [
-                        'saldoAtual' => $value['saldoAtual'] + ($_POST['valorRendimento'] * ($value['percentObjContaInvest'] / 100))
-                    ];
-                    $item_where = ['idObj' => $value['idObj']];
-                    $ret_c = $model_objetivos->atualizar(new ObjetivosEntity, $item, $item_where);
-
-                    if (!isset($ret_c['result']) || empty($ret_c['result'])) {
-                        throw new Exception($this->msg_retorno_falha . '<br>' . 'Os cálculos do objetivo id: ' . $value['idObj'] . ' e subsequentes não foram salvos.');
-                    }
-                }
+                (new InvestimentosController())->aplicarObjetivo(null, $_POST['valorRendimento'], $_POST['idContaInvest']);
 
                 $this->calcularTxRendimentoAM($_POST['idContaInvest'], $_POST['dataRendimento'], $model_rendimentos);
 

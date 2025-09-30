@@ -61,7 +61,8 @@ class InvestimentosController extends Controller {
 
         $this->view->data['tipo_movimento'] = $_GET['action'];
         $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
-        $this->view->data['options_list'] = json_encode($model->selectAll(new ObjetivosEntity, [], [], []));
+        $this->view->data['options_list_origem'] = json_encode($model->selectAll(new ObjetivosEntity, [], [], []));
+        $this->view->data['options_list_destino'] = json_encode($model->selectAll(new ObjetivosEntity, [['finalizado', '=', '"F"']], [], []));
         $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '"1"']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
         $this->view->data['url_buscar_mov_mensal'] = $this->index_route . '/buscaMovMensal?buscar=';
         $this->view->data['div_buscar_mov_mensal'] = 'id-content-return';
@@ -401,7 +402,7 @@ class InvestimentosController extends Controller {
         return $ret;
     }
 
-    private function aplicarObjetivo(string $id_objetivo, float $valor_aplicado, string $id_conta_invest): void
+    public function aplicarObjetivo(string|null $id_objetivo, float $valor_aplicado, string $id_conta_invest): void
     {
         $model = new Model();
 
@@ -414,7 +415,7 @@ class InvestimentosController extends Controller {
             $item_where = ['idObj' => $id_objetivo];
             $model->atualizar(new ObjetivosEntity, $item, $item_where);
         } else {
-            $objetivos = $model->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $id_conta_invest]], [], []);
+            $objetivos = $model->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $id_conta_invest], ['finalizado', '=', '"F"']], [], []);
 
             if (!empty($objetivos)) {
                 foreach ($objetivos as $value) {
