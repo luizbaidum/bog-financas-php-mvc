@@ -98,13 +98,10 @@ class InvestimentosController extends Controller {
                 $id = $_POST['idObj'];
                 $_POST['vlrObj'] = NumbersHelper::formatBRtoUS($_POST['vlrObj']);
                 $_POST['percentObjContaInvest'] = NumbersHelper::formatBRtoUS($_POST['percentObjContaInvest']);
+                $_POST['finalizado'] = isset($_POST['finalizado'][$id]) && $_POST['finalizado'][$id] == 'T' ? 'T' : 'F';
 
                 $conta_invest = $_POST['idContaInvest'];
                 $percentual_old = $_POST['percentObjContaInvestOLD'];
-
-                if (!isset($_POST['finalizado'])) {
-                    $_POST['finalizado'] = 'F';
-                }
 
                 unset($_POST['idObj']);
                 unset($_POST['idContaInvest']);

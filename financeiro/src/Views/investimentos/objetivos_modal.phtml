@@ -47,8 +47,8 @@
                                 </div>
 
                                 <div class="mb-3 form-check">
-                                    <input type="checkbox" name="finalizado" class="form-check-input" id="idFinalizado" value="T" <?= $value['finalizado'] == 'T' ? ' checked ' : ''; ?>>
-                                    <label class="form-check-label" for="idFinalizado">Finalizado?</label>
+                                    <input type="checkbox" name="finalizado[<?= $value['idObj']; ?>]" class="form-check-input" id="idFinalizado-<?= $value['idObj']; ?>" value="T" <?= $value['finalizado'] == 'T' ? ' checked ' : ''; ?>>
+                                    <label class="form-check-label" for="idFinalizado-<?= $value['idObj']; ?>">Finalizado?</label>
                                 </div>
 
                                 <div class="row px-3 mt-2">
