@@ -304,13 +304,13 @@ class InvestimentosController extends Controller {
                         );
 
                         $obj_movimento->nomeMovimento = $_POST['nomeMovimento'];
-                        $obj_movimento->idCategoria = $arr_cat[0]; //Definido pelo usuário
+                        $obj_movimento->idCategoria = $arr_cat[0]; // Definido pelo usuário
                         $obj_movimento->valor = $sinal . NumbersHelper::formatBRtoUS($_POST['valor']);
                         $obj_movimento->idMovMensal = $_POST['idMovMensal'] ?? 0;
                         unset($obj_movimento->idContaInvest);
                         unset($obj_movimento->idMovimento);
 
-                        //Inserção de Movimento
+                        // Inserção de Movimento
                         $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $obj_movimento);
                     }
 
@@ -401,6 +401,34 @@ class InvestimentosController extends Controller {
         return $ret;
     }
 
+    private function aplicarObjetivo(string $id_objetivo, float $valor_aplicado, string $id_conta_invest): void
+    {
+        $model = new Model();
+
+        if (!empty($id_objetivo)) {
+            $saldo_atual = $model->getSaldoAtual(new ObjetivosEntity, $id_objetivo);
+
+            $item = [
+                'saldoAtual' => $saldo_atual + $valor_aplicado
+            ];
+            $item_where = ['idObj' => $id_objetivo];
+            $model->atualizar(new ObjetivosEntity, $item, $item_where);
+        } else {
+            $objetivos = $model->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $id_conta_invest]], [], []);
+
+            if (!empty($objetivos)) {
+                foreach ($objetivos as $value) {
+                    $item = [
+                        'saldoAtual' => $value['saldoAtual'] + ($valor_aplicado * ($value['percentObjContaInvest'] / 100))
+                    ];
+                    $item_where = ['idObj' => $value['idObj']];
+
+                    $model->atualizar(new ObjetivosEntity, $item, $item_where);
+                }
+            }
+        }
+    }
+
     public function inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento, $id_categoria, $valor, $data_rend)
     {
         $model = new Model();
@@ -411,31 +439,10 @@ class InvestimentosController extends Controller {
 
                 $valor_aplicado = $valor;
                 if ($valor_aplicado < 0) {
-                    $valor_aplicado = ($valor_aplicado * -1); //veio negativo, pois aplicação é saída de dinheiro da conta corrente, mas é entrada em aplicações.
+                    $valor_aplicado = ($valor_aplicado * -1); // veio negativo, pois aplicação é saída de dinheiro da conta corrente, mas é entrada em aplicações.
                 }
 
-                if (!empty($id_objetivo)) {
-                    $objetivo = $model->selectAll(new ObjetivosEntity, [['idObj', '=', $id_objetivo]], [], [])[0];
-
-                    $item = [
-                        'saldoAtual' => $objetivo['saldoAtual'] + $valor_aplicado
-                    ];
-                    $item_where = ['idObj' => $objetivo['idObj']];
-                    $model->atualizar(new ObjetivosEntity, $item, $item_where);
-                } else {
-                    $objetivos = $model->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $id_conta_invest]], [], []);
-
-                    if (!empty($objetivos)) {
-                        foreach ($objetivos as $value) {
-                            $item = [
-                                'saldoAtual' => $value['saldoAtual'] + ($valor_aplicado * ($value['percentObjContaInvest'] / 100))
-                            ];
-                            $item_where = ['idObj' => $value['idObj']];
-
-                            $model->atualizar(new ObjetivosEntity, $item, $item_where);
-                        }
-                    }
-                }
+                $this->aplicarObjetivo($id_objetivo, $valor_aplicado, $id_conta_invest);
 
                 break;
             case $this->categoria_RA:
@@ -443,33 +450,10 @@ class InvestimentosController extends Controller {
 
                 $valor_aplicado = $valor; 
                 if ($valor_aplicado > 0) {
-                    $valor_aplicado = ($valor_aplicado * -1); //veio positivo, pois resgate é entrada de dinheiro da conta corrente, mas é saída em aplicações.
+                    $valor_aplicado = ($valor_aplicado * -1); // veio positivo, pois resgate é entrada de dinheiro da conta corrente, mas é saída em aplicações.
                 }
 
-                if (!empty($id_objetivo)) {
-                    $saldo_atual = $model->getSaldoAtual(new ObjetivosEntity, $id_objetivo);
-                    $item = [
-                        'saldoAtual' => ($saldo_atual + $valor_aplicado)
-                    ];
-                    $item_where = [
-                        'idObj' => $id_objetivo
-                    ];
-
-                    $model->atualizar(new ObjetivosEntity, $item, $item_where);
-                } else {
-                    $objetivos = $model->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $id_conta_invest]], [], []);
-
-                    if (!empty($objetivos)) {
-                        foreach ($objetivos as $value) {
-                            $item = [
-                                'saldoAtual' => $value['saldoAtual'] + ($valor_aplicado * ($value['percentObjContaInvest'] / 100))
-                            ];
-                            $item_where = ['idObj' => $value['idObj']];
-
-                            $model->atualizar(new ObjetivosEntity, $item, $item_where);
-                        }
-                    }
-                }
+                $this->aplicarObjetivo($id_objetivo, $valor_aplicado, $id_conta_invest);
 
                 break;
             default:
