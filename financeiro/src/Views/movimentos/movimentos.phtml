@@ -1,7 +1,12 @@
 <?php
     use MF\Helpers\NumbersHelper;
 
-    echo '<script>var options_obj = ' . $options_list . '</script>';
+    if (isset($options_list)) {
+        echo '<script>var options_obj = ' . $options_list . '</script>';
+    } else {
+        echo '<script>var options_obj = ' . $options_list_destino . '</script>';
+    }
+
     $id_obj_old = 0;
 
     $mov_id_proprietario = null;

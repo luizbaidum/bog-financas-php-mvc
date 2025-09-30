@@ -60,7 +60,7 @@ class Validations {
                     this.msg.push('Por favor, selecionar conta investimento.');
                 }
 
-                //Estou comentando esta validação pois o php sabe lidar com o resgate mesmo quando existem objetivos, mas nenhum é selecionado.
+                // Estou comentando esta validação pois o php sabe lidar com o resgate mesmo quando existem objetivos, mas nenhum é selecionado.
                 // if (id_categoria_post == this.resgate && (objetivo == '' || objetivo == null)) {
                 //     let select_obj = document.querySelector('select[name="idObjetivo"]');
 
