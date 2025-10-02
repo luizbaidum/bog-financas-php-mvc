@@ -29,43 +29,47 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($movimentos_agrupados as $data => $lancamentosDoDia): ?>
-                            <tr class="bg-light bg-opacity-50 lh-1">
-                                <td colspan="7" class="p-1 text-white bg-dark small">
-                                    <?= $data ?>
-                                </td>
-                            </tr>
-
-                            <?php foreach ($lancamentosDoDia as $mov): ?>
-                                <tr>
-                                    <td>
-                                        <button title="Detalhes" 
-                                                class="btn btn-sm btn-outline-primary render-ajax" 
-                                                data-url="<?= $url_detail . $mov['idMovimento']; ?>" 
-                                                data-div=""
-                                                data-modal="true">
-                                            <i>&#33;</i>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <?= $mov['nomeMovimento']; ?>
-                                    </td>
-                                    <td><?= $mov['categoria']; ?></td>
-                                    <td>R$ <?= NumbersHelper::formatUStoBR($mov['valor']); ?></td>
-                                    <td><?= $prop[$mov['idProprietario']]; ?></td>
-                                    <td>
-                                        <a href="<?= $url_edit . $mov['idMovimento']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
-                                            <button title="Editar" class="btn btn-sm btn-outline-primary">
-                                                <i>&#9998;</i>
-                                            </button>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <input type="checkbox" name="selectedData[]" value="<?= $mov['idMovimento']; ?>">
+                        <?php if (empty($prop)): ?>
+                            <tr><td colspan="7" class="text-center">Sem movimentos para o período/filtro.</td></tr>
+                        <?php else: ?>
+                            <?php foreach ($movimentos_agrupados as $data => $lancamentosDoDia): ?>
+                                <tr class="bg-light bg-opacity-50 lh-1">
+                                    <td colspan="7" class="p-1 text-white bg-dark small">
+                                        <?= $data ?>
                                     </td>
                                 </tr>
+
+                                <?php foreach ($lancamentosDoDia as $mov): ?>
+                                    <tr>
+                                        <td>
+                                            <button title="Detalhes" 
+                                                    class="btn btn-sm btn-outline-primary render-ajax" 
+                                                    data-url="<?= $url_detail . $mov['idMovimento']; ?>" 
+                                                    data-div=""
+                                                    data-modal="true">
+                                                <i>&#33;</i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <?= $mov['nomeMovimento']; ?>
+                                        </td>
+                                        <td><?= $mov['categoria']; ?></td>
+                                        <td>R$ <?= NumbersHelper::formatUStoBR($mov['valor']); ?></td>
+                                        <td><?= $prop[$mov['idProprietario']]; ?></td>
+                                        <td>
+                                            <a href="<?= $url_edit . $mov['idMovimento']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
+                                                <button title="Editar" class="btn btn-sm btn-outline-primary">
+                                                    <i>&#9998;</i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" name="selectedData[]" value="<?= $mov['idMovimento']; ?>">
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
                             <?php endforeach; ?>
-                        <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                     <tfoot>
                         <tr class="table-info">
