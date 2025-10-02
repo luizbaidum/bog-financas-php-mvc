@@ -230,7 +230,7 @@ class InvestimentosController extends Controller {
         $this->view->settings = [
             'action'    => $this->index_route . '/cad-objetivos',
             'redirect'  => $this->index_route . '/objetivos',
-            'title'     => 'Objetivos',
+            'title'     => 'Objetivos Investimentos',
             'extra_url' => $this->index_route . '/edit-status-objetivo?id=',
         ];
 
