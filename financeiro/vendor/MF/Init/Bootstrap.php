@@ -33,8 +33,7 @@ abstract class Bootstrap {
         $this->validarExisteFamilia();
 
 		foreach ($this->getRoutes() as $value) {
-			if ($url == $value['route'] || $url == $value['route'] . '/') {
-
+			if ($url == $value['route'] || $url == ($value['route'] . '/')) {
 				$class = 'src\\Controllers\\' . ucfirst($value['controller']);
 				$controller = new $class;
 
@@ -54,7 +53,14 @@ abstract class Bootstrap {
 
 				$action = $value['action'];
 				$controller->$action();
-			}
+			} else {
+                $class = 'MF\\Controller\\Controller';
+                $controller = new $class;
+
+                $controller->view->data['mensagem'] = 'Acesso negado.';
+                $controller->renderNullPage();
+                exit;
+            }
 		}
 	}
 
