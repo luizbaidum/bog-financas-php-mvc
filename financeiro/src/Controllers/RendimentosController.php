@@ -49,7 +49,6 @@ class RendimentosController extends Controller {
     {
         $model_rendimentos = new RendimentosDAO();
         $model_investimentos = new InvestimentosDAO();
-        $model_objetivos = new ObjetivosDAO();
 
         if ($this->isSetPost()) {
             try {
