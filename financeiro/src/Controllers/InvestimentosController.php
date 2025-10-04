@@ -40,7 +40,7 @@ class InvestimentosController extends Controller {
         $invests = $model_investimentos->getAllContas(true);
 
         $this->view->settings = [
-            'action'    => $this->index_route . '/cadastrar_rendimento',
+            'action'    => $this->index_route . '/cadastrar-rendimento',
             'redirect'  => $this->index_route . '/contas-investimentos-index',
             'title'     => 'Investimentos',
             'url_obj'   => $this->index_route . '/consultar_objetivos?idContaInvest='
@@ -230,7 +230,7 @@ class InvestimentosController extends Controller {
         $this->view->settings = [
             'action'    => $this->index_route . '/cad-objetivos',
             'redirect'  => $this->index_route . '/objetivos',
-            'title'     => 'Objetivos',
+            'title'     => 'Objetivos Investimentos',
             'extra_url' => $this->index_route . '/edit-status-objetivo?id=',
         ];
 

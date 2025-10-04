@@ -6,6 +6,7 @@ use DatePeriod;
 use DateTime;
 use Exception;
 use MF\Controller\Controller;
+use MF\Helpers\NumbersHelper;
 use src\Models\Rendimentos\RendimentosDAO;
 use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Investimentos\InvestimentosEntity;
@@ -49,22 +50,35 @@ class RendimentosController extends Controller {
     {
         $model_rendimentos = new RendimentosDAO();
         $model_investimentos = new InvestimentosDAO();
-        $model_objetivos = new ObjetivosDAO();
 
         if ($this->isSetPost()) {
             try {
-                if ($_POST['tipo'] == '1')
-                    $_POST['valorRendimento'] = ($_POST['valorRendimento'] * -1);
+                $tipo_preju = '1';
+                $tipo_lucro = '2';
 
-                $ret_a = $model_rendimentos->cadastrar(new RendimentosEntity, $_POST);
+                $objeto = new RendimentosEntity();
+                $objeto->idContaInvest = $_POST['idContaInvest'];
+
+                $saldo_atual = $model_investimentos->getSaldoAtual(new InvestimentosEntity, $_POST['idContaInvest']);
+                $vlr_atual = NumbersHelper::formatBRtoUS($_POST['valorAtual']);
+                $vlr_rendeu = $vlr_atual - $saldo_atual;
+
+                $objeto->tipo = $tipo_preju;
+                if ($vlr_rendeu > 0) {
+                    $objeto->tipo = $tipo_lucro;
+                }
+
+                $objeto->valorRendimento = $vlr_rendeu;
+                $objeto->dataRendimento = $_POST['dataRendimento'];
+
+                $ret_a = $model_rendimentos->cadastrar(new RendimentosEntity, $objeto);
 
                 if (!isset($ret_a['result']) || empty($ret_a['result'])) {
                     throw new Exception($this->msg_retorno_falha);
                 }
 
-                $saldo_atual = $model_investimentos->getSaldoAtual(new InvestimentosEntity, $_POST['idContaInvest']);
                 $item = [
-                    'saldoAtual'    => ($saldo_atual + $_POST['valorRendimento']),
+                    'saldoAtual'    => ($saldo_atual + $vlr_rendeu),
                     'saldoAnterior' => $saldo_atual,
                     'dataAnterior'  => date('Y-m-d')
                 ];
@@ -78,7 +92,7 @@ class RendimentosController extends Controller {
                     throw new Exception($this->msg_retorno_falha);
                 }
 
-                (new InvestimentosController())->aplicarObjetivo(null, $_POST['valorRendimento'], $_POST['idContaInvest']);
+                (new InvestimentosController())->aplicarObjetivo(null, $vlr_rendeu, $_POST['idContaInvest']);
 
                 $this->calcularTxRendimentoAM($_POST['idContaInvest'], $_POST['dataRendimento'], $model_rendimentos);
 

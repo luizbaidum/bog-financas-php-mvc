@@ -79,7 +79,7 @@ class HomeController extends Controller {
             $this->view->data['url_detail'] = $this->index_route . '/exibir-detalhes?idMovimento=';
             $this->view->data['result_por_prop'] = $result_por_prop;
             $this->view->data['resultado'] = $resultado;
-            $this->view->data['prop'] = $prop;
+            $this->view->data['prop'] = $prop ?? '';
 
 			$this->renderPage(conteudo: 'home');
 		} catch (Exception $e) {

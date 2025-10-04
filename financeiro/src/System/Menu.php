@@ -21,10 +21,10 @@ class Menu {
 
     public array $titles = [
         'Cadastros' => [
-            'Categorias', 'Movimentos', 'Contas Investimentos', 'Movimentos Mensais', 'Objetivos', 'Orçamento', 'Orçamento do Realizado', 'Movimento entre Investimentos'
+            'Categorias', 'Movimentos', 'Contas Investimentos', 'Movimentos Mensais', 'Objetivos Invest.', 'Orçamento', 'Orçamento do Realizado', 'Movimento entre Investimentos', 'Metas Mensais'
         ],
         'Consultas' => [
-            'Indicadores', 'Investimentos', 'Extrato Contas Invest', 'Orçamento', 'Evolução Rendimentos', 'Extrato por Proprietário'
+            'Indicadores', 'Investimentos', 'Extrato Contas Invest', 'Orçamento', 'Evolução Rendimentos', 'Extrato por Proprietário', 'Metas Mensais'
         ],
         'Configs' => [
             'Preferencias', 'Proprietarios', 'Usuarios'
@@ -33,10 +33,10 @@ class Menu {
 
     public array $routes = [
         'Cadastros' => [
-            'categorias', 'movimentos', 'investimentos', 'movimentos-mensais-index', 'objetivos', 'orcamento', 'orcamento_do_realizado', 'investimentos-movimentar',
+            'categorias', 'movimentos', 'investimentos', 'movimentos-mensais-index', 'objetivos', 'orcamento', 'orcamento_do_realizado', 'investimentos-movimentar', 'metas-mensais'
         ],
         'Consultas' => [
-            'indicadores_index', 'contas-investimentos-index', 'extrato_investimentos', 'orcamento_index', 'evolucao_rendimentos', 'extrato-proprietarios'
+            'indicadores-index', 'contas-investimentos-index', 'extrato_investimentos', 'orcamento_index', 'evolucao_rendimentos', 'extrato-proprietarios', 'metas-mensais-index'
         ],
         'Configs' => [
             'preferencias', 'proprietarios', 'usuarios'

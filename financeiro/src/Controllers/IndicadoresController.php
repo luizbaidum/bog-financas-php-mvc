@@ -14,9 +14,9 @@ class IndicadoresController extends Controller {
 
         $this->view->settings = [
             'action'     => '',
-            'redirect'   => $this->index_route . '/indicadores_index',
+            'redirect'   => $this->index_route . '/indicadores-index',
             'title'      => 'Indicadores',
-            'url_search' => $this->index_route . '/indicadores_index'
+            'url_search' => $this->index_route . '/indicadores-index'
         ];
 
         $arr_totais_por_tipo = [];

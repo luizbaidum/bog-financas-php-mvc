@@ -28,35 +28,77 @@ abstract class Bootstrap {
 	}
 
 	protected function run($url)
-	{
+    {
         $this->validarLogado();
         $this->validarExisteFamilia();
 
-		foreach ($this->getRoutes() as $value) {
-			if ($url == $value['route'] || $url == $value['route'] . '/') {
+        $route = $this->findMatchingRoute($url);
 
-				$class = 'src\\Controllers\\' . ucfirst($value['controller']);
-				$controller = new $class;
+        if (!$route) {
+            $this->renderAcessoNegado('Acesso negado.');
+            return;
+        }
 
-				$nivel_usuario = $_SESSION['nivel'] ?? NULL;
-				$index_route = $this->getIndexRoute($value['controller']);
-				//$acesso_pagina = $this->getPageSecurityByRoute($index_route);
+        $this->executeRoute($route);
+    }
 
-				$acesso_pagina = true;
+    private function findMatchingRoute($url)
+    {
+        foreach ($this->getRoutes() as $value) {
+            if ($url == $value['route'] || $url == ($value['route'] . '/')) {
+                return $value;
+            }
+        }
 
-				if ($nivel_usuario != "a" && $acesso_pagina !== true) {
-					if ($acesso_pagina != $nivel_usuario) {
-						$controller->view->data['mensagem'] = 'Acesso negado.';
-						$controller->renderNullPage();
-						exit;
-					}
-				}
+        return null;
+    }
 
-				$action = $value['action'];
-				$controller->$action();
-			}
-		}
-	}
+    private function executeRoute($route)
+    {
+        $class = 'src\\Controllers\\' . ucfirst($route['controller']);
+
+        if (!class_exists($class)) {
+            $this->renderAcessoNegado('Controller não encontrado.');
+            return;
+        }
+
+        $controller = new $class;
+
+        if (!$this->hasAccess($route, $controller)) {
+            $this->renderAcessoNegado('Acesso negado.');
+            return;
+        }
+
+        $action = $route['action'];
+
+        if (!method_exists($controller, $action)) {
+            $this->renderAcessoNegado('Ação não encontrada.');
+            return;
+        }
+
+        $controller->$action();
+    }
+
+    private function hasAccess($route)
+    {
+        $nivel_usuario = $_SESSION['nivel'] ?? null;
+        $index_route = $this->getIndexRoute($route['controller']);
+        $acesso_pagina = true;
+
+        if ($nivel_usuario != "a" && $acesso_pagina !== true) {
+            return $acesso_pagina == $nivel_usuario;
+        }
+
+        return true;
+    }
+
+    private function renderAcessoNegado($mensagem)
+    {
+        $class = 'MF\\Controller\\Controller';
+        $controller = new $class;
+        $controller->view->data['mensagem'] = $mensagem;
+        $controller->renderNullPage();
+    }
 
 	protected function getUrlPatch()
 	{

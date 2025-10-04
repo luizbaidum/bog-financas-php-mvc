@@ -139,10 +139,12 @@ class Model {
 		if (!empty($where_conditions)) {
 			$where = 'WHERE ';
 			foreach ($where_conditions as $part)
-				$where .= "$part[0] $part[1] $part[2]";
+				$where .= "($part[0] $part[1] $part[2]) AND ";
 				//column, condition, value
 				//Ex.: coluna > 1
 		}
+
+        $where = rtrim($where, ' AND ');
 
 		if (!empty($group_conditions)) {
 			$group = 'GROUP BY ';
