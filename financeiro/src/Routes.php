@@ -77,6 +77,10 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/primeiro-acesso', 'controller' => 'PrimeiroAcessoController', 'action' => 'primeiroAcesso');
         $routes[] = array('route' => '/cad-primeiro-acesso', 'controller' => 'PrimeiroAcessoController', 'action' => 'cadastrarPrimeiroAcesso');
 
+        $routes[] = array('route' => '/metas-mensais', 'controller' => 'MetasMensaisController', 'action' => 'lancarMetasMensais');
+        $routes[] = array('route' => '/cad-metas-mensais', 'controller' => 'MetasMensaisController', 'action' => 'cadastrarMetasMensais');
+        $routes[] = array('route' => '/metas-mensais-index', 'controller' => 'MetasMensaisController', 'action' => 'metasMensaisIndex');
+
 		$this->setRoutes($routes);
 	}
 }

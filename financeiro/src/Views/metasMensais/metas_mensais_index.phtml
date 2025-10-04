@@ -1,0 +1,106 @@
+<div class="container">
+    <div class="mt-2 mb-2">
+        <div class="card p-2">
+            <div class="text-center">Metas Mensais</div>
+        </div>
+    </div>
+
+    <div class="row my-2">
+        <div class="col-12 col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <label for="selectProprietario" class="form-label">Filtrar Proprietário</label>
+                    <select class="form-select" id="idProprietario" name="idProprietario">
+                        <?php 
+                            foreach ($lista_proprietarios as $prop):
+                                $x = $prop['idProprietario'];
+                                $n = $prop['proprietario'];
+                        ?>
+                            <option value="<?= $x ?>"> <?= $n; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="container-metas">
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="card-title mb-0">Janeiro 2023</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3 pb-2 border-bottom">
+                        <div class="fw-bold text-secondary">Total de Receitas</div>
+                        <div class="text-primary fw-bold">R$ 5.500,00</div>
+                    </div>
+                    <div class="mb-3 pb-2 border-bottom">
+                        <div class="fw-bold text-secondary">Valor a Economizar</div>
+                        <div class="text-success fw-bold">R$ 1.650,00</div>
+                    </div>
+                    <div class="mb-3 pb-2 border-bottom">
+                        <div class="fw-bold text-secondary">Percentual de Economia</div>
+                        <div>30%</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="fw-bold text-secondary">Proprietário</div>
+                        <div>João Silva</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="card-title mb-0">Fevereiro 2023</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3 pb-2 border-bottom">
+                        <div class="fw-bold text-secondary">Total de Receitas</div>
+                        <div class="text-primary fw-bold">R$ 6.200,00</div>
+                    </div>
+                    <div class="mb-3 pb-2 border-bottom">
+                        <div class="fw-bold text-secondary">Valor a Economizar</div>
+                        <div class="text-success fw-bold">R$ 1.860,00</div>
+                    </div>
+                    <div class="mb-3 pb-2 border-bottom">
+                        <div class="fw-bold text-secondary">Percentual de Economia</div>
+                        <div>30%</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="fw-bold text-secondary">Proprietário</div>
+                        <div>Maria Santos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="card-title mb-0">Março 2023</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3 pb-2 border-bottom">
+                        <div class="fw-bold text-secondary">Total de Receitas</div>
+                        <div class="text-primary fw-bold">R$ 5.800,00</div>
+                    </div>
+                    <div class="mb-3 pb-2 border-bottom">
+                        <div class="fw-bold text-secondary">Valor a Economizar</div>
+                        <div class="text-success fw-bold">R$ 1.740,00</div>
+                    </div>
+                    <div class="mb-3 pb-2 border-bottom">
+                        <div class="fw-bold text-secondary">Percentual de Economia</div>
+                        <div>30%</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="fw-bold text-secondary">Proprietário</div>
+                        <div>João Silva</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
