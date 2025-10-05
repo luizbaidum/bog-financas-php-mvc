@@ -3,41 +3,39 @@
         <h6 class="card-title mb-0">Controle Financeiro</h6>
     </div>
     <div class="card-body">
-        <form id="formControleFinanceiro">
-            <div class="form-group mb-3">
-                <div class="row">
-                    <div class="col-12 col-sm-3">
-                        <label for="idData" class="form-label">Data</label>
-                        <input type="date" class="form-control" id="idData" name="data" required>
-                    </div>
-                    <div class="col-12 col-sm-3">
-                        <label for="idTotalReceitas" class="form-label">Total de Receitas</label>
-                        <div class="input-group">
-                            <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control numero-br" id="idTotalReceitas" name="totalReceitas" required value="0,00">
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-3">
-                        <label for="idValorEconomizar" class="form-label">Valor a Economizar</label>
-                        <div class="input-group">
-                            <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control numero-br" id="idValorEconomizar" name="valorEconomizar" required value="0,00">
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-3">
-                        <label for="idProprietario" class="form-label">Proprietário</label>
-                        <select class="form-select" id="idProprietario" name="idProprietario">
-                            <?php 
-                                foreach ($lista_proprietarios as $prop):
-                                    $x = $prop['idProprietario'];
-                                    $n = $prop['proprietario'];
-                            ?>
-                                <option value="<?= $x ?>"> <?= $n; ?></option>
-                            <?php endforeach; ?>
-                        </select>
+        <div class="form-group mb-3">
+            <div class="row">
+                <div class="col-12 col-sm-3">
+                    <label for="idData" class="form-label">Data</label>
+                    <input type="date" class="form-control" id="idData" name="data" required>
+                </div>
+                <div class="col-12 col-sm-3">
+                    <label for="idTotalReceitas" class="form-label">Total de Receitas</label>
+                    <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input type="text" class="form-control numero-br" id="idTotalReceitas" name="totalReceitas" required value="0,00">
                     </div>
                 </div>
+                <div class="col-12 col-sm-3">
+                    <label for="idValorEconomizar" class="form-label">Valor a Economizar</label>
+                    <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input type="text" class="form-control numero-br" id="idValorEconomizar" name="vlrEconomizar" required value="0,00">
+                    </div>
+                </div>
+                <div class="col-12 col-sm-3">
+                    <label for="idProprietario" class="form-label">Proprietário</label>
+                    <select class="form-select" id="idProprietario" name="idProprietario" required>
+                        <?php 
+                            foreach ($lista_proprietarios as $prop):
+                                $x = $prop['idProprietario'];
+                                $n = $prop['proprietario'];
+                        ?>
+                            <option value="<?= $x ?>"> <?= $n; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
