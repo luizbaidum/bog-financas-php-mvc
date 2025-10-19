@@ -7,6 +7,7 @@ use MF\Helpers\NumbersHelper;
 use MF\Model\Model;
 use src\Models\MetasMensais\MetasMensaisDAO;
 use src\Models\MetasMensais\MetasMensaisEntity;
+use src\Models\Movimentos\MovimentosDAO;
 use src\Models\Proprietarios\ProprietariosEntity;
 
 class MetasMensaisController extends Controller {
@@ -71,38 +72,73 @@ class MetasMensaisController extends Controller {
     {
         $model_metas_mensais = new MetasMensaisDAO();
 
+        $this->view->settings = [
+            'url' => $this->index_route . '/obter-metas-mensais',
+            'div' => 'metas-content'
+        ];
+
         $this->view->data['lista_proprietarios'] = $model_metas_mensais->selectAll(new ProprietariosEntity, [], [], []);
-        $this->view->data['lista_mm'] = $this->tratarMetas($model_metas_mensais);
 
         $this->renderPage(
             conteudo: 'metas_mensais_index'
         );
     }
 
-    private function tratarMetas(MetasMensaisDAO $dao): array 
+    public function obterMetas(): void
     {
-        $lista_mm = $dao->listarMetasMensais(new MetasMensaisEntity, [], [], []);
+        $this->view->data['lista_mm'] = $this->tratarMetas();
+
+        $this->renderSimple('conteudo_metas');
+    }
+
+    private function tratarMetas(): array
+    {
+        $lista_mm = (new MetasMensaisDAO())->listarMetasMensais($_GET['idProprietario'], date('Y'));
+        $realizado = (new MovimentosDAO())->consultarAplicacoesPorMes($_GET['idProprietario'], date('Y'));
 
         $meses = array(
-            '01'  => "Janeiro",
-            '02'  => "Fevereiro",
-            '03'  => "Março",
-            '04'  => "Abril",
-            '05'  => "Maio",
-            '06'  => "Junho",
-            '07'  => "Julho",
-            '08'  => "Agosto",
-            '09'  => "Setembro",
-            '10' => "Outubro",
-            '11' => "Novembro",
-            '12' => "Dezembro"
+            '01' => 'Janeiro',
+            '02' => 'Fevereiro',
+            '03' => 'Março',
+            '04' => 'Abril',
+            '05' => 'Maio',
+            '06' => 'Junho',
+            '07' => 'Julho',
+            '08' => 'Agosto',
+            '09' => 'Setembro',
+            '10' => 'Outubro',
+            '11' => 'Novembro',
+            '12' => 'Dezembro'
         );
 
-        foreach ($lista_mm as $v) {
-            $tmp_xpl = explode('-', $v['data']);
-            $v['mesAno'] = $meses[$tmp_xpl[1]] . ' de ' . $tmp_xpl[0];
+        foreach ($meses as $num => $str) {
+            foreach ($lista_mm as $k => $v_mm)  {
+                $tmp_xpl = explode('-', $v_mm['data']);
+                $mes = $tmp_xpl[1];
+                $ano = $tmp_xpl[0];
 
-            $lista_mm_ret[] = $v;
+                if ($num == $mes) {
+                    $lista_mm_ret[$k] = [
+                        'mesAno'                 => $str . ' de ' . $ano,
+                        'totalReceitas'          => $v_mm['totalReceitas'],
+                        'vlrEconomia'            => $v_mm['vlrEconomia'],
+                        'proprietario'           => $v_mm['proprietario'],
+                        'vlrEconomiaRealizado'   => 1,
+                        'totalReceitasRealizado' => 1
+                    ];
+
+                    foreach ($realizado as $r) {
+                        if ($r['mes'] > 0 && $r['mes'] < 10) {
+                            $r['mes'] = '0' . $r['mes'];
+                        }
+
+                        if ($num == $r['mes']) {
+                            $lista_mm_ret[$k]['vlrEconomiaRealizado'] = $r['vlrEconomiaRealizado'];
+                            $lista_mm_ret[$k]['totalReceitasRealizado'] = $r['totalReceitasRealizado'];
+                        }
+                    }
+                }
+            }
         }
 
         return $lista_mm_ret ?? [];

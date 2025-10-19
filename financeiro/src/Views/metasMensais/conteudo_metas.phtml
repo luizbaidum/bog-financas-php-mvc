@@ -1,0 +1,58 @@
+<?php use MF\Helpers\NumbersHelper; ?>
+
+<?php foreach ($lista_mm as $v): ?>
+    <div class="col-12 col-md-6 col-lg-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h6 class="card-title mb-0"><?= $v['mesAno']; ?></h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3 pb-2 border-bottom">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="fw-bold text-secondary">Total de Receitas</div>
+                            <div class="text-primary fw-bold">R$ <?= NumbersHelper::formatUStoBR($v['totalReceitas']); ?></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="fw-bold text-secondary">Realizado</div>
+                            <div class="text-info"><?= NumbersHelper::formatUStoBR($v['totalReceitasRealizado']); ?></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3 pb-2 border-bottom">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="fw-bold text-secondary">Valor a Economizar</div>
+                            <div class="text-success fw-bold">R$ <?= NumbersHelper::formatUStoBR($v['vlrEconomia']); ?></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="fw-bold text-secondary">Realizado</div>
+                            <div class="text-info fw-bold">R$ <?= NumbersHelper::formatUStoBR($v['vlrEconomiaRealizado']); ?></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3 pb-2 border-bottom">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="fw-bold text-secondary">Percentual de Economia</div>
+                            <div><?= $v['totalReceitas'] > 0 ? NumbersHelper::formatUStoBR(($v['vlrEconomia'] / $v['totalReceitas']) * 100) : '0,00'; ?>%</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="fw-bold text-secondary">Realizado</div>
+                            <div class="text-info">
+                                <?= $v['totalReceitasRealizado'] > 0 ? NumbersHelper::formatUStoBR(($v['vlrEconomiaRealizado'] / $v['totalReceitasRealizado']) * 100) : '0,00'; ?>%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="fw-bold text-secondary">Proprietário</div>
+                    <div><?= $v['proprietario']; ?></div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endforeach; ?>
