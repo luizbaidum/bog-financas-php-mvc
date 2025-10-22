@@ -217,4 +217,25 @@ class MovimentosDAO extends Model {
 
         return $ret;
     }
+
+    public function consultarAplicacoesPorMes(string|null $id_proprietario, string|int $ano): array
+    {
+        if (is_null($id_proprietario)) {
+            return [];
+        }
+
+        $query = 'SELECT MONTH(movimentos.dataMovimento) AS mes, SUM(IF(categorias.tipo = "A" OR categorias.tipo = "RA", movimentos.valor, 0)) AS vlrEconomiaRealizado, proprietarios.proprietario, SUM(IF(categorias.tipo = "R", movimentos.valor, 0)) AS totalReceitasRealizado
+        FROM movimentos 
+        INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario 
+        INNER JOIN categorias ON movimentos.idCategoria = categorias.idCategoria
+        WHERE movimentos.idProprietario = ? AND YEAR(movimentos.dataMovimento) = ? AND (categorias.tipo = "A" OR categorias.tipo = "RA" OR categorias.tipo = "R")
+        GROUP BY MONTH(movimentos.dataMovimento) ASC';
+
+        $params = [$id_proprietario, $ano];
+
+        $new_sql = new SQLActions();
+		$result = $new_sql->executarQuery($query, $params);
+
+        return $result ?? [];
+    }
 }

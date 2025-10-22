@@ -80,6 +80,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/metas-mensais', 'controller' => 'MetasMensaisController', 'action' => 'lancarMetasMensais');
         $routes[] = array('route' => '/cad-metas-mensais', 'controller' => 'MetasMensaisController', 'action' => 'cadastrarMetasMensais');
         $routes[] = array('route' => '/metas-mensais-index', 'controller' => 'MetasMensaisController', 'action' => 'metasMensaisIndex');
+        $routes[] = array('route' => '/obter-metas-mensais', 'controller' => 'MetasMensaisController', 'action' => 'obterMetas');
 
 		$this->setRoutes($routes);
 	}
