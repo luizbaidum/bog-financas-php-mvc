@@ -253,7 +253,7 @@ $(document).on('click', '.vincular-mov-mensal', function (e) {
     let movimento_m = JSON.parse(json_value);
 
     $('#idNomeMovimento').val(movimento_m.nomeMovimento);
-    $('#idValor').val(movimento_m.valorDespesa);
+    $('#idValor').val((new Formatations(movimento_m.valorDespesa)).convertToBR());
     $('#idCategoria').val(`${movimento_m.idCategoria} - sinal: ${movimento_m.sinal}`);
     $('#idProprietario').val(movimento_m.idProprietario);
 

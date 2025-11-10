@@ -3,17 +3,34 @@ class Formatations {
         this.valor = value;
     }
 
-    convertToUS() 
-    {
+    convertToUS() {
         try {
             let br = this.valor;
             let converting = br.replace(/\./g, '');
-    
             let us = converting.replace(/,/g, '.');
-    
+
             return us;
         } catch (e) {
             console.log('Error ->' + e);
+        }
+    }
+
+    convertToBR() {
+        try {
+            let valorStr = this.valor.toString().trim();
+            let valorNormalizado = valorStr.replace(',', '.');
+            let numero = parseFloat(valorNormalizado);
+
+            if (isNaN(numero)) {
+                throw new Error('Valor não é um número válido');
+            }
+
+            return numero.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        } catch (e) {
+            console.log('Erro na conversão: ' + e.message);
         }
     }
 }
