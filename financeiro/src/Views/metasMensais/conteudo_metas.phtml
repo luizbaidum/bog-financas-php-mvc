@@ -28,7 +28,7 @@
                         </div>
                         <div class="col-6">
                             <div class="fw-bold text-secondary">Realizado</div>
-                            <div class="text-info fw-bold">R$ <?= NumbersHelper::formatUStoBR($v['vlrEconomiaRealizado']); ?></div>
+                            <div class="fw-bold <?= $v['corFonte']; ?>">R$ <?= NumbersHelper::formatUStoBR($v['vlrEconomiaRealizado']); ?></div>
                         </div>
                     </div>
                 </div>

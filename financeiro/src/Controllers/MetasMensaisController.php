@@ -123,8 +123,9 @@ class MetasMensaisController extends Controller {
                         'totalReceitas'          => $v_mm['totalReceitas'],
                         'vlrEconomia'            => $v_mm['vlrEconomia'],
                         'proprietario'           => $v_mm['proprietario'],
-                        'vlrEconomiaRealizado'   => 1,
-                        'totalReceitasRealizado' => 1
+                        'vlrEconomiaRealizado'   => 0,
+                        'totalReceitasRealizado' => 0,
+                        'corFonte'               => ''
                     ];
 
                     foreach ($realizado as $r) {
@@ -133,8 +134,9 @@ class MetasMensaisController extends Controller {
                         }
 
                         if ($num == $r['mes']) {
-                            $lista_mm_ret[$k]['vlrEconomiaRealizado'] = $r['vlrEconomiaRealizado'];
-                            $lista_mm_ret[$k]['totalReceitasRealizado'] = $r['totalReceitasRealizado'];
+                            $lista_mm_ret[$k]['vlrEconomiaRealizado']   = ($r['vlrEconomiaRealizado'] >= 0 ? ($r['vlrEconomiaRealizado'] * -1) : abs($r['vlrEconomiaRealizado']));
+                            $lista_mm_ret[$k]['totalReceitasRealizado'] = abs($r['totalReceitasRealizado']);
+                            $lista_mm_ret[$k]['corFonte']               = ($r['vlrEconomiaRealizado'] >= 0 ? 'text-danger' : 'text-success');
                         }
                     }
                 }
