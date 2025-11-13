@@ -59,7 +59,7 @@ class InvestimentosDAO extends Model {
             $where .= "AND `contas_investimentos`.`idProprietario` = '$proprietario'";
         }
 
-        $query = "SELECT `rendimentos`.*, CONCAT(`contas_investimentos`.`nomeBanco`, ' - ', `contas_investimentos`.`tituloInvest`) AS conta FROM `rendimentos` INNER JOIN `contas_investimentos` ON `rendimentos`.`idContaInvest` = `contas_investimentos`.`idContaInvest` INNER JOIN `proprietarios` ON `proprietarios`.`idProprietario` = `contas_investimentos`.`idProprietario` WHERE `rendimentos`.`idRendimento` > 0 $where ORDER BY `rendimentos`.`dataRendimento` DESC";
+        $query = "SELECT `rendimentos`.*, CONCAT(`contas_investimentos`.`nomeBanco`, ' - ', `contas_investimentos`.`tituloInvest`) AS conta, CONCAT(objetivos_invest.idObj, ' - ', nomeObj) AS objetivo FROM `rendimentos` INNER JOIN `contas_investimentos` ON `rendimentos`.`idContaInvest` = `contas_investimentos`.`idContaInvest` INNER JOIN `proprietarios` ON `proprietarios`.`idProprietario` = `contas_investimentos`.`idProprietario` LEFT JOIN objetivos_invest ON objetivos_invest.idObj = rendimentos.idObj WHERE `rendimentos`.`idRendimento` > 0 $where ORDER BY `rendimentos`.`dataRendimento` DESC";
 
         $new_sql = new SQLActions();
         $result = $new_sql->executarQuery($query);

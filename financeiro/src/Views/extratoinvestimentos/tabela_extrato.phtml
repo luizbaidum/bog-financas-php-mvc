@@ -12,6 +12,7 @@
             <th>Ação</th>
             <th>Valor</th>
             <th>Objetivo</th>
+            <th>idMov</th>
         </tr>
     </theader>
     <tbody>
@@ -31,10 +32,8 @@
                 <td><?= DateHelper::convertUStoBR($value['dataRendimento']); ?></td>
                 <td><?= $acao; ?></td>
                 <td>R$ <?= NumbersHelper::formatUStoBR($value['valorRendimento']); ?></td>
-                <td>
-                    <?php if ($acao == 'Resgate'): ?>
-                    <?php endif; ?>
-                </td>
+                <td><?= $value['objetivo']; ?></td>
+                <td><?= $value['idMovimento']; ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
@@ -42,6 +41,8 @@
         <tr class="table-dark">
             <td colspan="3" style="text-align: right">Resultado</td>
             <td>R$ <?= NumbersHelper::formatUStoBR($resultado_ext); ?>
+            <td></td>
+            <td></td>
         </tr>
     </tfoot>
 </table>

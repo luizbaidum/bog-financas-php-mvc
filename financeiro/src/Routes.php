@@ -56,7 +56,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/evolucao_rendimentos', 'controller' => 'RendimentosController', 'action' => 'index');
         $routes[] = array('route' => '/cadastrar-rendimento', 'controller' => 'RendimentosController', 'action' => 'cadastrarRendimento');
 
-        $routes[] = array('route' => '/extrato_investimentos', 'controller' => 'ExtratoInvestimentosController', 'action' => 'index');
+        $routes[] = array('route' => '/extrato-investimentos', 'controller' => 'ExtratoInvestimentosController', 'action' => 'index');
 
         $routes[] = array('route' => '/indicadores-index', 'controller' => 'IndicadoresController', 'action' => 'index');
 
