@@ -15,7 +15,7 @@
                         </div>
                         <div class="col-6">
                             <div class="fw-bold text-secondary">Realizado</div>
-                            <div class="text-info"><?= NumbersHelper::formatUStoBR($v['totalReceitasRealizado']); ?></div>
+                            <div class="text-primary">R$ <?= NumbersHelper::formatUStoBR($v['totalReceitasRealizado']); ?></div>
                         </div>
                     </div>
                 </div>
@@ -41,8 +41,8 @@
                         </div>
                         <div class="col-6">
                             <div class="fw-bold text-secondary">Realizado</div>
-                            <div class="text-info">
-                                <?= $v['totalReceitasRealizado'] > 0 ? NumbersHelper::formatUStoBR(($v['vlrEconomiaRealizado'] / $v['totalReceitasRealizado']) * 100) : '0,00'; ?>%
+                            <div>
+                                <?= $v['totalReceitasRealizado'] > 0 && $v['vlrEconomiaRealizado'] > 0 ? NumbersHelper::formatUStoBR(($v['vlrEconomiaRealizado'] / $v['totalReceitasRealizado']) * 100) : '0,00'; ?>%
                             </div>
                         </div>
                     </div>
