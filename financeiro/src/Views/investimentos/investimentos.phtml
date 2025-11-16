@@ -1,5 +1,3 @@
-
-
 <input type="hidden" name="cadContaInvest" value="1">
 
 <div class="card">
@@ -9,24 +7,32 @@
     <div class="card-body">
         <div class="form-group">
             <div class="row">
-                <div class="col-12 col-sm-4">
+                <div class="col-12 col-sm-3">
                     <label for="idNomeBanco">Nome Banco</label>
                     <input type="text" class="form-control" id="idNomeBanco" name="nomeBanco" required>
                 </div>
-                <div class="col-12 col-sm-4">
+                <div class="col-12 col-sm-3">
                     <label for="idTituloInvest">Título</label>
                     <input type="text" class="form-control" id="idTituloInvest" name="tituloInvest" required>
                 </div>
-                <div class="col-12 col-sm-4">
-                    <label for="idDataInicio">Data Início (m/d/a)</label>
+                <div class="col-12 col-sm-3">
+                    <label for="idDataInicio">Data Início</label>
                     <input type="date" class="form-control" id="idDataInicio" name="dataInicio" required>
+                </div>
+                <div class="col-12 col-sm-3">
+                    <label for="idDataResgate">Data Resgate</label>
+                    <input type="date" class="form-control" id="idDataResgatar" name="dataResgatar">
                 </div>
             </div>
             <div class="form-group">
                 <div class="row">
-                    <div class="col-12 col-sm-6">
-                        <label for="idSaldoInicial">Saldo de início (decimal com ponto)</label>
+                    <div class="col-12 col-sm-3">
+                        <label for="idSaldoInicial">Saldo Inicial</label>
                         <input type="number" class="form-control" id="idSaldoInicial" name="saldoInicial" step=".01" required>
+                    </div>
+                    <div class="col-12 col-sm-3">
+                        <label for="idValorFinal">Valor Final Resgate</label>
+                        <input type="number" class="form-control" id="idSaldoFinal" name="saldoFinal" step=".01">
                     </div>
                     <div class="col-12 col-sm-6">
                         <label for="idProprietario">Proprietário</label>

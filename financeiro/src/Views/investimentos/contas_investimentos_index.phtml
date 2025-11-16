@@ -67,6 +67,8 @@
                             <th>Saldo atual</th>
                             <th>Saldo anterior</th>
                             <th>Data anterior</th>
+                            <th>Data resgate</th>
+                            <th>Saldo final esperado</th>
                         </tr>
                     </theader>
                     <tbody>
@@ -94,6 +96,8 @@
                                 <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoAtual']); ?></td>
                                 <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoAnterior']); ?></td>
                                 <td><?= DateHelper::convertUStoBR($value['dataAnterior']); ?></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -108,6 +112,8 @@
                                     </small> <br>
                                 <?php endforeach; ?>
                             </td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                         </tr>
                     </tfoot>
@@ -176,6 +182,7 @@
                                 <tr>
                                     <th>Investimento</th>
                                     <th>Projeção rendimento AM R$</th>
+                                    <th>%</th>
                                 </tr>
                             </theader>
                             <tbody>
@@ -184,6 +191,7 @@
                                 <tr>
                                     <td><?= $val['nomeBanco'] . ' ' . $val['tituloInvest']; ?></td>
                                     <td>R$ <?= NumbersHelper::formatUStoBR($val['ultimoRendimentoAM']); ?></td>
+                                    <td><?= $value['saldoAtual'] > 0 ? NumbersHelper::formatUStoBR(($val['ultimoRendimentoAM'] / $value['saldoAtual']) * 100) : '0'; ?>%</td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
