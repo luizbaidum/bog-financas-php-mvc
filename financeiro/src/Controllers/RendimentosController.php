@@ -128,7 +128,7 @@ class RendimentosController extends Controller {
             if (!empty($periodo)) {
                 $fds = 0;
                 foreach ($periodo as $data) {
-                    //6 é sábado e 7 é domingo
+                    // 6 é sábado e 7 é domingo
                     if ($data->format('N') >= 6) {
                         $fds++;
                     }
