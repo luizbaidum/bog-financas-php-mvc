@@ -96,8 +96,8 @@
                                 <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoAtual']); ?></td>
                                 <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoAnterior']); ?></td>
                                 <td><?= DateHelper::convertUStoBR($value['dataAnterior']); ?></td>
-                                <td></td>
-                                <td></td>
+                                <td><?= $value['dataResgatar'] != '0000-00-00' ? DateHelper::convertUStoBR($value['dataResgatar']) : 'N/a'; ?></td>
+                                <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoFinal']); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
