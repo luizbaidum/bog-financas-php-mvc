@@ -191,7 +191,7 @@
                                 <tr>
                                     <td><?= $val['nomeBanco'] . ' ' . $val['tituloInvest']; ?></td>
                                     <td>R$ <?= NumbersHelper::formatUStoBR($val['ultimoRendimentoAM']); ?></td>
-                                    <td><?= $value['saldoAtual'] > 0 ? NumbersHelper::formatUStoBR(($val['ultimoRendimentoAM'] / $value['saldoAtual']) * 100) : '0'; ?>%</td>
+                                    <td><?= $val['saldoAnterior'] > 0 ? NumbersHelper::formatUStoBR(($val['ultimoRendimentoAM'] / $val['saldoAnterior']) * 100) : '0'; ?>%</td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
