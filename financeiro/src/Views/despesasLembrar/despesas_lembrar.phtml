@@ -1,0 +1,163 @@
+ <?php  use MF\Helpers\NumbersHelper; ?>
+
+<div class="container">
+    <div class="mt-2 mb-2">
+		<div class="card p-2">
+			<div class="text-center">Investimentos</div>
+		</div>
+	</div>
+
+    <div class="row mb-2">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <button class="btn btn-sm nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMovLembrar" aria-expanded="false" aria-controls="collapseMovLembrar">
+                        <h6 class="card-title mb-0">Cadastrar</h6>
+                    </button>
+                </div>
+
+                <div class="collapse show" id="collapseMovLembrar">
+                    <div class="card-body p-1">
+                        <form data-action="<?= $action; ?>" id="idform-crud" class="submit-form-crud-ajax">
+                            <div class="row">
+                                <div class="col-sm-4 col-12">
+                                    <label for="idData" class="">Data</label>
+                                    <input type="date" class="form-control" id="idData" name="data" required value="<?= $movimento['data'] ?? ''; ?>">
+                                </div>
+
+                                <div class="col-sm-4 col-12">
+                                    <label for="idValor" class="">Valor</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">R$</span>
+                                        <input type="text" class="form-control numero-br" id="idValor" name="valor" required value="<?= $movimento['valor'] ?? '0,00'; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4 col-12">
+                                    <label for="idDescricao" class="">Descrição</label>
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        id="idDescricao" 
+                                        name="descricao" 
+                                        required 
+                                        value="<?= $movimento['descricao'] ?? ''; ?>"
+                                        placeholder="Digite uma descrição para o movimento"
+                                    >
+                                </div>
+
+                                <div class="col-sm-4 col-12">
+                                    <label for="idProprietarioPagante" class="">Proprietário Pagante</label>
+                                    <select class="form-select" id="idProprietarioPagante" name="idProprietarioPagante">
+                                        <option value="">Selecione</option>
+                                        <?php foreach ($lista_proprietarios as $prop): ?>
+                                            <option value="<?= $prop['idProprietario'] ?>"><?= $prop['proprietario']; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-4 col-12">
+                                    <label for="idProprietarioReal" class="">Proprietário Real</label>
+                                    <select class="form-select" id="idProprietarioReal" name="idProprietarioReal">
+                                        <option value="">Selecione</option>
+                                        <?php foreach ($lista_proprietarios as $prop): ?>
+                                            <option value="<?= $prop['idProprietario'] ?>"><?= $prop['proprietario']; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-4 col-12">
+                                    <label for="idMetodoPagamento" class="">Método de Pagamento</label>
+                                    <select class="form-select" id="idMetodoPagamento" name="metodoPgto">
+                                        <option value="">Selecione</option>
+                                        <?php foreach ($lista_pgtos as $metodo): ?>
+                                            <option value="<?= $metodo['code'] ?>"><?= $metodo['name']; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <input type="checkbox" class="form-check-input" name="lancarMovimento" value="T"><span> Lançar movimento real</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="idCategoria" class="">Categoria</label>
+                                            <select class="form-select exibir-objetivos" id="idCategoria" name="idCategoria">
+                                                <option value="">Selecione</option>
+                                                <?php foreach ($categorias as $cat): ?>
+                                                    <?php if (! empty($movimento) && isset($movimento['idCategoria']) && $movimento['idCategoria'] == $cat['idCategoria']): ?>
+                                                        <option value="<?= $cat['idCategoria'] . ' - sinal: ' . $cat['sinal']; ?>" selected><?= $cat['categoria'] . ' - ' . $cat['tipo']; ?></option>
+                                                    <?php else: ?>
+                                                        <option value="<?= $cat['idCategoria'] . ' - sinal: ' . $cat['sinal']; ?>"><?= $cat['categoria'] . ' - ' . $cat['tipo']; ?></option>
+                                                    <?php endif; ?>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="idObservacao" class="">Observações</label>
+                                            <textarea 
+                                                class="form-control" 
+                                                id="idObservacao" 
+                                                name="observacao" 
+                                                rows="1"
+                                            ><?= $movimento['observacao'] ?? ''; ?></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="salvar" type="submit" class="btn btn-success m-1">Salvar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h6 class="card-title mb-0">Movimentos Lembrar</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Data</th>
+                                    <th scope="col">Valor</th>
+                                    <th scope="col">Proprietários Pagante | Real</th>
+                                    <th scope="col">Categoria</th>
+                                    <th scope="col">idMovimento</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($mov_cadastrados as $mov): ?>
+                                    <tr>
+                                        <td><?= date('d/m/Y', strtotime($mov['data'])); ?></td>
+                                        <td>R$ <?= NumbersHelper::formatUStoBR($mov['valor']); ?></td>
+                                        <td><?= $mov['propPagante']; ?> | <?= $mov['propReal']; ?></td>
+                                        <td><?= $mov['categoria']; ?></td>
+                                        <td><?= $mov['idMovimento']; ?></td>
+                                        <td>
+                                            <input type="checkbox" name="selectedData[]" value="<?= $mov['idDespLembrar']; ?>">
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

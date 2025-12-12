@@ -16,7 +16,7 @@ class Menu {
     }
 
     public array $grupos = [
-        'Cadastros', 'Consultas', 'Configs'
+        'Cadastros', 'Consultas', 'Configs', 'Lembrar'
     ];
 
     public array $titles = [
@@ -28,6 +28,9 @@ class Menu {
         ],
         'Configs' => [
             'Preferencias', 'Proprietarios', 'Usuarios'
+        ],
+        'Lembrar' => [
+            'Despesas'
         ]
     ];
 
@@ -40,6 +43,9 @@ class Menu {
         ],
         'Configs' => [
             'preferencias', 'proprietarios', 'usuarios'
+        ],
+        'Lembrar' => [
+            'lembrar-despesas'
         ]
     ];
 
