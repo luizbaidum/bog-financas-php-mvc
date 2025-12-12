@@ -37,7 +37,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/exibir_resultado', 'controller' => 'MovimentosController', 'action' => 'exibirResultados');
         $routes[] = array('route' => '/movimentos', 'controller' => 'MovimentosController', 'action' => 'index');
         $routes[] = array('route' => '/edit_movimento', 'controller' => 'MovimentosController', 'action' => 'editarMovimento');
-        $routes[] = array('route' => '/delete_movimentos', 'controller' => 'MovimentosController', 'action' => 'deletarMovimento');
+        $routes[] = array('route' => '/delete-movimentos', 'controller' => 'MovimentosController', 'action' => 'deletarMovimento');
         $routes[] = array('route' => '/cad_movimentos', 'controller' => 'MovimentosController', 'action' => 'cadastrarMovimentos');
         $routes[] = array('route' => '/exibir-detalhes', 'controller' => 'MovimentosController', 'action' => 'exibirDetalhes');
 
@@ -81,6 +81,10 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/cad-metas-mensais', 'controller' => 'MetasMensaisController', 'action' => 'cadastrarMetasMensais');
         $routes[] = array('route' => '/metas-mensais-index', 'controller' => 'MetasMensaisController', 'action' => 'metasMensaisIndex');
         $routes[] = array('route' => '/obter-metas-mensais', 'controller' => 'MetasMensaisController', 'action' => 'obterMetas');
+
+        $routes[] = array('route' => '/lembrar-despesas', 'controller' => 'DespesasLembrarController', 'action' => 'index');
+        $routes[] = array('route' => '/cadastrar-lembrar-despesas', 'controller' => 'DespesasLembrarController', 'action' => 'cadastrar');
+        $routes[] = array('route' => '/delete-desp-lembrar', 'controller' => 'DespesasLembrarController', 'action' => 'deletarDespLembrar');
 
 		$this->setRoutes($routes);
 	}

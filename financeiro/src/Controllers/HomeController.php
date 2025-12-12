@@ -59,7 +59,7 @@ class HomeController extends Controller {
 
 			$buttons->setButton(
 				'Apagar',
-				$this->index_route . '/delete_movimentos',
+				$this->index_route . '/delete-movimentos',
 				'px-2 btn btn-danger action-delete',
                 'right'
 			);

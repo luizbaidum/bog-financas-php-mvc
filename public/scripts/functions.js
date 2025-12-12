@@ -186,7 +186,7 @@ function arraySelecteds() {
 
     let array_of_values = new FormData;
 
-    let selected_selects = $('input[name="selectedData[]"]:checked').each(function () {
+    $('input[name="selectedData[]"]:checked').each(function () {
         array_of_values.append('itens[]', this.value)
     });
 

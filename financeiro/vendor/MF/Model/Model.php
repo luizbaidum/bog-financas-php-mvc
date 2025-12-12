@@ -128,15 +128,16 @@ class Model {
     }
 
 	 //selectAll(action: "movimento", where_conditions: [['valor', '>', '15000']], group_conditions: ['tabela', 'coluna', 'tabela2', 'coluna2'], order_conditions: ['dataMovimento' => 'DESC']);
-	public function selectAll(object $entity, array $where_conditions = [], array $group_conditions = [], array $order_conditions = [])
+	public function selectAll(object $entity, array $where_conditions = [], array $group_conditions = [], array $order_conditions = [], array $exceptions = [])
 	{
 		$where = 'WHERE 0 = 0';
 		$group = '';
 		$order = '';
+        $excecao = '';
 
 		$table = $entity::main_table;
 
-		if (!empty($where_conditions)) {
+		if (! empty($where_conditions)) {
 			$where = 'WHERE ';
 			foreach ($where_conditions as $part)
 				$where .= "($part[0] $part[1] $part[2]) AND ";
@@ -146,7 +147,7 @@ class Model {
 
         $where = rtrim($where, ' AND ');
 
-		if (!empty($group_conditions)) {
+		if (! empty($group_conditions)) {
 			$group = 'GROUP BY ';
 
 			$total = count($group_conditions);
@@ -157,13 +158,30 @@ class Model {
 			$group = rtrim($group, ', ');
 		}
 
-		if (!empty($order_conditions)) {
+		if (! empty($order_conditions)) {
 			$order = 'ORDER BY ';
 			foreach ($order_conditions as $column => $cond)
 				$order .= "$column $cond,";
 
 			$order = rtrim($order, ',');
 		}
+
+        // ['chave' => ['valor1', 'valor2'], 'chave2' => ['valor1', 'valor2']]
+        if (! empty($exceptions)) {
+            foreach ($exceptions as $k1 => $e1) {
+                $excecao .= ' AND (' . $k1 . ' NOT IN (';
+
+                foreach ($e1 as $v1) {
+                    $excecao .= $v1 . ', ';
+                }
+
+                $excecao = rtrim($excecao, ', ') . ')';
+            }
+
+            $excecao .= ')';
+
+            $where .= $excecao;
+        }
 
 		$query = "SELECT $table.* FROM $table $where $group $order";
 

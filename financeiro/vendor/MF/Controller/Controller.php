@@ -162,4 +162,12 @@ class Controller {
         echo $resultado;
         exit;
 	}
+
+    protected function getMethods(string $archive_name, string $function = ''): ?array
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $archive = require __DIR__ . $ds . '..' . $ds . 'Methods' . $ds . 'Metodos' . $archive_name . '.php';
+
+        return $archive;
+    }
 }
