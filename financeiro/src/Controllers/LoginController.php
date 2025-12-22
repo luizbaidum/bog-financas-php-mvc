@@ -7,6 +7,9 @@ use MF\Controller\Controller;
 use src\Models\Usuarios\UsuariosDAO;
 
 class LoginController extends Controller {
+
+    private bool $ok_get_github = false;
+
     public function telaLogin()
     {
         $this->view->settings = [
@@ -97,11 +100,13 @@ class LoginController extends Controller {
     {
         $ret = [];
 
-        $get_tag = (new GitHub())->getRepoRelease();
+        if ($this->ok_get_github) {
+            $get_tag = (new GitHub())->getRepoRelease();
+        }
 
-        $ret['sys_version'] = '>= v2.07';
+        $ret['sys_version'] = '';
         $ret['release_name'] = '';
-        if ($get_tag['status'] == '200' || $get_tag['status'] == '201') {
+        if (isset($get_tag) && ($get_tag['status'] == '200' || $get_tag['status'] == '201')) {
             $ret['sys_version'] = $get_tag['tag'];
             $ret['release_name'] = $get_tag['name'];
         }
