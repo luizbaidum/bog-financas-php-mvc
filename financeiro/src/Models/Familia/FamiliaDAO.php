@@ -4,7 +4,6 @@ namespace src\Models\Familia;
 
 use Exception;
 use MF\Model\Model;
-use MF\Model\SQLActions;
 
 class FamiliaDAO extends Model {
     public function consultarNomeFamilia($id_familia)
@@ -13,8 +12,7 @@ class FamiliaDAO extends Model {
         if (!empty($id_familia)) {
             $query = 'SELECT familias.nomeFamilia FROM familias WHERE familias.idFamilia = ?';
 
-            $new_sql = new SQLActions();
-		    $result = $new_sql->executarQuery($query, [$id_familia])[0]['nomeFamilia'];
+		    $result = $this->sql_actions->executarQuery($query, [$id_familia])[0]['nomeFamilia'];
         }
 
         return $result;
@@ -42,8 +40,7 @@ class FamiliaDAO extends Model {
 
 			$query = rtrim($query, ', ') . ')';
 
-			$new_sql = new SQLActions();
-			$result = $new_sql->executarQuery($query, $arr_values, false);
+			$result = $this->sql_actions->executarQuery($query, $arr_values, false);
 
 			if ($result) {
 				return array(

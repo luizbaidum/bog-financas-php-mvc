@@ -3,7 +3,6 @@
 namespace src\Models\Usuarios;
 
 use MF\Model\Model;
-use MF\Model\SQLActions;
 
 class UsuariosDAO extends Model {
 
@@ -18,8 +17,7 @@ class UsuariosDAO extends Model {
         $query_params[] = $obj->login;
         $query_params[] = md5($obj->senha);
 
-		$new_sql = new SQLActions();
-		$dados = $new_sql->executarQuery($query, $query_params, false);
+		$dados = $this->sql_actions->executarQuery($query, $query_params, false);
 
         if (count($dados) > 0) {
             return $dados;
@@ -34,9 +32,7 @@ class UsuariosDAO extends Model {
 
         $query_params[] = $id;
 
-        $new_sql = new SQLActions();
-
-        $result = $new_sql->executarQuery($query, $query_params);
+        $result = $this->sql_actions->executarQuery($query, $query_params);
 
         return $result;
     }
@@ -45,8 +41,7 @@ class UsuariosDAO extends Model {
     {
         $query = 'SELECT usuarios.idFamilia FROM usuarios INNER JOIN familias ON usuarios.idFamilia = familias.idFamilia WHERE usuarios.idUsuario = ?';
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query, [$id_usuario], false);
+        $result = $this->sql_actions->executarQuery($query, [$id_usuario], false);
 
         return (string) isset($result[0]) ? $result[0]['idFamilia'] : '';
     }
@@ -55,8 +50,7 @@ class UsuariosDAO extends Model {
     {
         $query = 'SELECT usuarios.* FROM usuarios WHERE usuarios.login = ?';
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query, [$login], false);
+        $result = $this->sql_actions->executarQuery($query, [$login], false);
 
         return $result;
     }
@@ -86,8 +80,8 @@ class UsuariosDAO extends Model {
 
 			$query = rtrim($query, ', ') . ')';
 
-			$new_sql = new SQLActions();
-			$result = $new_sql->executarQuery($query, $arr_values, false);
+
+			$result = $this->sql_actions->executarQuery($query, $arr_values, false);
 
 			if ($result) {
 				return array(

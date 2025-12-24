@@ -3,7 +3,6 @@
 namespace src\Models\DespesasLembrar;
 
 use MF\Model\Model;
-use MF\Model\SQLActions;
 
 class DespesasLembrarDAO extends Model {
     public function indexTable($pesquisa, $year = '', $month = '')
@@ -22,8 +21,7 @@ class DespesasLembrarDAO extends Model {
 
         $query = "SELECT despesas_lembrar.*, categorias.categoria, categorias.tipo, pagante.proprietario AS propPagante, verdadeiro.proprietario as propReal FROM despesas_lembrar LEFT JOIN proprietarios pagante ON pagante.idProprietario = despesas_lembrar.idProprietarioPagante LEFT JOIN proprietarios verdadeiro ON verdadeiro.idProprietario = despesas_lembrar.idProprietarioReal LEFT JOIN movimentos ON despesas_lembrar.idMovimento = movimentos.idMovimento LEFT JOIN categorias ON categorias.idCategoria = movimentos.idCategoria $where ORDER BY data DESC, valor DESC";
 
-        $new_sql = new SQLActions();
-		$result = $new_sql->executarQuery($query);
+		$result = $this->sql_actions->executarQuery($query);
 
         return $result;
     }
@@ -32,8 +30,7 @@ class DespesasLembrarDAO extends Model {
     {
         $query = "SELECT movimentos.idMovimento FROM despesas_lembrar INNER JOIN movimentos ON movimentos.idMovimento = despesas_lembrar.idMovimento WHERE despesas_lembrar.idDespLembrar = ?";
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query, array($idDespLembrar));
+        $result = $this->sql_actions->executarQuery($query, array($idDespLembrar));
         return $result[0] ?? null;
     }
 }

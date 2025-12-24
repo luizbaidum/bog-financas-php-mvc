@@ -3,7 +3,6 @@
 namespace src\Models\MetasMensais;
 
 use MF\Model\Model;
-use MF\Model\SQLActions;
 
 class MetasMensaisDAO extends Model {
     public function listarMetasMensais(string|null $id_proprietario, string|int $ano): array
@@ -20,8 +19,7 @@ class MetasMensaisDAO extends Model {
 
         $params = [$id_proprietario, $ano];
 
-        $new_sql = new SQLActions();
-		$result = $new_sql->executarQuery($query, $params);
+		$result = $this->sql_actions->executarQuery($query, $params);
 
         return $result ?? [];
     }
