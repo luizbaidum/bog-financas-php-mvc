@@ -14,9 +14,8 @@ class Model {
 	protected DateTime $current_time;
     public array $arr_afetados = array();
     public array $arr_nao_afetados = array();
-    private $con;
+    private $con = null;
     protected SQLActions $sql_actions;
-    private $bd = null;
 
     public function __construct()
     {
@@ -24,27 +23,21 @@ class Model {
         $this->sql_actions = new SQLActions($this->con);
     }
 
-    private function iniciarConexao()
-    {
-        return $this->con;
-    }
-
     public function iniciarTransacao()
     {
-        $this->bd = $this->iniciarConexao();
-        $this->bd->beginTransaction();
+        $this->con->beginTransaction();
     }
 
     public function finalizarTransacao()
     {
-        $this->bd->commit();
-        $this->bd = NULL;
+        $this->con->commit();
+        $this->con = NULL;
     }
 
     public function cancelarTransacao()
     {
-        $this->bd->rollBack();
-        $this->bd = NULL;
+        $this->con->rollBack();
+        $this->con = NULL;
     }
 
 	public function cadastrar(object $entity, $data)
