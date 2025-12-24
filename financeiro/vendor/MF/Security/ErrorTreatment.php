@@ -41,7 +41,7 @@ function traceError($exception)
     return $trace;
 }
 
-//Erro fatal não capturado pelo try catch. A função que chama a exceptionHandler interrompe o sistema.
+// Erro fatal não capturado pelo try catch. A função que chama a exceptionHandler interrompe o sistema.
 function exceptionHandler($exception)
 {
     $logger = new Logger('log_php.txt');
