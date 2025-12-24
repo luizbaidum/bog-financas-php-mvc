@@ -238,4 +238,16 @@ class MovimentosDAO extends Model {
 
         return $result ?? [];
     }
+
+    public function definirMovimentoMensalBaixado(string $id_movimento_mensal, string $nome_movimento)
+    {
+        $query = 'UPDATE movimentos SET idMovMensal = ? WHERE MONTH(dataMovimento) = ' . date('m') . ' AND YEAR(dataMovimento) = ' . date('Y') . ' AND idMovMensal = 0 AND nomeMovimento = ?';
+
+        $params = [$id_movimento_mensal, $nome_movimento];
+
+        $new_sql = new SQLActions();
+		$result = $new_sql->executarQuery($query, $params);
+
+        return $result ?? [];
+    }
 }
