@@ -1,50 +1,25 @@
-<?php 
+<?php
 
 namespace MF\Model;
 
 use Exception;
+use PDO;
 use src\Conexao;
 use src\Controllers\PrimeiroAcessoController;
 use src\Models\Usuarios\UsuariosDAO;
 
 class SQLActions {
-    private $con;
     private $family_user = null;
     private $bd = null;
 
-    public function iniciarTransacao()
+    public function __construct(PDO $conexao)
     {
-        $this->bd = $this->iniciarConexao();
-        $this->bd->beginTransaction();
-    }
-
-    public function finalizarTransacao()
-    {
-        $this->bd->commit();
-        $this->bd = NULL;
-    }
-
-    public function cancelarTransacao()
-    {
-        $this->bd->rollBack();
-        $this->bd = NULL;
+        $this->bd = $conexao;
     }
 
     private function getFamilyUser()
     {
         return $this->family_user;
-    }
-
-    private function iniciarConexao()
-    {
-        $this->con = Conexao::getDb();
-
-        return $this->con;
-    }
-
-    public function fecharConexao()
-    {
-        $this->con = NULL;
     }
 
     private function setFamilyUser($family_user)

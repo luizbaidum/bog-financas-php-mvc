@@ -3,7 +3,6 @@
 namespace src\Models\Orcamento;
 
 use MF\Model\Model;
-use MF\Model\SQLActions;
 
 class OrcamentoDAO extends Model {
     public function buscarMediasDespesas($year, $month)
@@ -27,8 +26,7 @@ class OrcamentoDAO extends Model {
                     WHERE $where
                     GROUP BY movimentos.idProprietario, movimentos.idCategoria";
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query);
+        $result = $this->sql_actions->executarQuery($query);
 
         return $result;
     }
@@ -59,8 +57,7 @@ class OrcamentoDAO extends Model {
                     GROUP BY orcamentos.idProprietario, orcamentos.idCategoria
                     ORDER BY totalOrcado DESC";
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query);
+        $result = $this->sql_actions->executarQuery($query);
 
         $ret = [];
         foreach ($result as $val) {

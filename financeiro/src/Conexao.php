@@ -11,7 +11,7 @@ use Monolog\Handler\BrowserConsoleHandler;
 
 class Conexao {
 
-	public static function getDb()
+	public function getDb()
 	{
 		try {
 			$con = (new ConfigConnection())->getConnection();
