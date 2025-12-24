@@ -6,6 +6,7 @@ use MF\Controller\Controller;
 use MF\Helpers\NumbersHelper;
 use MF\Model\Model;
 use src\Models\Categorias\CategoriasEntity;
+use src\Models\Movimentos\MovimentosDAO;
 use src\Models\Movimentos\MovimentosEntity;
 use src\Models\MovimentosMensais\MovimentosMensaisDAO;
 use src\Models\MovimentosMensais\MovimentosMensaisEntity;
@@ -67,6 +68,19 @@ class MovimentosMensaisController extends Controller {
         $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
         $this->view->data['mov_m'] = $mov_m[0] ?? null;
         $this->view->data['titulo_card'] = $action == 'edit' ? 'Edição' : 'Cadastro';
+        $this->view->data['is_baixado'] = $model->selectAll(new MovimentosEntity, [
+            ['idMovMensal', '=', $id], 
+            ['MONTH(dataMovimento)', '=', date('m')], 
+            ['YEAR(dataMovimento)', '=', date('Y')]
+        ], [], []);
+
+        if (! empty($this->view->data['is_baixado'])) {
+            $this->view->data['id_movimento'] = $this->view->data['is_baixado'][0]['idMovimento'];
+            $this->view->data['is_baixado'] = true;
+        } else {
+            $this->view->data['is_baixado'] = false;
+            $this->view->data['id_movimento'] = '0';
+        }
 
         $this->renderPage(conteudo: 'movimentos_mensais', base_interna: 'base_cruds');
     }
@@ -149,8 +163,11 @@ class MovimentosMensaisController extends Controller {
     {
         try {
             $model = new Model();
+            $model_movimentos = new MovimentosDAO();
             $obj_mov_mensal = new MovimentosMensaisEntity();
             $id_mov_m = $_POST['idMovMensal'];
+            $is_baixado_original = $_POST['isBaixadoOriginal'];
+            $definir_baixado = $_POST['definirBaixado'] ?? '0';
 
             $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
             $sinal = $arr_cat[1];
@@ -173,7 +190,15 @@ class MovimentosMensaisController extends Controller {
 
             $ret = $model->atualizar(new MovimentosMensaisEntity, $obj_mov_mensal, $item_where);
 
-            if (!isset($ret['result']) || empty($ret['result'])) {
+            if ($is_baixado_original != '0' && $definir_baixado == '0') {
+                // remover movimento mensal do mês vigente
+                $a = $model->atualizar(new MovimentosEntity, ['idMovMensal' => 0], ['idMovimento' => $is_baixado_original]);
+            } elseif ($is_baixado_original == '0' && $definir_baixado == '1') {
+                // adicionar movimento mensal ao mês vigente
+                $b = $model_movimentos->definirMovimentoMensalBaixado($id_mov_m, $obj_mov_mensal->nomeMovimento);
+            }
+
+            if ((!isset($ret['result']) || empty($ret['result'])) && empty($a) && empty($b)) {
                 throw new Exception('O Movimento Mensal não foi atualizado.');
             }
 

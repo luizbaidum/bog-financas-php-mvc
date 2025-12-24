@@ -175,7 +175,6 @@ $(document).on('submit', '.submit-form-crud-ajax', function (e) {
 });
 
 $(document).on('click', '.obter-orcamentos', function (e) {
-
     let url_action = e.currentTarget.dataset.url;
     let div_destino = e.currentTarget.dataset.div;
     let post_data = new FormData();
@@ -215,7 +214,6 @@ $(document).on('change', '.calcular-percentual-completo', function (e) {
 })
 
 $('.action-delete').click(async function() {
-
     let action = $(this).attr('data-url');
     let data = arraySelecteds();
     let redirect = true;
