@@ -10,9 +10,8 @@ use MF\Helpers\NumbersHelper;
 use src\Models\Rendimentos\RendimentosDAO;
 use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Investimentos\InvestimentosEntity;
-use src\Models\Objetivos\ObjetivosDAO;
-use src\Models\Objetivos\ObjetivosEntity;
 use src\Models\Rendimentos\RendimentosEntity;
+use src\Services\AplicacaoService;
 
 class RendimentosController extends Controller {
     public function index() {
@@ -92,7 +91,7 @@ class RendimentosController extends Controller {
                     throw new Exception($this->msg_retorno_falha);
                 }
 
-                (new InvestimentosController())->aplicarObjetivo(null, $vlr_rendeu, $_POST['idContaInvest']);
+                (new AplicacaoService())->aplicarObjetivo(null, $vlr_rendeu, $_POST['idContaInvest']);
 
                 $this->calcularTxRendimentoAM($_POST['idContaInvest'], $_POST['dataRendimento'], $model_rendimentos);
 
