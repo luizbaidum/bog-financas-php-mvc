@@ -14,8 +14,12 @@ use src\Models\Objetivos\ObjetivosEntity;
 use src\Models\Proprietarios\ProprietariosEntity;
 use src\Models\Rendimentos\RendimentosDAO;
 use src\Models\Rendimentos\RendimentosEntity;
+use src\Services\AplicacaoService;
 
 class MovimentosController extends Controller {
+
+    private AplicacaoService $aplicacao_service;
+
     public function index() {
         $model = new Model();
         $model_movimentos = new MovimentosDAO();
@@ -127,7 +131,7 @@ class MovimentosController extends Controller {
         $this->renderInModal(titulo: 'Demonstrativo', conteudo: 'exibir_resultado');
     }
 
-    public function editarMovimento()//depurar
+    public function editarMovimento()
     {
         $model_movimentos = new MovimentosDAO();
         $model_rendimentos = new RendimentosDAO();
@@ -219,7 +223,7 @@ class MovimentosController extends Controller {
             }
 
             if (!empty($obj_movimento->idContaInvest)) {
-                (new InvestimentosController())->inserirMovimentacaodeAplicacao(
+                $this->aplicacao_service->inserirMovimentacaodeAplicacao(
                     $obj_movimento->idContaInvest,
                     $id_objetivo_new,
                     $obj_movimento->idMovimento,
@@ -294,6 +298,9 @@ class MovimentosController extends Controller {
     {
         if ($this->isSetPost()) {
             try {
+                $model_movimentos = new MovimentosDAO();
+                $model_movimentos->iniciarTransacao();
+
                 if ($_POST['idCategoria'] == '') {
                     throw new Exception('Por favor, escolher categoria.');
                 }
@@ -314,17 +321,17 @@ class MovimentosController extends Controller {
 
                 $id_objetivo = $_POST['idObjetivo'] ?? '';
 
-                $ret = (new MovimentosDAO())->cadastrar(new MovimentosEntity, $obj_movimento);
+                $ret = $model_movimentos->cadastrar(new MovimentosEntity, $obj_movimento);
 
-                if (!$ret['result']) {
+                if (! $ret['result']) {
                     throw new Exception($this->msg_retorno_falha);
                 }
 
                 $obj_movimento->idMovimento = $ret['result'];
 
-                //Inserção de Rendimento (invest ou retirada)
-                if (!empty($obj_movimento->idContaInvest)) {
-                    (new InvestimentosController())->inserirMovimentacaodeAplicacao(
+                // Inserção de Rendimento (invest ou retirada)
+                if (! empty($obj_movimento->idContaInvest)) {
+                    $this->aplicacao_service->inserirMovimentacaodeAplicacao(
                         $obj_movimento->idContaInvest,
                         $id_objetivo,
                         $obj_movimento->idMovimento,
@@ -340,6 +347,8 @@ class MovimentosController extends Controller {
 						'mensagem' => $this->msg_retorno_sucesso
 					);
 
+                    $model_movimentos->finalizarTransacao();
+
 					echo json_encode($array_retorno);
 				} else {
 					throw new Exception($this->msg_retorno_falha);
@@ -349,6 +358,8 @@ class MovimentosController extends Controller {
 					'result'   => false,
 					'mensagem' => $e->getMessage(),
 				);
+
+                $model_movimentos->cancelarTransacao();
 
 				echo json_encode($array_retorno);
 			}
