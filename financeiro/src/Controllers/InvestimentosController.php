@@ -25,11 +25,12 @@ class InvestimentosController extends Controller {
 
     public function __construct() 
     {
-        $categorias = (new CategoriasDAO())->selecionarCategoriasTipoAeRA();
+        $model_categorias = new CategoriasDAO();
+        $categorias = $model_categorias->selecionarCategoriasTipoAeRA();
 
         $this->categoria_A = $categorias['A'];
         $this->categoria_RA = $categorias['RA'];
-        $this->aplicacao_service = new AplicacaoService();
+        $this->aplicacao_service = new AplicacaoService($model_categorias, $model_categorias);
 
         parent::__construct();
     }

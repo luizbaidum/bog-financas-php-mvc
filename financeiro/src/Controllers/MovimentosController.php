@@ -5,6 +5,7 @@ use Exception;
 use MF\Controller\Controller;
 use MF\Helpers\NumbersHelper;
 use MF\Model\Model;
+use src\Models\Categorias\CategoriasDAO;
 use src\Models\Movimentos\MovimentosDAO;
 use src\Models\Categorias\CategoriasEntity;
 use src\Models\Investimentos\InvestimentosEntity;
@@ -137,6 +138,8 @@ class MovimentosController extends Controller {
         $model_rendimentos = new RendimentosDAO();
         $model_objetivos = new ObjetivosDAO();
 
+        $model_movimentos->iniciarTransacao();
+
         try {
             $obj_movimento = new MovimentosEntity();
 
@@ -222,7 +225,9 @@ class MovimentosController extends Controller {
                 $model_rendimentos->delete(new RendimentosEntity, 'idRendimento', $old_id);
             }
 
-            if (!empty($obj_movimento->idContaInvest)) {
+            if (! empty($obj_movimento->idContaInvest)) {
+                $this->aplicacao_service = new AplicacaoService(model: $model_rendimentos);
+
                 $this->aplicacao_service->inserirMovimentacaodeAplicacao(
                     $obj_movimento->idContaInvest,
                     $id_objetivo_new,
@@ -242,12 +247,16 @@ class MovimentosController extends Controller {
                 'mensagem' => 'Movimento id ' . $obj_movimento->idMovimento . ' atualizado com sucesso.',
             );
 
+            $model_movimentos->finalizarTransacao();
+
             echo json_encode($array_retorno);
         } catch (Exception $e) {
             $array_retorno = array(
                 'result'   => false,
                 'mensagem' => $e->getMessage(),
             );
+
+            $model_movimentos->cancelarTransacao();
 
             echo json_encode($array_retorno);
         }
@@ -331,6 +340,8 @@ class MovimentosController extends Controller {
 
                 // Inserção de Rendimento (invest ou retirada)
                 if (! empty($obj_movimento->idContaInvest)) {
+                    $this->aplicacao_service = new AplicacaoService(model: $model_movimentos);
+
                     $this->aplicacao_service->inserirMovimentacaodeAplicacao(
                         $obj_movimento->idContaInvest,
                         $id_objetivo,
