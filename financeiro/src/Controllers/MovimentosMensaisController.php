@@ -88,8 +88,10 @@ class MovimentosMensaisController extends Controller {
     public function cadastrarMovimentosMensais()
     {
         if ($this->isSetPost()) {
+            $model_movimentos_mensais = new MovimentosMensaisDAO();
+            $model_movimentos_mensais->iniciarTransacao();
             try {
-                $ret = (new MovimentosMensaisDAO())->cadastrar(new MovimentosMensaisEntity, $_POST);
+                $ret = $model_movimentos_mensais->cadastrar(new MovimentosMensaisEntity, $_POST);
 
                 if ($ret['result']) {
 					$array_retorno = array(
@@ -97,7 +99,10 @@ class MovimentosMensaisController extends Controller {
 						'mensagem' => $this->msg_retorno_sucesso
 					);
 
+                    $model_movimentos_mensais->finalizarTransacao();
+
 					echo json_encode($array_retorno);
+                    exit;
 				} else {
 					throw new Exception($this->msg_retorno_falha);
 				}
@@ -107,7 +112,10 @@ class MovimentosMensaisController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_movimentos_mensais->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
             }
         }
     }
@@ -118,6 +126,7 @@ class MovimentosMensaisController extends Controller {
             $item = array();
 
             $model_movimentos_mensais = new MovimentosMensaisDAO();
+            $model_movimentos_mensais->iniciarTransacao();
 
             try {
                 foreach ($_POST['idMovMensal'] as $id) {
@@ -135,7 +144,7 @@ class MovimentosMensaisController extends Controller {
 
                     if (!isset($ret['result']) || empty($ret['result'])) {
                         throw new Exception($this->msg_retorno_falha . '<br>' . 'O lançamento: ' . $item['nomeMovimento'] . ' e subsequentes não foram salvos.');
-                    }//testar se o Exception interrompe o foreach
+                    }
 
                     $success[] = $ret['result'];
                 }
@@ -146,7 +155,10 @@ class MovimentosMensaisController extends Controller {
 						'mensagem' => $this->msg_retorno_sucesso
 					);
 
+                    $model_movimentos_mensais->finalizarTransacao();
+
 					echo json_encode($array_retorno);
+                    exit;
                 }
             } catch (Exception $e) {
                 $array_retorno = array(
@@ -154,7 +166,10 @@ class MovimentosMensaisController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_movimentos_mensais->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
             }
         }
     }
@@ -168,6 +183,8 @@ class MovimentosMensaisController extends Controller {
             $id_mov_m = $_POST['idMovMensal'];
             $is_baixado_original = $_POST['isBaixadoOriginal'];
             $definir_baixado = $_POST['definirBaixado'] ?? '0';
+
+            $model_movimentos->iniciarTransacao();
 
             $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
             $sinal = $arr_cat[1];
@@ -207,14 +224,20 @@ class MovimentosMensaisController extends Controller {
                 'mensagem' => 'Movimento Mensal id ' . $id_mov_m . ' atualizado com sucesso.',
             );
 
+            $model_movimentos->finalizarTransacao();
+
             echo json_encode($array_retorno);
+            exit;
         } catch (Exception $e) {
             $array_retorno = array(
                 'result'   => false,
                 'mensagem' => $e->getMessage(),
             );
 
+            $model_movimentos->cancelarTransacao();
+
             echo json_encode($array_retorno);
+            exit;
         }
     }
 }
