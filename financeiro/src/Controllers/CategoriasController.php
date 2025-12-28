@@ -32,6 +32,8 @@ class CategoriasController extends Controller {
     public function cadastrarCategorias()
     {
         if ($this->isSetPost()) {
+            $model_categorias = new CategoriasDAO();
+            $model_categorias->iniciarTransacao();
             try {
                 $_POST['tipo'] = strtoupper($_POST['tipo']);
 
@@ -57,13 +59,15 @@ class CategoriasController extends Controller {
                     throw new Exception("Atenção: Escolher uma opção para 'Regularidade'");
                 }
 
-                $ret = (new CategoriasDAO())->cadastrar(new CategoriasEntity, $_POST);
+                $ret = $model_categorias->cadastrar(new CategoriasEntity, $_POST);
 
                 if ($ret['result']) {
                     $array_retorno = array(
                         'result'   => $ret['result'],
                         'mensagem' => $this->msg_retorno_sucesso
                     );
+
+                    $model_categorias->finalizarTransacao();
 
                     echo json_encode($array_retorno);
                 } else {
@@ -74,6 +78,8 @@ class CategoriasController extends Controller {
                     'result'   => false,
                     'mensagem' => $e->getMessage(),
                 );
+
+                $model_categorias->cancelarTransacao();
 
                 echo json_encode($array_retorno);
             }
@@ -86,6 +92,10 @@ class CategoriasController extends Controller {
         $status = $_GET['status'];
 
         if (!empty($id_categoria) && $status != '') {
+
+            $model_categorias = new CategoriasDAO();
+            $model_categorias->iniciarTransacao();
+
             try {
                 $ret = (new CategoriasDAO())->atualizar(new CategoriasEntity,
                             ['status' => $status],
@@ -98,6 +108,8 @@ class CategoriasController extends Controller {
                         'mensagem' => 'idCategoria ' . $id_categoria . ' alterado com sucesso.'
                     );
 
+                    $model_categorias->finalizarTransacao();
+
                     echo json_encode($array_retorno);
                 } else {
                     throw new Exception('Erro ao alterar idCategoria ' . $id_categoria . '.');
@@ -107,6 +119,8 @@ class CategoriasController extends Controller {
                     'result'   => false,
                     'mensagem' => $e->getMessage(),
                 );
+
+                $model_categorias->cancelarTransacao();
 
                 echo json_encode($array_retorno);
             }
