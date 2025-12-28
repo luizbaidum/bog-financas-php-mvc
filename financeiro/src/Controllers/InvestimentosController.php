@@ -196,20 +196,24 @@ class InvestimentosController extends Controller {
 
     public function cadastrarInvestimentos()
     {
-        if ($this->isSetPost()) { 
+        if ($this->isSetPost()) {
+            $model_investimentos = new InvestimentosDAO();
+            $model_investimentos->iniciarTransacao();
             try {
                 if (isset($_POST['cadContaInvest'])) {
                     unset($_POST['cadContaInvest']);
                 }
 
                 $_POST['saldoAtual'] = $_POST['saldoInicial'];
-                $ret = (new InvestimentosDAO())->cadastrar(new InvestimentosEntity, $_POST);
+                $ret = $model_investimentos->cadastrar(new InvestimentosEntity, $_POST);
 
                 if ($ret['result']) {
 					$array_retorno = array(
 						'result'   => $ret['result'],
 						'mensagem' => $this->msg_retorno_sucesso
 					);
+
+                    $model_investimentos->finalizarTransacao();
 
 					echo json_encode($array_retorno);
 				} else {
@@ -220,6 +224,8 @@ class InvestimentosController extends Controller {
 					'result'   => false,
 					'mensagem' => $e->getMessage(),
 				);
+
+                $model_investimentos->cancelarTransacao();
 
 				echo json_encode($array_retorno);
             }
@@ -246,6 +252,8 @@ class InvestimentosController extends Controller {
     public function cadastrarObjetivos()
     {
         if ($this->isSetPost()) {
+            $model_objetivos = new ObjetivosDAO();
+            $model_objetivos->iniciarTransacao();
             try {
                 $ret = (new ObjetivosDAO())->cadastrar(new ObjetivosEntity, $_POST);
 
@@ -254,6 +262,8 @@ class InvestimentosController extends Controller {
 						'result'   => $ret['result'],
 						'mensagem' => $this->msg_retorno_sucesso
 					);
+
+                    $model_objetivos->finalizarTransacao();
 
 					echo json_encode($array_retorno);
 				} else {
@@ -265,6 +275,8 @@ class InvestimentosController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_objetivos->cancelarTransacao();
+
 				echo json_encode($array_retorno);
             }
         }
@@ -275,6 +287,7 @@ class InvestimentosController extends Controller {
         $model = new Model();
 
         if ($this->isSetPost()) {
+            $model->iniciarTransacao();
             try {
                 $ret = array();
 
@@ -335,6 +348,8 @@ class InvestimentosController extends Controller {
 						'mensagem' => $this->msg_retorno_sucesso
 					);
 
+                    $model->finalizarTransacao();
+
 					echo json_encode($array_retorno);
                     exit;
 				} else {
@@ -345,6 +360,8 @@ class InvestimentosController extends Controller {
 					'result'   => false,
 					'mensagem' => $e->getMessage(),
 				);
+
+                $model->cancelarTransacao();
 
 				echo json_encode($array_retorno);
                 exit;
@@ -384,7 +401,7 @@ class InvestimentosController extends Controller {
 
         $this->aplicacao_service->inserirMovimentacaodeAplicacao($id_invest, $objetivo_origem, $id_movimento, $this->categoria_RA, $valor, date('Y-m-d'));
 
-        //Aplicação
+        // Aplicação
         list($id_invest, $id_proprietario) = explode('@', $invest_destino);
 
         $item = array(
@@ -411,8 +428,10 @@ class InvestimentosController extends Controller {
         $status = $_GET['status'];
 
         if (!empty($id_conta_invest) && $status != '') {
+            $model_investimentos = new InvestimentosDAO();
+            $model_investimentos->iniciarTransacao();
             try {
-                $ret = (new InvestimentosDAO())->atualizar(new InvestimentosEntity,
+                $ret = $model_investimentos->atualizar(new InvestimentosEntity,
                             ['status' => $status],
                             ['idContaInvest' =>  $id_conta_invest]
                         );
@@ -423,7 +442,10 @@ class InvestimentosController extends Controller {
                         'mensagem' => 'idContaInvest ' . $id_conta_invest . ' alterada com sucesso.'
                     );
 
+                    $model_investimentos->finalizarTransacao();
+
                     echo json_encode($array_retorno);
+                    exit;
                 } else {
                     throw new Exception('Erro ao alterar idContaInvest ' . $id_conta_invest . '.');
                 }
@@ -433,7 +455,10 @@ class InvestimentosController extends Controller {
                     'mensagem' => $e->getMessage(),
                 );
 
+                $model_investimentos->cancelarTransacao();
+
                 echo json_encode($array_retorno);
+                exit;
             }
         }
     }
