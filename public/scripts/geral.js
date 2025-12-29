@@ -16,27 +16,6 @@ $(document).on('click', '.render-ajax', function (e) {
     );
 });
 
-$(document).on('change', '.obter-metas-mensais', function (e) {
-    try {
-        let url_action = e.currentTarget.dataset.url + '?idProprietario=' + e.currentTarget.value;
-        let div_destino = e.currentTarget.dataset.div;
-
-        if (e.currentTarget.value == '') {
-            document.getElementById(div_destino).innerHTML = '';
-        } else {
-            requireAjaxRender(
-                {
-                    action: url_action, 
-                    div_destino: div_destino, 
-                    modal: false
-                }
-            );
-        }
-    } catch (error) {
-        console.error('Erro ->', error);
-    }
-});
-
 $(document).on('submit', '.submit-form-render-ajax', function (e) {
     e.preventDefault();
 
