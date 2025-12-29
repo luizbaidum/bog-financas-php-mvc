@@ -93,8 +93,8 @@ class MetasMensaisController extends Controller {
 
     private function tratarMetas(): array
     {
-        $lista_mm = (new MetasMensaisDAO())->listarMetasMensais($_GET['idProprietario'], date('Y'));
-        $realizado = (new MovimentosDAO())->consultarAplicacoesPorMes($_GET['idProprietario'], date('Y'));
+        $lista_mm = (new MetasMensaisDAO())->listarMetasMensais($_POST['idProprietario'], $_POST['ano']);
+        $realizado = (new MovimentosDAO())->consultarAplicacoesPorMes($_POST['idProprietario'], $_POST['ano']);
 
         $meses = array(
             '01' => 'Janeiro',
