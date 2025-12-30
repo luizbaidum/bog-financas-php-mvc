@@ -9,7 +9,7 @@
     $home_url = $menu->getUrlHome();
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg bg-navbar-top-and-bottom">
     <div class="container px-4 px-lg-5">
         <a class="navbar-brand" href="<?= $home_url; ?>">Início</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,8 +26,8 @@
                                     <?php 
                                         $items = $titles[$v_g];
                                         $chunked_items = array_chunk($items, ceil(count($items) / 2), true);
-                                        
-                                        foreach ($chunked_items as $column): 
+
+                                        foreach ($chunked_items as $column):
                                     ?>
                                         <div class="col-sm-6 p-0">
                                             <div class="d-flex flex-column">
@@ -50,7 +50,7 @@
                     </a>
                 </li>
             </ul>
-            
+
             <?php require 'form_pesquisa.phtml'; ?>
 
         </div>

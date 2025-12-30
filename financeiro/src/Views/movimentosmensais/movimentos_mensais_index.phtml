@@ -21,8 +21,7 @@
                 </thead>
                 <tbody> 
                     <?php
-
-                use MF\Helpers\NumbersHelper;
+                        use MF\Helpers\NumbersHelper;
 
                         foreach ($arr_mensais as $value): 
                             $dia_original = date('d', strtotime($value['dataRepete']));
@@ -62,7 +61,7 @@
                             </td>
                             <td>
                                 <a href="<?= $url_edit . $value['idMovMensal']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
-                                    <button type="button" title="Editar" class="btn btn-sm btn-outline-primary">
+                                    <button type="button" title="Editar" class="btn btn-sm btn-dark">
                                         <i>&#9998;</i>
                                     </button>
                                 </a>

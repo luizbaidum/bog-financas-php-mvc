@@ -4,9 +4,9 @@
     <form id="idFormPesquisa" class="d-flex mb-0 flex-lg-row flex-column gap-2" action="<?= $this->view->settings['url_search']; ?>" method="GET" role="search">
         <?php require 'select_month.php'; ?>
         <div class="d-flex flex-grow-1">
-            <input type="text" class="form-control me-2" id="idPesquisa" name="pesquisa" value="<?= $pesquisa; ?>" placeholder="Pesquisar..." style="width: -webkit-fill-available">                        
-            <button type="submit" class="btn btn-outline-primary">Buscar</button>
+            <input type="text" class="form-control me-2" id="idPesquisa" name="pesquisa" value="<?= $pesquisa; ?>" placeholder="Pesquisar..." style="width: -webkit-fill-available">
+            <button type="submit" class="btn btn-primary">Buscar</button>
         </div>
-        <button type="button" class="btn btn-outline-danger limpar-pesquisa align-self-lg-center">X</button>
+        <button type="button" class="btn btn-danger limpar-pesquisa align-self-lg-center">X</button>
     </form>
 <?php endif; ?>

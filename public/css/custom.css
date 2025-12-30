@@ -11,8 +11,20 @@
     box-sizing: border-box;
 }
 
+.bg-navbar-top-and-bottom {
+    background-color: #b9fcb9;
+}
+
+.primary-site-color-strong {
+    color: #549654;
+}
+
+.bg-primary-site-color-strong {
+    background-color: #549654 !important;
+}
+
 body {
-    background-color: #b9f9f7;
+    background-color: #d1fdfb;
     font-family: 'Nunito', sans-serif;
 }
 
@@ -108,14 +120,8 @@ body {
     bottom: 0px;
     z-index: 99;
     font-size: 18px;
-    background-color: white;
-    color: white;
     padding: 8px;
     width: 100%;
-}
-
-#fixedBotton:hover {
-    background-color: #555;
 }
 
 .bg-pago {
