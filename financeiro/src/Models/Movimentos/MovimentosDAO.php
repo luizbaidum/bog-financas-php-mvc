@@ -244,8 +244,7 @@ class MovimentosDAO extends Model {
                         WHERE orcamentos.idFamilia = $id_familia AND $where_orcado
                         GROUP BY orcamentos.idCategoria, MONTH(orcamentos.dataOrcamento)";
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query, [], false);
+        $result = $this->sql_actions->executarQuery($query, [], false);
 
         $realizado = [];
         $orcado = [];
