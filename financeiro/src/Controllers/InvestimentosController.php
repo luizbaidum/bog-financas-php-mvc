@@ -96,6 +96,7 @@ class InvestimentosController extends Controller {
     public function editarObjetivo()
     {
         $model_objetivos = new ObjetivosDAO();
+        $model_objetivos->iniciarTransacao();
 
         if ($this->isSetPost()) {
             try {
@@ -130,7 +131,10 @@ class InvestimentosController extends Controller {
 					'mensagem' => 'Objetivo id ' . $id . ' atualizado com sucesso.',
 				);
 
+                $model_objetivos->finalizarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
 
             } catch (Exception $e) {
                 $array_retorno = array(
@@ -138,7 +142,10 @@ class InvestimentosController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_objetivos->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
             }
         }
     }
@@ -469,8 +476,12 @@ class InvestimentosController extends Controller {
         $status = $_GET['status'];
 
         if (!empty($id_obj) && $status != '') {
+
+            $model_objetivos = new ObjetivosDAO();
+            $model_objetivos->iniciarTransacao();
+
             try {
-                $ret = (new ObjetivosDAO())->atualizar(new ObjetivosEntity,
+                $ret = $model_objetivos->atualizar(new ObjetivosEntity,
                             ['finalizado' => $status],
                             ['idObj' => $id_obj]
                         );
@@ -481,7 +492,10 @@ class InvestimentosController extends Controller {
                         'mensagem' => 'idObjetivo ' . $id_obj . ' alterado com sucesso.'
                     );
 
+                    $model_objetivos->finalizarTransacao();
+
                     echo json_encode($array_retorno);
+                    exit;
                 } else {
                     throw new Exception('Erro ao alterar idObjetivo ' . $id_obj . '.');
                 }
@@ -491,7 +505,10 @@ class InvestimentosController extends Controller {
                     'mensagem' => $e->getMessage(),
                 );
 
+                $model_objetivos->cancelarTransacao();
+
                 echo json_encode($array_retorno);
+                exit;
             }
         }
     }

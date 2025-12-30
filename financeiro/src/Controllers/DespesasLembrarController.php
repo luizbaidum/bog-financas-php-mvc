@@ -69,6 +69,8 @@ class DespesasLembrarController extends Controller {
     public function cadastrar()
     {
         if ($this->isSetPost()) {
+            $model_despesas_lembrar = new DespesasLembrarDAO();
+            $model_despesas_lembrar->iniciarTransacao();
             try {
                 $sinal = '-';
                 $lancar_mov = false;
@@ -87,7 +89,7 @@ class DespesasLembrarController extends Controller {
                 $obj_lembrar->descricao             = $_POST['descricao'];
                 $obj_lembrar->metodoPgto            = $_POST['metodoPgto'];
 
-                $ret = (new DespesasLembrarDAO())->cadastrar(new DespesasLembrarEntity, $obj_lembrar);
+                $ret = $model_despesas_lembrar->cadastrar(new DespesasLembrarEntity, $obj_lembrar);
                 $obj_lembrar->idDespLembrar = $ret['result'];
 
                 if ($lancar_mov) {
@@ -110,7 +112,7 @@ class DespesasLembrarController extends Controller {
                         ['idDespLembrar' => $obj_lembrar->idDespLembrar]);
                 }
 
-                if (!$ret['result']) {
+                if (!  $ret['result']) {
                     throw new Exception($this->msg_retorno_falha);
                 }
 
@@ -120,7 +122,10 @@ class DespesasLembrarController extends Controller {
 						'mensagem' => $this->msg_retorno_sucesso
 					);
 
+                    $model_despesas_lembrar->finalizarTransacao();
+
 					echo json_encode($array_retorno);
+                    exit;
 				} else {
 					throw new Exception($this->msg_retorno_falha);
 				}
@@ -130,7 +135,10 @@ class DespesasLembrarController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_despesas_lembrar->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
 			}
         }
     }
@@ -140,6 +148,7 @@ class DespesasLembrarController extends Controller {
         if ($this->isSetPost()) {
 
             $model_desp_lembrar = new DespesasLembrarDAO();
+            $model_desp_lembrar->iniciarTransacao();
 
             try {
                 foreach ($_POST['itens'] as $id) {
@@ -162,7 +171,10 @@ class DespesasLembrarController extends Controller {
 					'mensagem' => 'Movimentos excluídos: ' . implode(', ', $model_desp_lembrar->arr_afetados) . '. Movimentos não excluídos: ' . implode(', ', $model_desp_lembrar->arr_nao_afetados),
 				);
 
+                $model_desp_lembrar->finalizarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
 
             } catch (Exception $e) {
                 $array_retorno = array(
@@ -170,7 +182,10 @@ class DespesasLembrarController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_desp_lembrar->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
             }
         }
     }

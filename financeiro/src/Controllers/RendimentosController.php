@@ -51,6 +51,9 @@ class RendimentosController extends Controller {
         $model_investimentos = new InvestimentosDAO();
 
         if ($this->isSetPost()) {
+
+            $model_rendimentos->iniciarTransacao();
+
             try {
                 $tipo_preju = '1';
                 $tipo_lucro = '2';
@@ -87,7 +90,7 @@ class RendimentosController extends Controller {
 
                 $ret_b = $model_investimentos->atualizar(new InvestimentosEntity, $item, $item_where);
 
-                if (!isset($ret_b['result']) || empty($ret_b['result'])) {
+                if (! isset($ret_b['result']) || empty($ret_b['result'])) {
                     throw new Exception($this->msg_retorno_falha);
                 }
 
@@ -101,7 +104,10 @@ class RendimentosController extends Controller {
 						'mensagem' => $this->msg_retorno_sucesso
 					);
 
+                    $model_rendimentos->finalizarTransacao();
+
 					echo json_encode($array_retorno);
+                    exit;
                 }
             } catch (Exception $e) {
                 $array_retorno = array(
@@ -109,7 +115,10 @@ class RendimentosController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_rendimentos->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
             }
         }
     }

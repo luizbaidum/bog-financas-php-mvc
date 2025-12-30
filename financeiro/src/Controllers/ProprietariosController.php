@@ -24,9 +24,11 @@ class ProprietariosController extends Controller {
     public function cadastrarProprietarios()
     {
         if ($this->isSetPost()) {
+            $model_proprietarios = new ProprietariosDAO();
+            $model_proprietarios->iniciarTransacao();
             try {
 
-                $ret = (new ProprietariosDAO())->cadastrar(new ProprietariosEntity, $_POST);
+                $ret = $model_proprietarios->cadastrar(new ProprietariosEntity, $_POST);
 
                 if ($ret['result']) {
                     $array_retorno = array(
@@ -34,7 +36,10 @@ class ProprietariosController extends Controller {
                         'mensagem' => $this->msg_retorno_sucesso
                     );
 
+                    $model_proprietarios->finalizarTransacao();
+
                     echo json_encode($array_retorno);
+                    exit;
                 } else {
                     throw new Exception($this->msg_retorno_falha);
                 }
@@ -44,7 +49,10 @@ class ProprietariosController extends Controller {
                     'mensagem' => $e->getMessage(),
                 );
 
+                $model_proprietarios->cancelarTransacao();
+
                 echo json_encode($array_retorno);
+                exit;
             }
         }
     }

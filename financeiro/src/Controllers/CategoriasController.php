@@ -91,7 +91,7 @@ class CategoriasController extends Controller {
         $id_categoria = $_GET['id'];
         $status = $_GET['status'];
 
-        if (!empty($id_categoria) && $status != '') {
+        if (! empty($id_categoria) && $status != '') {
 
             $model_categorias = new CategoriasDAO();
             $model_categorias->iniciarTransacao();

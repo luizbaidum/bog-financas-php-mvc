@@ -268,6 +268,7 @@ class MovimentosController extends Controller {
 
             $model_rendimentos = new RendimentosDAO();
             $model_movimentos = new MovimentosDAO();
+            $model_movimentos->iniciarTransacao();
 
             try {
                 foreach ($_POST['itens'] as $id) {
@@ -290,15 +291,20 @@ class MovimentosController extends Controller {
 					'mensagem' => 'Movimentos excluídos: ' . implode(', ', $model_movimentos->arr_afetados) . '. Movimentos não excluídos: ' . implode(', ', $model_movimentos->arr_nao_afetados),
 				);
 
-				echo json_encode($array_retorno);
+                $model_movimentos->finalizarTransacao();
 
+				echo json_encode($array_retorno);
+                exit;
             } catch (Exception $e) {
                 $array_retorno = array(
 					'result'   => false,
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_movimentos->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
             }
         }
     }
