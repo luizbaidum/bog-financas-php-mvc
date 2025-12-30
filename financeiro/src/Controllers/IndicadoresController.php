@@ -27,7 +27,7 @@ class IndicadoresController extends Controller {
             $indicadores = $model_movimentos->gerarRelatorioIndicadoresMensal($_SESSION['id_familia']);
         }
 
-        $indicadores_anuais = $model_movimentos->gerarRelatorioIndicadoresAnual($_SESSION['id_familia'], $ano_filtro);
+        list($realizado, $orcado) = $model_movimentos->gerarRelatorioIndicadoresAnual($_SESSION['id_familia'], $ano_filtro);
 
         foreach ($indicadores as $v) {
             isset($arr_totais_por_tipo[$v['tipo']]) ? $arr_totais_por_tipo[$v['tipo']] += $v['totalRealizado'] : $arr_totais_por_tipo[$v['tipo']] = $v['totalRealizado'];
@@ -35,12 +35,46 @@ class IndicadoresController extends Controller {
         }
 
         $this->view->data['indicadores'] = $indicadores;
-        $this->view->data['indicadores_anuais'] = $indicadores_anuais;
+        list($this->view->data['arr_cat'], $this->view->data['indicadores_anuais']) = $this->prepararDadosAnual($realizado, $orcado);
         $this->view->data['arr_totais_por_tipo'] = $arr_totais_por_tipo;
         $this->view->data['arr_totais_por_tipo_orcado'] = $arr_totais_por_tipo_orcado;
 
         $this->renderPage(
             conteudo: 'indicadores_index'
         );
+    }
+
+    private function prepararDadosAnual($realizado, $orcado): array
+    {
+        $indicadores_anuais = [];
+        $arr_cat = [];
+
+        foreach ($realizado as $item) {
+            foreach ($item as $it) {
+                $categoria_id = $it['idCategoria'];
+                $categoria_nome = $it['categoria'];
+                $total_realizado = $it['total'];
+                $mes = $it['mes'];
+
+                $arr_cat[$categoria_id]['nome'] = $categoria_nome;
+
+                $indicadores_anuais[$mes][$categoria_id]['realizado'] = $total_realizado;
+            }
+        }
+
+        foreach ($orcado as $item) {
+            foreach ($item as $it) {
+                $categoria_id = $it['idCategoria'];
+                $categoria_nome = $it['categoria'];
+                $total_orcado = $it['total'];
+                $mes = $it['mes'];
+
+                $arr_cat[$categoria_id]['nome'] = $categoria_nome;
+
+                $indicadores_anuais[$mes][$categoria_id]['orcado'] = $total_orcado;
+            }
+        }
+
+        return [$arr_cat, $indicadores_anuais];
     }
 }

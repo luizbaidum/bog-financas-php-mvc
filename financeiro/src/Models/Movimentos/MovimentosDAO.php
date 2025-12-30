@@ -225,7 +225,7 @@ class MovimentosDAO extends Model {
             $where_realizado = " DATE_FORMAT(movimentos.dataMovimento, '%Y') = '$year'";
         }
 
-        $where_orcado = ' (MONTH(orcamentos.dataOrcamento) = YEAR(CURRENT_DATE()))';
+        $where_orcado = ' (YEAR(orcamentos.dataOrcamento) = YEAR(CURRENT_DATE()))';
         if ($year != '') {
             $where_orcado = " DATE_FORMAT(orcamentos.dataOrcamento, '%Y') = '$year'";
         }
@@ -262,7 +262,7 @@ class MovimentosDAO extends Model {
         foreach ($result as $val) {
             if ($val['isRealizado'] == 'T') {
                 $realizado[$val['mes']][$val['idCategoria']] = $val;
-            } else {
+            } elseif ($val['isOrcado'] == 'T') {
                 $orcado[$val['mes']][$val['idCategoria']] = $val;
             }
         }

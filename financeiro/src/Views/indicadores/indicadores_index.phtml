@@ -76,7 +76,9 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm">
+    <hr>
+
+    <div class="card border-0 shadow-sm mt-2">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0 table-sm">
@@ -97,28 +99,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($indicadores_anuais as $categoria_id => $categoria): ?>
-                            <?php
-                            $total_categoria_real = 0;
-                            $total_categoria_orcado = 0;
-                            ?>
+                        <?php 
+                            foreach ($arr_cat as $id => $cat): 
+                                $total_categoria_real = 0;
+                                $total_categoria_orcado = 0;
+                        ?>
                             <tr>
-                                <td class="ps-4 fw-bold"><?= $categoria['nome']; ?></td>
+                                <td class="ps-4"><?= $cat['nome']; ?> (R$)</td>
 
-                                <?php for ($mes = 1; $mes <= 12; $mes++): ?>
-                                    <?php
-                                    $realizado = $categoria['meses'][$mes]['realizado'] ?? 0;
-                                    $orcado = $categoria['meses'][$mes]['orcado'] ?? 0;
-                                    $total_categoria_real += $realizado;
-                                    $total_categoria_orcado += $orcado;
-                                    ?>
+                                <?php for ($mes = 1; $mes <= 12; $mes++):
+                                        $realizado = $indicadores_anuais[$mes][$id]['realizado'] ?? 0;
+                                        $orcado = $indicadores_anuais[$mes][$id]['orcado'] ?? 0;
+                                        $total_categoria_real += $realizado;
+                                        $total_categoria_orcado += $orcado;
+                                ?>
                                     <td class="text-center">
                                         <div class="d-flex flex-column">
-                                            <span class="<?= $realizado <= 0 ? 'text-danger' : 'text-success'; ?>">
-                                                R$ <?= NumbersHelper::formatUStoBR($realizado); ?>
+                                            <span class="<?= $realizado <= 0 ? 'text-danger' : 'text-success'; ?>" style="font-size: 0.90rem;">
+                                                <?= NumbersHelper::formatUStoBR($realizado); ?>
                                             </span>
                                             <span class="text-secondary" style="font-size: 0.85rem;">
-                                                R$ <?= NumbersHelper::formatUStoBR($orcado); ?>
+                                                <?= NumbersHelper::formatUStoBR($orcado); ?>
                                             </span>
                                         </div>
                                     </td>
@@ -126,7 +127,7 @@
 
                                 <td class="text-end pe-4">
                                     <div class="d-flex flex-column">
-                                        <span class="fw-bold <?= $total_categoria_real <= 0 ? 'text-danger' : 'text-success'; ?>">
+                                        <span class="fw-bold <?= $total_categoria_real <= 0 ? 'text-danger' : 'text-success'; ?>" style="font-size: 0.90rem;">
                                             R$ <?= NumbersHelper::formatUStoBR($total_categoria_real); ?>
                                         </span>
                                         <span class="fw-bold text-secondary" style="font-size: 0.85rem;">
@@ -139,18 +140,17 @@
                     </tbody>
                     <tfoot>
                         <?php
-                        // Calcular totais mensais e gerais
-                        $totais_mensais_real = array_fill(1, 12, 0);
-                        $totais_mensais_orcado = array_fill(1, 12, 0);
+                            $totais_mensais_real = array_fill(1, 12, 0);
+                            $totais_mensais_orcado = array_fill(1, 12, 0);
 
-                        foreach ($indicadores_anuais as $categoria) {
-                            for ($mes = 1; $mes <= 12; $mes++) {
-                                $totais_mensais_real[$mes] += $categoria['meses'][$mes]['realizado'] ?? 0;
-                                $totais_mensais_orcado[$mes] += $categoria['meses'][$mes]['orcado'] ?? 0;
-                                $total_real_geral += $categoria['meses'][$mes]['realizado'] ?? 0;
-                                $total_orcado_geral += $categoria['meses'][$mes]['orcado'] ?? 0;
+                            foreach ($arr_cat as $id => $cat) {
+                                for ($mes = 1; $mes <= 12; $mes++) {
+                                    $totais_mensais_real[$mes] += $indicadores_anuais[$mes][$id]['realizado'] ?? 0;
+                                    $totais_mensais_orcado[$mes] += $indicadores_anuais[$mes][$id]['orcado'] ?? 0;
+                                    $total_real_geral += $indicadores_anuais[$mes][$id]['realizado'] ?? 0;
+                                    $total_orcado_geral += $indicadores_anuais[$mes][$id]['orcado'] ?? 0;
+                                }
                             }
-                        }
                         ?>
 
                         <tr class="table-dark fw-bolder">
@@ -160,10 +160,10 @@
                                 <td class="text-center">
                                     <div class="d-flex flex-column">
                                         <span class="<?= $totais_mensais_real[$mes] <= 0 ? 'text-danger' : 'text-success'; ?>">
-                                            R$ <?= NumbersHelper::formatUStoBR($totais_mensais_real[$mes]); ?>
+                                            <?= NumbersHelper::formatUStoBR($totais_mensais_real[$mes]); ?>
                                         </span>
                                         <span class="text-secondary" style="font-size: 0.85rem;">
-                                            R$ <?= NumbersHelper::formatUStoBR($totais_mensais_orcado[$mes]); ?>
+                                            <?= NumbersHelper::formatUStoBR($totais_mensais_orcado[$mes]); ?>
                                         </span>
                                     </div>
                                 </td>
@@ -172,10 +172,10 @@
                             <td class="text-end pe-4">
                                 <div class="d-flex flex-column">
                                     <span class="<?= $total_real_geral <= 0 ? 'text-danger' : 'text-success'; ?>">
-                                        R$ <?= NumbersHelper::formatUStoBR($total_real_geral); ?>
+                                        <?= NumbersHelper::formatUStoBR($total_real_geral); ?>
                                     </span>
                                     <span class="text-secondary" style="font-size: 0.85rem;">
-                                        R$ <?= NumbersHelper::formatUStoBR($total_orcado_geral); ?>
+                                        <?= NumbersHelper::formatUStoBR($total_orcado_geral); ?>
                                     </span>
                                 </div>
                             </td>
