@@ -3,7 +3,6 @@ namespace src\Controllers;
 
 use MF\Controller\Controller;
 use src\Models\Movimentos\MovimentosDAO;
-use src\Models\Orcamento\OrcamentoDAO;
 
 class IndicadoresController extends Controller {
     public function index() {
@@ -23,10 +22,12 @@ class IndicadoresController extends Controller {
         $arr_totais_por_tipo_orcado = [];
 
         if ($mes_filtro != '') {
-            $indicadores = $model_movimentos->gerarRelatorioIndicadores($ano_filtro, $mes_filtro);
+            $indicadores = $model_movimentos->gerarRelatorioIndicadoresMensal($_SESSION['id_familia'], $ano_filtro, $mes_filtro);
         } else {
-            $indicadores = $model_movimentos->gerarRelatorioIndicadores();
+            $indicadores = $model_movimentos->gerarRelatorioIndicadoresMensal($_SESSION['id_familia']);
         }
+
+        $indicadores_anuais = $model_movimentos->gerarRelatorioIndicadoresAnual($_SESSION['id_familia'], $ano_filtro);
 
         foreach ($indicadores as $v) {
             isset($arr_totais_por_tipo[$v['tipo']]) ? $arr_totais_por_tipo[$v['tipo']] += $v['totalRealizado'] : $arr_totais_por_tipo[$v['tipo']] = $v['totalRealizado'];
@@ -34,6 +35,7 @@ class IndicadoresController extends Controller {
         }
 
         $this->view->data['indicadores'] = $indicadores;
+        $this->view->data['indicadores_anuais'] = $indicadores_anuais;
         $this->view->data['arr_totais_por_tipo'] = $arr_totais_por_tipo;
         $this->view->data['arr_totais_por_tipo_orcado'] = $arr_totais_por_tipo_orcado;
 

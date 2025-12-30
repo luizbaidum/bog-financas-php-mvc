@@ -166,7 +166,7 @@ class MovimentosDAO extends Model {
         return $result;
     }
 
-    public function gerarRelatorioIndicadores($year = '', $month = '')
+    public function gerarRelatorioIndicadoresMensal($id_familia, $year = '', $month = '')
     {
         $where_realizado = ' (DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = DATE_FORMAT(CURRENT_DATE(), "%Y%m"))';
         if ($month != '') {
@@ -193,17 +193,17 @@ class MovimentosDAO extends Model {
                     (
                         SELECT IFNULL(SUM(movimentos.valor), 0)
                         FROM movimentos
-                        WHERE movimentos.idCategoria = categorias.idCategoria AND movimentos.idFamilia = $_SESSION[id_familia]
+                        WHERE movimentos.idCategoria = categorias.idCategoria AND movimentos.idFamilia = $id_familia
                         AND $where_realizado
                     ) AS totalRealizado,
                     (
                         SELECT IFNULL(SUM(orcamentos.valor), 0)
                         FROM orcamentos
-                        WHERE orcamentos.idCategoria = categorias.idCategoria AND orcamentos.idFamilia = $_SESSION[id_familia]
+                        WHERE orcamentos.idCategoria = categorias.idCategoria AND orcamentos.idFamilia = $id_familia
                         AND $where_orcado
                     ) AS totalOrcado
                     FROM categorias 
-                    WHERE categorias.idCategoria > 0 AND categorias.idFamilia = $_SESSION[id_familia]
+                    WHERE categorias.idCategoria > 0 AND categorias.idFamilia = $id_familia
                     HAVING (totalRealizado <> 0 OR totalOrcado <> 0)
                     ORDER BY categorias.tipo DESC, totalRealizado DESC";
 
@@ -216,6 +216,58 @@ class MovimentosDAO extends Model {
         }
 
         return $ret;
+    }
+
+    public function gerarRelatorioIndicadoresAnual($id_familia, $year = '')
+    {
+        $where_realizado = ' (DATE_FORMAT(movimentos.dataMovimento, "%Y") = DATE_FORMAT(CURRENT_DATE(), "%Y"))';
+        if ($year != '') {
+            $where_realizado = " DATE_FORMAT(movimentos.dataMovimento, '%Y') = '$year'";
+        }
+
+        $where_orcado = ' (MONTH(orcamentos.dataOrcamento) = YEAR(CURRENT_DATE()))';
+        if ($year != '') {
+            $where_orcado = " DATE_FORMAT(orcamentos.dataOrcamento, '%Y') = '$year'";
+        }
+
+        $query  = "SELECT SUM(movimentos.valor) AS total,
+                        MONTH(movimentos.dataMovimento) AS mes,
+                        categorias.idCategoria,
+                        categorias.categoria,
+                        categorias.tipo,
+                        'T' AS isRealizado,
+                        'F' AS isOrcado
+                        FROM movimentos
+                        INNER JOIN categorias ON movimentos.idCategoria = categorias.idCategoria
+                        WHERE movimentos.idFamilia = $id_familia AND $where_realizado
+                        GROUP BY movimentos.idCategoria, MONTH(movimentos.dataMovimento)
+                    UNION ALL
+                    SELECT SUM(orcamentos.valor) AS total,
+                        MONTH(orcamentos.dataOrcamento) AS mes,
+                        categorias.idCategoria,
+                        categorias.categoria,
+                        categorias.tipo,
+                        'F' AS isRealizado,
+                        'T' AS isOrcado
+                        FROM orcamentos
+                        INNER JOIN categorias ON orcamentos.idCategoria = categorias.idCategoria
+                        WHERE orcamentos.idFamilia = $id_familia AND $where_orcado
+                        GROUP BY orcamentos.idCategoria, MONTH(orcamentos.dataOrcamento)";
+
+        $new_sql = new SQLActions();
+        $result = $new_sql->executarQuery($query, [], false);
+
+        $realizado = [];
+        $orcado = [];
+        foreach ($result as $val) {
+            if ($val['isRealizado'] == 'T') {
+                $realizado[$val['mes']][$val['idCategoria']] = $val;
+            } else {
+                $orcado[$val['mes']][$val['idCategoria']] = $val;
+            }
+        }
+
+        return [$realizado, $orcado];
     }
 
     public function consultarAplicacoesPorMes(string|null $id_proprietario, string|int $ano): array
