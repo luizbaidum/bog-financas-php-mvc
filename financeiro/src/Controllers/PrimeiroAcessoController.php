@@ -11,6 +11,7 @@ class PrimeiroAcessoController extends Controller {
     {
         $obj_usuario = new UsuariosEntity();
         $model_usuario = new UsuariosDAO();
+        $model_usuario->iniciarTransacao();
 
         $obj_usuario->nome = $_POST['nome'];
         $obj_usuario->login = $_POST['login'];
@@ -41,14 +42,20 @@ class PrimeiroAcessoController extends Controller {
                 'mensagem' => $this->msg_retorno_sucesso
             );
 
+            $model_usuario->finalizarTransacao();
+
             echo json_encode($array_retorno);
+            exit;
         } catch (Exception $e) {
             $array_retorno = array(
                 'result'   => false,
                 'mensagem' => $e->getMessage()
             );
 
+            $$model_usuario->cancelarTransacao();
+
             echo json_encode($array_retorno);
+            exit;
         }
     }
 

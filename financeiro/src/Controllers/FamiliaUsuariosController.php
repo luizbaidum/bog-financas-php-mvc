@@ -65,6 +65,8 @@ class FamiliaUsuariosController extends Controller {
             exit;
         }
 
+        $model_usuario->iniciarTransacao();
+
         try {
             $ret = $model_usuario->cadastrar(new UsuariosEntity, $obj_usuario);
 
@@ -77,14 +79,20 @@ class FamiliaUsuariosController extends Controller {
                 'mensagem' => $this->msg_retorno_sucesso
             );
 
+            $model_usuario->finalizarTransacao();
+
             echo json_encode($array_retorno);
+            exit;
         } catch (Exception $e) {
             $array_retorno = array(
                 'result'   => false,
                 'mensagem' => $e->getMessage()
             );
 
+            $model_usuario->cancelarTransacao();
+
             echo json_encode($array_retorno);
+            exit;
         }
     }
 
@@ -108,13 +116,15 @@ class FamiliaUsuariosController extends Controller {
 
     public function cadastrarFamilia()
     {
+        $model_familia = new FamiliaDAO();
+        $model_familia->iniciarTransacao();
         try {
             $id_usuario = $_SESSION['user'];
 
             $familia_obj = new FamiliaEntity();
             $familia_obj->nomeFamilia = $_POST['nomeFamilia'];
 
-            $novo_id_familia = (new FamiliaDAO())->cadastrarFamilia(new FamiliaEntity, $familia_obj)['result'] ?? 0;
+            $novo_id_familia = $model_familia->cadastrarFamilia(new FamiliaEntity, $familia_obj)['result'] ?? 0;
 
             $_SESSION['id_familia'] = $novo_id_familia;
 
@@ -136,14 +146,20 @@ class FamiliaUsuariosController extends Controller {
                 'mensagem' => $this->msg_retorno_sucesso
             );
 
+            $model_familia->finalizarTransacao();
+
             echo json_encode($array_retorno);
+            exit;
         } catch (Exception $e) {
             $array_retorno = array(
                 'result'   => false,
                 'mensagem' => $e->getMessage()
             );
 
+            $model_familia->cancelarTransacao();
+
             echo json_encode($array_retorno);
+            exit;
         }
     }
 }

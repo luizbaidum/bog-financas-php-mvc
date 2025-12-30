@@ -3,7 +3,6 @@
 namespace src\Models\Rendimentos;
 
 use MF\Model\Model;
-use MF\Model\SQLActions;
 
 class RendimentosDAO extends Model {
     public function getEvolucaoRendimentos()
@@ -31,8 +30,7 @@ class RendimentosDAO extends Model {
                 ORDER BY 
                     contas.idContaInvest ASC, meses.mesAno ASC";
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery(query: $query, apply_security: false);
+        $result = $this->sql_actions->executarQuery(query: $query, apply_security: false);
 
         if (count($result) > 0) {
             return $result;
@@ -48,8 +46,7 @@ class RendimentosDAO extends Model {
         $params[] = $id_conta_invest;
         $params[] = $data_rend;
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery(query: $query, arr_values: $params);
+        $result = $this->sql_actions->executarQuery(query: $query, arr_values: $params);
 
         return $result;
     }

@@ -28,6 +28,7 @@ class PreferenciasController extends Controller {
     {
         if ($this->isSetPost()) {
             $model_preferencias = new PreferenciasDAO();
+            $model_preferencias->iniciarTransacao();
 
             try {
                 foreach ($_POST['idPreferencia'] as $id) {
@@ -55,7 +56,10 @@ class PreferenciasController extends Controller {
                         'mensagem' => $msg,
                     );
 
+                    $model_preferencias->finalizarTransacao();
+
                     echo json_encode($array_retorno);
+                    exit;
 				} else {
 					throw new Exception('Nenhuma preferência foi atualizada.');
 				}
@@ -65,7 +69,10 @@ class PreferenciasController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_preferencias->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
 			}
         }
     }
@@ -74,6 +81,7 @@ class PreferenciasController extends Controller {
     {
         if ($this->isSetPost()) {
             $model_preferencias = new PreferenciasDAO();
+            $model_preferencias->iniciarTransacao();
 
             try {
                 $item = $_POST;
@@ -86,7 +94,10 @@ class PreferenciasController extends Controller {
 						'mensagem' => $this->msg_retorno_sucesso
 					);
 
+                    $model_preferencias->finalizarTransacao();
+
 					echo json_encode($array_retorno);
+                    exit;
 				} else {
 					throw new Exception($this->msg_retorno_falha);
 				}
@@ -96,7 +107,10 @@ class PreferenciasController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_preferencias->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
 			}
         }
     }

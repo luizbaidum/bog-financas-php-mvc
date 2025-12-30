@@ -10,9 +10,8 @@ use MF\Helpers\NumbersHelper;
 use src\Models\Rendimentos\RendimentosDAO;
 use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Investimentos\InvestimentosEntity;
-use src\Models\Objetivos\ObjetivosDAO;
-use src\Models\Objetivos\ObjetivosEntity;
 use src\Models\Rendimentos\RendimentosEntity;
+use src\Services\AplicacaoService;
 
 class RendimentosController extends Controller {
     public function index() {
@@ -52,6 +51,9 @@ class RendimentosController extends Controller {
         $model_investimentos = new InvestimentosDAO();
 
         if ($this->isSetPost()) {
+
+            $model_rendimentos->iniciarTransacao();
+
             try {
                 $tipo_preju = '1';
                 $tipo_lucro = '2';
@@ -88,11 +90,11 @@ class RendimentosController extends Controller {
 
                 $ret_b = $model_investimentos->atualizar(new InvestimentosEntity, $item, $item_where);
 
-                if (!isset($ret_b['result']) || empty($ret_b['result'])) {
+                if (! isset($ret_b['result']) || empty($ret_b['result'])) {
                     throw new Exception($this->msg_retorno_falha);
                 }
 
-                (new InvestimentosController())->aplicarObjetivo(null, $vlr_rendeu, $_POST['idContaInvest']);
+                (new AplicacaoService())->aplicarObjetivo(null, $vlr_rendeu, $_POST['idContaInvest']);
 
                 $this->calcularTxRendimentoAM($_POST['idContaInvest'], $_POST['dataRendimento'], $model_rendimentos);
 
@@ -102,7 +104,10 @@ class RendimentosController extends Controller {
 						'mensagem' => $this->msg_retorno_sucesso
 					);
 
+                    $model_rendimentos->finalizarTransacao();
+
 					echo json_encode($array_retorno);
+                    exit;
                 }
             } catch (Exception $e) {
                 $array_retorno = array(
@@ -110,7 +115,10 @@ class RendimentosController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_rendimentos->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
             }
         }
     }

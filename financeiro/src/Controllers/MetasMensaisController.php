@@ -32,6 +32,8 @@ class MetasMensaisController extends Controller {
     public function cadastrarMetasMensais()
     {
         if ($this->isSetPost()) {
+            $model_metas_mensais = new MetasMensaisDAO();
+            $model_metas_mensais->iniciarTransacao();
             try {
                 $objeto = new MetasMensaisEntity();
 
@@ -41,7 +43,7 @@ class MetasMensaisController extends Controller {
                 $objeto->idProprietario = $_POST['idProprietario'];
                 $objeto->atualizado = 'F';
 
-                $ret = (new MetasMensaisDAO())->cadastrar(new MetasMensaisEntity, $objeto);
+                $ret = $model_metas_mensais->cadastrar(new MetasMensaisEntity, $objeto);
 
                 if (!$ret['result']) {
                     throw new Exception($this->msg_retorno_falha);
@@ -53,7 +55,10 @@ class MetasMensaisController extends Controller {
 						'mensagem' => $this->msg_retorno_sucesso
 					);
 
+                    $model_metas_mensais->finalizarTransacao();
+
 					echo json_encode($array_retorno);
+                    exit;
 				} else {
 					throw new Exception($this->msg_retorno_falha);
 				}
@@ -63,7 +68,10 @@ class MetasMensaisController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_metas_mensais->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
 			}
         }
     }

@@ -64,6 +64,7 @@ class OrcamentoController extends Controller {
         if ($this->isSetPost()) {
 
             $model_orcamento = new OrcamentoDAO();
+            $model_orcamento->iniciarTransacao();
 
             try {
                 foreach ($_POST['itens'] as $id) {
@@ -81,15 +82,20 @@ class OrcamentoController extends Controller {
 					'mensagem' => 'Orçamentos excluídos: ' . implode(', ', $model_orcamento->arr_afetados) . '. Orçamentos não excluídos: ' . implode(', ', $model_orcamento->arr_nao_afetados),
 				);
 
-				echo json_encode($array_retorno);
+                $model_orcamento->finalizarTransacao();
 
+				echo json_encode($array_retorno);
+                exit;
             } catch (Exception $e) {
                 $array_retorno = array(
 					'result'   => false,
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_orcamento->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
             }
         }
     }
@@ -127,6 +133,9 @@ class OrcamentoController extends Controller {
     public function cadastrarOrcamento()
     {
         if ($this->isSetPost()) {
+
+            $model_orcamento = new OrcamentoDAO();
+
             try {
                 $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
                 $sinal = $arr_cat[1];
@@ -142,8 +151,8 @@ class OrcamentoController extends Controller {
                     'idProprietario'=> $_POST['idProprietario'],
                     'valor'         => $valor
                 ];
-    
-                $ret = (new OrcamentoDAO())->cadastrar(new OrcamentoEntity(), $item);
+
+                $ret = $model_orcamento->cadastrar(new OrcamentoEntity(), $item);
 
                 if ($ret['result']) {
 					$array_retorno = array(
@@ -151,7 +160,10 @@ class OrcamentoController extends Controller {
 						'mensagem' => $this->msg_retorno_sucesso
 					);
 
+                    $model_orcamento->finalizarTransacao();
+
 					echo json_encode($array_retorno);
+                    exit;
 				} else {
 					throw new Exception($this->msg_retorno_falha);
 				}
@@ -161,7 +173,10 @@ class OrcamentoController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_orcamento->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
             }
         }
     }
@@ -169,6 +184,9 @@ class OrcamentoController extends Controller {
     public function cadastrarOrcamentoDoRealizado()
     {
         if ($this->isSetPost()) {
+
+            $model_orcamento = new OrcamentoDAO();
+
             try {
                 $ret = [];
 
@@ -176,7 +194,7 @@ class OrcamentoController extends Controller {
                     $item['idCategoria'] = $categoria;
                     $item['idProprietario'] = $_POST['idProprietario'][$k];
                     $sinal = $_POST['sinal'][$k];
-    
+
                     $item['valor'] = NumbersHelper::formatBRtoUS($_POST['valor'][$k]);
                     if ($sinal == '-' && $item['valor'] > 0) {
                         $item['valor'] = $item['valor'] * -1;
@@ -185,15 +203,15 @@ class OrcamentoController extends Controller {
                     if ($sinal == '+' && $item['valor'] < 0) {
                         $item['valor'] = $item['valor'] * -1;
                     }
-    
+
                     $item['dataOrcamento'] = $_POST['destino'] . '-01';
 
-                    $bd = (new OrcamentoDAO())->cadastrar(new OrcamentoEntity(), $item);
+                    $bd = $model_orcamento->cadastrar(new OrcamentoEntity(), $item);
 
                     if ($bd['result'] == '' || $bd['result'] == 0) {
                         throw new Exception('Nem todos os orçamentos foram cadastrados.');
                     }
-    
+
                     $ret[] = $bd;
                 }
 
@@ -205,7 +223,10 @@ class OrcamentoController extends Controller {
 						'mensagem' => $this->msg_retorno_sucesso
 					);
 
+                    $model_orcamento->finalizarTransacao();
+
 					echo json_encode($array_retorno);
+                    exit;
                 }
             } catch (Exception $e) {
                 $array_retorno = array(
@@ -213,7 +234,10 @@ class OrcamentoController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_orcamento->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
             }
         }
     }

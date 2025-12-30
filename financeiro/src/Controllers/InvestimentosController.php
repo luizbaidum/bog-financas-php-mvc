@@ -15,19 +15,22 @@ use src\Models\Objetivos\ObjetivosDAO;
 use src\Models\Objetivos\ObjetivosEntity;
 use src\Models\Proprietarios\ProprietariosDAO;
 use src\Models\Proprietarios\ProprietariosEntity;
-use src\Models\Rendimentos\RendimentosEntity;
+use src\Services\AplicacaoService;
 
 class InvestimentosController extends Controller {
 
     private $categoria_A;
     private $categoria_RA;
+    private AplicacaoService $aplicacao_service;
 
     public function __construct() 
     {
-        $categorias = (new CategoriasDAO())->selecionarCategoriasTipoAeRA();
+        $model_categorias = new CategoriasDAO();
+        $categorias = $model_categorias->selecionarCategoriasTipoAeRA();
 
         $this->categoria_A = $categorias['A'];
         $this->categoria_RA = $categorias['RA'];
+        $this->aplicacao_service = new AplicacaoService($model_categorias, $model_categorias);
 
         parent::__construct();
     }
@@ -93,6 +96,7 @@ class InvestimentosController extends Controller {
     public function editarObjetivo()
     {
         $model_objetivos = new ObjetivosDAO();
+        $model_objetivos->iniciarTransacao();
 
         if ($this->isSetPost()) {
             try {
@@ -127,7 +131,10 @@ class InvestimentosController extends Controller {
 					'mensagem' => 'Objetivo id ' . $id . ' atualizado com sucesso.',
 				);
 
+                $model_objetivos->finalizarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
 
             } catch (Exception $e) {
                 $array_retorno = array(
@@ -135,7 +142,10 @@ class InvestimentosController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_objetivos->cancelarTransacao();
+
 				echo json_encode($array_retorno);
+                exit;
             }
         }
     }
@@ -193,20 +203,24 @@ class InvestimentosController extends Controller {
 
     public function cadastrarInvestimentos()
     {
-        if ($this->isSetPost()) { 
+        if ($this->isSetPost()) {
+            $model_investimentos = new InvestimentosDAO();
+            $model_investimentos->iniciarTransacao();
             try {
                 if (isset($_POST['cadContaInvest'])) {
                     unset($_POST['cadContaInvest']);
                 }
 
                 $_POST['saldoAtual'] = $_POST['saldoInicial'];
-                $ret = (new InvestimentosDAO())->cadastrar(new InvestimentosEntity, $_POST);
+                $ret = $model_investimentos->cadastrar(new InvestimentosEntity, $_POST);
 
                 if ($ret['result']) {
 					$array_retorno = array(
 						'result'   => $ret['result'],
 						'mensagem' => $this->msg_retorno_sucesso
 					);
+
+                    $model_investimentos->finalizarTransacao();
 
 					echo json_encode($array_retorno);
 				} else {
@@ -217,6 +231,8 @@ class InvestimentosController extends Controller {
 					'result'   => false,
 					'mensagem' => $e->getMessage(),
 				);
+
+                $model_investimentos->cancelarTransacao();
 
 				echo json_encode($array_retorno);
             }
@@ -243,6 +259,8 @@ class InvestimentosController extends Controller {
     public function cadastrarObjetivos()
     {
         if ($this->isSetPost()) {
+            $model_objetivos = new ObjetivosDAO();
+            $model_objetivos->iniciarTransacao();
             try {
                 $ret = (new ObjetivosDAO())->cadastrar(new ObjetivosEntity, $_POST);
 
@@ -251,6 +269,8 @@ class InvestimentosController extends Controller {
 						'result'   => $ret['result'],
 						'mensagem' => $this->msg_retorno_sucesso
 					);
+
+                    $model_objetivos->finalizarTransacao();
 
 					echo json_encode($array_retorno);
 				} else {
@@ -262,6 +282,8 @@ class InvestimentosController extends Controller {
 					'mensagem' => $e->getMessage(),
 				);
 
+                $model_objetivos->cancelarTransacao();
+
 				echo json_encode($array_retorno);
             }
         }
@@ -272,6 +294,7 @@ class InvestimentosController extends Controller {
         $model = new Model();
 
         if ($this->isSetPost()) {
+            $model->iniciarTransacao();
             try {
                 $ret = array();
 
@@ -295,7 +318,7 @@ class InvestimentosController extends Controller {
 
                         $id_objetivo = $_POST['idObjetivo'] ?? '';
 
-                        $this->inserirMovimentacaodeAplicacao(
+                        $this->aplicacao_service->inserirMovimentacaodeAplicacao(
                             $obj_movimento->idContaInvest, 
                             $id_objetivo, 
                             $obj_movimento->idMovimento, 
@@ -332,6 +355,8 @@ class InvestimentosController extends Controller {
 						'mensagem' => $this->msg_retorno_sucesso
 					);
 
+                    $model->finalizarTransacao();
+
 					echo json_encode($array_retorno);
                     exit;
 				} else {
@@ -342,6 +367,8 @@ class InvestimentosController extends Controller {
 					'result'   => false,
 					'mensagem' => $e->getMessage(),
 				);
+
+                $model->cancelarTransacao();
 
 				echo json_encode($array_retorno);
                 exit;
@@ -379,9 +406,9 @@ class InvestimentosController extends Controller {
 
         $id_movimento = $ret['result'];
 
-        $this->inserirMovimentacaodeAplicacao($id_invest, $objetivo_origem, $id_movimento, $this->categoria_RA, $valor, date('Y-m-d'));
+        $this->aplicacao_service->inserirMovimentacaodeAplicacao($id_invest, $objetivo_origem, $id_movimento, $this->categoria_RA, $valor, date('Y-m-d'));
 
-        //Aplicação
+        // Aplicação
         list($id_invest, $id_proprietario) = explode('@', $invest_destino);
 
         $item = array(
@@ -397,89 +424,9 @@ class InvestimentosController extends Controller {
 
         $id_movimento = $ret['result'];
 
-        $this->inserirMovimentacaodeAplicacao($id_invest, $objetivo_destino, $id_movimento, $this->categoria_A, $valor, date('Y-m-d'));
+        $this->aplicacao_service->inserirMovimentacaodeAplicacao($id_invest, $objetivo_destino, $id_movimento, $this->categoria_A, $valor, date('Y-m-d'));
 
         return $ret;
-    }
-
-    public function aplicarObjetivo(string|null $id_objetivo, float $valor_aplicado, string $id_conta_invest): void
-    {
-        $model = new Model();
-
-        if (!empty($id_objetivo)) {
-            $saldo_atual = $model->getSaldoAtual(new ObjetivosEntity, $id_objetivo);
-
-            $item = [
-                'saldoAtual' => $saldo_atual + $valor_aplicado
-            ];
-            $item_where = ['idObj' => $id_objetivo];
-            $model->atualizar(new ObjetivosEntity, $item, $item_where);
-        } else {
-            $objetivos = $model->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $id_conta_invest], ['finalizado', '=', '"F"']], [], []);
-
-            if (!empty($objetivos)) {
-                foreach ($objetivos as $value) {
-                    $item = [
-                        'saldoAtual' => $value['saldoAtual'] + ($valor_aplicado * ($value['percentObjContaInvest'] / 100))
-                    ];
-                    $item_where = ['idObj' => $value['idObj']];
-
-                    $model->atualizar(new ObjetivosEntity, $item, $item_where);
-                }
-            }
-        }
-    }
-
-    public function inserirMovimentacaodeAplicacao($id_conta_invest, $id_objetivo, $id_movimento, $id_categoria, $valor, $data_rend)
-    {
-        $model = new Model();
-
-        switch ($id_categoria) {
-            case $this->categoria_A:
-                $tipo = 4;
-
-                $valor_aplicado = $valor;
-                if ($valor_aplicado < 0) {
-                    $valor_aplicado = ($valor_aplicado * -1); // veio negativo, pois aplicação é saída de dinheiro da conta corrente, mas é entrada em aplicações.
-                }
-
-                $this->aplicarObjetivo($id_objetivo, $valor_aplicado, $id_conta_invest);
-
-                break;
-            case $this->categoria_RA:
-                $tipo = 3;
-
-                $valor_aplicado = $valor; 
-                if ($valor_aplicado > 0) {
-                    $valor_aplicado = ($valor_aplicado * -1); // veio positivo, pois resgate é entrada de dinheiro da conta corrente, mas é saída em aplicações.
-                }
-
-                $this->aplicarObjetivo($id_objetivo, $valor_aplicado, $id_conta_invest);
-
-                break;
-            default:
-                $tipo = '';
-        }
-
-        $obj_rendimento = new RendimentosEntity();
-
-        $obj_rendimento->idContaInvest = $id_conta_invest;
-        $obj_rendimento->valorRendimento = $valor_aplicado;
-        $obj_rendimento->tipo = $tipo;
-        $obj_rendimento->dataRendimento = $data_rend;
-        $obj_rendimento->idMovimento = $id_movimento;
-        $obj_rendimento->idObj = (empty($id_objetivo) ? 0 : $id_objetivo);
-
-        $model->cadastrar(new RendimentosEntity, $obj_rendimento);
-
-        $saldo_atual = $model->getSaldoAtual(new InvestimentosEntity, $id_conta_invest);
-        $item = [
-            'saldoAtual' => ($saldo_atual + $valor_aplicado)
-        ];
-        $item_where = [
-            'idContaInvest' => $id_conta_invest
-        ];
-        $model->atualizar(new InvestimentosEntity, $item, $item_where);
     }
 
     public function editarStatus()
@@ -488,8 +435,10 @@ class InvestimentosController extends Controller {
         $status = $_GET['status'];
 
         if (!empty($id_conta_invest) && $status != '') {
+            $model_investimentos = new InvestimentosDAO();
+            $model_investimentos->iniciarTransacao();
             try {
-                $ret = (new InvestimentosDAO())->atualizar(new InvestimentosEntity,
+                $ret = $model_investimentos->atualizar(new InvestimentosEntity,
                             ['status' => $status],
                             ['idContaInvest' =>  $id_conta_invest]
                         );
@@ -500,7 +449,10 @@ class InvestimentosController extends Controller {
                         'mensagem' => 'idContaInvest ' . $id_conta_invest . ' alterada com sucesso.'
                     );
 
+                    $model_investimentos->finalizarTransacao();
+
                     echo json_encode($array_retorno);
+                    exit;
                 } else {
                     throw new Exception('Erro ao alterar idContaInvest ' . $id_conta_invest . '.');
                 }
@@ -510,7 +462,10 @@ class InvestimentosController extends Controller {
                     'mensagem' => $e->getMessage(),
                 );
 
+                $model_investimentos->cancelarTransacao();
+
                 echo json_encode($array_retorno);
+                exit;
             }
         }
     }
@@ -521,8 +476,12 @@ class InvestimentosController extends Controller {
         $status = $_GET['status'];
 
         if (!empty($id_obj) && $status != '') {
+
+            $model_objetivos = new ObjetivosDAO();
+            $model_objetivos->iniciarTransacao();
+
             try {
-                $ret = (new ObjetivosDAO())->atualizar(new ObjetivosEntity,
+                $ret = $model_objetivos->atualizar(new ObjetivosEntity,
                             ['finalizado' => $status],
                             ['idObj' => $id_obj]
                         );
@@ -533,7 +492,10 @@ class InvestimentosController extends Controller {
                         'mensagem' => 'idObjetivo ' . $id_obj . ' alterado com sucesso.'
                     );
 
+                    $model_objetivos->finalizarTransacao();
+
                     echo json_encode($array_retorno);
+                    exit;
                 } else {
                     throw new Exception('Erro ao alterar idObjetivo ' . $id_obj . '.');
                 }
@@ -543,7 +505,10 @@ class InvestimentosController extends Controller {
                     'mensagem' => $e->getMessage(),
                 );
 
+                $model_objetivos->cancelarTransacao();
+
                 echo json_encode($array_retorno);
+                exit;
             }
         }
     }

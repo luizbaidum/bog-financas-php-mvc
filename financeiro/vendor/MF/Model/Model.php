@@ -7,12 +7,38 @@ use Exception;
 use src\Models\Investimentos\InvestimentosEntity;
 use src\Models\Objetivos\ObjetivosEntity;
 use Throwable;
+use src\Conexao;
 
 class Model {
 
 	protected DateTime $current_time;
     public array $arr_afetados = array();
     public array $arr_nao_afetados = array();
+    private $con = null;
+    protected SQLActions $sql_actions;
+
+    public function __construct()
+    {
+        $this->con = (new Conexao())->getDb();
+        $this->sql_actions = new SQLActions($this->con);
+    }
+
+    public function iniciarTransacao()
+    {
+        $this->con->beginTransaction();
+    }
+
+    public function finalizarTransacao()
+    {
+        $this->con->commit();
+        $this->con = NULL;
+    }
+
+    public function cancelarTransacao()
+    {
+        $this->con->rollBack();
+        $this->con = NULL;
+    }
 
 	public function cadastrar(object $entity, $data)
 	{
@@ -36,8 +62,7 @@ class Model {
 
 			$query = rtrim($query, ', ') . ')';
 
-			$new_sql = new SQLActions();
-			$result = $new_sql->executarQuery($query, $arr_values);
+			$result = $this->sql_actions->executarQuery($query, $arr_values);
 
 			if ($result) {
 				return array(
@@ -81,8 +106,7 @@ class Model {
 
 			$query .= " WHERE $where_column = $where_value";
 
-			$new_sql = new SQLActions();
-			$result = $new_sql->executarQuery($query, $arr_values);
+			$result = $this->sql_actions->executarQuery($query, $arr_values);
 
 			if ($result) {
 				return array(
@@ -113,9 +137,7 @@ class Model {
 
         $query = "SHOW COLUMNS FROM " . $entity::main_table;
 
-        $new_sql = new SQLActions();
-
-        $result = $new_sql->executarQuery($query);
+        $result = $this->sql_actions->executarQuery($query);
 
         if (!empty($result)) {
             foreach ($result as $columns)
@@ -185,8 +207,7 @@ class Model {
 
 		$query = "SELECT $table.* FROM $table $where $group $order";
 
-		$new_sql = new SQLActions();
-        return $new_sql->executarQuery($query, []);
+        return $this->sql_actions->executarQuery($query, []);
 	}
 
 	public function getSaldoAtual(object $entity, $id_where)
@@ -208,8 +229,7 @@ class Model {
 
         $arr_values[] = $id_where;
 
-        $new_sql = new SQLActions();
-		$result = $new_sql->executarQuery($query, $arr_values);
+		$result = $this->sql_actions->executarQuery($query, $arr_values);
 
         return $result[0]['saldoAtual'] ?? 0;
     }
@@ -222,8 +242,7 @@ class Model {
         $query = "DELETE FROM `$table` WHERE `$field` = ?"; 
         $arr_values[] = $id;
 
-        $new_sql = new SQLActions();
-		$result = $new_sql->executarQuery($query, $arr_values);
+		$result = $this->sql_actions->executarQuery($query, $arr_values);
 
         return $result;
     }

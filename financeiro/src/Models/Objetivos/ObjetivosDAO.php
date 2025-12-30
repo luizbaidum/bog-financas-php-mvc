@@ -3,7 +3,6 @@
 namespace src\Models\Objetivos;
 
 use MF\Model\Model;
-use MF\Model\SQLActions;
 
 class ObjetivosDAO extends Model {
     public function consultarObjetivosPorInvestimento($id_invest)
@@ -12,8 +11,7 @@ class ObjetivosDAO extends Model {
 
         $arr_values[] = $id_invest;
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query, $arr_values);
+        $result = $this->sql_actions->executarQuery($query, $arr_values);
 
         if (count($result) > 0) {
             return $result;
@@ -28,8 +26,7 @@ class ObjetivosDAO extends Model {
 
         $arr_values[] = $id_conta_invest;
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query, $arr_values);
+        $result = $this->sql_actions->executarQuery($query, $arr_values);
 
         if (count($result) > 0) {
             return $result[0]['totalUtilizado'];

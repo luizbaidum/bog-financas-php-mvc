@@ -3,7 +3,6 @@
 namespace src\Models\Movimentos;
 
 use MF\Model\Model;
-use MF\Model\SQLActions;
 
 class MovimentosDAO extends Model {
     public function indexTable($pesquisa, $year = '', $month = '')
@@ -22,8 +21,7 @@ class MovimentosDAO extends Model {
 
         $query = "SELECT movimentos.*, categorias.categoria, categorias.tipo, proprietarios.proprietario FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario $where ORDER BY dataMovimento DESC, valor DESC";
 
-        $new_sql = new SQLActions();
-		$result = $new_sql->executarQuery($query);
+		$result = $this->sql_actions->executarQuery($query);
 
         return $result;
     }
@@ -38,8 +36,7 @@ class MovimentosDAO extends Model {
                     WHERE $where
                     GROUP BY MES";
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query);
+        $result = $this->sql_actions->executarQuery($query);
 
         return $result;
     }
@@ -53,8 +50,7 @@ class MovimentosDAO extends Model {
 
         $query = "SELECT SUM(movimentos.valor) AS total, movimentos.idProprietario, categorias.tipo, proprietarios.proprietario FROM movimentos INNER JOIN categorias ON movimentos.idCategoria = categorias.idCategoria INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario WHERE $where GROUP BY movimentos.idProprietario, categorias.idCategoria";
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query);
+        $result = $this->sql_actions->executarQuery($query);
 
         if (count($result) > 0) {
             return $result;
@@ -83,8 +79,7 @@ class MovimentosDAO extends Model {
             LEFT JOIN proprietarios investprop ON investprop.idProprietario = contas_investimentos.idProprietario 
             WHERE movimentos.idMovimento = ?";
 
-        $new_sql = new SQLActions();
-		$result = $new_sql->executarQuery($query, [$id]);
+		$result = $this->sql_actions->executarQuery($query, [$id]);
 
         return $result;
     }
@@ -93,8 +88,7 @@ class MovimentosDAO extends Model {
     {
         $query = "SELECT movimentos.*, rendimentos.idRendimento, rendimentos.idObj, objetivos_invest.nomeObj FROM movimentos LEFT JOIN rendimentos ON movimentos.idMovimento = rendimentos.idMovimento LEFT JOIN objetivos_invest ON rendimentos.idObj = objetivos_invest.idObj WHERE movimentos.idMovimento = ?";
 
-        $new_sql = new SQLActions();
-		$result = $new_sql->executarQuery($query, [$id]);
+		$result = $this->sql_actions->executarQuery($query, [$id]);
 
         return $result;
     }
@@ -116,8 +110,7 @@ class MovimentosDAO extends Model {
 
         $query = "SELECT movimentos.*, categorias.categoria, CONCAT(contas_investimentos.nomeBanco, ' - ', contas_investimentos.tituloInvest) AS invest FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria INNER JOIN contas_investimentos ON contas_investimentos.idContaInvest = movimentos.idContaInvest INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario WHERE movimentos.idContaInvest > 0 AND categorias.idCategoria IN (12, 10) AND $where ORDER BY dataMovimento DESC";
 
-        $new_sql = new SQLActions();
-		$result = $new_sql->executarQuery($query);
+		$result = $this->sql_actions->executarQuery($query);
 
         return $result;
     }
@@ -128,8 +121,7 @@ class MovimentosDAO extends Model {
 
         $query = 'SELECT movimentos.observacao FROM movimentos WHERE movimentos.idMovimento = ?';
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query, $params);
+        $result = $this->sql_actions->executarQuery($query, $params);
 
         if (count($result) > 0) {
             return $result[0]['observacao'];
@@ -160,8 +152,7 @@ class MovimentosDAO extends Model {
 
         $query = "SELECT movimentos.*, proprietarios.proprietario, categorias.categoria FROM movimentos INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria WHERE movimentos.idMovimento > 0 $where ORDER BY dataMovimento DESC";
 
-        $new_sql = new SQLActions();
-		$result = $new_sql->executarQuery($query, $params);
+		$result = $this->sql_actions->executarQuery($query, $params);
 
         return $result;
     }
@@ -207,8 +198,7 @@ class MovimentosDAO extends Model {
                     HAVING (totalRealizado <> 0 OR totalOrcado <> 0)
                     ORDER BY categorias.tipo DESC, totalRealizado DESC";
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query, [], false);
+        $result = $this->sql_actions->executarQuery($query, [], false);
 
         $ret = [];
         foreach ($result as $val) {
@@ -254,8 +244,7 @@ class MovimentosDAO extends Model {
                         WHERE orcamentos.idFamilia = $id_familia AND $where_orcado
                         GROUP BY orcamentos.idCategoria, MONTH(orcamentos.dataOrcamento)";
 
-        $new_sql = new SQLActions();
-        $result = $new_sql->executarQuery($query, [], false);
+        $result = $this->sql_actions->executarQuery($query, [], false);
 
         $realizado = [];
         $orcado = [];
@@ -285,8 +274,7 @@ class MovimentosDAO extends Model {
 
         $params = [$id_proprietario, $ano];
 
-        $new_sql = new SQLActions();
-		$result = $new_sql->executarQuery($query, $params);
+		$result = $this->sql_actions->executarQuery($query, $params);
 
         return $result ?? [];
     }
@@ -297,8 +285,7 @@ class MovimentosDAO extends Model {
 
         $params = [$id_movimento_mensal, $nome_movimento];
 
-        $new_sql = new SQLActions();
-		$result = $new_sql->executarQuery($query, $params);
+		$result = $this->sql_actions->executarQuery($query, $params);
 
         return $result ?? [];
     }

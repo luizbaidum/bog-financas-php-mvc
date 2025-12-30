@@ -1,32 +1,25 @@
-<?php 
+<?php
 
 namespace MF\Model;
 
 use Exception;
+use PDO;
 use src\Conexao;
 use src\Controllers\PrimeiroAcessoController;
 use src\Models\Usuarios\UsuariosDAO;
 
 class SQLActions {
-
-    private $con;
     private $family_user = null;
+    private $bd = null;
+
+    public function __construct(PDO $conexao)
+    {
+        $this->bd = $conexao;
+    }
 
     private function getFamilyUser()
     {
         return $this->family_user;
-    }
-
-    private function iniciarConexao()
-    {
-        $this->con = Conexao::getDb();
-
-        return $this->con;
-    }
-
-    public function fecharConexao()
-    {
-        $this->con = NULL;
     }
 
     private function setFamilyUser($family_user)
@@ -85,11 +78,15 @@ class SQLActions {
 
                     $query = implode(' ', $arr_query);
                 } else {
-                    throw new Exception('WHERE clause not found..');
+                    throw new Exception('WHERE clause not found.');
                 }
             } catch (Exception $e) {
-                echo 'Security fail: ' . $e->getMessage();
-                exit;
+                errorHandler(
+                    1, 
+                    'Security fail: ' . $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine()
+                );
             }
         }
 
@@ -118,12 +115,13 @@ class SQLActions {
             $query = $this->setWhereSecurity($operacao, $query);
         }
 
-        $bd = $this->iniciarConexao();
-        $stmt = $bd->prepare($query);
+        if ($this->bd == null) {
+            throw new Exception('Conexão não iniciada.');
+        }
+
+        $stmt = $this->bd->prepare($query);
 
         try {
-            $bd->beginTransaction();
-
             if (!empty($arr_values))
                 $stmt->execute($arr_values);
             else
@@ -133,7 +131,7 @@ class SQLActions {
             // exit;
             switch ($operacao) {
                 case 'INSERT':
-                    $result = $bd->lastInsertId();
+                    $result = $this->bd->lastInsertId();
                     break;
                 case 'UPDATE':
                 case 'DELETE':
@@ -148,13 +146,8 @@ class SQLActions {
                     throw new Exception('Operação não reconhecida.');
             }
 
-            $bd->commit();
-            $bd = NULL;
-
             return $result;
         } catch (Exception $e) {
-            $bd->rollBack();
-
             errorHandler(
 				1, 
 				$e->getMessage(),
@@ -168,8 +161,6 @@ class SQLActions {
             );
 
             echo json_encode($array_retorno);
-
-            exit;
         }
     }
 }
