@@ -2,7 +2,7 @@
     $ano_selecionado = $_GET['anoFiltro'] ?? date('Y');
     $mes_selecionado = $_GET['mesFiltro'] ?? date('M');
     $months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Todos');
-    $years = array('2023', '2024', '2025', '2026', '2027');
+    $years = array('2024', '2025', '2026', '2027', '2028', '2029', '2030');
 ?>
 
 <select class="form-select form-control" id="idAnoFiltro" name="anoFiltro">
