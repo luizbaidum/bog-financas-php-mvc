@@ -26,6 +26,7 @@ class InvestimentosDAO extends Model {
         $invest = $filtro['extratoInvest'] ?? '';
         $acao = $filtro['acaoInvest'] ?? '';
         $proprietario = $filtro['idProprietario'] ?? '';
+        $desconsiderar = $filtro['investNaoConsiderar'] ?? [];
 
         if ($mes == '') {
             if ($ano == date('Y') || $ano == '') {
@@ -55,6 +56,13 @@ class InvestimentosDAO extends Model {
 
         if ($proprietario != '') {
             $where .= "AND `contas_investimentos`.`idProprietario` = '$proprietario'";
+        }
+
+        if (! empty($desconsiderar)) {
+
+            foreach ($desconsiderar as $id) {
+                $where .= " AND `rendimentos`.`idContaInvest` != '$id'";
+            }
         }
 
         $query = "SELECT `rendimentos`.*, CONCAT(`contas_investimentos`.`nomeBanco`, ' - ', `contas_investimentos`.`tituloInvest`) AS conta, CONCAT(objetivos_invest.idObj, ' - ', nomeObj) AS objetivo FROM `rendimentos` INNER JOIN `contas_investimentos` ON `rendimentos`.`idContaInvest` = `contas_investimentos`.`idContaInvest` INNER JOIN `proprietarios` ON `proprietarios`.`idProprietario` = `contas_investimentos`.`idProprietario` LEFT JOIN objetivos_invest ON objetivos_invest.idObj = rendimentos.idObj WHERE `rendimentos`.`idRendimento` > 0 $where ORDER BY `rendimentos`.`dataRendimento` DESC";

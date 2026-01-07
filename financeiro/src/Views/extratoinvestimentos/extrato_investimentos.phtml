@@ -66,9 +66,19 @@
                                 <?php endforeach;?>
                             </select>
                         </div>
-                        <div class="col-3 pt-3">
-                            <button class="btn btn-primary mt-1" type="submit">Aplicar</button>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="idInvestNaoConsiderar">Invest NÃO considerar</label>
+                            <select class="form-select form-select-sm" id="idInvestNaoConsiderar" name="investNaoConsiderar[]" multiple="true" size="2">
+                                <?php foreach ($lista_invest as $v): ?>
+                                    <option value="<?= $v['idContaInvest']; ?>"><?= $v['nomeBanco'] . ' - ' . $v['tituloInvest']; ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
+                    </div>
+                    <div class="col-3 pt-3">
+                        <button class="btn btn-primary mt-1" type="submit">Aplicar</button>
                     </div>
                 </div>
             </form>
