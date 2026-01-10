@@ -20,7 +20,7 @@ class AplicacaoService {
         ?Model $model = null
     ) {
         $this->model_categorias = $model_categorias ?? new CategoriasDAO();
-        $this->model = $model;
+        $this->model = $model ?? new Model();
 
         $categorias = $this->model_categorias->selecionarCategoriasTipoAeRA();
 

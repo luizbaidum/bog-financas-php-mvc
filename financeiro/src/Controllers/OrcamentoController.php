@@ -133,9 +133,8 @@ class OrcamentoController extends Controller {
     public function cadastrarOrcamento()
     {
         if ($this->isSetPost()) {
-
             $model_orcamento = new OrcamentoDAO();
-
+            $model_orcamento->iniciarTransacao();
             try {
                 $arr_cat = explode(' - sinal: ' , $_POST['idCategoria']);
                 $sinal = $arr_cat[1];
@@ -184,9 +183,8 @@ class OrcamentoController extends Controller {
     public function cadastrarOrcamentoDoRealizado()
     {
         if ($this->isSetPost()) {
-
             $model_orcamento = new OrcamentoDAO();
-
+            $model_orcamento->iniciarTransacao();
             try {
                 $ret = [];
 
