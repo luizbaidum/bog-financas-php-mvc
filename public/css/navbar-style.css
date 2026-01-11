@@ -1,0 +1,159 @@
+/* CSS para navbar responsiva em todos os tamanhos de tela */
+.sidebar {
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    width: 280px;
+    transition: transform 0.3s ease;
+}
+
+/* Conteúdo principal - ajusta margem para sidebar em desktop */
+@media (min-width: 992px) {
+    .sidebar {
+        transform: translateX(0) !important; /* Força sidebar visível */
+    }
+
+    /* Ajusta o conteúdo principal para não ficar atrás da sidebar */
+    body {
+        padding-left: 280px;
+    }
+
+    /* Remove backdrop em desktop */
+    .sidebar-backdrop {
+        display: none !important;
+    }
+}
+
+/* Mobile - esconde sidebar por padrão */
+@media (max-width: 991px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    body {
+        padding-left: 0;
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    .sidebar-backdrop.show {
+        display: block;
+    }
+}
+
+/* Botão toggle para mobile - sempre fixo */
+#sidebarToggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    display: none;
+    transition: all 0.3s ease;
+}
+
+.sidebar.show ~ #sidebarToggle {
+    left: 295px; /* 280px (sidebar width) + 15px (margin) */
+    z-index: 1002; /* Um pouco acima da sidebar */
+}
+
+@media (max-width: 991px) {
+    #sidebarToggle {
+        display: block; /* Mostra apenas em mobile */
+    }
+}
+
+/* Estilos auxiliares */
+.cashflow-item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.scrollable-area {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* IMPORTANTE: Adicione este estilo para garantir que o backdrop não quebre o layout */
+.sidebar-backdrop {
+    cursor: pointer;
+}
+
+/* Estilos para o accordion do menu */
+.sidebar-nav .accordion-header {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+}
+
+.sidebar-nav .accordion-header:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+.sidebar-nav .accordion-header[aria-expanded="true"] {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+}
+
+.sidebar-nav .accordion-arrow {
+    transition: transform 0.3s ease;
+    font-size: 0.875rem;
+}
+
+.sidebar-nav .accordion-header[aria-expanded="true"] .accordion-arrow {
+    transform: rotate(180deg);
+}
+
+/* Estilos para os itens do submenu */
+.sidebar-nav .submenu-item {
+    padding-left: 2rem !important;
+    border-left: 2px solid transparent;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+}
+
+.sidebar-nav .submenu-item:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-left-color: #0d6efd;
+    color: #0d6efd !important;
+}
+
+.sidebar-nav .submenu-item:hover .bi-circle {
+    color: #0d6efd !important;
+}
+
+.sidebar-nav .submenu-item:hover .bi-arrow-right-short {
+    opacity: 1 !important;
+    color: #0d6efd !important;
+}
+
+/* Responsividade das colunas */
+@media (max-width: 768px) {
+    .sidebar-nav .accordion-content .row .col-6 {
+        width: 100% !important;
+    }
+}
+
+/* Espaçamento entre colunas */
+.sidebar-nav .accordion-content .row {
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+.sidebar-nav .accordion-content .row > div {
+    padding-left: 5px;
+    padding-right: 5px;
+}

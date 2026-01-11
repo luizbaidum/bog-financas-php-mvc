@@ -7,4 +7,5 @@
     <link rel="stylesheet" href="<?= Diretorio::getBaseUrl() ?>/css/bootstrap.css">
     <link rel="stylesheet" href="<?= Diretorio::getBaseUrl() ?>/css/custom.css">
     <link rel="stylesheet" href="<?= Diretorio::getBaseUrl() ?>/css/media-query.css">
+    <link rel="stylesheet" href="<?= Diretorio::getBaseUrl() ?>/css/navbar-style.css">
 </head>
