@@ -17,8 +17,7 @@
             <div class="d-flex align-items-center">
                 <i class="bi bi-cash-stack fs-3 text-primary me-2"></i>
                 <div>
-                    <h4 class="mb-0 fw-bold text-primary">LB Finanças</h4>
-                    <small class="text-muted"><?= 'tipo usuário'; ?></small>
+                    <h4 class="mb-0 fw-bold text-primary"><?= $this->empresa; ?></h4>
                 </div>
             </div>
         </div>
@@ -30,7 +29,7 @@
                     <?php if (isset($titles[$v_g]) && !empty($titles[$v_g])): ?>
                         <li class="nav-item mb-2">
                             <!-- Accordion Header -->
-                            <a class="nav-link text-dark d-flex justify-content-between align-items-center accordion-header collapsed" 
+                            <a class="nav-link text-dark d-flex justify-content-between align-items-center accordion-header" 
                                href="#" 
                                data-bs-toggle="collapse" 
                                data-bs-target="#collapse-<?= md5($v_g) ?>"
@@ -38,7 +37,6 @@
                                 <span class="d-flex align-items-center">
                                     <i class="bi bi-menu-button-wide me-2"></i> <?= $v_g ?>
                                 </span>
-                                <i class="bi bi-chevron-down accordion-arrow fs-6"></i>
                             </a>
 
                             <!-- Accordion Content -->
