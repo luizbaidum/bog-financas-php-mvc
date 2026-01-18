@@ -244,16 +244,19 @@ function atualizarStatus(elemento_select) {
 function atualizarMenuAberto() {
     let href_atual = pagina_atual.replace('/', '');
 
-    document.querySelectorAll('a.submenu-item').forEach(link => {
+    try {
+        document.querySelectorAll('a.submenu-item').forEach(link => {
+            let link_path = link.getAttribute('href');
 
-        let link_path = link.getAttribute('href');
+            if (link_path == href_atual) {
+                link.classList.add('custom-active');
 
-        if (link_path == href_atual) {
-            link.classList.add('custom-active');
-
-            let dropdown_atual = link.closest('.nav-item').querySelector('.accordion-header');
-            dropdown_atual.setAttribute('aria-expanded', 'true');
-            link.closest('.nav-item').querySelector('.accordion-content').classList.add('show');
-        }
-    });
+                let dropdown_atual = link.closest('.nav-item').querySelector('.accordion-header');
+                dropdown_atual.setAttribute('aria-expanded', 'true');
+                link.closest('.nav-item').querySelector('.accordion-content').classList.add('show');
+            }
+        });
+    } catch (error) {
+        console.error(error)
+    }
 }
