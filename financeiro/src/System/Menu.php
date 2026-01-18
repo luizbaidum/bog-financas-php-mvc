@@ -3,8 +3,21 @@
 namespace src\System;
 
 use MF\Controller\Controller;
+use src\Models\Usuarios\UsuariosDAO;
 
 class Menu {
+    public array $userInfo;
+
+    public function __construct() 
+    {
+        $userInfo = (new UsuariosDAO())->detalhar($_SESSION['user']);
+
+        $this->userInfo = [
+            'nome'  => $userInfo[0]['nome'],
+            'nivel' => $userInfo[0]['gestor'] == 'T' ? 'Gestor' : 'Membro'
+        ];
+    }
+
     public function getUrlLogout()
     {
         return (new Controller())->index_route . '/logout?logout=true';

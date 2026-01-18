@@ -7,9 +7,9 @@
     $routes = $menu->routes;
     $logout_url = $menu->getUrlLogout();
     $home_url = $menu->getUrlHome();
+    $nome_usuario = ucfirst($menu->userInfo['nome']);
+    $nivel_usuario = ucfirst($menu->userInfo['nivel']);
 ?>
-
-//fazer bolinha do loading no request até a pagina ficar pronta
 
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
@@ -74,14 +74,14 @@
 
         <div class="p-3 border-top">
             <div class="d-flex align-items-center">
-                <img src="https://ui-avatars.com/api/?name=Usuario+Exemplo&background=0d6efd&color=fff&size=40"
+                <img src="https://ui-avatars.com/api/?name=<?= $nome_usuario; ?>&background=0d6efd&color=fff&size=40"
                      class="rounded-circle me-3" alt="Usuário">
                 <div class="flex-grow-1">
-                    <h6 class="mb-0 fw-bold">Usuário Exemplo</h6>
-                    <small class="text-muted">usuario@exemplo.com</small>
+                    <h6 class="mb-0 fw-bold"><?= $nome_usuario; ?></h6>
+                    <small class="text-muted"><?= $nivel_usuario; ?></small>
                 </div>
                 <a href="<?= $logout_url ?>" class="btn btn-sm btn-outline-danger" title="Sair">
-                    <i class="bi bi-box-arrow-right"></i>
+                    Sair
                 </a>
             </div>
         </div>
