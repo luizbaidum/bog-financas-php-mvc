@@ -55,6 +55,14 @@ class HomeController extends Controller {
 				'url_edit'   => $this->index_route . '/movimentos?action=edit&idMovimento=',
 				'redirect'   => $this->index_route . '/home',
 				'url_search' => $this->index_route . '/home',
+                'card'       => [
+                    'div_receitas' => 'div-card-receitas',
+                    'url_receitas' => '',
+                    'div_despesas' => 'div-card-despesas',
+                    'url_despesas' => '',
+                    'div_saldo'    => 'div-card-saldo',
+                    'url_saldo'    => ''
+                ]
 			];
 
 			$buttons->setButton(
@@ -86,4 +94,19 @@ class HomeController extends Controller {
 			echo $e->getMessage();
 		}
 	}
+
+    public function renderCardReceitas(string|null $id_proprietario = null)
+    {
+        $this->renderSimple('card_receitas');
+    }
+
+    public function renderCardDespesas(string|null $id_proprietario = null)
+    {
+        $this->renderSimple('card_despesas');
+    }
+
+    public function renderCardSaldo(string|null $id_proprietario = null)
+    {
+        $this->renderSimple('card_saldo');
+    }
 }

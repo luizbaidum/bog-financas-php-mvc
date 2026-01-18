@@ -5,6 +5,12 @@ namespace src\Models\Movimentos;
 use MF\Model\Model;
 
 class MovimentosDAO extends Model {
+    private array $meses_numero = [
+        'Jan' => 1, 'Fev' => 2, 'Mar' => 3, 'Abr' => 4,
+        'Mai' => 5, 'Jun' => 6, 'Jul' => 7, 'Ago' => 8,
+        'Set' => 9, 'Out' => 10, 'Nov' => 11, 'Dez' => 12
+    ];
+
     public function indexTable($pesquisa, $year = '', $month = '')
     {
         $where = 'WHERE (DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = DATE_FORMAT(CURRENT_DATE(), "%Y%m"))';
@@ -286,6 +292,33 @@ class MovimentosDAO extends Model {
         $params = [$id_movimento_mensal, $nome_movimento];
 
 		$result = $this->sql_actions->executarQuery($query, $params);
+
+        return $result ?? [];
+    }
+
+    public function getSaldoReceitas(string|null $id_proprietario = null, string $mes = '', string $ano = '')
+    {
+        $params = [];
+        $where_clause = 'WHERE ';
+
+        if ($id_proprietario != null) {
+
+        }
+
+        if ($mes != '' && $ano != '') {
+            $where_clause .= "AND DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$ano$mes'";
+        } else {
+            $where_clause .= 'AND MONTH(dataMovimento) = ' . date('m') . ' AND YEAR(dataMovimento) = ' . date('Y') . '';
+        }
+
+        if ($mes != 'Jan') {
+            $mes_anterior = $this->meses_numero[($this->meses_numero[$mes] - 1)];
+            $where_clause .= "AND DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$ano$mes_anterior'";
+        }
+
+        $query = 'SELECT SUM(movimentos) FROM movimentos INNER JOIN cate' . $where_clause . ' GROUP BY MONTH(movimentos.dataMovimento)';
+
+        $result = $this->sql_actions->executarQuery($query, $params);
 
         return $result ?? [];
     }
