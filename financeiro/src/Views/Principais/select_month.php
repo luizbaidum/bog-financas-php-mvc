@@ -1,8 +1,11 @@
-<?php 
+<?php
+    use src\System\MonthAndYear;
+
+    $years = MonthAndYear::getYears();
+    $months = MonthAndYear::getMonths();
+
     $ano_selecionado = $_GET['anoFiltro'] ?? date('Y');
-    $mes_selecionado = $_GET['mesFiltro'] ?? date('M');
-    $months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Todos');
-    $years = array('2024', '2025', '2026', '2027', '2028', '2029', '2030');
+    $mes_selecionado = $_GET['mesFiltro'] ?? date('m');
 ?>
 
 <select class="form-select form-control" id="idAnoFiltro" name="anoFiltro">
@@ -12,7 +15,7 @@
 </select>
 
 <select class="form-select form-control" id="idMesFiltro" name="mesFiltro">
-    <?php foreach ($months as $v): ?>
-        <option value="<?= $v; ?>"<?= ($v == $mes_selecionado ? ' selected ' : ''); ?>><?= $v; ?></option>
+    <?php foreach ($months as $k => $v): ?>
+        <option value="<?= $k; ?>"<?= ($k == $mes_selecionado ? ' selected ' : ''); ?>><?= $v; ?></option>
     <?php endforeach;?>
 </select>

@@ -38,7 +38,7 @@ class OrcamentoDAO extends Model {
             if ($month == 'Todos') {
                 $where = 'WHERE orcamentos.dataOrcamento IS NOT NULL';
             } else {
-                $where = "WHERE DATE_FORMAT(orcamentos.dataOrcamento, '%Y%b') = '$year$month'";
+                $where = "WHERE DATE_FORMAT(orcamentos.dataOrcamento, '%Y%m') = '$year$month'";
             }
         }
 

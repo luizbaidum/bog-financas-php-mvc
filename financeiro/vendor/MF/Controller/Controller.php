@@ -13,7 +13,7 @@ class Controller {
 
 	public function __construct(
 		public $view = new \stdClass(),
-		public string $empresa = 'LBv Finanças',
+		public string $empresa = 'LB Finanças',
 	) {
 		if (isset($_SERVER['HTTP_HOST'])) {
 

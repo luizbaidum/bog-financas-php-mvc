@@ -12,7 +12,7 @@ class DespesasLembrarDAO extends Model {
         if ($month != '' && $month == 'Todos') {
             $where = 'WHERE despesas_lembrar.data IS NOT NULL';
         } elseif ($month != '' && $month != 'Todos') {
-            $where = "WHERE DATE_FORMAT(despesas_lembrar.data, '%Y%b') = '$year$month'";
+            $where = "WHERE DATE_FORMAT(despesas_lembrar.data, '%Y%m') = '$year$month'";
         }
 
         if ($pesquisa != '') {

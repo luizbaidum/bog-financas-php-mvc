@@ -57,7 +57,7 @@ class HomeController extends Controller {
 				'url_search' => $this->index_route . '/home',
                 'card'       => [
                     'div_receitas' => 'div-card-receitas',
-                    'url_receitas' => '',
+                    'url_receitas' => $this->index_route . 'render-card-receitas',
                     'div_despesas' => 'div-card-despesas',
                     'url_despesas' => '',
                     'div_saldo'    => 'div-card-saldo',
@@ -95,9 +95,26 @@ class HomeController extends Controller {
 		}
 	}
 
-    public function renderCardReceitas(string|null $id_proprietario = null)
+    public function renderCardReceitas()
     {
+        $receita = (new MovimentosDAO())->getSaldoReceitas(
+            $_POST['idProprietario'] ?? '',
+            $_GET['mesFiltro'] ?? '',
+            $_GET['anoFiltro'] ?? ''
+        );
+
+        $data_receita = $this->prepararDadosCardReceita($receita, $_GET['mesFiltro'] ?? date('m'));
+
         $this->renderSimple('card_receitas');
+    }
+
+    private function prepararDadosCardReceita(array $dados_in, string|int $mes_atual): array
+    {
+        $ret = [];
+        print_r($dados_in);
+        print_r($mes_atual);
+
+        return $ret;
     }
 
     public function renderCardDespesas(string|null $id_proprietario = null)

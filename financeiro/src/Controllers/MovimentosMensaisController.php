@@ -70,7 +70,7 @@ class MovimentosMensaisController extends Controller {
         $this->view->data['titulo_card'] = $action == 'edit' ? 'Edição' : 'Cadastro';
         $this->view->data['is_baixado'] = $model->selectAll(new MovimentosEntity, [
             ['idMovMensal', '=', $id], 
-            ['MONTH(dataMovimento)', '=', date('m')], 
+            ['MONTH(dataMovimento)', '=', date('n')], 
             ['YEAR(dataMovimento)', '=', date('Y')]
         ], [], []);
 

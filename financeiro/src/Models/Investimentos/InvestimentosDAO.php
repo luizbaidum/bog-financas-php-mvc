@@ -42,7 +42,7 @@ class InvestimentosDAO extends Model {
         } elseif ($mes == 'Todos') {
             $where = "AND DATE_FORMAT(`rendimentos`.`dataRendimento`, '%Y') = '$ano'";
         } else {
-            $where = "AND DATE_FORMAT(`rendimentos`.`dataRendimento`, '%Y%b') = '$ano$mes'";
+            $where = "AND DATE_FORMAT(`rendimentos`.`dataRendimento`, '%Y%m') = '$ano$mes'";
         }
 
         if ($invest != '') {

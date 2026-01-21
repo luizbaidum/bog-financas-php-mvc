@@ -16,4 +16,35 @@ class DateHelper {
 
         return $data_formatada;
     }
+
+    public static function calcMonth(string|int $month_in, string $operador, string|int $count)
+    {
+        switch ($operador) {
+            case '+':
+                $result = $month_in + $count;
+                break;
+            case '-':
+                $result = $month_in - $count;
+                break;
+            case '*':
+                $result = $month_in * $count;
+                break;
+            case '/':
+                if ($count != 0) {
+                    $result = $month_in / $count;
+                } else {
+                    $result = 0;
+                }
+                break;
+            default:
+                $result = $month_in;
+                break;
+        }
+
+        if ($result >= 1 && $result <= 9 && substr($result, 0, 1) != '0') {
+            $result = '0' . $result;
+        }
+
+        return $result;
+    }
 }

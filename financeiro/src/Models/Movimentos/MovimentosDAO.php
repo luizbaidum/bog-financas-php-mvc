@@ -2,15 +2,10 @@
 
 namespace src\Models\Movimentos;
 
+use MF\Helpers\DateHelper;
 use MF\Model\Model;
 
 class MovimentosDAO extends Model {
-    private array $meses_numero = [
-        'Jan' => 1, 'Fev' => 2, 'Mar' => 3, 'Abr' => 4,
-        'Mai' => 5, 'Jun' => 6, 'Jul' => 7, 'Ago' => 8,
-        'Set' => 9, 'Out' => 10, 'Nov' => 11, 'Dez' => 12
-    ];
-
     public function indexTable($pesquisa, $year = '', $month = '')
     {
         $where = 'WHERE (DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = DATE_FORMAT(CURRENT_DATE(), "%Y%m"))';
@@ -18,7 +13,7 @@ class MovimentosDAO extends Model {
         if ($month != '' && $month == 'Todos') {
             $where = 'WHERE movimentos.dataMovimento IS NOT NULL';
         } elseif ($month != '' && $month != 'Todos') {
-            $where = "WHERE DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$year$month'";
+            $where = "WHERE DATE_FORMAT(movimentos.dataMovimento, '%Y%m') = '$year$month'";
         }
 
         if ($pesquisa != '') {
@@ -35,23 +30,32 @@ class MovimentosDAO extends Model {
     public function getSaldoPassado(int $times = 2)
     {
         $mes_atual = date('m');
-        $where = 'MONTH(movimentos.dataMovimento) BETWEEN "'. ($mes_atual - $times).'" AND "'. ($mes_atual - 1).'"';
 
-        $query = "SELECT SUM(movimentos.valor) AS valor, MONTH(movimentos.dataMovimento) AS MES
-                    FROM movimentos 
-                    WHERE $where
-                    GROUP BY MES";
+        if ($mes_atual != 01) {
+            if ($mes_atual == 02) {
+                $times = 1;
+            }
 
-        $result = $this->sql_actions->executarQuery($query);
+            $where = 'MONTH(movimentos.dataMovimento) BETWEEN "'. ($mes_atual - $times).'" AND "'. ($mes_atual - 1).'"';
 
-        return $result;
+            $query = "SELECT SUM(movimentos.valor) AS valor, MONTH(movimentos.dataMovimento) AS MES
+                        FROM movimentos 
+                        WHERE $where
+                        GROUP BY MES";
+
+            $result = $this->sql_actions->executarQuery($query);
+
+            return $result;
+        }
+
+        return [];
     }
 
     public function getResultado($year = '', $month = '')
     {
         $where = '(DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = DATE_FORMAT(CURRENT_DATE(), "%Y%m"))';
         if (!empty($month)) {
-            $where = "DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$year$month'";
+            $where = "DATE_FORMAT(movimentos.dataMovimento, '%Y%m') = '$year$month'";
         }
 
         $query = "SELECT SUM(movimentos.valor) AS total, movimentos.idProprietario, categorias.tipo, proprietarios.proprietario FROM movimentos INNER JOIN categorias ON movimentos.idCategoria = categorias.idCategoria INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario WHERE $where GROUP BY movimentos.idProprietario, categorias.idCategoria";
@@ -106,7 +110,7 @@ class MovimentosDAO extends Model {
         if ($month != '' && $month == 'Todos') {
             $where = 'movimentos.dataMovimento IS NOT NULL';
         } elseif ($month != '' && $month != 'Todos') {
-            $where = "DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$year$month'";
+            $where = "DATE_FORMAT(movimentos.dataMovimento, '%Y%m') = '$year$month'";
         }
 
         if ($pesquisa != '') {
@@ -170,7 +174,7 @@ class MovimentosDAO extends Model {
             if ($month == 'Todos') {
                 $where_realizado = ' movimentos.dataMovimento IS NOT NULL';
             } else {
-                $where_realizado = " DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$year$month'";
+                $where_realizado = " DATE_FORMAT(movimentos.dataMovimento, '%Y%m') = '$year$month'";
             }
         }
 
@@ -179,7 +183,7 @@ class MovimentosDAO extends Model {
             if ($month == 'Todos') {
                 $where_orcado = ' orcamentos.dataOrcamento IS NOT NULL';
             } else {
-                $where_orcado = " DATE_FORMAT(orcamentos.dataOrcamento, '%Y%b') = '$year$month'";
+                $where_orcado = " DATE_FORMAT(orcamentos.dataOrcamento, '%Y%m') = '$year$month'";
             }
         }
 
@@ -287,7 +291,7 @@ class MovimentosDAO extends Model {
 
     public function definirMovimentoMensalBaixado(string $id_movimento_mensal, string $nome_movimento)
     {
-        $query = 'UPDATE movimentos SET idMovMensal = ? WHERE MONTH(dataMovimento) = ' . date('m') . ' AND YEAR(dataMovimento) = ' . date('Y') . ' AND idMovMensal = 0 AND nomeMovimento = ?';
+        $query = 'UPDATE movimentos SET idMovMensal = ? WHERE MONTH(dataMovimento) = ' . date('n') . ' AND YEAR(dataMovimento) = ' . date('Y') . ' AND idMovMensal = 0 AND nomeMovimento = ?';
 
         $params = [$id_movimento_mensal, $nome_movimento];
 
@@ -296,30 +300,51 @@ class MovimentosDAO extends Model {
         return $result ?? [];
     }
 
-    public function getSaldoReceitas(string|null $id_proprietario = null, string $mes = '', string $ano = '')
+    public function getSaldoReceitas(string $id_proprietario = '', string $mes = '', string $ano = '')
     {
         $params = [];
-        $where_clause = 'WHERE ';
 
-        if ($id_proprietario != null) {
+        $where_clause = 'WHERE categorias.tipo = ? ';
+        $params[] = 'R';
 
+        if ($id_proprietario != '') {
+            $where_clause .= "AND movimentos.idProprietario = ? ";
+            $params[] = $id_proprietario;
         }
 
-        if ($mes != '' && $ano != '') {
-            $where_clause .= "AND DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$ano$mes'";
-        } else {
-            $where_clause .= 'AND MONTH(dataMovimento) = ' . date('m') . ' AND YEAR(dataMovimento) = ' . date('Y') . '';
+        if ($mes != 'Todos') {
+            if ($mes != '' && $ano != '') {
+                $where_clause .= "AND (DATE_FORMAT(movimentos.dataMovimento, '%Y%m') = ? ";
+                $params[] = "$ano$mes";
+            } else {
+                $where_clause .= 'AND (MONTH(dataMovimento) = ? AND YEAR(dataMovimento) = ? ';
+                $params[] = date('n');
+                $params[] = date('Y');
+            }
+
+            if ($mes == '' && date('m') != 01) {
+                $mes_anterior = DateHelper::calcMonth(date('m'), '-', 1);
+                $where_clause .= 'OR DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = ? ';
+
+                $params[] = "$ano$mes_anterior";
+            } elseif ($mes != '' && $mes != '01') {
+                $mes_anterior = DateHelper::calcMonth($mes, '-', 1);;
+                $where_clause .= 'OR DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = ?';
+
+                $params[] = "$ano$mes_anterior";
+            }
+
+            $where_clause .= ')';
         }
 
-        if ($mes != 'Jan') {
-            $mes_anterior = $this->meses_numero[($this->meses_numero[$mes] - 1)];
-            $where_clause .= "AND DATE_FORMAT(movimentos.dataMovimento, '%Y%b') = '$ano$mes_anterior'";
-        }
-
-        $query = 'SELECT SUM(movimentos) FROM movimentos INNER JOIN cate' . $where_clause . ' GROUP BY MONTH(movimentos.dataMovimento)';
+        $query = 'SELECT SUM(movimentos.valor) AS totalReceitas, MONTH(movimentos.dataMovimento) AS mes FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria ' . $where_clause . ' GROUP BY MONTH(movimentos.dataMovimento) ORDER BY MONTH(movimentos.dataMovimento) DESC';
 
         $result = $this->sql_actions->executarQuery($query, $params);
 
-        return $result ?? [];
+        foreach ($result as $value) {
+            $ret[$value['mes']] = $value['totalReceitas'];
+        }
+
+        return $ret ?? [];
     }
 }
