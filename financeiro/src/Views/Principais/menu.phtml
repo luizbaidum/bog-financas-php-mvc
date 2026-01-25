@@ -7,52 +7,87 @@
     $routes = $menu->routes;
     $logout_url = $menu->getUrlLogout();
     $home_url = $menu->getUrlHome();
+    $nome_usuario = ucfirst($menu->userInfo['nome']);
+    $nivel_usuario = ucfirst($menu->userInfo['nivel']);
 ?>
 
-<nav class="navbar navbar-expand-lg bg-navbar-top-and-bottom">
-    <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="<?= $home_url; ?>">Início</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<nav class="sidebar bg-white shadow-sm border-end">
+    <div class="d-flex flex-column h-100">
+        <div class="p-3 border-bottom">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-cash-stack fs-3 text-primary me-2"></i>
+                <div>
+                    <a href="home" style="text-decoration: none;"> <h4 class="mb-0 fw-bold text-primary"><?= $this->empresa; ?></h4> </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-grow-1 p-3 sidebar-nav">
+            <ul class="nav nav-pills flex-column">
+                <!-- Grupos de Menu -->
                 <?php foreach ($grupos as $v_g): ?>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?= $v_g; ?></a>
-                        <div class="dropdown-menu p-0" aria-labelledby="navbarDropdown" style="min-width: 400px; max-width: 600px;">
-                            <div class="container-fluid">
-                                <div class="row">
+                    <?php if (isset($titles[$v_g]) && !empty($titles[$v_g])): ?>
+                        <li class="nav-item mb-2">
+                            <!-- Accordion Header -->
+                            <a class="nav-link text-dark d-flex justify-content-between align-items-center accordion-header" 
+                               href="#" 
+                               data-bs-toggle="collapse" 
+                               data-bs-target="#collapse-<?= md5($v_g) ?>"
+                               aria-expanded="false">
+                                <span class="d-flex align-items-center">
+                                    <i class="bi bi-menu-button-wide me-2"></i> <?= $v_g ?>
+                                </span>
+                            </a>
+
+                            <!-- Accordion Content -->
+                            <div class="collapse accordion-content" id="collapse-<?= md5($v_g) ?>">
+                                <div class="mt-2">
                                     <?php 
                                         $items = $titles[$v_g];
                                         $chunked_items = array_chunk($items, ceil(count($items) / 2), true);
-
-                                        foreach ($chunked_items as $column):
                                     ?>
-                                        <div class="col-sm-6 p-0">
-                                            <div class="d-flex flex-column">
-                                                <?php foreach ($column as $k_t => $v_t): ?>
-                                                    <a class="dropdown-item py-2" href="<?= $routes[$v_g][$k_t]; ?>">
-                                                        <div class="text-wrap"><?= $v_t; ?></div>
-                                                    </a>
-                                                <?php endforeach; ?>
+                                    <div class="row g-0">
+                                        <?php foreach ($chunked_items as $column): ?>
+                                            <div class="col-12">
+                                                <div class="d-flex flex-column">
+                                                    <?php foreach ($column as $k_t => $v_t): ?>
+                                                        <a class="nav-link text-dark py-2 px-3 d-flex align-items-center submenu-item" 
+                                                           href="<?= $routes[$v_g][$k_t] ?>">
+                                                            <i class="bi bi-circle small me-2 text-muted"></i>
+                                                            <span class="flex-grow-1"><?= $v_t ?></span>
+                                                            <i class="bi bi-arrow-right-short text-muted opacity-50"></i>
+                                                        </a>
+                                                    <?php endforeach; ?>
+                                                </div>
                                             </div>
-                                        </div>
-                                    <?php endforeach; ?>
+                                        <?php endforeach; ?>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
+                    <?php endif; ?>
                 <?php endforeach; ?>
-                <li class="nav-item">
-                    <a href="<?= $logout_url; ?>">
-                        <button type="button" class="btn btn-danger">Sair</button>
-                    </a>
-                </li>
             </ul>
+        </div>
 
-            <?php require 'form_pesquisa.phtml'; ?>
-
+        <div class="p-3 border-top">
+            <div class="d-flex align-items-center">
+                <img src="https://ui-avatars.com/api/?name=<?= $nome_usuario; ?>&background=0d6efd&color=fff&size=40"
+                     class="rounded-circle me-3" alt="Usuário">
+                <div class="flex-grow-1">
+                    <h6 class="mb-0 fw-bold"><?= $nome_usuario; ?></h6>
+                    <small class="text-muted"><?= $nivel_usuario; ?></small>
+                </div>
+                <a href="<?= $logout_url ?>" class="btn btn-sm btn-outline-danger" title="Sair">
+                    Sair
+                </a>
+            </div>
         </div>
     </div>
 </nav>
+
+<button class="btn btn-primary d-lg-none" id="sidebarToggle">
+    <i class="bi bi-list"></i>
+</button>

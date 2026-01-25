@@ -1,0 +1,26 @@
+<div class="col">
+    <div class="card border-start border-start-5 border-start-primary h-100">
+        <div class="card-body">
+            <div class="row g-0"> <!-- g-0 remove espaçamento interno -->
+                <!-- Aplicações -->
+                <div class="col-6 pe-2"> <!-- pe-2: padding direito -->
+                    <div class="d-flex flex-column">
+                        <h6 class="text-muted text-uppercase small text-truncate" title="Aplicações">
+                            Aplicações
+                        </h6>
+                        <h5 class="mb-0 fw-bold text-nowrap">R$ <?= $data_investimentos['aplica']; ?></h5>
+                    </div>
+                </div>
+                <!-- Resgates -->
+                <div class="col-6 ps-2"> <!-- ps-2: padding esquerdo -->
+                    <div class="d-flex flex-column">
+                        <h6 class="text-muted text-uppercase small text-truncate" title="Resgates">
+                            Resgates
+                        </h6>
+                        <h5 class="mb-0 fw-bold text-nowrap">R$ <?= $data_investimentos['resgata']; ?></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

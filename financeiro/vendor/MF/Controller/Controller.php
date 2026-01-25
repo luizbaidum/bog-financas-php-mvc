@@ -13,7 +13,7 @@ class Controller {
 
 	public function __construct(
 		public $view = new \stdClass(),
-		public string $empresa = 'Bog Finanças',
+		public string $empresa = 'LB Finanças',
 	) {
 		if (isset($_SERVER['HTTP_HOST'])) {
 
@@ -160,7 +160,7 @@ class Controller {
             $resultado = ob_get_contents();
         ob_end_clean();
         echo $resultado;
-        exit;
+        // exit;
 	}
 
     protected function getMethods(string $archive_name, string $function = ''): ?array

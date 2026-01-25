@@ -77,41 +77,41 @@ class PreferenciasController extends Controller {
         }
     }
 
-    public function cadastrarPreferencia()
-    {
-        if ($this->isSetPost()) {
-            $model_preferencias = new PreferenciasDAO();
-            $model_preferencias->iniciarTransacao();
+    // public function cadastrarPreferencia()
+    // {
+    //     if ($this->isSetPost()) {
+    //         $model_preferencias = new PreferenciasDAO();
+    //         $model_preferencias->iniciarTransacao();
 
-            try {
-                $item = $_POST;
-                $item['status'] = 'T';
-                $ret = $model_preferencias->cadastrar(new PreferenciasEntity, $item);
+    //         try {
+    //             $item = $_POST;
+    //             $item['status'] = 'T';
+    //             $ret = $model_preferencias->cadastrar(new PreferenciasEntity, $item);
 
-                if ($ret['result']) {
-					$array_retorno = array(
-						'result'   => $ret['result'],
-						'mensagem' => $this->msg_retorno_sucesso
-					);
+    //             if ($ret['result']) {
+	// 				$array_retorno = array(
+	// 					'result'   => $ret['result'],
+	// 					'mensagem' => $this->msg_retorno_sucesso
+	// 				);
 
-                    $model_preferencias->finalizarTransacao();
+    //                 $model_preferencias->finalizarTransacao();
 
-					echo json_encode($array_retorno);
-                    exit;
-				} else {
-					throw new Exception($this->msg_retorno_falha);
-				}
-            } catch (Exception $e) {
-				$array_retorno = array(
-					'result'   => false,
-					'mensagem' => $e->getMessage(),
-				);
+	// 				echo json_encode($array_retorno);
+    //                 exit;
+	// 			} else {
+	// 				throw new Exception($this->msg_retorno_falha);
+	// 			}
+    //         } catch (Exception $e) {
+	// 			$array_retorno = array(
+	// 				'result'   => false,
+	// 				'mensagem' => $e->getMessage(),
+	// 			);
 
-                $model_preferencias->cancelarTransacao();
+    //             $model_preferencias->cancelarTransacao();
 
-				echo json_encode($array_retorno);
-                exit;
-			}
-        }
-    }
+	// 			echo json_encode($array_retorno);
+    //             exit;
+	// 		}
+    //     }
+    // }
 }

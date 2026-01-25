@@ -24,7 +24,6 @@
 }
 
 body {
-    background-color: #d1fdfb;
     font-family: 'Nunito', sans-serif;
 }
 
@@ -182,4 +181,25 @@ body {
 .disabled {
     pointer-events: none;
     opacity: 0.6;
+}
+
+/* Adicione ao seu custom.css ou navbar-style.css */
+#fixedBottom {
+    left: 280px; /* Largura aproximada do seu sidebar */
+    right: 0;
+    width: auto; /* Remove width: 100% */
+    z-index: 1020;
+    transition: left 0.3s ease;
+}
+
+/* Quando o sidebar estiver recolhido (mobile) */
+@media (max-width: 992px) {
+    #fixedBottom {
+        left: 0;
+    }
+}
+
+/* Para o conteúdo principal não ficar escondido */
+main {
+    padding-bottom: 80px; /* Altura do rodapé */
 }

@@ -3,8 +3,21 @@
 namespace src\System;
 
 use MF\Controller\Controller;
+use src\Models\Usuarios\UsuariosDAO;
 
 class Menu {
+    public array $userInfo;
+
+    public function __construct() 
+    {
+        $userInfo = (new UsuariosDAO())->detalhar($_SESSION['user']);
+
+        $this->userInfo = [
+            'nome'  => $userInfo[0]['nome'],
+            'nivel' => $userInfo[0]['gestor'] == 'T' ? 'Gestor' : 'Membro'
+        ];
+    }
+
     public function getUrlLogout()
     {
         return (new Controller())->index_route . '/logout?logout=true';
@@ -16,18 +29,18 @@ class Menu {
     }
 
     public array $grupos = [
-        'Cadastros', 'Consultas', 'Configs', 'Lembrar'
+        'Cadastros', 'Consultas', 'Config.', 'Lembrar'
     ];
 
     public array $titles = [
         'Cadastros' => [
-            'Categorias', 'Movimentos', 'Contas Investimentos', 'Movimentos Mensais', 'Objetivos Invest.', 'Orçamento', 'Orçamento do Realizado', 'Movimento entre Investimentos', 'Metas Mensais'
+            'Categorias', 'Movimentos', 'Investimentos', 'Movimentos Mensais', 'Objetivos Invest.', 'Orçamento', 'Orçamento do Realizado', 'Movimento entre Investimentos', 'Metas Mensais'
         ],
         'Consultas' => [
-            'Indicadores', 'Investimentos', 'Extrato Contas Invest', 'Orçamento', 'Evolução Rendimentos', 'Extrato por Proprietário', 'Metas Mensais'
+            'Indicadores', 'Investimentos', 'Extrato Investimentos', 'Orçamento', 'Evolução Investimentos', 'Extrato por Proprietário', 'Metas Mensais'
         ],
-        'Configs' => [
-            'Preferencias', 'Proprietarios', 'Usuarios'
+        'Config.' => [
+            'Preferências', 'Proprietários', 'Usuários'
         ],
         'Lembrar' => [
             'Despesas'
@@ -41,7 +54,7 @@ class Menu {
         'Consultas' => [
             'indicadores-index', 'contas-investimentos-index', 'extrato-investimentos', 'orcamento_index', 'evolucao_rendimentos', 'extrato-proprietarios', 'metas-mensais-index'
         ],
-        'Configs' => [
+        'Config.' => [
             'preferencias', 'proprietarios', 'usuarios'
         ],
         'Lembrar' => [
@@ -52,7 +65,7 @@ class Menu {
     public array $niveis = [
         'Cadastros' => [],
         'Consultas' => [],
-        'Configs'   => []
+        'Config.'   => []
     ];
 }
 ?>

@@ -2,6 +2,14 @@ $('#id-modal-alerta').on('show.bs.modal', function (e) {
     $('#id-modal-form').modal('hide');
 });
 
+startLoading();
+
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        stopLoading();
+    }, 500)
+});
+
 $(document).on('click', '.render-ajax', function (e) {
     let url_action = e.currentTarget.dataset.url;
     let div_destino = e.currentTarget.dataset.div;

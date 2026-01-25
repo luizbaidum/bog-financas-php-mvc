@@ -1,9 +1,7 @@
 var isLoading = false;
 
-addEventListener('popstate', () => {
-    let url = window.location.href;
-    window.location.href = url;
-});
+const url_atual = window.location.href;
+const pagina_atual = window.location.pathname;
 
 function requireAjaxOperation(user_options) {
     let default_options = {
@@ -241,4 +239,24 @@ function atualizarStatus(elemento_select) {
     requireAjaxOperation({
         action: url + '&status=' + novo_status
     })
+}
+
+function atualizarMenuAberto() {
+    let href_atual = pagina_atual.replace('/', '');
+
+    try {
+        document.querySelectorAll('a.submenu-item').forEach(link => {
+            let link_path = link.getAttribute('href');
+
+            if (link_path == href_atual) {
+                link.classList.add('custom-active');
+
+                let dropdown_atual = link.closest('.nav-item').querySelector('.accordion-header');
+                dropdown_atual.setAttribute('aria-expanded', 'true');
+                link.closest('.nav-item').querySelector('.accordion-content').classList.add('show');
+            }
+        });
+    } catch (error) {
+        console.error(error)
+    }
 }
