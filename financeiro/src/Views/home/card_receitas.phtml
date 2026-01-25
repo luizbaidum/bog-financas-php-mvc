@@ -1,18 +1,19 @@
-<div class="card border-start border-start-5 border-start-success">
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h6 class="text-muted text-uppercase small">Receitas</h6>
-                <h4 class="mb-0 fw-bold">R$ 5.280,00</h4>
+ <div class="col">
+    <div class="card border-start border-start-5 border-start-success h-100">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-muted text-uppercase small">Receitas</h6>
+                    <h5 class="mb-0 fw-bold">R$ <?= $data_receita['receita']; ?></h5>
+                </div>
             </div>
-            <div class="bg-success bg-opacity-10 p-3 rounded-circle">
-                <i class="bi bi-arrow-down-circle fs-3 text-success"></i>
-            </div>
-        </div>
-        <div class="mt-2">
-            <span class="badge bg-success bg-opacity-10 text-success">
-                <i class="bi bi-arrow-up"></i> 12% mês anterior
-            </span>
+            <?php if ($data_receita['diferenca'] != '0,00'): ?>
+                <div class="mt-2">
+                    <span class="badge bg-success bg-opacity-10 text-<?= $data_receita['bg-color']; ?>">
+                        <i class="bi bi-arrow-up"></i> <?= $data_receita['diferenca']; ?>% mês anterior
+                    </span>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

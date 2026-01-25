@@ -1,9 +1,5 @@
 <?php 
 	$buttons = $this->view->buttons ?? false;
-	$margin_bottom = '';
-	if ($buttons) {
-		$margin_bottom = 'margin-bottom: 50px;';
-	}
 ?>
 
 <html lang="pt-br">
@@ -31,8 +27,7 @@
     ?>
 
 		<main id="grid-principal">
-
-			<div style="<?= $margin_bottom; ?>">
+			<div>
 				<?php 
 					if ($this->view->base_interna != '')
 						$this->carregarBaseInterna();
@@ -42,20 +37,21 @@
 			</div>
 
 			<?php if ($buttons): ?>
-                <div id="fixedBotton" class="bg-navbar-top-and-bottom">
+                <div id="fixedBottom" class="fixed-bottom bg-light border-top shadow-sm py-3">
                     <div class="container">
-                        <?php foreach ($buttons as $btn): ?>
-                            <button 
-                                type="button"
-                                title="<?= $btn['title']; ?>"
-                                data-url="<?= $btn['action']; ?>"
-                                class="<?= $btn['classes']; ?> <?= ($btn['position'] == 'right' ? 'float-end' : 'float-start') ?>"
-                                data-modal="<?= $btn['modal']; ?>"
-                            >
-                                <?= $btn['title']; ?>
-                            </button>
-                        <?php endforeach; ?>
-                        <div class="clearfix"></div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <?php foreach ($buttons as $btn): ?>
+                                <button
+                                    type="button"
+                                    title="<?= $btn['title']; ?>"
+                                    data-url="<?= $btn['action']; ?>"
+                                    class="<?= $btn['classes']; ?> <?= ($btn['position'] == 'right' ? 'float-end' : 'float-start') ?>"
+                                    data-modal="<?= $btn['modal']; ?>"
+                                >
+                                    <?= $btn['title']; ?>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
                 </div>
             <?php endif; ?>

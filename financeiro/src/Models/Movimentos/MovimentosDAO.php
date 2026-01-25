@@ -347,4 +347,102 @@ class MovimentosDAO extends Model {
 
         return $ret ?? [];
     }
+
+    public function getSaldoDespesas(string $id_proprietario = '', string $mes = '', string $ano = '')
+    {
+        $params = [];
+
+        $where_clause = 'WHERE categorias.tipo = ? ';
+        $params[] = 'D';
+
+        if ($id_proprietario != '') {
+            $where_clause .= "AND movimentos.idProprietario = ? ";
+            $params[] = $id_proprietario;
+        }
+
+        if ($mes != 'Todos') {
+            if ($mes != '' && $ano != '') {
+                $where_clause .= "AND (DATE_FORMAT(movimentos.dataMovimento, '%Y%m') = ? ";
+                $params[] = "$ano$mes";
+            } else {
+                $where_clause .= 'AND (MONTH(dataMovimento) = ? AND YEAR(dataMovimento) = ? ';
+                $params[] = date('n');
+                $params[] = date('Y');
+            }
+
+            if ($mes == '' && date('m') != 01) {
+                $mes_anterior = DateHelper::calcMonth(date('m'), '-', 1);
+                $where_clause .= 'OR DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = ? ';
+
+                $params[] = "$ano$mes_anterior";
+            } elseif ($mes != '' && $mes != '01') {
+                $mes_anterior = DateHelper::calcMonth($mes, '-', 1);;
+                $where_clause .= 'OR DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = ?';
+
+                $params[] = "$ano$mes_anterior";
+            }
+
+            $where_clause .= ')';
+        }
+
+        $query = 'SELECT SUM(movimentos.valor) AS totalDespesas, MONTH(movimentos.dataMovimento) AS mes FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria ' . $where_clause . ' GROUP BY MONTH(movimentos.dataMovimento) ORDER BY MONTH(movimentos.dataMovimento) DESC';
+
+        $result = $this->sql_actions->executarQuery($query, $params);
+
+        foreach ($result as $value) {
+            $ret[$value['mes']] = $value['totalDespesas'];
+        }
+
+        return $ret ?? [];
+    }
+
+    public function getSaldoInvestimentos(string $id_proprietario = '', string $mes = '', string $ano = '')
+    {
+        $params = [];
+
+        $where_clause = 'WHERE (categorias.tipo = ? OR categorias.tipo = ?)';
+        $params[] = 'A';
+        $params[] = 'RA';
+
+        if ($id_proprietario != '') {
+            $where_clause .= "AND movimentos.idProprietario = ? ";
+            $params[] = $id_proprietario;
+        }
+
+        if ($mes != 'Todos') {
+            if ($mes != '' && $ano != '') {
+                $where_clause .= "AND (DATE_FORMAT(movimentos.dataMovimento, '%Y%m') = ? ";
+                $params[] = "$ano$mes";
+            } else {
+                $where_clause .= 'AND (MONTH(dataMovimento) = ? AND YEAR(dataMovimento) = ? ';
+                $params[] = date('n');
+                $params[] = date('Y');
+            }
+
+            // if ($mes == '' && date('m') != 01) {
+            //     $mes_anterior = DateHelper::calcMonth(date('m'), '-', 1);
+            //     $where_clause .= 'OR DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = ? ';
+
+            //     $params[] = "$ano$mes_anterior";
+            // } elseif ($mes != '' && $mes != '01') {
+            //     $mes_anterior = DateHelper::calcMonth($mes, '-', 1);;
+            //     $where_clause .= 'OR DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = ?';
+
+            //     $params[] = "$ano$mes_anterior";
+            // }
+
+            $where_clause .= ')';
+        }
+
+        $query = 'SELECT SUM(IF(categorias.tipo = "A", movimentos.valor, 0)) AS totalAplicacoes, SUM(IF(categorias.tipo = "RA", movimentos.valor, 0)) AS totalResgates, MONTH(movimentos.dataMovimento) AS mes FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria ' . $where_clause . ' GROUP BY MONTH(movimentos.dataMovimento) ORDER BY MONTH(movimentos.dataMovimento) DESC';
+
+        $result = $this->sql_actions->executarQuery($query, $params);
+
+        foreach ($result as $value) {
+            $ret['aplic'] = $value['totalAplicacoes'];
+            $ret['resg'] = $value['totalResgates'];
+        }
+
+        return $ret ?? [];
+    }
 }
