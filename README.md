@@ -1,4 +1,4 @@
-[![GitHub Release](https://img.shields.io/badge/Release-v2.0-blueviolet)]() 
+[![GitHub Release](https://img.shields.io/badge/Release-v3.0-blue)]() 
 
 ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
@@ -19,4 +19,5 @@ php composer.phar update
 ```
 para atualizar e instalar o monolog
 
-<img width="555" height="655" alt="image" src="https://github.com/user-attachments/assets/cdd032c5-9e0d-47f0-a54a-18a77d8e143e" />
+<img width="555" height="658" alt="image" src="https://github.com/user-attachments/assets/b6b3a30e-3ead-4e02-a5cb-73d6ce5069b8" />
+
