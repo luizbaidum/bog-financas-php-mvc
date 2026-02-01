@@ -26,6 +26,7 @@ class InvestimentosDAO extends Model {
         $invest = $filtro['extratoInvest'] ?? '';
         $acao = $filtro['acaoInvest'] ?? '';
         $proprietario = $filtro['idProprietario'] ?? '';
+        $desconsiderar = $filtro['desconsiderarInvest'] ?? [];
 
         if ($mes == '') {
             if ($ano == date('Y') || $ano == '') {
@@ -37,7 +38,7 @@ class InvestimentosDAO extends Model {
             }
 
             date_sub($data_create, date_interval_create_from_date_string('90 days'));
-    
+
             $where = "AND `rendimentos`.`dataRendimento` BETWEEN '" . date_format($data_create, 'Y-m-01') . "' AND '$hoje'";
         } elseif ($mes == 'Todos') {
             $where = "AND DATE_FORMAT(`rendimentos`.`dataRendimento`, '%Y') = '$ano'";
@@ -55,6 +56,10 @@ class InvestimentosDAO extends Model {
 
         if ($proprietario != '') {
             $where .= "AND `contas_investimentos`.`idProprietario` = '$proprietario'";
+        }
+
+        if (! empty($desconsiderar)) {
+            $where .= 'AND `rendimentos`.`idContaInvest` NOT IN (' . implode(',', $desconsiderar) . ')';
         }
 
         $query = "SELECT `rendimentos`.*, CONCAT(`contas_investimentos`.`nomeBanco`, ' - ', `contas_investimentos`.`tituloInvest`) AS conta, CONCAT(objetivos_invest.idObj, ' - ', nomeObj) AS objetivo FROM `rendimentos` INNER JOIN `contas_investimentos` ON `rendimentos`.`idContaInvest` = `contas_investimentos`.`idContaInvest` INNER JOIN `proprietarios` ON `proprietarios`.`idProprietario` = `contas_investimentos`.`idProprietario` LEFT JOIN objetivos_invest ON objetivos_invest.idObj = rendimentos.idObj WHERE `rendimentos`.`idRendimento` > 0 $where ORDER BY `rendimentos`.`dataRendimento` DESC";
