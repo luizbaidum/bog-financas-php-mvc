@@ -6,6 +6,7 @@ use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Investimentos\InvestimentosEntity;
 use src\Models\Proprietarios\ProprietariosEntity;
 use src\Models\Rendimentos\RendimentosEntity;
+use src\System\MonthAndYear;
 
 class ExtratoInvestimentosController extends Controller {
     public function index() 
@@ -25,9 +26,9 @@ class ExtratoInvestimentosController extends Controller {
         }
 
         $this->view->data['extrato'] = $model_investimentos->consultarExtrato([]);
-        $this->view->data['lista_invest'] = $model_investimentos->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], []);
-        $this->view->data['months'] = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Todos');
-        $this->view->data['years'] = array('2023', '2024', '2025', '2026', '2027');
+        $this->view->data['lista_invest'] = $model_investimentos->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC']);
+        $this->view->data['months'] = MonthAndYear::getMonths();
+        $this->view->data['years'] = MonthAndYear::getYears();
         $this->view->data['lista_acao'] = $model_investimentos->selectAll(new RendimentosEntity, [], ['rendimentos', 'tipo'], []);
         $this->view->data['lista_proprietarios'] = $model_investimentos->selectAll(new ProprietariosEntity, [], [], []);
 

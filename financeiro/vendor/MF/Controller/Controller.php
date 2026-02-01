@@ -160,7 +160,7 @@ class Controller {
             $resultado = ob_get_contents();
         ob_end_clean();
         echo $resultado;
-        // exit;
+        exit;
 	}
 
     protected function getMethods(string $archive_name, string $function = ''): ?array

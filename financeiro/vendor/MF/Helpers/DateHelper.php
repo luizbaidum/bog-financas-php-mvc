@@ -8,7 +8,7 @@ class DateHelper {
     public static function convertUStoBR($date)
     {
         if ($date == null || $date == '')
-            return ''; 
+            return '';
 
         date_default_timezone_set('America/Sao_Paulo');
         $ob_data_atual = new DateTime($date);
