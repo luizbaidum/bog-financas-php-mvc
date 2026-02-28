@@ -5,7 +5,12 @@
     </div>
 
     <div class="card-body">
-        <?php if (empty($dados)): ?>
+        <?php
+
+use MF\Helpers\DateHelper;
+use MF\Helpers\NumbersHelper;
+
+ if (empty($dados)): ?>
             <div class="text-center">
                 Nenhum registro encontrado
             </div>
@@ -29,9 +34,9 @@
                             $total_geral += $registro['valor'];
                     ?>
                         <tr>
-                            <td><?= $registro['dataMovimento']; ?></td>
+                            <td><?= DateHelper::convertUStoBR($registro['dataMovimento']); ?></td>
                             <td><?= $registro['nomeMovimento']; ?></td>
-                            <td><?= $registro['valor']; ?></td>
+                            <td>R$ <?= NumbersHelper::formatUStoBR($registro['valor']); ?></td>
                             <td><?= $registro['categoria']; ?></td>
                             <td><?= $registro['proprietario']; ?></td>
                         </tr>
@@ -41,7 +46,7 @@
                     <tr class="table-dark">
                         <td colspan="2">Total</td>
                         <td>
-                            <?= $total_geral; ?>
+                            R$ <?= NumbersHelper::formatUStoBR($total_geral); ?>
                         </td>
                         <td colspan="2"></td>
                     </tr>
