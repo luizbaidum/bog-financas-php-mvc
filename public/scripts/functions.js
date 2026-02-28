@@ -1,5 +1,3 @@
-var isLoading = false;
-
 const url_atual = window.location.href;
 const pagina_atual = window.location.pathname;
 
@@ -205,8 +203,6 @@ function limparMovMensalVinculado() {
 }
 
 function startLoading() {
-    isLoading = true;
-
     const loadingOverlay = document.getElementById('loadingOverlay');
     loadingOverlay.style.display = 'flex';
 
@@ -214,8 +210,6 @@ function startLoading() {
 }
 
 function stopLoading() {
-    isLoading = false;
-
     const loadingOverlay = document.getElementById('loadingOverlay');
     loadingOverlay.style.display = 'none';
 
@@ -223,13 +217,9 @@ function stopLoading() {
 }
 
 function preventClicks(event) {
-    if (isLoading) {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-
-        return false;
-    }
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
 }
 
 function atualizarStatus(elemento_select) {

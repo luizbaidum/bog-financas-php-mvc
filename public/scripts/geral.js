@@ -2,7 +2,7 @@ $('#id-modal-alerta').on('show.bs.modal', function (e) {
     $('#id-modal-form').modal('hide');
 });
 
-startLoading();
+// startLoading();
 
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {
