@@ -210,8 +210,9 @@ $('.action-delete').click(async function() {
     } else {
         let r_confirmacao = await confirmacao();
 
-        if (r_confirmacao)
+        if (r_confirmacao) {
             requireAjaxOperation({action, data, redirect})
+        }
     }
 });
 

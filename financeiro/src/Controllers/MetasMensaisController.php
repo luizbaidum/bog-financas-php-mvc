@@ -5,9 +5,13 @@ use Exception;
 use MF\Controller\Controller;
 use MF\Helpers\NumbersHelper;
 use MF\Model\Model;
+use MF\View\SetButtons;
 use src\Models\MetasMensais\MetasMensaisDAO;
 use src\Models\MetasMensais\MetasMensaisEntity;
 use src\Models\Movimentos\MovimentosDAO;
+use src\Models\Movimentos\MovimentosEntity;
+use src\Models\MovimentosMensais\MovimentosMensaisDAO;
+use src\Models\MovimentosMensais\MovimentosMensaisEntity;
 use src\Models\Proprietarios\ProprietariosEntity;
 
 class MetasMensaisController extends Controller {
@@ -79,6 +83,7 @@ class MetasMensaisController extends Controller {
     public function metasMensaisIndex() 
     {
         $model_metas_mensais = new MetasMensaisDAO();
+        $buttons = new SetButtons();
 
         $this->view->settings = [
             'url' => $this->index_route . '/obter-metas-mensais',
@@ -86,6 +91,15 @@ class MetasMensaisController extends Controller {
         ];
 
         $this->view->data['lista_proprietarios'] = $model_metas_mensais->selectAll(new ProprietariosEntity, [], [], []);
+
+        $buttons->setButton(
+                    'Apagar',
+                    $this->index_route . '/delete-meta-mensal',
+                    'px-2 btn btn-danger action-delete',
+                    'right'
+                );
+
+        $this->view->buttons = $buttons->getButtons();
 
         $this->renderPage(
             conteudo: 'metas_mensais_index'
@@ -133,7 +147,8 @@ class MetasMensaisController extends Controller {
                         'proprietario'           => $v_mm['proprietario'],
                         'vlrEconomiaRealizado'   => 0,
                         'totalReceitasRealizado' => 0,
-                        'corFonte'               => ''
+                        'corFonte'               => '',
+                        'idMetaMensal'           => $v_mm['idMetaMensal']
                     ];
 
                     foreach ($realizado as $r) {
@@ -152,5 +167,46 @@ class MetasMensaisController extends Controller {
         }
 
         return $lista_mm_ret ?? [];
+    }
+
+    public function deletarMetaMensal()
+    {
+        if ($this->isSetPost()) {
+
+            $model_metas_mensais = new MetasMensaisDAO();
+            $model_metas_mensais->iniciarTransacao();
+
+            try {
+                foreach ($_POST['itens'] as $id) {
+                    $ret = $model_metas_mensais->delete(new MetasMensaisEntity(), 'idMetaMensal', $id);
+
+                    if ($ret != false) {
+                        $model_metas_mensais->arr_afetados[] = $id;
+                    } else {
+                        $model_metas_mensais->arr_nao_afetados[] = $id;
+                    }
+                }
+
+                $array_retorno = array(
+					'result'   => true,
+					'mensagem' => 'Movimentos excluídos: ' . implode(', ', $model_metas_mensais->arr_afetados) . '. Movimentos não excluídos: ' . implode(', ', $model_metas_mensais->arr_nao_afetados),
+				);
+
+                $model_metas_mensais->finalizarTransacao();
+
+				echo json_encode($array_retorno);
+                exit;
+            } catch (Exception $e) {
+                $array_retorno = array(
+					'result'   => false,
+					'mensagem' => $e->getMessage(),
+				);
+
+                $model_metas_mensais->cancelarTransacao();
+
+				echo json_encode($array_retorno);
+                exit;
+            }
+        }
     }
 }

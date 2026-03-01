@@ -81,6 +81,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/cad-metas-mensais', 'controller' => 'MetasMensaisController', 'action' => 'cadastrarMetasMensais');
         $routes[] = array('route' => '/metas-mensais-index', 'controller' => 'MetasMensaisController', 'action' => 'metasMensaisIndex');
         $routes[] = array('route' => '/obter-metas-mensais', 'controller' => 'MetasMensaisController', 'action' => 'obterMetas');
+        $routes[] = array('route' => '/delete-meta-mensal', 'controller' => 'MetasMensaisController', 'action' => 'deletarMetaMensal');
 
         $routes[] = array('route' => '/lembrar-despesas', 'controller' => 'DespesasLembrarController', 'action' => 'index');
         $routes[] = array('route' => '/cadastrar-lembrar-despesas', 'controller' => 'DespesasLembrarController', 'action' => 'cadastrar');

@@ -4,7 +4,10 @@
     <div class="col-12 col-md-6 col-lg-4 mb-4">
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
-                <h6 class="card-title mb-0"><?= $v['mesAno']; ?></h6>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="card-title mb-0"><?= $v['mesAno']; ?></h6>
+                    <input type="checkbox" name="selectedData[]" class="form-check-input" style="margin-left: 8px;" value="<?= $v['idMetaMensal']; ?>">
+                </div>
             </div>
             <div class="card-body">
                 <div class="mb-3 pb-2 border-bottom">
