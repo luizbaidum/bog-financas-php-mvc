@@ -326,7 +326,7 @@ class MovimentosDAO extends Model {
                 $mes_anterior = DateHelper::calcMonth(date('m'), '-', 1);
                 $where_clause .= 'OR DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = ? ';
 
-                $params[] = "$ano$mes_anterior";
+                $params[] = date('Y') . $mes_anterior;
             } elseif ($mes != '' && $mes != '01') {
                 $mes_anterior = DateHelper::calcMonth($mes, '-', 1);;
                 $where_clause .= 'OR DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = ?';
@@ -365,7 +365,7 @@ class MovimentosDAO extends Model {
                 $where_clause .= "AND (DATE_FORMAT(movimentos.dataMovimento, '%Y%m') = ? ";
                 $params[] = "$ano$mes";
             } else {
-                $where_clause .= 'AND (MONTH(dataMovimento) = ? AND YEAR(dataMovimento) = ? ';
+                $where_clause .= 'AND ((MONTH(dataMovimento) = ? AND YEAR(dataMovimento) = ?) ';
                 $params[] = date('n');
                 $params[] = date('Y');
             }
@@ -374,9 +374,9 @@ class MovimentosDAO extends Model {
                 $mes_anterior = DateHelper::calcMonth(date('m'), '-', 1);
                 $where_clause .= 'OR DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = ? ';
 
-                $params[] = "$ano$mes_anterior";
+                $params[] = date('Y') . $mes_anterior;
             } elseif ($mes != '' && $mes != '01') {
-                $mes_anterior = DateHelper::calcMonth($mes, '-', 1);;
+                $mes_anterior = DateHelper::calcMonth($mes, '-', 1);
                 $where_clause .= 'OR DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = ?';
 
                 $params[] = "$ano$mes_anterior";
