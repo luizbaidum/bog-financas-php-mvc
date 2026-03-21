@@ -68,11 +68,14 @@ class MovimentosMensaisController extends Controller {
         $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
         $this->view->data['mov_m'] = $mov_m[0] ?? null;
         $this->view->data['titulo_card'] = $action == 'edit' ? 'Edição' : 'Cadastro';
-        $this->view->data['is_baixado'] = $model->selectAll(new MovimentosEntity, [
-            ['idMovMensal', '=', $id], 
-            ['MONTH(dataMovimento)', '=', date('n')], 
-            ['YEAR(dataMovimento)', '=', date('Y')]
-        ], [], []);
+
+        if ($action == 'edit') {
+            $this->view->data['is_baixado'] = $model->selectAll(new MovimentosEntity, [
+                ['idMovMensal', '=', $id], 
+                ['MONTH(dataMovimento)', '=', date('n')], 
+                ['YEAR(dataMovimento)', '=', date('Y')]
+            ], [], []);
+        }
 
         if (! empty($this->view->data['is_baixado'])) {
             $this->view->data['id_movimento'] = $this->view->data['is_baixado'][0]['idMovimento'];
