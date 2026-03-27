@@ -1,5 +1,6 @@
 <?php
 
+use MF\Helpers\DateHelper;
 use MF\Helpers\NumbersHelper;
 
 if (isset($mov_m['idMovMensal'])): ?>
@@ -59,17 +60,17 @@ if (isset($mov_m['idMovMensal'])): ?>
             </div>
         </div>
         <div class="form-group">
-            <div class="mt-2 form-check">
-                <input type="checkbox" 
-                    class="form-check-input" 
-                    name="definirBaixado" 
-                    value="1" 
-                    <?= ($is_baixado ? 'checked' : ''); ?>>
-                <label class="form-check-label" for="definirBaixado">
-                    Baixado no mês vigente
-                </label>
+            <div class="mt-2">
+                <label for="idBaixadoMesVigente" class="form-label">Baixado no mês vigente?</label>
+                <select class="form-select" id="idBaixadoMesVigente" name="definirBaixado">
+                    <option value="0">Limpar</option>
+                    <?php foreach ($lista_mov_periodo as $mov): ?>
+                        <option value="<?= $mov['idMovimento']; ?>" <?= ($id_movimento == $mov['idMovimento']) ? 'selected' : ''; ?>>
+                            <?= 'Id: ' . $mov['idMovimento'] . ' - ' . $mov['nomeMovimento'] . ' - ' . DateHelper::convertUStoBR($mov['dataMovimento']) . ' - R$ ' . NumbersHelper::formatUStoBR($mov['valor']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
-
             <input type="hidden" name="isBaixadoOriginal" value="<?= $id_movimento; ?>">
         </div>
     </div>
