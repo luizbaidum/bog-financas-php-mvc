@@ -79,11 +79,15 @@ class MovimentosMensaisController extends Controller {
 
         if (! empty($this->view->data['is_baixado'])) {
             $this->view->data['id_movimento'] = $this->view->data['is_baixado'][0]['idMovimento'];
-            $this->view->data['is_baixado'] = true;
         } else {
-            $this->view->data['is_baixado'] = false;
             $this->view->data['id_movimento'] = '0';
         }
+
+        $this->view->data['lista_mov_periodo'] = $model->selectAll(new MovimentosEntity, [
+                                                                            ['MONTH(dataMovimento)', '=', date('n')], 
+                                                                            ['YEAR(dataMovimento)', '=', date('Y')]
+                                                                        ], [], []
+                                                                    );
 
         $this->renderPage(conteudo: 'movimentos_mensais', base_interna: 'base_cruds');
     }
@@ -185,7 +189,7 @@ class MovimentosMensaisController extends Controller {
             $obj_mov_mensal = new MovimentosMensaisEntity();
             $id_mov_m = $_POST['idMovMensal'];
             $is_baixado_original = $_POST['isBaixadoOriginal'];
-            $definir_baixado = $_POST['definirBaixado'] ?? '0';
+            $definir_baixado = empty($_POST['definirBaixado']) ? '0' : $_POST['definirBaixado'];
 
             $model_movimentos->iniciarTransacao();
 
@@ -213,9 +217,9 @@ class MovimentosMensaisController extends Controller {
             if ($is_baixado_original != '0' && $definir_baixado == '0') {
                 // remover movimento mensal do mês vigente
                 $a = $model->atualizar(new MovimentosEntity, ['idMovMensal' => 0], ['idMovimento' => $is_baixado_original]);
-            } elseif ($is_baixado_original == '0' && $definir_baixado == '1') {
+            } elseif (($is_baixado_original == '0' && $definir_baixado != '0') || ($is_baixado_original != '0' && $definir_baixado != '0' && $is_baixado_original != $definir_baixado)) {
                 // adicionar movimento mensal ao mês vigente
-                $b = $model_movimentos->definirMovimentoMensalBaixado($id_mov_m, $obj_mov_mensal->nomeMovimento);
+                $b = $model->atualizar(new MovimentosEntity, ['idMovMensal' => $id_mov_m], ['idMovimento' => $definir_baixado]);
             }
 
             if ((!isset($ret['result']) || empty($ret['result'])) && empty($a) && empty($b)) {
