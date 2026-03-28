@@ -289,3 +289,17 @@ $(document).on('change', '.exibir-objetivos-destino', function () {
         console.error('Erro -> ' + error);
     }
 })
+
+$(document).ready(function() {
+    $('#sidebarToggle').on('click', function() {
+        // Alterna a classe que controla o estado do menu
+        $('.sidebar').toggleClass('open'); // Ajuste o seletor conforme sua estrutura
+
+        // Altera o texto do botão baseado na classe
+        if ($('.sidebar').hasClass('open')) {
+            $(this).html('<small>Fechar</small>');
+        } else {
+            $(this).html('<small>Abrir</small>');
+        }
+    });
+});
