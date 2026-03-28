@@ -262,7 +262,14 @@ class InvestimentosController extends Controller {
             $model_objetivos = new ObjetivosDAO();
             $model_objetivos->iniciarTransacao();
             try {
-                $ret = (new ObjetivosDAO())->cadastrar(new ObjetivosEntity, $_POST);
+
+                $obj_objetivo = new ObjetivosEntity();
+                $obj_objetivo->nomeObj = $_POST['nomeObj'];
+                $obj_objetivo->vlrObj = NumbersHelper::formatBRtoUS($_POST['vlrObj']);
+                $obj_objetivo->idContaInvest = $_POST['idContaInvest'];
+                $obj_objetivo->percentObjContaInvest = NumbersHelper::formatBRtoUS($_POST['percentObjContaInvest']);
+
+                $ret = (new ObjetivosDAO())->cadastrar(new ObjetivosEntity, $obj_objetivo);
 
                 if ($ret['result']) {
 					$array_retorno = array(

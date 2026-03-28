@@ -1,3 +1,8 @@
+<?php
+    use MF\Helpers\DateHelper;
+    use MF\Helpers\NumbersHelper;
+?>
+
 <div class="card mt-2">
 
     <div class="card-header bg-dark text-white">
@@ -5,19 +10,14 @@
     </div>
 
     <div class="card-body">
-        <?php
-
-use MF\Helpers\DateHelper;
-use MF\Helpers\NumbersHelper;
-
- if (empty($dados)): ?>
+        <?php if (empty($dados)): ?>
             <div class="text-center">
                 Nenhum registro encontrado
             </div>
-        <?php 
-            else: 
+        <?php
+            else:
                 $total_geral = 0;
-        ?> 
+        ?>
             <table class="table table-hover table-sm mb-1 align-middle">
                 <thead>
                     <tr>
