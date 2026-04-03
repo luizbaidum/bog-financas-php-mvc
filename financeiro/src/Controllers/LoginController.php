@@ -22,6 +22,7 @@ class LoginController extends Controller {
 
         $this->view->settings['sys_version'] = $git_hub_infos['sys_version'];
         $this->view->settings['sys_version_msg'] = $git_hub_infos['release_name'];
+        $this->view->settings['ok_get_github'] = $this->ok_get_github;
 
         $this->renderLoginPage();
     }
@@ -91,6 +92,7 @@ class LoginController extends Controller {
 
         $this->view->settings['sys_version'] = $git_hub_infos['sys_version'];
         $this->view->settings['sys_version_msg'] = $git_hub_infos['release_name'];
+        $this->view->settings['ok_get_github'] = $this->ok_get_github;
 
         $this->renderLoginPage();
         exit;

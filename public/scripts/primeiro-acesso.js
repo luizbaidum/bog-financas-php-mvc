@@ -43,8 +43,12 @@ function msgRetornoPrimeiroAcesso(ret) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const navbar = document.getElementsByClassName('navbar')[0]
-    navbar.style.display = 'none'
+    const navbar = document.getElementsByClassName('navbar')[0];
+    if (navbar) {
+        navbar.style.display = 'none'
+    }
+
+    stopLoading();
 
     // Verificar correspondência de senhas
     const password = document.getElementById('password')

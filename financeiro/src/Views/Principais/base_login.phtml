@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     </head>
 
-    <body>
+    <body class="bg-light">
         <div class="container">
             <div class="row justify-content-center align-items-center min-vh-100">
                 <div class="col-md-6 col-lg-5">
@@ -67,10 +67,12 @@
                                     </div>
                                 <?php endif; ?>
 
-                                <div class="text-center mt-4">
-                                    <small class="text-muted"><?= $sys_version; ?></small> <br>
-                                    <small class="text-muted">Nota da Versão: <?= $sys_version_msg; ?></small>
-                                </div>
+                                <?php if ($ok_get_github): ?>
+                                    <div class="text-center mt-4">
+                                        <small class="text-muted"><?= $sys_version; ?></small> <br>
+                                        <small class="text-muted">Nota da Versão: <?= $sys_version_msg; ?></small>
+                                    </div>
+                                <?php endif; ?>
                             </form>
                         </div>
                     </div>

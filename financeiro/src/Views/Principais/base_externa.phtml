@@ -4,10 +4,10 @@
 
 	<?php require_once ('view_head.php'); ?>
 
-    <?php 
-        if ($_SERVER['REQUEST_URI'] != '/primeiro-acesso'): 
-    ?>
-        <body class="bg-light">
+    <body class="bg-light" <?= $_SERVER['REQUEST_URI'] == '/primeiro-acesso' ? 'style="padding-left: 0px;"' : ''; ?>>
+        <?php
+            if ($_SERVER['REQUEST_URI'] != '/primeiro-acesso'):
+        ?>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12 p-3">
@@ -18,15 +18,13 @@
                     </div>
                 </div>
             </div>
-
-    <?php
-            require ('menu.phtml');
-        endif;
-    ?>
-
+        <?php
+                require ('menu.phtml');
+            endif;
+        ?>
 		<main id="grid-principal">
 			<div>
-				<?php 
+				<?php
 					if ($this->view->base_interna != '')
 						$this->carregarBaseInterna();
 					else
