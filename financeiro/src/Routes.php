@@ -87,6 +87,9 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/cadastrar-lembrar-despesas', 'controller' => 'DespesasLembrarController', 'action' => 'cadastrar');
         $routes[] = array('route' => '/delete-desp-lembrar', 'controller' => 'DespesasLembrarController', 'action' => 'deletarDespLembrar');
 
+        $routes[] = array('route' => '/solicitar-acesso', 'controller' => 'SolicitarAcessoController', 'action' => 'index');
+        $routes[] = array('route' => '/cad-solicitar-acesso', 'controller' => 'SolicitarAcessoController', 'action' => 'solicitarPrimeiroAcesso');
+
 		$this->setRoutes($routes);
 	}
 }

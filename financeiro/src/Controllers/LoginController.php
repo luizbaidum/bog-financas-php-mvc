@@ -13,9 +13,10 @@ class LoginController extends Controller {
     public function telaLogin()
     {
         $this->view->settings = [
-            'action'              => $this->index_route . '/login',
-            'title'               => 'Login - Bog Finanças',
-            'url_primeiro_acesso' => $this->index_route . '/primeiro-acesso',
+            'action'               => $this->index_route . '/login',
+            'title'                => 'Login - Bog Finanças',
+            'url_primeiro_acesso'  => $this->index_route . '/primeiro-acesso',
+            'url_solicitar_acesso' => $this->index_route . '/solicitar-acesso',
         ];
 
         $git_hub_infos = $this->getGitHubInfos();

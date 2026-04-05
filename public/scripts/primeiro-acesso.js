@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function checkPasswordMatch() {
         if (password.value && confirmPassword.value) {
-            if (password.value === confirmPassword.value) {
+            if (password.value == confirmPassword.value) {
                 passwordMatch.style.display = 'inline'
                 passwordMismatch.style.display = 'none'
             } else {

@@ -4,9 +4,9 @@
 
 	<?php require_once ('view_head.php'); ?>
 
-    <body class="bg-light" <?= $_SERVER['REQUEST_URI'] == '/primeiro-acesso' ? 'style="padding-left: 0px;"' : ''; ?>>
+    <body class="bg-light" <?= $_SERVER['REQUEST_URI'] == '/primeiro-acesso' || $_SERVER['REQUEST_URI'] == '/solicitar-acesso' ? 'style="padding-left: 0px;"' : ''; ?>>
         <?php
-            if ($_SERVER['REQUEST_URI'] != '/primeiro-acesso'):
+            if ($_SERVER['REQUEST_URI'] != '/primeiro-acesso' && $_SERVER['REQUEST_URI'] != '/solicitar-acesso'):
         ?>
             <div class="container">
                 <div class="row">

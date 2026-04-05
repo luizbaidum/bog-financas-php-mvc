@@ -14,4 +14,5 @@ class UsuariosEntity extends Entity {
     public int $idFamilia;
     public string $gestor;
     public string $nome;
+    public string $hash;
 }

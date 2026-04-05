@@ -1,0 +1,53 @@
+
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <h1 class="h4 mb-1">Bog Finanças - Bem-vindo(a)!</h1>
+                        <p class="text-muted mb-0">Vamos solicitar um acesso para você.</p>
+                    </div>
+
+                    <div class="alert alert-warning" role="alert">
+                        <div class="text-center">
+                            <h4 class="alert-heading h6 mb-2">Informações importantes</h4>
+                        </div>
+                        <p class="mb-1">Nesta etapa você precisa preencher os itens abaixo e clicar em 'Solicitar'.</p>
+                        <p class="mb-0">É importante que as informações preenchidas sejam exatamente as mesmas com as quais você pretende usar o sistema, pois nós dependemos disso para liberar seu acesso.</p>
+                        <p>Depois que você solicitar o acesso, guarde o código disponibilizado na tela somente com você. Ele será necessário para próxima etapa.</p>
+                    </div>
+
+                    <form
+                        class="submit-form-crud-ajax-pa"
+                        method="POST"
+                        name="form-crud"
+                        id="idform-crud"
+                        data-action="<?= $action; ?>"
+                        data-redirect="<?= $redirect; ?>"
+                    >
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="nome" id="name" placeholder="Nome" required>
+                            <label for="name">Nome</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="login" id="login" placeholder="Login" required>
+                            <label for="login">Login</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input type="password" class="form-control" name="senha" id="password" placeholder="Senha" required>
+                            <label for="password">Senha</label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">Solicitar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

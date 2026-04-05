@@ -60,6 +60,11 @@
                                 <div class="d-grid gap-2">
                                     <button type="submit" class="btn btn-primary btn-lg fw-bold">Entrar</button>
                                 </div>
+                                 <div class="text-center mt-2">
+                                    <a href="<?= $url_primeiro_acesso; ?>">
+                                        <button type="button" class="btn btn-outline-success">Primeiro acesso?</button>
+                                    </a>
+                                </div>
 
                                 <?php if (isset($mensagem)): ?>
                                     <div class="alert alert-danger mt-3 text-center">
@@ -73,12 +78,12 @@
                                         <small class="text-muted">Nota da Versão: <?= $sys_version_msg; ?></small>
                                     </div>
                                 <?php endif; ?>
-                            </form>
+                        </form>
                         </div>
                     </div>
-                    <div class="text-center mt-2">
-                        <a href="<?= $url_primeiro_acesso; ?>">
-                            <button type="button" class="btn btn-outline-secondary">Primeiro acesso?</button>
+                    <div class="text-center mt-3">
+                        <a href="<?= $url_solicitar_acesso; ?>">
+                            <button type="button" class="btn btn-outline-secondary">Solicitar acesso</button>
                         </a>
                     </div>
                 </div>
