@@ -11,7 +11,6 @@ class SolicitarAcessoEntity extends Entity {
     public string $nome;
     public string $login;
     public string $senha;
-    public string $hashIn;
+    public string $hash;
     public string $dataHoraSolicitacao;
-    public string $hashOut;
 }

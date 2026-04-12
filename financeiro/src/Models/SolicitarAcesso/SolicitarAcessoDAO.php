@@ -50,37 +50,4 @@ class SolicitarAcessoDAO extends Model {
 			);
 		}
     }
-
-    public function atualizarHashOut($id, $hash_out)
-    {
-        try {
-            $table = SolicitarAcessoEntity::main_table;
-            $query = "UPDATE $table SET hashOut = ? WHERE idSolicitarAcesso = ?";
-
-            $arr_values[] = $hash_out;
-            $arr_values[] = $id;
-
-            $result = $this->sql_actions->executarQuery($query, $arr_values, false);
-
-            if ($result) {
-				return array(
-					'result' => $result
-				);
-			} else {
-				throw new \Exception('Erro ao atualizar.');
-			}
-		} catch (\Exception $e) {
-			errorHandler(
-				1,
-				$e->getMessage(),
-				$e->getFile(),
-				$e->getLine()
-			);
-
-			return array(
-				'result'   => false,
-				'mensagem' => $e->getMessage()
-			);
-		}
-    }
 }

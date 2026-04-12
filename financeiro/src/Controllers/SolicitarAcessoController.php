@@ -21,7 +21,9 @@ class SolicitarAcessoController extends Controller {
         $senha_post = $_POST['senha'];
         $obj_solicitar_acesso->senha = md5($senha_post);
 
-        $ret_validacao = (new AcessoService())->validacoesPreInsercao((new UsuariosDAO()), $obj_solicitar_acesso, null);
+        $ret_validacao = (new AcessoService())->validacoesPreInsercao(
+            (new UsuariosDAO()), $obj_solicitar_acesso, null
+        );
 
         if ($ret_validacao['result'] == false) {
             $array_retorno = array(
@@ -33,11 +35,11 @@ class SolicitarAcessoController extends Controller {
             exit;
         }
 
+        $hr_time = hrtime();
         $data_hora_atual = date('Y-m-d H:i:s');
 
-        $hash_in_conteudo = $obj_solicitar_acesso->nome . $obj_solicitar_acesso->login . $senha_post . $data_hora_atual;
-        $hash_in_md5 = md5($hash_in_conteudo);
-        $obj_solicitar_acesso->hashIn = $hash_in_md5;
+        $hash = $hr_time[1];
+        $obj_solicitar_acesso->hash = $hash;
         $obj_solicitar_acesso->dataHoraSolicitacao = $data_hora_atual;
 
         try {
@@ -49,24 +51,14 @@ class SolicitarAcessoController extends Controller {
                 throw new Exception($this->msg_retorno_falha);
             }
 
-            $hash_out_conteudo = $novo_id . $hash_in_md5;
-            $hash_out_md5 = md5($hash_out_conteudo);
-
-            $model_solicitar_acesso->atualizarHashOut($novo_id, $hash_out_md5);
-
-             $array_retorno = array(
-                'result'   => true,
-                'mensagem' => 'Solicitação de acesso realizada com sucesso. Anote o código abaixo para a próxima etapa.',
-                'codigo'   => $obj_solicitar_acesso->hashIn
-            );
-
             if (empty($ret)) {
                 throw new Exception($this->msg_retorno_falha);
             }
 
             $array_retorno = array(
-                'result'   => $ret['result'],
-                'mensagem' => $this->msg_retorno_sucesso
+                'result'   => true,
+                'mensagem' => 'Solicitação de acesso realizada com sucesso. <br> ANOTE O CÓDIGO PARA A PRÓXIMA ETAPA: ',
+                'codigo'   => $obj_solicitar_acesso->hash
             );
 
             $model_solicitar_acesso->finalizarTransacao();
@@ -79,7 +71,7 @@ class SolicitarAcessoController extends Controller {
                 'mensagem' => $e->getMessage()
             );
 
-            $$model_solicitar_acesso->cancelarTransacao();
+            $model_solicitar_acesso->cancelarTransacao();
 
             echo json_encode($array_retorno);
             exit;
