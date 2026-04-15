@@ -5,25 +5,51 @@ use Exception;
 use MF\Controller\Controller;
 use src\Models\Usuarios\UsuariosDAO;
 use src\Models\Usuarios\UsuariosEntity;
+use src\Services\AcessoService;
 
 class PrimeiroAcessoController extends Controller {
     public function cadastrarPrimeiroAcesso()
     {
         $obj_usuario = new UsuariosEntity();
         $model_usuario = new UsuariosDAO();
+        $service_acesso = new AcessoService();
+
         $model_usuario->iniciarTransacao();
 
         $obj_usuario->nome = $_POST['nome'];
         $obj_usuario->login = $_POST['login'];
         $obj_usuario->senha = md5($_POST['senha']);
+        $obj_usuario->hash = $_POST['hash'];
         $senha_confirmar = md5($_POST['confirmaSenha']);
 
-        $ret_validacao = $this->validacoesPreInsercao($model_usuario, $obj_usuario, $senha_confirmar);
+        if ($obj_usuario->hash == '') {
+            $array_retorno = array(
+                'result'   => false,
+                'mensagem' => 'Hash de acesso é obrigatório.'
+            );
+
+            echo json_encode($array_retorno);
+            exit;
+        }
+
+        $ret_validacao = $service_acesso->validacoesPreInsercao($model_usuario, $obj_usuario, $senha_confirmar);
 
         if ($ret_validacao['result'] == false) {
             $array_retorno = array(
                 'result'   => false,
                 'mensagem' => $ret_validacao['mensagem']
+            );
+
+            echo json_encode($array_retorno);
+            exit;
+        }
+
+        $ret_valida_hash = $service_acesso->validarHashAcesso($model_usuario, $obj_usuario);
+
+        if ($ret_valida_hash['result'] == false) {
+            $array_retorno = array(
+                'result'   => false,
+                'mensagem' => $ret_valida_hash['mensagem']
             );
 
             echo json_encode($array_retorno);
@@ -52,29 +78,11 @@ class PrimeiroAcessoController extends Controller {
                 'mensagem' => $e->getMessage()
             );
 
-            $$model_usuario->cancelarTransacao();
+            $model_usuario->cancelarTransacao();
 
             echo json_encode($array_retorno);
             exit;
         }
-    }
-
-    private function validacoesPreInsercao(object $model, object $obj_usuario, string|int $senha_confirmar) : array
-    {
-        $status = true;
-        $mensagem = '';
-
-        if ($obj_usuario->senha != $senha_confirmar) {
-            $status = false;
-            $mensagem = 'As senhas não conferem.';
-        }
-
-        if (!empty($model->consultarUsuarioPorLogin($obj_usuario->login))) {
-            $status = false;
-            $mensagem = 'Por favor, escolher outro login.';
-        }
-
-        return ['result' => $status, 'mensagem' => $mensagem];
     }
 
     public function primeiroAcesso()

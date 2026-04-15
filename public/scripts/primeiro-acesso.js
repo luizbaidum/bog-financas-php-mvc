@@ -12,15 +12,18 @@ class PrimeiroAcesso {
                 response.text()
                     .then(resp_text => {
                         let resposta_json = JSON.parse(resp_text)
-                        console.log(resposta_json)
                         let msg_para_usuario = resposta_json.mensagem
+                        if (resposta_json.codigo != undefined) {
+                            msg_para_usuario = msg_para_usuario.concat(resposta_json.codigo);
+                            msg_para_usuario = msg_para_usuario.replace(' <br> ', '\n') + '\n\n';
+                        }
 
                         if (resposta_json.result !== false) {
-                            msg_para_usuario = msg_para_usuario.concat(' \n Você será redirecionado para a tela de login.')
+                            msg_para_usuario = msg_para_usuario.concat('\n Você será redirecionado para a tela de login.')
                             if (confirm(msg_para_usuario)) {
-                                 window.location.href = window.location.origin;
-                            } else {
                                 window.location.href = window.location.origin;
+                            } else {
+                                // window.location.href = window.location.origin;
                             }
                         } else {
                             alert(msg_para_usuario)
@@ -38,10 +41,6 @@ formulario.addEventListener('submit', function(e) {
     PrimeiroAcesso.enviarFormulario(formulario)
 })
 
-function msgRetornoPrimeiroAcesso(ret) {
-    console.log(ret)
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     const navbar = document.getElementsByClassName('navbar')[0];
     if (navbar) {
@@ -58,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function checkPasswordMatch() {
         if (password.value && confirmPassword.value) {
-            if (password.value === confirmPassword.value) {
+            if (password.value == confirmPassword.value) {
                 passwordMatch.style.display = 'inline'
                 passwordMismatch.style.display = 'none'
             } else {

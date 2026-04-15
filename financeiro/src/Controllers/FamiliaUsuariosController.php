@@ -106,7 +106,7 @@ class FamiliaUsuariosController extends Controller {
             $mensagem = 'As senhas não conferem.';
         }
 
-        if (!empty($model->consultarUsuarioPorLogin($obj_usuario->login))) {
+        if (! empty($model->consultarUsuarioPorLogin($obj_usuario->login))) {
             $status = false;
             $mensagem = 'Por favor, escolher outro login.';
         }

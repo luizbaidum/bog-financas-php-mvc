@@ -13,9 +13,10 @@ class LoginController extends Controller {
     public function telaLogin()
     {
         $this->view->settings = [
-            'action'              => $this->index_route . '/login',
-            'title'               => 'Login - Bog Finanças',
-            'url_primeiro_acesso' => $this->index_route . '/primeiro-acesso',
+            'action'               => $this->index_route . '/login',
+            'title'                => 'Login - Bog Finanças',
+            'url_primeiro_acesso'  => $this->index_route . '/primeiro-acesso',
+            'url_solicitar_acesso' => $this->index_route . '/solicitar-acesso'
         ];
 
         $git_hub_infos = $this->getGitHubInfos();
@@ -76,17 +77,21 @@ class LoginController extends Controller {
     {
         session_destroy();
 
-        if (isset($_GET['erro']))
+        if (isset($_GET['erro'])) {
             $this->view->data['mensagem'] = 'Faça login primeiro.';
+        }
 
-        if (isset($_GET['logout']))
+        if (isset($_GET['logout'])) {
             $this->view->data['mensagem'] = 'Você está desconectado.';
+        }
 
-        if (isset($_GET['incorrect']))
+        if (isset($_GET['incorrect'])) {
             $this->view->data['mensagem'] = 'Usuário e/ou senha incorreto(s).';
+        }
 
         $this->view->settings['action'] = '/login';
         $this->view->settings['url_primeiro_acesso'] = $this->index_route . '/primeiro-acesso';
+        $this->view->settings['url_solicitar_acesso'] = $this->index_route . '/solicitar-acesso';
 
         $git_hub_infos = $this->getGitHubInfos();
 
