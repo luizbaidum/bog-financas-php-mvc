@@ -2,6 +2,8 @@
 
 namespace src\Services;
 
+use src\Models\SolicitarAcesso\SolicitarAcessoDAO;
+
 class AcessoService {
     public function validacoesPreInsercao(object $model, object $obj_usuario, string|int|null $senha_confirmar): array
     {
@@ -21,10 +23,31 @@ class AcessoService {
         return ['result' => $status, 'mensagem' => $mensagem];
     }
 
-    public function gerarHashOut(): string
+    public function validarHashAcesso(object $model_usuario, object $obj_usuario): array
     {
-        $ret = '';
+        $status = true;
+        $mensagem = '';
 
-        return $ret;
+        $model_primeiro_acesso = new SolicitarAcessoDAO();
+
+        $ret = $model_usuario->consultarSolicitarAcessoPorHash($obj_usuario->hash);
+
+        if (! empty($ret)) {
+            $status   = false;
+            $mensagem = 'Hash de acesso inválido. Por favor, verificar o código informado.';
+        }
+
+        $ret = $model_primeiro_acesso->consultarSolicitarAcessoPorHash($obj_usuario->hash);
+
+        $nome = strtolower($ret[0]['nome']);
+        $login = strtolower($ret[0]['login']);
+        $senha = $ret[0]['senha'];
+
+        if ($nome != strtolower($obj_usuario->nome) || $login != strtolower($obj_usuario->login) || $senha != $obj_usuario->senha) {
+            $status   = false;
+            $mensagem = 'Hash de acesso inválido. Por favor, verificar o código informado.';
+        }
+
+        return ['result' => $status, 'mensagem' => $mensagem];
     }
 }

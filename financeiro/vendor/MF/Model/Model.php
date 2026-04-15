@@ -48,8 +48,9 @@ class Model {
 			$table = $entity::main_table;
 			$query = "INSERT INTO $table (";
 
-			foreach ($data as $k => $v)
-				$query .= "$k, ";
+			foreach ($data as $k => $v) {
+                $query .= "$k, ";
+            }
 
 			$query = rtrim($query, ', ') . ')';
 

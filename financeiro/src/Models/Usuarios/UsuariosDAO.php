@@ -104,4 +104,13 @@ class UsuariosDAO extends Model {
 			);
 		}
     }
+
+    public function consultarSolicitarAcessoPorHash(string $hash) : array
+    {
+        $query = 'SELECT usuarios.* FROM usuarios WHERE usuarios.hash = ?';
+
+        $result = $this->sql_actions->executarQuery($query, [$hash], false);
+
+        return $result;
+    }
 };

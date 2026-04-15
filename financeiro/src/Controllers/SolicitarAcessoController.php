@@ -43,7 +43,7 @@ class SolicitarAcessoController extends Controller {
         $obj_solicitar_acesso->dataHoraSolicitacao = $data_hora_atual;
 
         try {
-            $ret = $model_solicitar_acesso->cadastrarSolicitarAcesso($obj_solicitar_acesso);
+            $ret = $model_solicitar_acesso->cadastrar($obj_solicitar_acesso, $obj_solicitar_acesso);
 
             $novo_id = $ret['result'];
 

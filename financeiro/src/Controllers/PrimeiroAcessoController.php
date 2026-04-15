@@ -12,6 +12,8 @@ class PrimeiroAcessoController extends Controller {
     {
         $obj_usuario = new UsuariosEntity();
         $model_usuario = new UsuariosDAO();
+        $service_acesso = new AcessoService();
+
         $model_usuario->iniciarTransacao();
 
         $obj_usuario->nome = $_POST['nome'];
@@ -20,12 +22,34 @@ class PrimeiroAcessoController extends Controller {
         $obj_usuario->hash = $_POST['hash'];
         $senha_confirmar = md5($_POST['confirmaSenha']);
 
-        $ret_validacao = (new AcessoService())->validacoesPreInsercao($model_usuario, $obj_usuario, $senha_confirmar);
+        if ($obj_usuario->hash == '') {
+            $array_retorno = array(
+                'result'   => false,
+                'mensagem' => 'Hash de acesso é obrigatório.'
+            );
+
+            echo json_encode($array_retorno);
+            exit;
+        }
+
+        $ret_validacao = $service_acesso->validacoesPreInsercao($model_usuario, $obj_usuario, $senha_confirmar);
 
         if ($ret_validacao['result'] == false) {
             $array_retorno = array(
                 'result'   => false,
                 'mensagem' => $ret_validacao['mensagem']
+            );
+
+            echo json_encode($array_retorno);
+            exit;
+        }
+
+        $ret_valida_hash = $service_acesso->validarHashAcesso($model_usuario, $obj_usuario);
+
+        if ($ret_valida_hash['result'] == false) {
+            $array_retorno = array(
+                'result'   => false,
+                'mensagem' => $ret_valida_hash['mensagem']
             );
 
             echo json_encode($array_retorno);
@@ -54,7 +78,7 @@ class PrimeiroAcessoController extends Controller {
                 'mensagem' => $e->getMessage()
             );
 
-            $$model_usuario->cancelarTransacao();
+            $model_usuario->cancelarTransacao();
 
             echo json_encode($array_retorno);
             exit;

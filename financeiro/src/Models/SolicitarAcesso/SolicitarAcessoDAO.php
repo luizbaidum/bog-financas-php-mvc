@@ -2,21 +2,33 @@
 
 namespace src\Models\SolicitarAcesso;
 
+use Exception;
 use MF\Model\Model;
+use Throwable;
 
 class SolicitarAcessoDAO extends Model {
-    public function cadastrarSolicitarAcesso($data)
+    public function consultarSolicitarAcessoPorHash(string $hash) : array
     {
-        $arr_values = array();
+        $query = 'SELECT solicitar_acesso.* FROM solicitar_acesso WHERE solicitar_acesso.hash = ?';
+
+        $result = $this->sql_actions->executarQuery($query, [$hash], false);
+
+        return $result;
+    }
+
+    public function cadastrar(object $entity, $data)
+	{
+		$arr_values = array();
 
 		try {
-			$table = SolicitarAcessoEntity::main_table;
+			$table = $entity::main_table;
 			$query = "INSERT INTO $table (";
 
-			foreach ($data as $k => $v)
-				$query .= "$k, ";
+			foreach ($data as $k => $v) {
+                $query .= "$k, ";
+            }
 
-			$query = rtrim($query, ', ') . ') ';
+			$query = rtrim($query, ', ') . ')';
 
 			$query .= 'VALUES (';
 
@@ -34,9 +46,9 @@ class SolicitarAcessoDAO extends Model {
 					'result' => $result
 				);
 			} else {
-				throw new \Exception('Erro ao cadastrar.');
+				throw new Exception('Erro ao cadastrar.');
 			}
-		} catch (\Exception $e) {
+		} catch (Throwable $e) {
 			errorHandler(
 				1,
 				$e->getMessage(),
@@ -45,9 +57,8 @@ class SolicitarAcessoDAO extends Model {
 			);
 
 			return array(
-				'result'   => false,
-				'mensagem' => $e->getMessage()
-			);
+                'result' => false
+            );
 		}
-    }
+	}
 }
