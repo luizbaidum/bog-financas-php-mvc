@@ -25,10 +25,11 @@
 		<main id="grid-principal">
 			<div>
 				<?php
-					if ($this->view->base_interna != '')
-						$this->carregarBaseInterna();
-					else
-						$this->carregarConteudo();
+					if ($this->view->base_interna != '') {
+                        $this->carregarBaseInterna();
+                    } else {
+                        $this->carregarConteudo();
+                    }
 				?>
 			</div>
 

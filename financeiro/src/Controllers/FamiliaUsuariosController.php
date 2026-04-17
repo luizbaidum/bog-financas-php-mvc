@@ -7,6 +7,7 @@ use src\Models\Familia\FamiliaDAO;
 use src\Models\Familia\FamiliaEntity;
 use src\Models\Usuarios\UsuariosDAO;
 use src\Models\Usuarios\UsuariosEntity;
+use src\Services\AcessoService;
 
 class FamiliaUsuariosController extends Controller {
     public function index()
@@ -47,13 +48,14 @@ class FamiliaUsuariosController extends Controller {
     {
         $obj_usuario = new UsuariosEntity();
         $model_usuario = new UsuariosDAO();
+        $service_acesso = new AcessoService();
 
         $obj_usuario->nome = $_POST['nome'];
         $obj_usuario->login = $_POST['login'];
         $obj_usuario->senha = md5($_POST['senha']);
         $senha_confirmar = md5($_POST['confirmaSenha']);
 
-        $ret_validacao = $this->validacoesPreInsercao($model_usuario, $obj_usuario, $senha_confirmar);
+        $ret_validacao = $service_acesso->validacoesPreInsercao($model_usuario, $obj_usuario, $senha_confirmar);
 
         if ($ret_validacao['result'] == false) {
             $array_retorno = array(
@@ -94,24 +96,6 @@ class FamiliaUsuariosController extends Controller {
             echo json_encode($array_retorno);
             exit;
         }
-    }
-
-    private function validacoesPreInsercao(object $model, object $obj_usuario, string|int $senha_confirmar) : array
-    {
-        $status = true;
-        $mensagem = '';
-
-        if ($obj_usuario->senha != $senha_confirmar) {
-            $status = false;
-            $mensagem = 'As senhas não conferem.';
-        }
-
-        if (! empty($model->consultarUsuarioPorLogin($obj_usuario->login))) {
-            $status = false;
-            $mensagem = 'Por favor, escolher outro login.';
-        }
-
-        return ['result' => $status, 'mensagem' => $mensagem];
     }
 
     public function cadastrarFamilia()

@@ -79,6 +79,11 @@ class Controller {
 		require_once (Diretorio::getDiretorio() . '/Views/Principais/base_login.phtml');
 	}
 
+    protected function renderPrimeiraFamiliaPage()
+	{
+		require_once (Diretorio::getDiretorio() . '/Views/primeiroAcesso/primeira_familia.phtml');
+	}
+
 	public function renderNullPage()
 	{
 		require_once (Diretorio::getDiretorio() . '/Views/Principais/null_page.phtml');
