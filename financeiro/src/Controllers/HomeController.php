@@ -89,13 +89,13 @@ class HomeController extends Controller {
                                 );
 
             $this->view->data['exibir_cards'] = false;
-            if ($preferencia_cards[0]['status'] == 'T') {
+            if (isset($preferencia_cards[0]) && $preferencia_cards[0]['status'] == 'T') {
                 $this->view->data['exibir_cards'] = true;
                 $this->getDataCardsResumo();
             }
 
             $this->view->data['exibir_resumo_investimentos'] = false;
-            if ($preferencia_investimentos[0]['status'] == 'T') {
+            if (isset($preferencia_investimentos[0]) && $preferencia_investimentos[0]['status'] == 'T') {
                 $this->view->data['exibir_resumo_investimentos'] = true;
             }
 

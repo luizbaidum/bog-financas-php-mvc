@@ -9,9 +9,6 @@ use MF\View\SetButtons;
 use src\Models\MetasMensais\MetasMensaisDAO;
 use src\Models\MetasMensais\MetasMensaisEntity;
 use src\Models\Movimentos\MovimentosDAO;
-use src\Models\Movimentos\MovimentosEntity;
-use src\Models\MovimentosMensais\MovimentosMensaisDAO;
-use src\Models\MovimentosMensais\MovimentosMensaisEntity;
 use src\Models\Proprietarios\ProprietariosEntity;
 
 class MetasMensaisController extends Controller {
@@ -25,7 +22,7 @@ class MetasMensaisController extends Controller {
             'title'    => 'Metas Mensais',
         ];
 
-        $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
+        $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [['status', '=', '"1"']], [], []);
 
         $this->renderPage(
             conteudo: 'metas_mensais',
