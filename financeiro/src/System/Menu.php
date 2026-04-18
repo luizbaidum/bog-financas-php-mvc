@@ -8,7 +8,7 @@ use src\Models\Usuarios\UsuariosDAO;
 class Menu {
     public array $userInfo;
 
-    public function __construct() 
+    public function __construct()
     {
         $userInfo = (new UsuariosDAO())->detalhar($_SESSION['user']);
 

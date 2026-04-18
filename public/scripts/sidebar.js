@@ -23,3 +23,25 @@ document.getElementById('sidebarClose')?.addEventListener('click', function() {
 document.addEventListener('DOMContentLoaded', function() {
     atualizarMenuAberto();
 });
+
+// Ensure only one accordion section is open at a time
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.sidebar .accordion-header').forEach(function(header) {
+        header.addEventListener('click', function(event) {
+            let targetSelector = header.getAttribute('data-bs-target');
+            if (!targetSelector) return;
+            let target = document.querySelector(targetSelector);
+
+            // Close any other open accordion-content within the sidebar
+            document.querySelectorAll('.sidebar .accordion-content.collapse.show').forEach(function(openEl) {
+                if (openEl == target) return;
+                let inst = bootstrap.Collapse.getInstance(openEl);
+                if (inst) {
+                    inst.hide();
+                } else {
+                    new bootstrap.Collapse(openEl, { toggle: false }).hide();
+                }
+            });
+        });
+    });
+});
