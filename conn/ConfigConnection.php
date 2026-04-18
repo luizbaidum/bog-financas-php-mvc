@@ -3,7 +3,7 @@
 
 		private $con;
 		private $host = 'localhost';
-		private $db   = 'meu_financeiro';
+		private $db   = 'meu_financeiro_2';
 		private $user = 'root';
 		private $pw   = '';
 

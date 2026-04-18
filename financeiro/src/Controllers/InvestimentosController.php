@@ -69,7 +69,7 @@ class InvestimentosController extends Controller {
         $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '"1"']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
         $this->view->data['url_buscar_mov_mensal'] = $this->index_route . '/buscaMovMensal?buscar=';
         $this->view->data['div_buscar_mov_mensal'] = 'id-content-return';
-        $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
+        $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [['status', '=', '"1"']], [], []);
         $this->view->data['titulo_card'] = 'Cadastro';
 
         $this->renderSimple('definido_movimento_investimento');
@@ -385,7 +385,7 @@ class InvestimentosController extends Controller {
         $this->view->settings = [
             'action'   => $this->index_route . '/investimentos-movimentar',
             'redirect' => $this->index_route . '/investimentos-movimentar',
-            'url_ajax' => $this->index_route . '/definir_movimento_investimento?action=',
+            'url_ajax' => $this->index_route . '/definir-movimento-investimento?action=',
             'title'    => 'Movimento entre Investimentos',
             'div_ajax' => 'id-destino'
         ];

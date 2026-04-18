@@ -16,9 +16,12 @@ class ProprietariosController extends Controller {
             'action'   => $this->index_route . '/cad_proprietarios',
             'redirect' => $this->index_route . '/proprietarios',
             'title'    => 'Cadastro de Proprietario',
+            'extra_url' => $this->index_route . '/edit-status-proprietario?id='
         ];
 
-        $this->renderPage(conteudo: 'proprietarios', base_interna: 'base_cruds');
+        $this->view->data['todos_prop'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], ['proprietario' => 'ASC']);
+
+        $this->renderPage(conteudo: 'proprietarios', base_interna: 'base_cruds', extra: 'listagem_proprietarios');
     }
 
     public function cadastrarProprietarios()
@@ -89,5 +92,46 @@ class ProprietariosController extends Controller {
         $this->view->data['dados'] = $model_movimentos->extratoProprietarios($filtros);
 
         $this->renderSimple('extrato_proprietarios');
+    }
+
+     public function editarStatus()
+    {
+        $id_proprietario = $_GET['id'];
+        $status = $_GET['status'];
+
+        if (! empty($id_proprietario) && $status != '') {
+
+            $model_proprietarios = new ProprietariosDAO();
+            $model_proprietarios->iniciarTransacao();
+
+            try {
+                $ret = $model_proprietarios->atualizar(new ProprietariosEntity,
+                            ['status' => $status],
+                            ['idProprietario' =>  $id_proprietario]
+                        );
+
+                if ($ret['result']) {
+                    $array_retorno = array(
+                        'result'   => $ret['result'],
+                        'mensagem' => 'idProprietario ' . $id_proprietario . ' alterado com sucesso.'
+                    );
+
+                    $model_proprietarios->finalizarTransacao();
+
+                    echo json_encode($array_retorno);
+                } else {
+                    throw new Exception('Erro ao alterar idProprietario ' . $id_proprietario . '.');
+                }
+            } catch (Exception $e) {
+                $array_retorno = array(
+                    'result'   => false,
+                    'mensagem' => $e->getMessage(),
+                );
+
+                $model_proprietarios->cancelarTransacao();
+
+                echo json_encode($array_retorno);
+            }
+        }
     }
 }

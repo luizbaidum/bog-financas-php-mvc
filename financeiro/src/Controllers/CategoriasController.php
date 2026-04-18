@@ -97,7 +97,7 @@ class CategoriasController extends Controller {
             $model_categorias->iniciarTransacao();
 
             try {
-                $ret = (new CategoriasDAO())->atualizar(new CategoriasEntity,
+                $ret = $model_categorias->atualizar(new CategoriasEntity,
                             ['status' => $status],
                             ['idCategoria' =>  $id_categoria]
                         );

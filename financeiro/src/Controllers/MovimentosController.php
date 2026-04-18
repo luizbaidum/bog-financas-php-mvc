@@ -46,7 +46,7 @@ class MovimentosController extends Controller {
         $this->view->data['movimento'] = $mov[0] ?? null;
         $this->view->data['url_buscar_mov_mensal'] = $this->index_route . '/buscaMovMensal?buscar=';
         $this->view->data['div_buscar_mov_mensal'] = 'id-content-return';
-        $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [], [], []);
+        $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [['status', '=', '"1"']], [], []);
         $this->view->data['titulo_card'] = $action == 'edit' ? 'Edição' : 'Cadastro';
 
         $this->renderPage(
