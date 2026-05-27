@@ -33,6 +33,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/edit-status-investimento', 'controller' => 'InvestimentosController', 'action' => 'editarStatus');
         $routes[] = array('route' => '/edit-status-objetivo', 'controller' => 'InvestimentosController', 'action' => 'editarStatusObjetivo');
         $routes[] = array('route' => '/validar-percentual-uso-json', 'controller' => 'InvestimentosController', 'action' => 'validarPercentualUsoJson');
+        $routes[] = array('route' => '/delete-objetivos', 'controller' => 'InvestimentosController', 'action' => 'deletarObjetivo');
 
         $routes[] = array('route' => '/exibir_resultado', 'controller' => 'MovimentosController', 'action' => 'exibirResultados');
         $routes[] = array('route' => '/movimentos', 'controller' => 'MovimentosController', 'action' => 'index');

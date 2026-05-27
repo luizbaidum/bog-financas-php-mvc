@@ -5,6 +5,7 @@ use Exception;
 use MF\Controller\Controller;
 use MF\Helpers\NumbersHelper;
 use MF\Model\Model;
+use MF\View\SetButtons;
 use src\Models\Categorias\CategoriasDAO;
 use src\Models\Categorias\CategoriasEntity;
 use src\Models\Investimentos\InvestimentosDAO;
@@ -242,6 +243,7 @@ class InvestimentosController extends Controller {
     public function objetivos()
     {
         $model = new Model();
+        $buttons = new SetButtons();
 
         $this->view->settings = [
             'action'    => $this->index_route . '/cad-objetivos',
@@ -253,6 +255,14 @@ class InvestimentosController extends Controller {
         $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
         $this->view->data['lista_obj'] = $model->selectAll(new ObjetivosEntity, [], [], []);
 
+        $buttons->setButton(
+            'Apagar',
+            $this->index_route . '/delete-objetivos',
+            'px-2 btn btn-danger action-delete',
+            'right'
+        );
+
+        $this->view->buttons = $buttons->getButtons();
         $this->renderPage(conteudo: 'objetivos', base_interna: 'base_cruds', extra: 'listagem_objetivos');
     }
 
@@ -515,6 +525,47 @@ class InvestimentosController extends Controller {
                 $model_objetivos->cancelarTransacao();
 
                 echo json_encode($array_retorno);
+                exit;
+            }
+        }
+    }
+
+     public function deletarObjetivo()
+    {
+        if ($this->isSetPost()) {
+
+            $model_objetivos = new ObjetivosDAO();
+            $model_objetivos->iniciarTransacao();
+
+            try {
+                foreach ($_POST['itens'] as $id) {
+                    $ret = $model_objetivos->delete(new ObjetivosEntity, 'idObj', $id);
+
+                    if ($ret != false) {
+                        $model_objetivos->arr_afetados[] = $id;
+                    } else {
+                        $model_objetivos->arr_nao_afetados[] = $id;
+                    }
+                }
+
+                $array_retorno = array(
+					'result'   => true,
+					'mensagem' => 'Objetivos excluídos: ' . implode(', ', $model_objetivos->arr_afetados) . '. Objetivos não excluídos: ' . implode(', ', $model_objetivos->arr_nao_afetados),
+				);
+
+                $model_objetivos->finalizarTransacao();
+
+				echo json_encode($array_retorno);
+                exit;
+            } catch (Exception $e) {
+                $array_retorno = array(
+					'result'   => false,
+					'mensagem' => $e->getMessage(),
+				);
+
+                $model_objetivos->cancelarTransacao();
+
+				echo json_encode($array_retorno);
                 exit;
             }
         }
