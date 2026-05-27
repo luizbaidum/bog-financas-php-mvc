@@ -80,7 +80,7 @@ class InvestimentosDAO extends Model {
             $where = ' AND contas_investimentos.status = "1" ';
         }
 
-        $query = "SELECT contas_investimentos.*, proprietarios.proprietario FROM contas_investimentos INNER JOIN proprietarios ON proprietarios.idProprietario = contas_investimentos.idProprietario WHERE contas_investimentos.idContaInvest > 0 $where ORDER BY contas_investimentos.nomeBanco, contas_investimentos.tituloInvest, contas_investimentos.idProprietario";
+        $query = "SELECT contas_investimentos.*, proprietarios.proprietario FROM contas_investimentos INNER JOIN proprietarios ON proprietarios.idProprietario = contas_investimentos.idProprietario WHERE contas_investimentos.idContaInvest > 0 $where ORDER BY contas_investimentos.nomeBanco, contas_investimentos.idProprietario , contas_investimentos.tituloInvest";
 
         $result = $this->sql_actions->executarQuery($query);
 
