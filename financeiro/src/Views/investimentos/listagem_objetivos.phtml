@@ -12,11 +12,11 @@
             <div class="d-flex gap-2">
                 <div class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
                     <i class="bi bi-check-circle-fill me-1 small"></i>
-                    <?= count(array_filter($lista_obj ?? [], function($item) { return $item['finalizado'] == 'T'; })); ?> Concluídos
+                    <?= $stats['concluidos']; ?> Concluídos
                 </div>
                 <div class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill">
                     <i class="bi bi-hourglass-split me-1 small"></i>
-                    <?= count(array_filter($lista_obj ?? [], function($item) { return $item['finalizado'] == 'F'; })); ?> Em andamento
+                    <?= $stats['andamento']; ?> Em andamento
                 </div>
             </div>
         </div>
@@ -39,11 +39,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($lista_obj as $k => $v): 
-                        $progresso = ($v['saldoAtual'] / $v['vlrObj']) * 100;
-                        $progresso = min(100, round($progresso, 1));
-                        $corProgresso = $progresso < 30 ? 'bg-danger' : ($progresso < 70 ? 'bg-warning' : 'bg-success');
-                    ?>
+                    <?php foreach ($lista_obj as $k => $v): ?>
                         <tr class="border-bottom">
                             <td class="ps-4 py-3">
                                 <div class="d-flex align-items-center">
@@ -63,16 +59,16 @@
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="flex-grow-1">
                                         <div class="progress" style="height: 8px;">
-                                            <div class="<?= $corProgresso; ?>"
+                                            <div class="<?= $v['corProgresso']; ?>"
                                                  role="progressbar"
-                                                 style="width: <?= $progresso; ?>%"
-                                                 aria-valuenow="<?= $progresso; ?>"
+                                                 style="width: <?= $v['progresso']; ?>%"
+                                                 aria-valuenow="<?= $v['progresso']; ?>"
                                                  aria-valuemin="0"
                                                  aria-valuemax="100">
                                             </div>
                                         </div>
                                     </div>
-                                    <small class="text-muted fw-semibold" style="min-width: 45px;"><?= $progresso; ?>%</small>
+                                    <small class="text-muted fw-semibold" style="min-width: 45px;"><?= $v['progresso']; ?>%</small>
                                 </div>
                             </td>
                             <td class="text-center py-3">
@@ -86,7 +82,7 @@
                                         id="status-<?= $k; ?>" 
                                         name="finalizado[]" 
                                         onchange="atualizarStatus(this)"
-                                        style="background-color: <?= $v['finalizado'] == 'T' ? '#d1e7dd' : '#fff3cd'; ?>">
+                                        style="background-color: <?= $v['corStatus']; ?>">
                                     <option value="F" <?= $v['finalizado'] == 'F' ? 'selected' : ''; ?> class="text-warning">
                                         🔄 Em andamento
                                     </option>
@@ -118,13 +114,13 @@
     </div>
 
     <?php if (! empty($lista_obj)): ?>
-    <div class="card-footer bg-white border-top-0 pt-0 pb-3 px-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <small class="text-muted">
-                <i class="bi bi-info-circle me-1"></i>
-                <?= count($lista_obj); ?> objetivo(s) cadastrado(s)
-            </small>
+        <div class="card-footer bg-white border-top-0 pt-0 pb-3 px-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">
+                    <i class="bi bi-info-circle me-1"></i>
+                    <?= $stats['total']; ?> objetivo(s) cadastrado(s)
+                </small>
+            </div>
         </div>
-    </div>
     <?php endif; ?>
 </div>

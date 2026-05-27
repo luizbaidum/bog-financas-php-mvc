@@ -253,7 +253,10 @@ class InvestimentosController extends Controller {
         ];
 
         $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
-        $this->view->data['lista_obj'] = $model->selectAll(new ObjetivosEntity, [], [], []);
+        $lista_obj = $model->selectAll(new ObjetivosEntity, [], [], []);
+
+        $this->view->data['lista_obj'] = $this->processarObjetivos($lista_obj);
+        $this->view->data['stats'] = $this->calcularEstatisticas($lista_obj);
 
         $buttons->setButton(
             'Apagar',
@@ -264,6 +267,56 @@ class InvestimentosController extends Controller {
 
         $this->view->buttons = $buttons->getButtons();
         $this->renderPage(conteudo: 'objetivos', base_interna: 'base_cruds', extra: 'listagem_objetivos');
+    }
+
+    private function processarObjetivos($lista_obj)
+    {
+        if (empty($lista_obj)) {
+            return [];
+        }
+
+        foreach ($lista_obj as &$objetivo) {
+            $progresso = ($objetivo['saldoAtual'] / $objetivo['vlrObj']) * 100;
+            $objetivo['progresso'] = min(100, round($progresso, 1));
+
+            if ($objetivo['progresso'] < 30) {
+                $objetivo['corProgresso'] = 'bg-danger';
+            } elseif ($objetivo['progresso'] < 70) {
+                $objetivo['corProgresso'] = 'bg-warning';
+            } else {
+                $objetivo['corProgresso'] = 'bg-success';
+            }
+
+            // Definir cor de fundo do select de status
+            $objetivo['corStatus'] = $objetivo['finalizado'] == 'T' ? '#d1e7dd' : '#fff3cd';
+        }
+
+        return $lista_obj;
+    }
+
+    private function calcularEstatisticas($lista_obj)
+    {
+        if (empty($lista_obj)) {
+            return [
+                'concluidos' => 0,
+                'andamento' => 0,
+                'total' => 0
+            ];
+        }
+
+        $concluidos = count(array_filter($lista_obj, function($item) {
+            return $item['finalizado'] == 'T';
+        }));
+
+        $andamento = count(array_filter($lista_obj, function($item) {
+            return $item['finalizado'] == 'F';
+        }));
+
+        return [
+            'concluidos' => $concluidos,
+            'andamento' => $andamento,
+            'total' => count($lista_obj)
+        ];
     }
 
     public function cadastrarObjetivos()
