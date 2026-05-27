@@ -17,6 +17,7 @@
                     <tr class="text-secondary">
                         <th class="ps-4 py-3 border-0 fw-semibold">Banco</th>
                         <th class="py-3 border-0 fw-semibold">Título</th>
+                        <th class="py-3 border-0 fw-semibold">Data Resgate?</th>
                         <th class="py-3 border-0 fw-semibold">Proprietário</th>
                         <th class="pe-4 py-3 border-0 fw-semibold text-center">Status</th>
                     </tr>
@@ -29,6 +30,9 @@
                             </td>
                             <td class="py-3">
                                 <span><?= $v['tituloInvest']; ?></span>
+                            </td>
+                            <td class="py-3">
+                                <span><?= $v['dataResgatar'] != '0000-00-00' && $v['dataResgatar'] != '' ? 'Sim' : 'Não'; ?></span>
                             </td>
                             <td class="py-3">
                                 <span><?= $v['proprietario']; ?></span>

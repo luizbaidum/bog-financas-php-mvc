@@ -8,7 +8,7 @@
     <div class="card-body p-2">
         <div class="row g-2">
             <div class="col-md-6">
-                <label for="idNomeObj" class="form-label fw-semibold text-secondary">Título do Objetivo</label>
+                <label for="idNomeObj" class="form-label titulo-input-formulario-cadastro">Título do Objetivo</label>
                 <div class="input-group">
                     <input type="text" class="form-control"
                            id="idNomeObj" name="nomeObj"
@@ -19,7 +19,7 @@
             </div>
 
             <div class="col-md-6">
-                <label for="idVlrObj" class="form-label fw-semibold text-secondary">Meta Financeira</label>
+                <label for="idVlrObj" class="form-label titulo-input-formulario-cadastro">Meta Financeira</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0">R$</span>
                     <input type="text" class="form-control border-start-0 ps-0 numero-br"
@@ -31,7 +31,7 @@
             </div>
 
             <div class="col-md-6">
-                <label for="idContaInvest" class="form-label fw-semibold text-secondary">Conta de Investimento</label>
+                <label for="idContaInvest" class="form-label titulo-input-formulario-cadastro">Conta de Investimento</label>
                 <select class="form-select" id="idContaInvest" name="idContaInvest" required>
                     <option value="" disabled selected>Selecione uma conta</option>
                     <?php foreach ($invests as $value): ?>
@@ -44,7 +44,7 @@
             </div>
 
             <div class="col-md-6">
-                <label for="idPercentObjContaInvest" class="form-label fw-semibold text-secondary">Percentual de Alocação</label>
+                <label for="idPercentObjContaInvest" class="form-label titulo-input-formulario-cadastro">Percentual de Alocação</label>
                 <div class="input-group">
                     <input type="text" class="form-control text-end numero-br"
                            id="idPercentObjContaInvest" name="percentObjContaInvest"

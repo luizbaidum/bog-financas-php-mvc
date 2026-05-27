@@ -10,7 +10,7 @@
     <div class="card-body p-2">
         <div class="row g-2">
             <div class="col-md-6">
-                <label for="idNomeBanco" class="form-label fw-semibold text-secondary">Nome Banco</label>
+                <label for="idNomeBanco" class="form-label titulo-input-formulario-cadastro">Nome Banco</label>
                 <div class="input-group">
                     <input type="text" class="form-control"
                            id="idNomeBanco" name="nomeBanco"
@@ -19,7 +19,7 @@
             </div>
 
             <div class="col-md-6">
-                <label for="idTituloInvest" class="form-label fw-semibold text-secondary">Título</label>
+                <label for="idTituloInvest" class="form-label titulo-input-formulario-cadastro">Título</label>
                 <div class="input-group">
                     <input type="text" class="form-control"
                            id="idTituloInvest" name="tituloInvest"
@@ -28,7 +28,7 @@
             </div>
 
             <div class="col-md-6">
-                <label for="idDataInicio" class="form-label fw-semibold text-secondary">Data Início</label>
+                <label for="idDataInicio" class="form-label titulo-input-formulario-cadastro">Data Início</label>
                 <div class="input-group">
                     <input type="date" class="form-control"
                            id="idDataInicio" name="dataInicio"
@@ -37,7 +37,7 @@
             </div>
 
             <div class="col-md-6">
-                <label for="idDataResgate" class="form-label fw-semibold text-secondary">Data Resgate</label>
+                <label for="idDataResgate" class="form-label titulo-input-formulario-cadastro">Data Resgate</label>
                 <div class="input-group">
                     <input type="date" class="form-control"
                            id="idDataResgatar" name="dataResgatar">
@@ -45,7 +45,7 @@
             </div>
 
             <div class="col-md-6">
-                <label for="idSaldoInicial" class="form-label fw-semibold text-secondary">Saldo Inicial</label>
+                <label for="idSaldoInicial" class="form-label titulo-input-formulario-cadastro">Saldo Inicial</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0">R$</span>
                     <input type="text" class="form-control numero-br"
@@ -54,7 +54,7 @@
             </div>
 
             <div class="col-md-6">
-                <label for="idSaldoFinal" class="form-label fw-semibold text-secondary">Valor Final Resgate</label>
+                <label for="idSaldoFinal" class="form-label titulo-input-formulario-cadastro">Valor Final Resgate</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0">R$</span>
                     <input type="text" class="form-control numero-br"
@@ -63,7 +63,7 @@
             </div>
 
             <div class="col-md-6">
-                <label for="idProprietario" class="form-label fw-semibold text-secondary">Proprietário</label>
+                <label for="idProprietario" class="form-label titulo-input-formulario-cadastro">Proprietário</label>
                 <select class="form-select" id="idProprietario" name="idProprietario" required>
                     <?php foreach ($lista_proprietarios as $prop): ?>
                         <option value="<?= $prop['idProprietario']; ?>"> <?= $prop['proprietario']; ?></option>
