@@ -269,7 +269,7 @@ class InvestimentosController extends Controller {
         $this->renderPage(conteudo: 'objetivos', base_interna: 'base_cruds', extra: 'listagem_objetivos');
     }
 
-    private function processarObjetivos($lista_obj)
+    private function processarObjetivos(array $lista_obj)
     {
         if (empty($lista_obj)) {
             return [];
@@ -294,7 +294,7 @@ class InvestimentosController extends Controller {
         return $lista_obj;
     }
 
-    private function calcularEstatisticas($lista_obj)
+    private function calcularEstatisticas(array $lista_obj)
     {
         if (empty($lista_obj)) {
             return [
