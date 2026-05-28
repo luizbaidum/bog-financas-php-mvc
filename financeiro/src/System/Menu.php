@@ -52,7 +52,7 @@ class Menu {
             'categorias', 'movimentos', 'investimentos', 'movimentos-mensais-index', 'objetivos', 'orcamento', 'orcamento_do_realizado', 'investimentos-movimentar', 'metas-mensais'
         ],
         'Consultas' => [
-            'indicadores-index', 'contas-investimentos-index', 'extrato-investimentos', 'orcamento_index', 'evolucao_rendimentos', 'extrato-proprietarios', 'metas-mensais-index'
+            'indicadores-index', 'contas-investimentos-index', 'extrato-investimentos', 'orcamento_index', 'evolucao-rendimentos', 'extrato-proprietarios', 'metas-mensais-index'
         ],
         'Config.' => [
             'preferencias', 'proprietarios', 'usuarios'
