@@ -1,4 +1,3 @@
-
 <?php
     use MF\Helpers\DateHelper;
     use MF\Helpers\NumbersHelper;
@@ -9,71 +8,89 @@
 ?>
 
 <div class="container">
-
     <div class="mt-2 mb-2">
 		<div class="card p-2">
 			<div class="text-center">Investimentos</div>
 		</div>
 	</div>
 
-    <div class="card mt-2">
+    <div class="card mt-2 border-0 shadow-sm">
         <div class="card-header bg-dark text-white">
-            <button class="btn btn-sm nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCadRendimento" aria-expanded="false" aria-controls="collapseCadRendimento">
-                <h6 class="card-title mb-0">Cadastrar Rendimento</h6>
-            </button>
+            <div class="d-flex align-items-center">
+                <i class="bi bi-plus-circle fs-4 me-2"></i>
+                <button class="btn btn-sm nav-link p-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCadRendimento" aria-expanded="false" aria-controls="collapseCadRendimento">
+                    <h6 class="card-title mb-0">Cadastrar Rendimento</h6>
+                </button>
+            </div>
         </div>
         <div class="collapse" id="collapseCadRendimento">
-            <div class="card-body p-1">
+            <div class="card-body p-2">
                 <form data-action="<?= $action; ?>" id="idform-crud" class="submit-form-crud-ajax">
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-12 col-sm-4">
-                                <label for="idDataRendimento">Data</label>
+                    <div class="row g-2">
+                        <div class="col-12 col-md-4">
+                            <label for="idDataRendimento" class="form-label titulo-input-formulario-cadastro">Data</label>
+                            <div class="input-group">
                                 <input type="date" class="form-control" id="idDataRendimento" name="dataRendimento" required>
                             </div>
-                            <div class="col-12 col-sm-4">
-                                <label for="idContaInvest">Conta Invest</label>
-                                    <select class="form-select" id="idContaInvest" name="idContaInvest">
-                                        <option value="">Selecione</option>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label for="idContaInvest" class="form-label titulo-input-formulario-cadastro">Conta Invest</label>
+                            <div class="input-group">
+                                <select class="form-select" id="idContaInvest" name="idContaInvest">
+                                    <option value="">Selecione</option>
                                     <?php foreach ($invests as $value): ?>
                                         <option value="<?= $value['idContaInvest']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <div class="col-12 col-sm-4">
-                                <label for="idValorAtual">Valor atual do investimento</label>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label for="idValorAtual" class="form-label titulo-input-formulario-cadastro">Valor atual do investimento</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">R$</span>
                                 <input type="text" class="form-control numero-br" id="idValorAtual" name="valorAtual" value="0,00" required>
                             </div>
                         </div>
                     </div>
-                    <button id="salvar" type="submit" class="btn btn-success m-1">Salvar</button>
+                    <div class="mt-2">
+                        <button id="salvar" type="submit" class="btn btn-success">Salvar</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <div class="card mt-2 mb-2">
-        <div class="card-header bg-dark text-white">
-            <h6 class="card-title mb-0">Investimentos ativos</h6>
+    <div class="card border-0 shadow-sm mt-2 mb-2">
+        <div class="card-header bg-white border-bottom-0 pt-4 pb-2">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0 fw-bold text-dark">Investimentos ativos</h6>
+                        <p class="text-muted small mb-0">Acompanhe todos os seus investimentos ativos</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
+
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-sm">
-                    <theader>
-                        <tr>
-                            <th>Banco</th>
-                            <th>Título</th>
-                            <th>Objetivos</th>
-                            <th>Saldo atual</th>
-                            <th>Saldo anterior</th>
-                            <th>Data anterior</th>
-                            <th>Data resgate</th>
-                            <th>Saldo final esperado</th>
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr class="text-secondary">
+                            <th class="py-3 border-0 fw-semibold">Banco</th>
+                            <th class="py-3 border-0 fw-semibold">Título</th>
+                            <th class="ps-4 py-3 border-0 fw-semibold">Proprietário</th>
+                            <th class="py-3 border-0 fw-semibold">Objetivos</th>
+                            <th class="py-3 border-0 fw-semibold">Saldo atual</th>
+                            <th class="py-3 border-0 fw-semibold">Saldo anterior</th>
+                            <th class="py-3 border-0 fw-semibold">Data anterior</th>
+                            <th class="py-3 border-0 fw-semibold">Data resgate</th>
+                            <th class="pe-4 py-3 border-0 fw-semibold">Saldo final esperado</th>
                         </tr>
-                    </theader>
+                    </thead>
                     <tbody>
-                        <?php 
-                            foreach ($invests as $value): 
+                        <?php
+                            foreach ($invests as $value):
                                 $total += $value['saldoAtual'];
                                 $lista_prop[$value['idProprietario']] = $value['proprietario'];
 
@@ -83,46 +100,86 @@
                                     $total_proprietarios[$value['idProprietario']] = $value['saldoAtual'];
                                 }
                         ?>
-                            <tr>
-                                <td><?= $value['nomeBanco']; ?></td>
-                                <td><?= $value['tituloInvest']; ?></td>
-                                <td class="text-left">
-                                    <button class="render-ajax" 
+                            <tr class="border-bottom">
+                                <td class="py-3">
+                                    <div class="fw-semibold text-dark"><?= $value['nomeBanco']; ?></div>
+                                </td>
+                                <td class="py-3">
+                                    <span><?= $value['tituloInvest']; ?></span>
+                                </td>
+                                <td class="ps-4 py-3">
+                                    <div class="fw-semibold text-dark"><?= $value['proprietario']; ?></div>
+                                </td>
+                                <td class="py-3 text-left">
+                                    <button class="render-ajax btn btn-sm btn-outline-secondary" 
                                             data-url="<?= $url_obj . $value['idContaInvest'] ?>"
                                             data-div=""
                                             data-modal="true"
-                                    >&#8505;</button>
+                                    >ℹ️</button>
                                 </td>
-                                <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoAtual']); ?></td>
-                                <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoAnterior']); ?></td>
-                                <td><?= DateHelper::convertUStoBR($value['dataAnterior']); ?></td>
-                                <td><?= $value['dataResgatar'] != '0000-00-00' ? DateHelper::convertUStoBR($value['dataResgatar']) : 'N/a'; ?></td>
-                                <td>R$ <?= NumbersHelper::formatUStoBR($value['saldoFinal']); ?></td>
+                                <td class="py-3">
+                                    <span class="fw-semibold">R$ <?= NumbersHelper::formatUStoBR($value['saldoAtual']); ?></span>
+                                </td>
+                                <td class="py-3">
+                                    <span>R$ <?= NumbersHelper::formatUStoBR($value['saldoAnterior']); ?></span>
+                                </td>
+                                <td class="py-3">
+                                    <span><?= DateHelper::convertUStoBR($value['dataAnterior']); ?></span>
+                                </td>
+                                <td class="py-3">
+                                    <span><?= $value['dataResgatar'] != '0000-00-00' ? DateHelper::convertUStoBR($value['dataResgatar']) : 'N/a'; ?></span>
+                                </td>
+                                <td class="pe-4 py-3">
+                                    <span>R$ <?= NumbersHelper::formatUStoBR($value['saldoFinal']); ?></span>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
+
+                        <?php if (empty($invests)): ?>
+                            <tr>
+                                <td colspan="9" class="text-center py-5">
+                                    <i class="bi bi-inbox text-muted fs-1 d-block mb-3"></i>
+                                    <p class="text-muted mb-0">Nenhum investimento ativo encontrado</p>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                     <tfoot>
-                        <tr class="table-info">
-                            <td colspan="3" style="text-align: right">Total</td>
-                            <td>R$ <?= NumbersHelper::formatUStoBR($total); ?>
-                            <td>
+                        <tr class="border-top">
+                            <td colspan="4" class="ps-4 py-3 fw-bold text-dark">Total</td>
+                            <td class="py-3 fw-bold text-dark">R$ <?= NumbersHelper::formatUStoBR($total); ?></td>
+                            <td class="py-3"></td>
+                            <td class="py-3"></td>
+                            <td class="py-3"></td>
+                            <td class="pe-4 py-3"></td>
+                        </tr>
+                        <tr class="border-bottom">
+                            <td colspan="9" class="ps-4 py-2">
                                 <?php foreach ($total_proprietarios as $id => $valor): ?>
-                                    <small>
-                                        <?= $lista_prop[$id]; ?>: <?= NumbersHelper::formatUStoBR($valor); ?>
-                                    </small> <br>
+                                    <small class="text-muted me-3">
+                                        <?= $lista_prop[$id]; ?>: R$ <?= NumbersHelper::formatUStoBR($valor); ?>
+                                    </small>
                                 <?php endforeach; ?>
                             </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
+
+        <?php if (! empty($invests)): ?>
+            <div class="card-footer bg-white border-top-0 pt-0 pb-3 px-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        <?= count($invests); ?> investimento(s) ativo(s)
+                    </small>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
 
-    <div class="row">
+    <div class="row g-3">
         <div class="col-sm-6 col-12">
             <?php
                 $arr = [];
@@ -139,65 +196,187 @@
                     $total += $value['saldoAtual'];
                 }
             ?>
-            <div class="card mb-2">
-                <div class="card-header bg-dark text-white">
-                    <h6 class="card-title mb-0">Objetivos</h6>
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-header bg-white border-bottom-0 pt-4 pb-2">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h6 class="card-title mb-0 fw-bold text-dark">Objetivos</h6>
+                                <p class="text-muted small mb-0">Acompanhamento de metas e objetivos</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <table class="table table-sm">
-                            <theader>
-                                <tr>
-                                    <th>Objetivo</th>
-                                    <th>Valor</th>
-                                    <th>Meta</th>
-                                    <th>% ating.</th>
-                                </tr>
-                            </theader>
-                            <tbody>
-                            <?php 
-                                foreach ($arr as $k => $val): ?>
-                                <tr>
-                                    <td><?= $k; ?></td>
-                                    <td>R$ <?= NumbersHelper::formatUStoBR($val['saldo']); ?></td>
-                                    <td>R$ <?= NumbersHelper::formatUStoBR($val['meta']); ?></td>
-                                    <td><?= NumbersHelper::formatUStoBR(number_format(($val['saldo'] / $val['meta']) * 100, 2)); ?>%</td>
-                                </tr>
-                            <?php endforeach; ?>
+
+                <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr class="text-secondary">
+                                        <th class="ps-4 py-3 border-0 fw-semibold">Objetivo</th>
+                                        <th class="py-3 border-0 fw-semibold">Valor</th>
+                                        <th class="py-3 border-0 fw-semibold">Meta</th>
+                                        <th class="pe-4 py-3 border-0 fw-semibold">% ating.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($arr as $k => $val): ?>
+                                        <tr class="border-bottom">
+                                            <td class="ps-4 py-3">
+                                                <div class="fw-semibold text-dark"><?= $k; ?></div>
+                                            </td>
+                                            <td class="py-3">
+                                                <span class="fw-semibold">R$ <?= NumbersHelper::formatUStoBR($val['saldo']); ?></span>
+                                            </td>
+                                            <td class="py-3">
+                                                <span>R$ <?= NumbersHelper::formatUStoBR($val['meta']); ?></span>
+                                            </td>
+                                            <td class="pe-4 py-3">
+                                                <?php 
+                                                    $percentual = ($val['saldo'] / $val['meta']) * 100;
+                                                    $percentualFormatado = NumbersHelper::formatUStoBR(number_format($percentual, 2));
+                                                    $progressColor = $percentual >= 100 ? 'text-success' : ($percentual >= 50 ? 'text-warning' : 'text-secondary');
+                                                ?>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="progress flex-grow-1" style="height: 6px;">
+                                                        <div class="progress-bar bg-success" role="progressbar" 
+                                                            style="width: <?= min(100, $percentual); ?>%" 
+                                                            aria-valuenow="<?= $percentual; ?>" 
+                                                            aria-valuemin="0" 
+                                                            aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                    <span class="small fw-semibold <?= $progressColor; ?>"><?= $percentualFormatado; ?>%</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php if (empty($arr)): ?>
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5">
+                                            <i class="bi bi-inbox text-muted fs-1 d-block mb-3"></i>
+                                            <p class="text-muted mb-0">Nenhum objetivo cadastrado ainda</p>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
+
+                <?php if (! empty($arr)): ?>
+                    <div class="card-footer bg-white border-top-0 pt-0 pb-3 px-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle me-1"></i>
+                                <?= count($arr); ?> objetivo(s) cadastrado(s)
+                            </small>
+                            <small class="text-muted">
+                                <i class="bi bi-currency-dollar me-1"></i>
+                                Total investido: <strong>R$ <?= NumbersHelper::formatUStoBR($total); ?></strong>
+                            </small>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
+
         <div class="col-sm-6 col-12">
-            <div class="card mb-2">
-                <div class="card-header bg-dark text-white">
-                    <h6 class="card-title mb-0">Rendimento projetado</h6>
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-header bg-white border-bottom-0 pt-4 pb-2">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h6 class="card-title mb-0 fw-bold text-dark">Rendimento projetado</h6>
+                                <p class="text-muted small mb-0">Projeção de rendimentos mensais</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <table class="table table-sm">
-                            <theader>
-                                <tr>
-                                    <th>Investimento</th>
-                                    <th>Projeção rendimento AM R$</th>
-                                    <th>%</th>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr class="text-secondary">
+                                    <th class="ps-4 py-3 border-0 fw-semibold">Proprietário</th>
+                                    <th class="py-3 border-0 fw-semibold">Investimento</th>
+                                    <th class="py-3 border-0 fw-semibold">Projeção rendimento AM R$</th>
+                                    <th class="pe-4 py-3 border-0 fw-semibold">%</th>
                                 </tr>
-                            </theader>
+                            </thead>
                             <tbody>
-                            <?php 
-                                foreach ($arr_projecao as $val): ?>
-                                <tr>
-                                    <td><?= $val['nomeBanco'] . ' ' . $val['tituloInvest']; ?></td>
-                                    <td>R$ <?= NumbersHelper::formatUStoBR($val['ultimoRendimentoAM']); ?></td>
-                                    <td><?= $val['saldoAnterior'] > 0 ? NumbersHelper::formatUStoBR(($val['ultimoRendimentoAM'] / $val['saldoAnterior']) * 100) : '0'; ?>%</td>
-                                </tr>
-                            <?php endforeach; ?>
+                                <?php
+                                    $total_proj_por_proprietario = [];
+                                    foreach ($arr_projecao as $val):
+                                        $prop = isset($val['proprietario']) ? $val['proprietario'] : 'Não informado';
+                                        if (!isset($total_proj_por_proprietario[$prop])) {
+                                            $total_proj_por_proprietario[$prop] = 0;
+                                        }
+                                        $total_proj_por_proprietario[$prop] += $val['ultimoRendimentoAM'];
+                                ?>
+                                    <tr class="border-bottom">
+                                        <td class="ps-4 py-3">
+                                            <div class="fw-semibold text-dark"><?= $prop; ?></div>
+                                        </td>
+                                        <td class="py-3">
+                                            <div class="fw-semibold text-dark"><?= $val['nomeBanco'] . ' ' . $val['tituloInvest']; ?></div>
+                                        </td>
+                                        <td class="py-3">
+                                            <span class="text-success fw-semibold">R$ <?= NumbersHelper::formatUStoBR($val['ultimoRendimentoAM']); ?></span>
+                                        </td>
+                                        <td class="pe-4 py-3">
+                                            <?php
+                                                $percentual_rend = $val['saldoAnterior'] > 0 ? ($val['ultimoRendimentoAM'] / $val['saldoAnterior']) * 100 : 0;
+                                                $percentual_rend_formatado = NumbersHelper::formatUStoBR($percentual_rend);
+                                            ?>
+                                            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
+                                                +<?= $percentual_rend_formatado; ?>%
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+
+                                <?php if (empty($arr_projecao)): ?>
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5">
+                                            <i class="bi bi-inbox text-muted fs-1 d-block mb-3"></i>
+                                            <p class="text-muted mb-0">Nenhuma projeção de rendimento disponível</p>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
+                            <?php if (!empty($arr_projecao)): ?>
+                                <tfoot>
+                                    <tr class="border-top">
+                                        <td colspan="4" class="ps-4 py-2">
+                                            <?php foreach ($total_proj_por_proprietario as $proprietario => $total_valor): ?>
+                                                <small class="text-muted me-3">
+                                                    <?= $proprietario; ?>: R$ <?= NumbersHelper::formatUStoBR($total_valor); ?>
+                                                </small>
+                                            <?php endforeach; ?>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            <?php endif; ?>
                         </table>
                     </div>
                 </div>
+
+                <?php if (! empty($arr_projecao)): ?>
+                    <div class="card-footer bg-white border-top-0 pt-0 pb-3 px-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle me-1"></i>
+                                <?= count($arr_projecao); ?> investimento(s) com projeção
+                            </small>
+                            <small class="text-muted">
+                                <i class="bi bi-graph-up me-1"></i>
+                                Baseado no último rendimento
+                            </small>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

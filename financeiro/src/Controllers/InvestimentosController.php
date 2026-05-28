@@ -64,7 +64,7 @@ class InvestimentosController extends Controller {
         $model = new Model();
 
         $this->view->data['tipo_movimento'] = $_GET['action'];
-        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
+        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'idProprietario' => 'ASC', 'tituloInvest' => 'ASC']);
         $this->view->data['options_list_origem'] = json_encode($model->selectAll(new ObjetivosEntity, [], [], []));
         $this->view->data['options_list_destino'] = json_encode($model->selectAll(new ObjetivosEntity, [['finalizado', '=', '"F"']], [], []));
         $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '"1"']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
