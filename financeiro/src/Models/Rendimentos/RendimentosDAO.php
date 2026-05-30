@@ -7,27 +7,27 @@ use MF\Model\Model;
 class RendimentosDAO extends Model {
     public function getEvolucaoRendimentos()
     {
-        $query = "SELECT 
+        $query = "SELECT
                     contas.idContaInvest,
                     COALESCE(SUM(rendimentos.valorRendimento), 0) AS valor,
                     meses.mesAno,
                     CONCAT(contas.idContaInvest, ' - ', contas.tituloInvest) AS nome,
                     contas.idProprietario,
                     proprietarios.proprietario AS proprietarioNome
-                FROM 
-                    (SELECT DISTINCT idContaInvest, tituloInvest, idProprietario FROM contas_investimentos WHERE contas_investimentos.idFamilia = $_SESSION[id_familia]) contas
-                CROSS JOIN 
-                    (SELECT DISTINCT DATE_FORMAT(dataRendimento, '%Y%m') AS mesAno FROM rendimentos WHERE rendimentos.idFamilia = $_SESSION[id_familia]) meses
-                LEFT JOIN 
-                    rendimentos 
+                FROM
+                    (SELECT DISTINCT idContaInvest, tituloInvest, idProprietario FROM contas_investimentos WHERE contas_investimentos.idFamilia = $_SESSION[id_familia] AND contas_investimentos.status = '1') contas
+                CROSS JOIN
+                    (SELECT DISTINCT DATE_FORMAT(dataRendimento, '%Y%m') AS mesAno FROM rendimentos WHERE rendimentos.idFamilia = $_SESSION[id_familia] AND rendimentos.dataRendimento <= CURDATE() AND rendimentos.dataRendimento >= DATE_SUB(CURDATE(), INTERVAL 15 MONTH)) meses
+                LEFT JOIN
+                    rendimentos
                     ON rendimentos.idContaInvest = contas.idContaInvest
                     AND DATE_FORMAT(rendimentos.dataRendimento, '%Y%m') = meses.mesAno AND rendimentos.idFamilia = $_SESSION[id_familia]
-                LEFT JOIN 
+                LEFT JOIN
                     proprietarios
                     ON proprietarios.idProprietario = contas.idProprietario
-                GROUP BY 
+                GROUP BY
                     contas.idContaInvest, meses.mesAno
-                ORDER BY 
+                ORDER BY
                     contas.idContaInvest ASC, meses.mesAno ASC";
 
         $result = $this->sql_actions->executarQuery(query: $query, apply_security: false);

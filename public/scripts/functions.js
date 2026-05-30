@@ -250,3 +250,10 @@ function atualizarMenuAberto() {
         console.error(error)
     }
 }
+
+function toggleAllCheckboxes(selectAllCheckbox) {
+    const checkboxes = document.querySelectorAll('.data-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCheckbox.checked;
+    });
+}

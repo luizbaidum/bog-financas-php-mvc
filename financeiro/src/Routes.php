@@ -33,6 +33,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/edit-status-investimento', 'controller' => 'InvestimentosController', 'action' => 'editarStatus');
         $routes[] = array('route' => '/edit-status-objetivo', 'controller' => 'InvestimentosController', 'action' => 'editarStatusObjetivo');
         $routes[] = array('route' => '/validar-percentual-uso-json', 'controller' => 'InvestimentosController', 'action' => 'validarPercentualUsoJson');
+        $routes[] = array('route' => '/delete-objetivos', 'controller' => 'InvestimentosController', 'action' => 'deletarObjetivo');
 
         $routes[] = array('route' => '/exibir_resultado', 'controller' => 'MovimentosController', 'action' => 'exibirResultados');
         $routes[] = array('route' => '/movimentos', 'controller' => 'MovimentosController', 'action' => 'index');
@@ -53,7 +54,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/salvar_preferencias', 'controller' => 'PreferenciasController', 'action' => 'editarPreferencia');
         $routes[] = array('route' => '/nova_preferencia', 'controller' => 'PreferenciasController', 'action' => 'cadastrarPreferencia');
 
-        $routes[] = array('route' => '/evolucao_rendimentos', 'controller' => 'RendimentosController', 'action' => 'index');
+        $routes[] = array('route' => '/evolucao-rendimentos', 'controller' => 'RendimentosController', 'action' => 'index');
         $routes[] = array('route' => '/cadastrar-rendimento', 'controller' => 'RendimentosController', 'action' => 'cadastrarRendimento');
 
         $routes[] = array('route' => '/extrato-investimentos', 'controller' => 'ExtratoInvestimentosController', 'action' => 'index');

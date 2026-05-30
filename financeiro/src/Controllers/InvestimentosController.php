@@ -5,6 +5,7 @@ use Exception;
 use MF\Controller\Controller;
 use MF\Helpers\NumbersHelper;
 use MF\Model\Model;
+use MF\View\SetButtons;
 use src\Models\Categorias\CategoriasDAO;
 use src\Models\Categorias\CategoriasEntity;
 use src\Models\Investimentos\InvestimentosDAO;
@@ -63,7 +64,7 @@ class InvestimentosController extends Controller {
         $model = new Model();
 
         $this->view->data['tipo_movimento'] = $_GET['action'];
-        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
+        $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'idProprietario' => 'ASC', 'tituloInvest' => 'ASC']);
         $this->view->data['options_list_origem'] = json_encode($model->selectAll(new ObjetivosEntity, [], [], []));
         $this->view->data['options_list_destino'] = json_encode($model->selectAll(new ObjetivosEntity, [['finalizado', '=', '"F"']], [], []));
         $this->view->data['categorias'] = $model->selectAll(new CategoriasEntity, [['status', '=', '"1"']], [], ['tipo' => 'ASC', 'categoria' => 'ASC']);
@@ -242,6 +243,7 @@ class InvestimentosController extends Controller {
     public function objetivos()
     {
         $model = new Model();
+        $buttons = new SetButtons();
 
         $this->view->settings = [
             'action'    => $this->index_route . '/cad-objetivos',
@@ -251,9 +253,70 @@ class InvestimentosController extends Controller {
         ];
 
         $this->view->data['invests'] = $model->selectAll(new InvestimentosEntity, [['status', '=', '"1"']], [], ['nomeBanco' => 'ASC', 'tituloInvest' => 'ASC']);
-        $this->view->data['lista_obj'] = $model->selectAll(new ObjetivosEntity, [], [], []);
+        $lista_obj = $model->selectAll(new ObjetivosEntity, [], [], []);
 
+        $this->view->data['lista_obj'] = $this->processarObjetivos($lista_obj);
+        $this->view->data['stats'] = $this->calcularEstatisticas($lista_obj);
+
+        $buttons->setButton(
+            'Apagar',
+            $this->index_route . '/delete-objetivos',
+            'px-2 btn btn-danger action-delete',
+            'right'
+        );
+
+        $this->view->buttons = $buttons->getButtons();
         $this->renderPage(conteudo: 'objetivos', base_interna: 'base_cruds', extra: 'listagem_objetivos');
+    }
+
+    private function processarObjetivos(array $lista_obj)
+    {
+        if (empty($lista_obj)) {
+            return [];
+        }
+
+        foreach ($lista_obj as &$objetivo) {
+            $progresso = ($objetivo['saldoAtual'] / $objetivo['vlrObj']) * 100;
+            $objetivo['progresso'] = min(100, round($progresso, 1));
+
+            if ($objetivo['progresso'] < 30) {
+                $objetivo['corProgresso'] = 'bg-danger';
+            } elseif ($objetivo['progresso'] < 70) {
+                $objetivo['corProgresso'] = 'bg-warning';
+            } else {
+                $objetivo['corProgresso'] = 'bg-success';
+            }
+
+            // Definir cor de fundo do select de status
+            $objetivo['corStatus'] = $objetivo['finalizado'] == 'T' ? '#d1e7dd' : '#fff3cd';
+        }
+
+        return $lista_obj;
+    }
+
+    private function calcularEstatisticas(array $lista_obj)
+    {
+        if (empty($lista_obj)) {
+            return [
+                'concluidos' => 0,
+                'andamento' => 0,
+                'total' => 0
+            ];
+        }
+
+        $concluidos = count(array_filter($lista_obj, function($item) {
+            return $item['finalizado'] == 'T';
+        }));
+
+        $andamento = count(array_filter($lista_obj, function($item) {
+            return $item['finalizado'] == 'F';
+        }));
+
+        return [
+            'concluidos' => $concluidos,
+            'andamento' => $andamento,
+            'total' => count($lista_obj)
+        ];
     }
 
     public function cadastrarObjetivos()
@@ -515,6 +578,47 @@ class InvestimentosController extends Controller {
                 $model_objetivos->cancelarTransacao();
 
                 echo json_encode($array_retorno);
+                exit;
+            }
+        }
+    }
+
+     public function deletarObjetivo()
+    {
+        if ($this->isSetPost()) {
+
+            $model_objetivos = new ObjetivosDAO();
+            $model_objetivos->iniciarTransacao();
+
+            try {
+                foreach ($_POST['itens'] as $id) {
+                    $ret = $model_objetivos->delete(new ObjetivosEntity, 'idObj', $id);
+
+                    if ($ret != false) {
+                        $model_objetivos->arr_afetados[] = $id;
+                    } else {
+                        $model_objetivos->arr_nao_afetados[] = $id;
+                    }
+                }
+
+                $array_retorno = array(
+					'result'   => true,
+					'mensagem' => 'Objetivos excluídos: ' . implode(', ', $model_objetivos->arr_afetados) . '. Objetivos não excluídos: ' . implode(', ', $model_objetivos->arr_nao_afetados),
+				);
+
+                $model_objetivos->finalizarTransacao();
+
+				echo json_encode($array_retorno);
+                exit;
+            } catch (Exception $e) {
+                $array_retorno = array(
+					'result'   => false,
+					'mensagem' => $e->getMessage(),
+				);
+
+                $model_objetivos->cancelarTransacao();
+
+				echo json_encode($array_retorno);
                 exit;
             }
         }

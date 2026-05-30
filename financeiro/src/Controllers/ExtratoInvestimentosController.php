@@ -9,7 +9,7 @@ use src\Models\Rendimentos\RendimentosEntity;
 use src\System\MonthAndYear;
 
 class ExtratoInvestimentosController extends Controller {
-    public function index() 
+    public function index()
     {
         $model_investimentos = new InvestimentosDAO();
 

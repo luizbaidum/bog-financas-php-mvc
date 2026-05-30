@@ -203,3 +203,8 @@ body {
 main {
     padding-bottom: 80px; /* Altura do rodapé */
 }
+
+.titulo-input-formulario-cadastro {
+    font-weight: 600 !important; /* fw-semibold */
+    color: #6c757d !important; /* text-secondary */
+}

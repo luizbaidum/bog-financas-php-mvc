@@ -1,48 +1,74 @@
 <input type="hidden" name="cadContaInvest" value="1">
 
-<div class="card">
+<div class="card border-0 shadow-sm">
     <div class="card-header bg-dark text-white">
-        <h6 class="card-title mb-0">Cadastro</h6>
+        <div class="d-flex align-items-center">
+            <i class="bi bi-plus-circle fs-4 me-2"></i>
+            <h6 class="card-title mb-0">Cadastro</h6>
+        </div>
     </div>
-    <div class="card-body">
-        <div class="form-group">
-            <div class="row">
-                <div class="col-12 col-sm-3">
-                    <label for="idNomeBanco">Nome Banco</label>
-                    <input type="text" class="form-control" id="idNomeBanco" name="nomeBanco" required>
-                </div>
-                <div class="col-12 col-sm-3">
-                    <label for="idTituloInvest">Título</label>
-                    <input type="text" class="form-control" id="idTituloInvest" name="tituloInvest" required>
-                </div>
-                <div class="col-12 col-sm-3">
-                    <label for="idDataInicio">Data Início</label>
-                    <input type="date" class="form-control" id="idDataInicio" name="dataInicio" required>
-                </div>
-                <div class="col-12 col-sm-3">
-                    <label for="idDataResgate">Data Resgate</label>
-                    <input type="date" class="form-control" id="idDataResgatar" name="dataResgatar">
+    <div class="card-body p-2">
+        <div class="row g-2">
+            <div class="col-md-6">
+                <label for="idNomeBanco" class="form-label titulo-input-formulario-cadastro">Nome Banco</label>
+                <div class="input-group">
+                    <input type="text" class="form-control"
+                           id="idNomeBanco" name="nomeBanco"
+                           required>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-12 col-sm-3">
-                        <label for="idSaldoInicial">Saldo Inicial</label>
-                        <input type="number" class="form-control" id="idSaldoInicial" name="saldoInicial" step=".01" required>
-                    </div>
-                    <div class="col-12 col-sm-3">
-                        <label for="idValorFinal">Valor Final Resgate</label>
-                        <input type="number" class="form-control" id="idSaldoFinal" name="saldoFinal" step=".01">
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <label for="idProprietario">Proprietário</label>
-                        <select class="form-select" id="idProprietario" name="idProprietario">
-                            <?php foreach ($lista_proprietarios as $prop): ?>
-                                <option value="<?= $prop['idProprietario']; ?>"> <?= $prop['proprietario']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+
+            <div class="col-md-6">
+                <label for="idTituloInvest" class="form-label titulo-input-formulario-cadastro">Título</label>
+                <div class="input-group">
+                    <input type="text" class="form-control"
+                           id="idTituloInvest" name="tituloInvest"
+                           required>
                 </div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="idDataInicio" class="form-label titulo-input-formulario-cadastro">Data Início</label>
+                <div class="input-group">
+                    <input type="date" class="form-control"
+                           id="idDataInicio" name="dataInicio"
+                           required>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="idDataResgate" class="form-label titulo-input-formulario-cadastro">Data Resgate</label>
+                <div class="input-group">
+                    <input type="date" class="form-control"
+                           id="idDataResgatar" name="dataResgatar">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="idSaldoInicial" class="form-label titulo-input-formulario-cadastro">Saldo Inicial</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">R$</span>
+                    <input type="text" class="form-control numero-br"
+                           id="idSaldoInicial" name="saldoInicial" required value="0,00">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="idSaldoFinal" class="form-label titulo-input-formulario-cadastro">Valor Final Resgate</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">R$</span>
+                    <input type="text" class="form-control numero-br"
+                           id="idSaldoFinal" name="saldoFinal" required>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="idProprietario" class="form-label titulo-input-formulario-cadastro">Proprietário</label>
+                <select class="form-select" id="idProprietario" name="idProprietario" required>
+                    <?php foreach ($lista_proprietarios as $prop): ?>
+                        <option value="<?= $prop['idProprietario']; ?>"> <?= $prop['proprietario']; ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
         </div>
     </div>

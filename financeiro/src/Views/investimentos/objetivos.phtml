@@ -1,35 +1,57 @@
-<div class="card">
+<div class="card border-0 shadow-sm">
     <div class="card-header bg-dark text-white">
-        <h6 class="card-title mb-0">Cadastro</h6>
-    </div>
-    <div class="card-body">
-        <div class="form-group">
-            <div class="row">
-                <div class="col-sm-6 col-12">
-                    <label for="idNomeObj">Título</label>
-                    <input type="text" class="form-control" id="idNomeObj" name="nomeObj" required>
-                </div>
-                <div class="col-sm-6 col-12">
-                    <label for="idVlrObj">Valor Final Juntar</label>
-                    <input type="text" class="form-control numero-br" id="idVlrObj" name="vlrObj" value="0,00" required>
-                </div>
-            </div>
+        <div class="d-flex align-items-center">
+            <i class="bi bi-plus-circle fs-4 me-2"></i>
+            <h6 class="card-title mb-0">Cadastro</h6>
         </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-12 col-sm-6">
-                    <label for="idContaInvest">Conta Invest</label>
-                    <select class="form-select" id="idContaInvest" name="idContaInvest" required>
-                        <option value="">Selecione</option>
-                        <?php foreach ($invests as $value): ?>
-                            <option value="<?= $value['idContaInvest']; ?>"><?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
+    </div>
+    <div class="card-body p-2">
+        <div class="row g-2">
+            <div class="col-md-6">
+                <label for="idNomeObj" class="form-label titulo-input-formulario-cadastro">Título do Objetivo</label>
+                <div class="input-group">
+                    <input type="text" class="form-control"
+                           id="idNomeObj" name="nomeObj"
+                           placeholder="Ex: Comprar um carro, Viagem, etc."
+                           required>
                 </div>
-                <div class="col-12 col-sm-6">
-                    <label for="idPercentObjContaInvest">% da Conta p/ Objetivo</label>
-                    <input type="text" class="form-control numero-br"  id="idPercentObjContaInvest" name="percentObjContaInvest" value="0,00" required>
+                <div class="form-text text-muted">Escolha um nome descritivo para seu objetivo</div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="idVlrObj" class="form-label titulo-input-formulario-cadastro">Meta Financeira</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">R$</span>
+                    <input type="text" class="form-control border-start-0 ps-0 numero-br"
+                           id="idVlrObj" name="vlrObj" value="0,00"
+                           placeholder="0,00"
+                           required>
                 </div>
+                <div class="form-text text-muted">Valor total que deseja acumular</div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="idContaInvest" class="form-label titulo-input-formulario-cadastro">Conta de Investimento</label>
+                <select class="form-select" id="idContaInvest" name="idContaInvest" required>
+                    <option value="" disabled selected>Selecione uma conta</option>
+                    <?php foreach ($invests as $value): ?>
+                        <option value="<?= $value['idContaInvest']; ?>">
+                            <i class="bi bi-bank"></i> <?= $value['nomeBanco'] . ' - ' . $value['tituloInvest']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="form-text text-muted">Conta que será usada para atingir este objetivo</div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="idPercentObjContaInvest" class="form-label titulo-input-formulario-cadastro">Percentual de Alocação</label>
+                <div class="input-group">
+                    <input type="text" class="form-control text-end numero-br"
+                           id="idPercentObjContaInvest" name="percentObjContaInvest"
+                           value="0,00" required>
+                    <span class="input-group-text bg-light">%</span>
+                </div>
+                <div class="form-text text-muted">Percentual da conta destinado a este objetivo</div>
             </div>
         </div>
     </div>
