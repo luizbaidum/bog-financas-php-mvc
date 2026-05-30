@@ -1,29 +1,34 @@
 <div class="container">
 
     <div class="mt-2 mb-2">
-		<div class="card p-2">
-			<div class="text-center">Extrato dos Investimentos</div>
-		</div>
-	</div>
-
-    <div class="card mt-2">
-        <div class="card-header bg-dark text-white">
-            <h6 class="card-title mb-0">Filtro</h6>
+        <div class="mt-2 mb-2">
+            <div class="card p-2">
+                <div class="text-center">Investimentos</div>
+            </div>
         </div>
-        <div class="card-body p-1">
+    </div>
+
+    <div class="card border-0 shadow-sm mt-2">
+        <div class="card-header bg-dark text-white">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-funnel fs-4 me-2"></i>
+                <h6 class="card-title mb-0">Filtro</h6>
+            </div>
+        </div>
+        <div class="card-body p-2">
             <form method="POST" data-action="<?= $action; ?>" class="submit-form-render-ajax" data-div="<?= $div; ?>">
-                <div class="form-group m-2">
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="idExtratoAno">Ano</label>
+                <div class="form-group">
+                    <div class="row g-2">
+                        <div class="col-md-2">
+                            <label for="idExtratoAno" class="form-label titulo-input-formulario-cadastro">Ano</label>
                             <select class="form-select" id="idExtratoAno" name="extratoAno">
                                 <?php foreach ($years as $v): ?>
                                     <option value="<?= $v; ?>" <?= $v == date('Y') ? ' selected ' : ''; ?>><?= $v; ?></option>
                                 <?php endforeach;?>
                             </select>
                         </div>
-                        <div class="col-2">
-                            <label for="idExtratoMes">Mês</label>
+                        <div class="col-md-2">
+                            <label for="idExtratoMes" class="form-label titulo-input-formulario-cadastro">Mes</label>
                             <select class="form-select" id="idExtratoMes" name="extratoMes">
                                 <option value="">Trimestre</option>
                                 <?php foreach ($months as $k => $v): ?>
@@ -31,8 +36,8 @@
                                 <?php endforeach;?>
                             </select>
                         </div>
-                        <div class="col-3">
-                            <label for="idExtratoInvest">Invest</label>
+                        <div class="col-md-3">
+                            <label for="idExtratoInvest" class="form-label titulo-input-formulario-cadastro">Invest</label>
                             <select class="form-select" id="idExtratoInvest" name="extratoInvest">
                                 <option value="">Todos</option>
                                 <?php foreach ($lista_invest as $v): ?>
@@ -40,8 +45,8 @@
                                 <?php endforeach;?>
                             </select>
                         </div>
-                        <div class="col-3">
-                            <label for="idAcaoInvest">Ação</label>
+                        <div class="col-md-3">
+                            <label for="idAcaoInvest" class="form-label titulo-input-formulario-cadastro">Acao</label>
                             <select class="form-select" id="idAcaoInvest" name="acaoInvest">
                                 <option value="">Todos</option>
                                 <?php 
@@ -57,8 +62,8 @@
                                 <?php endforeach;?>
                             </select>
                         </div>
-                        <div class="col-2">
-                            <label for="idProprietario">Proprietário</label>
+                        <div class="col-md-2">
+                            <label for="idProprietario" class="form-label titulo-input-formulario-cadastro">Proprietario</label>
                             <select class="form-select" id="idProprietario" name="idProprietario">
                                 <option value="">Todos</option>
                                 <?php foreach ($lista_proprietarios as $v): ?>
@@ -67,17 +72,26 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-4">
-                            <label for="idDesconsiderar">Desconsiderar</label>
+                    <div class="row g-2 mt-2">
+                        <div class="col-md-4">
+                            <label for="idDesconsiderar" class="form-label titulo-input-formulario-cadastro">Desconsiderar</label>
                             <select class="form-select" id="idDesconsiderar" name="desconsiderarInvest[]" multiple>
                                 <?php foreach ($lista_invest as $v): ?>
                                     <option value="<?= $v['idContaInvest']; ?>"><?= $v['nomeBanco'] . ' - ' . $v['tituloInvest']; ?></option>
                                 <?php endforeach;?>
                             </select>
                         </div>
+                        <div class="col-md-2">
+                            <label for="idProprietarioMov" class="form-label titulo-input-formulario-cadastro">Proprietario Movimento</label>
+                            <select class="form-select" id="idProprietarioMov" name="idProprietarioMov">
+                                <option value="">Todos</option>
+                                <?php foreach ($lista_proprietarios as $v): ?>
+                                    <option value="<?= $v['idProprietario']; ?>"><?= $v['idProprietario'] . ' - ' . $v['proprietario']; ?></option>
+                                <?php endforeach;?>
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-3 pt-3">
+                    <div class="col-md-3 pt-3">
                         <button class="btn btn-primary mt-1" type="submit">Aplicar</button>
                     </div>
                 </div>
@@ -85,11 +99,14 @@
         </div>
     </div>
 
-    <div class="card mt-2">
+    <div class="card border-0 shadow-sm mt-2">
         <div class="card-header bg-dark text-white">
-            <h6 class="card-title mb-0">Extrato</h6>
+            <div class="d-flex align-items-center">
+                <i class="bi bi-receipt fs-4 me-2"></i>
+                <h6 class="card-title mb-0">Extrato</h6>
+            </div>
         </div>
-        <div class="card-body p-1" id="<?= $div; ?>">
+        <div class="card-body p-2" id="<?= $div; ?>">
             <?php require ('tabela_extrato.phtml'); ?>
         </div>
     </div>

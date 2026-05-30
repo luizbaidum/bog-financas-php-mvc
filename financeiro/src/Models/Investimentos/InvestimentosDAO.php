@@ -27,6 +27,7 @@ class InvestimentosDAO extends Model {
         $acao = $filtro['acaoInvest'] ?? '';
         $proprietario = $filtro['idProprietario'] ?? '';
         $desconsiderar = $filtro['desconsiderarInvest'] ?? [];
+        $proprietarioMovimento = $filtro['idProprietarioMov'] ?? '';
 
         if ($mes == '') {
             if ($ano == date('Y') || $ano == '') {
@@ -58,11 +59,29 @@ class InvestimentosDAO extends Model {
             $where .= "AND `contas_investimentos`.`idProprietario` = '$proprietario'";
         }
 
+        if ($proprietarioMovimento != '') {
+            $where .= "AND `movimentos`.`idProprietario` = '$proprietarioMovimento'";
+        }
+
         if (! empty($desconsiderar)) {
             $where .= 'AND `rendimentos`.`idContaInvest` NOT IN (' . implode(',', $desconsiderar) . ')';
         }
 
-        $query = "SELECT `rendimentos`.*, CONCAT(`contas_investimentos`.`nomeBanco`, ' - ', `contas_investimentos`.`tituloInvest`) AS conta, CONCAT(objetivos_invest.idObj, ' - ', nomeObj) AS objetivo FROM `rendimentos` INNER JOIN `contas_investimentos` ON `rendimentos`.`idContaInvest` = `contas_investimentos`.`idContaInvest` INNER JOIN `proprietarios` ON `proprietarios`.`idProprietario` = `contas_investimentos`.`idProprietario` LEFT JOIN objetivos_invest ON objetivos_invest.idObj = rendimentos.idObj WHERE `rendimentos`.`idRendimento` > 0 $where ORDER BY `rendimentos`.`dataRendimento` DESC";
+        $query = "SELECT `rendimentos`.*,
+                CONCAT(`contas_investimentos`.`nomeBanco`, ' - ', `contas_investimentos`.`tituloInvest`) AS conta,
+                CONCAT(objetivos_invest.idObj, ' - ', nomeObj) AS objetivo,
+                `movimentos`.idProprietario AS idPropMov,
+                `contas_investimentos`.idProprietario AS idPropConta,
+                `propConta`.proprietario AS proprietarioConta,
+                `propMov`.proprietario AS proprietarioMov
+                FROM `rendimentos`
+                INNER JOIN `contas_investimentos` ON `rendimentos`.`idContaInvest` = `contas_investimentos`.`idContaInvest`
+                LEFT JOIN `movimentos` ON `movimentos`.idMovimento = `rendimentos`.idMovimento
+                INNER JOIN `proprietarios` propConta ON `propConta`.`idProprietario` = `contas_investimentos`.`idProprietario`
+                LEFT JOIN objetivos_invest ON objetivos_invest.idObj = rendimentos.idObj
+                LEFT JOIN `proprietarios` propMov ON `propMov`.`idProprietario` = `movimentos`.`idProprietario`
+                WHERE `rendimentos`.`idRendimento` > 0 $where
+                ORDER BY `rendimentos`.`dataRendimento` DESC";
 
         $result = $this->sql_actions->executarQuery($query);
 
