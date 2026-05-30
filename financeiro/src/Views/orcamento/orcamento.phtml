@@ -1,38 +1,44 @@
-<div class="card">
+<div class="card border-0 shadow-sm formulario-padrao-card">
     <div class="card-header bg-dark text-white">
-        <h6 class="card-title mb-0">Cadastro</h6>
+        <div class="d-flex align-items-center">
+            <i class="bi bi-plus-circle fs-4 me-2"></i>
+            <h6 class="card-title mb-0">Cadastro</h6>
+        </div>
     </div>
-    <div class="card-body">
+    <div class="card-body p-2">
         <div class="form-group">
-            <div class="row">
-                <div class="col-12 col-sm-3">
-                    <label for="idDataOrcamento">Mês Movimento Orçado</label>
-                    <select class="form-select" id="idDataOrcamento" name="dataOrcamento" required>
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <label for="idDataOrcamento" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Mês Movimento Orçado</label>
+                    <select class="form-select formulario-padrao-input" id="idDataOrcamento" name="dataOrcamento" required>
                         <?php foreach ($months as $k => $v): ?>
                             <option value="<?= date('y') . "-" . ($k + 1) . "-01"; ?>" <?= ((date('m') + 1) == ($k + 1) ? "selected" : ""); ?>><?= $v; ?></option>
                         <?php endforeach;?>
                     </select>
                 </div>
-                <div class="col-12 col-sm-3">
-                    <label for="idCategoria">Categoria Orçamento</label>
-                    <select class="form-select" id="idCategoria" name="idCategoria" required>
+                <div class="col-md-3">
+                    <label for="idCategoria" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Categoria Orçamento</label>
+                    <select class="form-select formulario-padrao-input" id="idCategoria" name="idCategoria" required>
                         <option value="">Selecione</option>
                         <?php foreach ($categorias as $cat): ?>
                             <option value="<?= $cat['idCategoria'] . ' - sinal: ' . $cat['sinal']; ?>"><?= $cat['categoria'] . ' - ' . $cat['tipo']; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <div class="col-12 col-sm-3">
-                    <label for="idProprietario">Proprietário</label>
-                    <select class="form-select" id="idProprietario" name="idProprietario">
+                <div class="col-md-3">
+                    <label for="idProprietario" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Proprietário</label>
+                    <select class="form-select formulario-padrao-input" id="idProprietario" name="idProprietario">
                         <?php foreach ($lista_proprietarios as $prop): ?>
                             <option value="<?= $prop['idProprietario']; ?>"> <?= $prop['proprietario']; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <div class="col-12 col-sm-3">
-                    <label for="tipo">Valor</label>
-                    <input type="text" class="form-control numero-br" id="idValor" name="valor" required value="0,00">
+                <div class="col-md-3">
+                    <label for="tipo" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Valor</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">R$</span>
+                        <input type="text" class="form-control numero-br formulario-padrao-input" id="idValor" name="valor" required value="0,00">
+                    </div>
                 </div>
             </div>
         </div>

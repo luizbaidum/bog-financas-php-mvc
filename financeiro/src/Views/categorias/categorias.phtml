@@ -1,29 +1,32 @@
-<div class="card">
+<div class="card border-0 shadow-sm formulario-padrao-card">
     <div class="card-header bg-dark text-white">
-        <h6 class="card-title mb-0">Cadastro</h6>
+        <div class="d-flex align-items-center">
+            <i class="bi bi-plus-circle fs-4 me-2"></i>
+            <h6 class="card-title mb-0">Cadastro</h6>
+        </div>
     </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-sm-6 col-12">
-                <div class="row">
-                    <div class="col-sm-6 col-12">
-                        <label for="categoria">Nome/Título</label>
-                        <input type="text" class="form-control" id="categoria" name="categoria" required>
+    <div class="card-body p-2">
+        <div class="row g-2">
+            <div class="col-md-6 col-12">
+                <div class="row g-2">
+                    <div class="col-md-6 col-12">
+                        <label for="categoria" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Nome/Título</label>
+                        <input type="text" class="form-control formulario-padrao-input" id="categoria" name="categoria" required>
                     </div>
-                    <div class="col-sm-6 col-12">
-                        <label for="idRegularidade">Regularidade</label>
-                        <select class="form-control" id="idRegularidade" name="regularidade" required>
+                    <div class="col-md-6 col-12">
+                        <label for="idRegularidade" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Regularidade</label>
+                        <select class="form-select formulario-padrao-input" id="idRegularidade" name="regularidade" required>
                             <option value="">Selecione</option>
                             <option value="f">F (Fixa)</option>
                             <option value="v">V (Variável)</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6 col-12">
-                            <label for="tipo">Tipo</label>
-                            <select class="form-control" id="tipo" name="tipo" required>
+                <div class="form-group mt-2">
+                    <div class="row g-2">
+                        <div class="col-md-6 col-12">
+                            <label for="tipo" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Tipo</label>
+                            <select class="form-select formulario-padrao-input" id="tipo" name="tipo" required>
                                 <option value="">Selecione</option>
                                 <option value="R">R (Receita)</option>
                                 <option value="D">D (Despesa)</option>
@@ -31,9 +34,9 @@
                                 <option value="RA">RA (Resgate de Aplicação)</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-12">
-                            <label for="sinal">Sinal</label>
-                            <select class="form-control" id="sinal" name="sinal" required>
+                        <div class="col-md-6 col-12">
+                            <label for="sinal" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Sinal</label>
+                            <select class="form-select formulario-padrao-input" id="sinal" name="sinal" required>
                                 <option value="">Selecione</option>
                                 <option value="+">+ (Entradas)</option>
                                 <option value="-">- (Saídas)</option>
@@ -42,7 +45,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-12">
+            <div class="col-md-6 col-12">
                 <small class="text-muted">
                     Regularidade <strong>Fixa</strong> para Categorias onde o valor não sofre alteração mês-a-mês, ou sofre pequenas alterações. <br>
                     Regularidade <strong>Variável</strong> para Categorias onde o valor tem grandes alterações a cada mês. 

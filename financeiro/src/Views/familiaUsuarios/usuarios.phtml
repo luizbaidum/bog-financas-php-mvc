@@ -8,7 +8,7 @@
     </div>
 
     <?php if ($is_gestor): ?>
-        <div class="card mt-2 mb-2">
+        <div class="card mt-2 mb-2 formulario-padrao-card">
             <div class="card-header bg-dark text-white">
                 <button class="btn btn-sm nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCadUsuario" aria-expanded="false" aria-controls="collapseCadUsuario">
                     <h6 class="card-title mb-0">Cadastrar Usuário</h6>
@@ -17,26 +17,26 @@
             <div class="collapse" id="collapseCadUsuario">
                 <div class="card-body p-1">
                     <form data-action="<?= $action; ?>" id="idform-usuario" class="submit-form-crud-ajax">
-                        <div class="form-group">
+                        <div class="form-group formulario-padrao-section">
                             <div class="row g-2">
                                 <div class="col-md-3">
-                                    <label for="idNome" class="form-label">Nome</label>
-                                    <input type="text" class="form-control form-control-sm" id="idNome" name="nome" required 
+                                    <label for="idNome" class="form-label formulario-padrao-label">Nome</label>
+                                    <input type="text" class="form-control formulario-padrao-input form-control-sm" id="idNome" name="nome" required 
                                         placeholder="Nome do usuário">
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="idLogin" class="form-label">Login</label>
-                                    <input type="text" class="form-control form-control-sm" id="idLogin" name="login" required 
+                                    <label for="idLogin" class="form-label formulario-padrao-label">Login</label>
+                                    <input type="text" class="form-control formulario-padrao-input form-control-sm" id="idLogin" name="login" required 
                                         placeholder="Login">
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="idSenha" class="form-label">Senha</label>
-                                    <input type="password" class="form-control form-control-sm" id="idSenha" name="senha" required 
+                                    <label for="idSenha" class="form-label formulario-padrao-label">Senha</label>
+                                    <input type="password" class="form-control formulario-padrao-input form-control-sm" id="idSenha" name="senha" required 
                                         placeholder="Senha segura">
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="idConfirmaSenha" class="form-label">Confirmar</label>
-                                    <input type="password" class="form-control form-control-sm" id="idConfirmaSenha" name="confirmaSenha" required 
+                                    <label for="idConfirmaSenha" class="form-label formulario-padrao-label">Confirmar</label>
+                                    <input type="password" class="form-control formulario-padrao-input form-control-sm" id="idConfirmaSenha" name="confirmaSenha" required 
                                         placeholder="Repita a senha">
                                 </div>
                             </div>
