@@ -9,7 +9,7 @@
 
     <div class="row mb-2">
         <div class="col-12">
-            <div class="card">
+            <div class="card formulario-padrao-card">
                 <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                     <button class="btn btn-sm nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMovLembrar" aria-expanded="false" aria-controls="collapseMovLembrar">
                         <h6 class="card-title mb-0">Cadastrar</h6>
@@ -21,23 +21,23 @@
                         <form data-action="<?= $action; ?>" id="idform-crud" class="submit-form-crud-ajax">
                             <div class="row">
                                 <div class="col-sm-4 col-12">
-                                    <label for="idData" class="">Data</label>
-                                    <input type="date" class="form-control" id="idData" name="data" required value="<?= $movimento['data'] ?? ''; ?>">
+                                    <label for="idData" class="form-label formulario-padrao-label">Data</label>
+                                    <input type="date" class="form-control formulario-padrao-input" id="idData" name="data" required value="<?= $movimento['data'] ?? ''; ?>">
                                 </div>
 
                                 <div class="col-sm-4 col-12">
-                                    <label for="idValor" class="">Valor</label>
+                                    <label for="idValor" class="form-label formulario-padrao-label">Valor</label>
                                     <div class="input-group">
                                         <span class="input-group-text">R$</span>
-                                        <input type="text" class="form-control numero-br" id="idValor" name="valor" required value="<?= $movimento['valor'] ?? '0,00'; ?>">
+                                        <input type="text" class="form-control numero-br formulario-padrao-input" id="idValor" name="valor" required value="<?= $movimento['valor'] ?? '0,00'; ?>">
                                     </div>
                                 </div>
 
                                 <div class="col-sm-4 col-12">
-                                    <label for="idDescricao" class="">Descrição</label>
+                                    <label for="idDescricao" class="form-label formulario-padrao-label">Descrição</label>
                                     <input 
                                         type="text" 
-                                        class="form-control" 
+                                        class="form-control formulario-padrao-input" 
                                         id="idDescricao" 
                                         name="descricao" 
                                         required 
@@ -47,8 +47,8 @@
                                 </div>
 
                                 <div class="col-sm-4 col-12">
-                                    <label for="idProprietarioPagante" class="">Proprietário Pagante</label>
-                                    <select class="form-select" id="idProprietarioPagante" name="idProprietarioPagante">
+                                    <label for="idProprietarioPagante" class="form-label formulario-padrao-label">Proprietário Pagante</label>
+                                    <select class="form-select formulario-padrao-input" id="idProprietarioPagante" name="idProprietarioPagante">
                                         <option value="">Selecione</option>
                                         <?php foreach ($lista_proprietarios as $prop): ?>
                                             <option value="<?= $prop['idProprietario'] ?>"><?= $prop['proprietario']; ?></option>
@@ -57,8 +57,8 @@
                                 </div>
 
                                 <div class="col-sm-4 col-12">
-                                    <label for="idProprietarioReal" class="">Proprietário Real</label>
-                                    <select class="form-select" id="idProprietarioReal" name="idProprietarioReal">
+                                    <label for="idProprietarioReal" class="form-label formulario-padrao-label">Proprietário Real</label>
+                                    <select class="form-select formulario-padrao-input" id="idProprietarioReal" name="idProprietarioReal">
                                         <option value="">Selecione</option>
                                         <?php foreach ($lista_proprietarios as $prop): ?>
                                             <option value="<?= $prop['idProprietario'] ?>"><?= $prop['proprietario']; ?></option>
@@ -67,8 +67,8 @@
                                 </div>
 
                                 <div class="col-sm-4 col-12">
-                                    <label for="idMetodoPagamento" class="">Método de Pagamento</label>
-                                    <select class="form-select" id="idMetodoPagamento" name="metodoPgto">
+                                    <label for="idMetodoPagamento" class="form-label formulario-padrao-label">Método de Pagamento</label>
+                                    <select class="form-select formulario-padrao-input" id="idMetodoPagamento" name="metodoPgto">
                                         <option value="">Selecione</option>
                                         <?php foreach ($lista_pgtos as $metodo): ?>
                                             <option value="<?= $metodo['code'] ?>"><?= $metodo['name']; ?></option>

@@ -1,6 +1,6 @@
 <input type="hidden" name="cadContaInvest" value="1">
 
-<div class="card border-0 shadow-sm">
+<div class="card border-0 shadow-sm formulario-padrao-card">
     <div class="card-header bg-dark text-white">
         <div class="d-flex align-items-center">
             <i class="bi bi-plus-circle fs-4 me-2"></i>
@@ -10,61 +10,61 @@
     <div class="card-body p-2">
         <div class="row g-2">
             <div class="col-md-6">
-                <label for="idNomeBanco" class="form-label titulo-input-formulario-cadastro">Nome Banco</label>
+                <label for="idNomeBanco" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Nome Banco</label>
                 <div class="input-group">
-                    <input type="text" class="form-control"
+                    <input type="text" class="form-control formulario-padrao-input"
                            id="idNomeBanco" name="nomeBanco"
                            required>
                 </div>
             </div>
 
             <div class="col-md-6">
-                <label for="idTituloInvest" class="form-label titulo-input-formulario-cadastro">Título</label>
+                <label for="idTituloInvest" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Título</label>
                 <div class="input-group">
-                    <input type="text" class="form-control"
+                    <input type="text" class="form-control formulario-padrao-input"
                            id="idTituloInvest" name="tituloInvest"
                            required>
                 </div>
             </div>
 
             <div class="col-md-6">
-                <label for="idDataInicio" class="form-label titulo-input-formulario-cadastro">Data Início</label>
+                <label for="idDataInicio" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Data Início</label>
                 <div class="input-group">
-                    <input type="date" class="form-control"
+                    <input type="date" class="form-control formulario-padrao-input"
                            id="idDataInicio" name="dataInicio"
                            required>
                 </div>
             </div>
 
             <div class="col-md-6">
-                <label for="idDataResgate" class="form-label titulo-input-formulario-cadastro">Data Resgate</label>
+                <label for="idDataResgate" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Data Resgate</label>
                 <div class="input-group">
-                    <input type="date" class="form-control"
+                    <input type="date" class="form-control formulario-padrao-input"
                            id="idDataResgatar" name="dataResgatar">
                 </div>
             </div>
 
             <div class="col-md-6">
-                <label for="idSaldoInicial" class="form-label titulo-input-formulario-cadastro">Saldo Inicial</label>
+                <label for="idSaldoInicial" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Saldo Inicial</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0">R$</span>
-                    <input type="text" class="form-control numero-br"
+                    <input type="text" class="form-control numero-br formulario-padrao-input"
                            id="idSaldoInicial" name="saldoInicial" required value="0,00">
                 </div>
             </div>
 
             <div class="col-md-6">
-                <label for="idSaldoFinal" class="form-label titulo-input-formulario-cadastro">Valor Final Resgate</label>
+                <label for="idSaldoFinal" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Valor Final Resgate</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0">R$</span>
-                    <input type="text" class="form-control numero-br"
+                    <input type="text" class="form-control numero-br formulario-padrao-input"
                            id="idSaldoFinal" name="saldoFinal" required>
                 </div>
             </div>
 
             <div class="col-md-6">
-                <label for="idProprietario" class="form-label titulo-input-formulario-cadastro">Proprietário</label>
-                <select class="form-select" id="idProprietario" name="idProprietario" required>
+                <label for="idProprietario" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Proprietário</label>
+                <select class="form-select formulario-padrao-input" id="idProprietario" name="idProprietario" required>
                     <?php foreach ($lista_proprietarios as $prop): ?>
                         <option value="<?= $prop['idProprietario']; ?>"> <?= $prop['proprietario']; ?></option>
                     <?php endforeach; ?>
