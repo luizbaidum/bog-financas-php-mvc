@@ -1,19 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace MF\API;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Smalot\PdfParser\Parser as PdfParser;
 
 class ConferenciaExtratoService
 {
-    private $conexao;
-
-    public function __construct($conexao)
-    {
-        $this->conexao = $conexao;
-    }
-
     /**
      * Processa a conferência do extrato bancário
      *
@@ -21,22 +14,20 @@ class ConferenciaExtratoService
      * @param array $arquivo $_FILES['arquivo']
      * @return array Resultado da conferência
      */
-    public function processarConferencia($dadosFormulario, $arquivo)
+    public function processarConferencia($dadosFormulario, $movimentos, $arquivo)
     {
         try {
             // 1. Validar dados recebidos
             $this->validarDados($dadosFormulario, $arquivo);
 
             // 2. Buscar movimentos lançados no sistema
-            $movimentosSistema = $this->buscarMovimentosSistema(
-                $dadosFormulario['proprietario'],
-                $dadosFormulario['mes_ano']
-            );
+            $movimentosSistema = $movimentos;
 
             // 3. Ler e processar arquivo do extrato
             $movimentosExtrato = $this->lerArquivoExtrato(
                 $arquivo,
-                $dadosFormulario['tipo_arquivo']
+                $dadosFormulario['tipo_arquivo'],
+                $dadosFormulario['banco']
             );
 
             // 4. Fazer conferência/match entre os dados
@@ -68,6 +59,10 @@ class ConferenciaExtratoService
             throw new \Exception('Mês/Ano não informado');
         }
 
+        if (empty($dados['banco'])) {
+            throw new \Exception('Banco não informado');
+        }
+
         if (empty($dados['tipo_arquivo'])) {
             throw new \Exception('Tipo de arquivo não informado');
         }
@@ -76,59 +71,41 @@ class ConferenciaExtratoService
             throw new \Exception('Arquivo não enviado ou erro no upload');
         }
 
-        $tiposPermitidos = ['pdf', 'xlsx', 'csv'];
-        if (!in_array($dados['tipo_arquivo'], $tiposPermitidos)) {
-            throw new \Exception('Tipo de arquivo inválido');
+        // Validação de tipos permitidos por banco
+        $banco = strtolower($dados['banco']);
+        $tipoArquivo = strtolower($dados['tipo_arquivo']);
+
+        // XLSX não é usado
+        if ($tipoArquivo === 'xlsx') {
+            throw new \Exception('Formato XLSX não é permitido. Use CSV ou PDF conforme o banco.');
         }
-    }
 
-    /**
-     * Busca movimentos lançados no sistema
-     */
-    private function buscarMovimentosSistema($idProprietario, $mesAno)
-    {
-        // Converter mes_ano (2024-01) para filtro SQL
-        list($ano, $mes) = explode('-', $mesAno);
+        // Validações específicas por banco
+        switch ($banco) {
+            case 'bradesco':
+            case 'bb':
+                // Bradesco e BB aceitam apenas CSV
+                if ($tipoArquivo != 'csv') {
+                    throw new \Exception('Para ' . strtoupper($banco) . ', apenas arquivos CSV são permitidos');
+                }
+                break;
 
-        $sql = "SELECT 
-                    m.idMovimento,
-                    m.data,
-                    m.descricao,
-                    m.valor,
-                    m.tipo,
-                    c.categoria
-                FROM movimentos m
-                LEFT JOIN categorias c ON m.idCategoria = c.idCategoria
-                WHERE m.idProprietario = :proprietario
-                AND YEAR(m.data) = :ano
-                AND MONTH(m.data) = :mes
-                ORDER BY m.data, m.idMovimento";
+            case 'cef':
+                // CEF aceita apenas PDF
+                if ($tipoArquivo != 'pdf') {
+                    throw new \Exception('Para CEF, apenas arquivos PDF são permitidos');
+                }
+                break;
 
-        $stmt = $this->conexao->prepare($sql);
-        $stmt->bindParam(':proprietario', $idProprietario);
-        $stmt->bindParam(':ano', $ano);
-        $stmt->bindParam(':mes', $mes);
-        $stmt->execute();
-
-        $movimentos = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-        // Normalizar valores
-        return array_map(function($mov) {
-            return [
-                'id' => $mov['idMovimento'],
-                'data' => $mov['data'],
-                'descricao' => $this->normalizarTexto($mov['descricao']),
-                'valor' => floatval($mov['valor']),
-                'tipo' => $mov['tipo'],
-                'categoria' => $mov['categoria']
-            ];
-        }, $movimentos);
+            default:
+                throw new \Exception('Banco não reconhecido');
+        }
     }
 
     /**
      * Lê e processa o arquivo de extrato
      */
-    private function lerArquivoExtrato($arquivo, $tipoArquivo)
+    private function lerArquivoExtrato($arquivo, $tipoArquivo, $banco)
     {
         switch ($tipoArquivo) {
             case 'pdf':
@@ -136,15 +113,16 @@ class ConferenciaExtratoService
             case 'xlsx':
                 return $this->lerExcel($arquivo['tmp_name']);
             case 'csv':
-                return $this->lerCSV($arquivo['tmp_name']);
+                if (strtolower($banco) == 'bradesco') {
+                    return $this->lerCSVBradesco($arquivo['tmp_name']);
+                } else {
+                    return $this->lerCSVBB($arquivo['tmp_name']);
+                }
             default:
                 throw new \Exception('Tipo de arquivo não suportado');
         }
     }
 
-    /**
-     * Lê arquivo PDF
-     */
     private function lerPDF($caminhoArquivo)
     {
         // Requer: composer require smalot/pdfparser
@@ -157,9 +135,6 @@ class ConferenciaExtratoService
         return $this->extrairMovimentosDeTexto($texto);
     }
 
-    /**
-     * Lê arquivo Excel
-     */
     private function lerExcel($caminhoArquivo)
     {
         // Requer: composer require phpoffice/phpspreadsheet
@@ -182,8 +157,7 @@ class ConferenciaExtratoService
                 $movimentos[] = [
                     'data' => $this->converterData($dados[0]),
                     'descricao' => $this->normalizarTexto($dados[1] ?? ''),
-                    'valor' => floatval($dados[2] ?? 0),
-                    'tipo' => $this->identificarTipo($dados[2] ?? 0)
+                    'valor' => floatval($dados[2] ?? 0)
                 ];
             }
         }
@@ -191,10 +165,7 @@ class ConferenciaExtratoService
         return $movimentos;
     }
 
-    /**
-     * Lê arquivo CSV
-     */
-    private function lerCSV($caminhoArquivo)
+    private function lerCSVBradesco($caminhoArquivo)
     {
         $movimentos = [];
 
@@ -207,13 +178,51 @@ class ConferenciaExtratoService
                     $movimentos[] = [
                         'data' => $this->converterData($dados[0]),
                         'descricao' => $this->normalizarTexto($dados[1] ?? ''),
-                        'valor' => floatval(str_replace(',', '.', $dados[2] ?? 0)),
-                        'tipo' => $this->identificarTipo($dados[2] ?? 0)
+                        'credito' => floatval(str_replace(',', '.', $dados[3] ?? 0)),
+                        'debito' => floatval(str_replace(',', '.', $dados[4] ?? 0))
                     ];
                 }
             }
             fclose($handle);
         }
+
+        echo '<pre>';
+        print_r($movimentos);
+        echo '</pre>';
+        exit;
+
+        return $movimentos;
+    }
+
+    private function lerCSVBB($caminhoArquivo)
+    {
+        // Função genérica para BB
+        $movimentos = [];
+
+        if (($handle = fopen($caminhoArquivo, 'r')) !== false) {
+            // Pular cabeçalho
+            fgetcsv($handle, 1000, ';');
+
+            while (($dados = fgetcsv($handle, 1000, ',')) !== false) {
+                if (!empty($dados[0])) {
+
+                    $valor = floatval(str_replace(',', '.', $dados[4] ?? 0));
+
+                    $movimentos[] = [
+                        'data' => $this->converterData($dados[0]),
+                        'descricao' => $this->normalizarTexto($dados[1] ?? ''),
+                        'credito' => $valor >= 0 ? $valor : 0,
+                        'debito' => $valor < 0 ? abs($valor) : 0
+                    ];
+                }
+            }
+            fclose($handle);
+        }
+
+        echo '<pre>';
+        print_r($movimentos);
+        echo '</pre>';
+        exit;
 
         return $movimentos;
     }
@@ -236,10 +245,14 @@ class ConferenciaExtratoService
                     'data' => $this->converterData($matches[1]),
                     'descricao' => $this->normalizarTexto($matches[2]),
                     'valor' => floatval(str_replace(',', '.', str_replace('.', '', $matches[3]))),
-                    'tipo' => $this->identificarTipo($matches[3])
                 ];
             }
         }
+
+        echo '<pre>';
+        print_r($movimentos);
+        echo '</pre>';
+        exit;
 
         return $movimentos;
     }
@@ -261,10 +274,10 @@ class ConferenciaExtratoService
 
             foreach ($extratoRestante as $key => $movExtrato) {
                 // Critérios de match
-                $matchData = $movSistema['data'] === $movExtrato['data'];
+                $matchData = $movSistema['dataMovimento'] == $movExtrato['data'];
                 $matchValor = abs($movSistema['valor'] - $movExtrato['valor']) < 0.01;
                 $matchDescricao = $this->calcularSimilaridade(
-                    $movSistema['descricao'],
+                    $movSistema['nomeMovimento'],
                     $movExtrato['descricao']
                 ) > 0.7; // 70% de similaridade
 
@@ -339,13 +352,5 @@ class ConferenciaExtratoService
         }
 
         return $data;
-    }
-
-    /**
-     * Identifica tipo de movimento (débito/crédito)
-     */
-    private function identificarTipo($valor)
-    {
-        return floatval($valor) < 0 ? 'debito' : 'credito';
     }
 }

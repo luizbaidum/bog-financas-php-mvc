@@ -6,6 +6,8 @@ use Exception;
 use MF\Controller\Controller;
 use src\Models\Proprietarios\ProprietariosEntity;
 use MF\Model\Model;
+use src\Models\Movimentos\MovimentosDAO;
+use MF\API\ConferenciaExtratoService;
 
 class ConferenciaExtratoController extends Controller {
 
@@ -14,10 +16,10 @@ class ConferenciaExtratoController extends Controller {
         $model = new Model();
 
         $this->view->settings = [
-            'action'   => $this->index_route . '/extrato-investimentos',
-            'redirect' => $this->index_route . '/extrato-investimentos',
+            'action'   => $this->index_route . '/processar-conferencia-extrato',
+            'redirect' => $this->index_route . '/conferencia-extrato',
             'title'    => 'Conferência de Extrato',
-            'div'      => 'id-tabela-extrato'
+            'div'      => 'id-tabela-conferencia'
         ];
 
         $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [['status', '=', '"1"']], [], []);
@@ -29,16 +31,29 @@ class ConferenciaExtratoController extends Controller {
 
     public function processarConferenciaExtrato()
     {
-        $dadosFormulario = [
+        $dados_formulario = [
             'proprietario' => $_POST['proprietario'],
             'mes_ano' => $_POST['mes_ano'],
-            'tipo_arquivo' => $_POST['tipo_arquivo']
+            'tipo_arquivo' => $_POST['tipo_arquivo'],
+            'banco' => $_POST['banco']
         ];
 
-        $arquivo = $_FILES['arquivo']; // IMPORTANTE: corrigir o name no form
+        $xpl = explode('-', $_POST['mes_ano']);
+        $ano_filtro = $xpl[0] ?? '';
+        $mes_filtro = $xpl[1] ?? '';
 
-        $service = new ConferenciaExtratoService($this->conexao);
-        $resultado = $service->processarConferencia($dadosFormulario, $arquivo);
+        $arquivo = $_FILES['arquivo'];
+
+        $model_movimentos = new MovimentosDAO();
+        $movimentos = $model_movimentos->indexTable('', $ano_filtro, $mes_filtro);
+
+        $service = new ConferenciaExtratoService();
+        $resultado = $service->processarConferencia($dados_formulario, $movimentos, $arquivo);
+
+        echo '<pre>';
+        print_r($resultado);
+        echo '</pre>';
+        exit;
 
         if ($resultado['sucesso']) {
             $this->view->resultado = $resultado['dados'];
