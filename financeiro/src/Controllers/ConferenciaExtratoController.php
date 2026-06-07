@@ -50,14 +50,10 @@ class ConferenciaExtratoController extends Controller {
         $service = new ConferenciaExtratoService();
         $resultado = $service->processarConferencia($dados_formulario, $movimentos, $arquivo);
 
-        echo '<pre>';
-        print_r($resultado);
-        echo '</pre>';
-        exit;
-
         if ($resultado['sucesso']) {
-            $this->view->resultado = $resultado['dados'];
-            $this->render('resultado', 'layout_ajax');
+            $this->view->data['resultado'] = $resultado['dados'];
+            $this->view->data['movimentos'] = $movimentos;
+            $this->renderSimple('resultado');
         } else {
             echo json_encode(['erro' => $resultado['erro']]);
         }

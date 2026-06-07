@@ -4,6 +4,8 @@ namespace MF\API;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Smalot\PdfParser\Parser as PdfParser;
+use Exception;
+use MF\Helpers\DateHelper;
 
 class ConferenciaExtratoService
 {
@@ -38,7 +40,7 @@ class ConferenciaExtratoService
                 'dados' => $resultado
             ];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return [
                 'sucesso' => false,
                 'erro' => $e->getMessage()
@@ -52,32 +54,34 @@ class ConferenciaExtratoService
     private function validarDados($dados, $arquivo)
     {
         if (empty($dados['proprietario'])) {
-            throw new \Exception('Proprietário não informado');
+            throw new Exception('Proprietário não informado');
         }
 
         if (empty($dados['mes_ano'])) {
-            throw new \Exception('Mês/Ano não informado');
+            throw new Exception('Mês/Ano não informado');
         }
 
         if (empty($dados['banco'])) {
-            throw new \Exception('Banco não informado');
+            throw new Exception('Banco não informado');
         }
 
         if (empty($dados['tipo_arquivo'])) {
-            throw new \Exception('Tipo de arquivo não informado');
+            throw new Exception('Tipo de arquivo não informado');
         }
 
-        if (!isset($arquivo) || $arquivo['error'] !== UPLOAD_ERR_OK) {
-            throw new \Exception('Arquivo não enviado ou erro no upload');
+        if (!isset($arquivo) || $arquivo['error'] != UPLOAD_ERR_OK) {
+            throw new Exception('Arquivo não enviado ou erro no upload');
         }
+
+        // Validar se o tipo do arquivo enviado corresponde ao tipo declarado no formulário
+        $this->validarTipoArquivo($arquivo, $dados['tipo_arquivo']);
 
         // Validação de tipos permitidos por banco
         $banco = strtolower($dados['banco']);
         $tipoArquivo = strtolower($dados['tipo_arquivo']);
 
-        // XLSX não é usado
-        if ($tipoArquivo === 'xlsx') {
-            throw new \Exception('Formato XLSX não é permitido. Use CSV ou PDF conforme o banco.');
+        if ($tipoArquivo == 'xlsx') {
+            throw new Exception('Formato XLSX ainda não é permitido. Use CSV ou PDF conforme o banco.');
         }
 
         // Validações específicas por banco
@@ -86,20 +90,65 @@ class ConferenciaExtratoService
             case 'bb':
                 // Bradesco e BB aceitam apenas CSV
                 if ($tipoArquivo != 'csv') {
-                    throw new \Exception('Para ' . strtoupper($banco) . ', apenas arquivos CSV são permitidos');
+                    throw new Exception('Para ' . strtoupper($banco) . ', apenas arquivos CSV são permitidos');
                 }
                 break;
 
             case 'cef':
                 // CEF aceita apenas PDF
                 if ($tipoArquivo != 'pdf') {
-                    throw new \Exception('Para CEF, apenas arquivos PDF são permitidos');
+                    throw new Exception('Para CEF, apenas arquivos PDF são permitidos');
                 }
                 break;
 
             default:
-                throw new \Exception('Banco não reconhecido');
+                throw new Exception('Banco não reconhecido');
         }
+    }
+
+    private function validarTipoArquivo($arquivo, $tipoDeclarado)
+    {
+        // Obter a extensão real do arquivo enviado
+        $nomeArquivo = $arquivo['name'];
+        $extensaoReal = strtolower(pathinfo($nomeArquivo, PATHINFO_EXTENSION));
+        $tipoDeclarado = strtolower($tipoDeclarado);
+
+        // Verificar correspondência
+        if ($extensaoReal !== $tipoDeclarado) {
+            throw new Exception(
+                "Incompatibilidade de arquivo: você selecionou '{$tipoDeclarado}' no formulário, " .
+                "mas o arquivo enviado é do tipo '{$extensaoReal}'. " .
+                "Por favor, envie um arquivo {$tipoDeclarado} ou selecione o tipo correto no formulário."
+            );
+        }
+
+        // Validação adicional com MIME type para maior segurança
+        $mimeType = mime_content_type($arquivo['tmp_name']);
+        $mimeTypeEsperado = $this->getMimeTypeEsperado($tipoDeclarado);
+
+        if (!in_array($mimeType, $mimeTypeEsperado)) {
+            throw new Exception(
+                "O arquivo enviado não parece ser um {$tipoDeclarado} válido. " .
+                "Tipo detectado: {$mimeType}"
+            );
+        }
+    }
+
+    /**
+     * Retorna os MIME types esperados para cada tipo de arquivo
+     */
+    private function getMimeTypeEsperado($tipo)
+    {
+        $mimeTypes = [
+            'pdf' => ['application/pdf'],
+            'csv' => ['text/csv', 'text/plain', 'application/csv', 'text/comma-separated-values'],
+            'xlsx' => [
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.ms-excel'
+            ]
+        ];
+
+        return $mimeTypes[$tipo] ?? [];
     }
 
     /**
@@ -119,7 +168,7 @@ class ConferenciaExtratoService
                     return $this->lerCSVBB($arquivo['tmp_name']);
                 }
             default:
-                throw new \Exception('Tipo de arquivo não suportado');
+                throw new Exception('Tipo de arquivo não suportado');
         }
     }
 
@@ -153,7 +202,7 @@ class ConferenciaExtratoService
                 $dados[] = $cell->getValue();
             }
 
-            if (!empty($dados[0])) {
+            if (! empty($dados[0])) {
                 $movimentos[] = [
                     'data' => $this->converterData($dados[0]),
                     'descricao' => $this->normalizarTexto($dados[1] ?? ''),
@@ -174,7 +223,7 @@ class ConferenciaExtratoService
             fgetcsv($handle, 1000, ';');
 
             while (($dados = fgetcsv($handle, 1000, ';')) !== false) {
-                if (!empty($dados[0])) {
+                if (! empty($dados[0])) {
                     $movimentos[] = [
                         'data' => $this->converterData($dados[0]),
                         'descricao' => $this->normalizarTexto($dados[1] ?? ''),
@@ -185,11 +234,6 @@ class ConferenciaExtratoService
             }
             fclose($handle);
         }
-
-        echo '<pre>';
-        print_r($movimentos);
-        echo '</pre>';
-        exit;
 
         return $movimentos;
     }
@@ -262,6 +306,11 @@ class ConferenciaExtratoService
      */
     private function conferirMovimentos($movimentosSistema, $movimentosExtrato)
     {
+        // echo '<pre>';
+        // print_r($movimentosSistema);
+        // print_r($movimentosExtrato);
+        // echo '</pre>';
+        // exit;
         $conferidos = [];
         $naoConciliados_sistema = [];
         $naoConciliados_extrato = [];
@@ -272,16 +321,27 @@ class ConferenciaExtratoService
         foreach ($movimentosSistema as $movSistema) {
             $encontrado = false;
 
+            $valor_sistema = $movSistema['valor'];
+            $data_sistema = $movSistema['dataMovimento'];
+
             foreach ($extratoRestante as $key => $movExtrato) {
-                // Critérios de match
-                $matchData = $movSistema['dataMovimento'] == $movExtrato['data'];
-                $matchValor = abs($movSistema['valor'] - $movExtrato['valor']) < 0.01;
+                $valor_extrato = $movExtrato['credito'] > 0 ? $movExtrato['credito'] : (abs($movExtrato['debito']) * -1);
+                $data_extrato = $movExtrato['data'];
+
+                // echo '<pre>';
+                // echo "Comparando:\n";
+                // echo "Sistema: Data={$data_sistema}, Valor={$valor_sistema}, Descrição={$movSistema['nomeMovimento']}\n";
+                // echo "Extrato: Data={$data_extrato}, Valor={$valor_extrato}, Descrição={$movExtrato['descricao']}\n";
+                // echo '</pre>';
+
+                $matchData = $data_sistema == $movExtrato['data'];
+                $matchValor = abs($valor_sistema - $valor_extrato) < 0.01;
                 $matchDescricao = $this->calcularSimilaridade(
                     $movSistema['nomeMovimento'],
                     $movExtrato['descricao']
                 ) > 0.7; // 70% de similaridade
 
-                if ($matchData && $matchValor && $matchDescricao) {
+                if ($matchData && $matchValor /*&& $matchDescricao*/) {
                     $conferidos[] = [
                         'sistema' => $movSistema,
                         'extrato' => $movExtrato,
@@ -294,7 +354,7 @@ class ConferenciaExtratoService
                 }
             }
 
-            if (!$encontrado) {
+            if (! $encontrado) {
                 $naoConciliados_sistema[] = $movSistema;
             }
         }
