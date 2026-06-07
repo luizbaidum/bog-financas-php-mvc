@@ -32,7 +32,6 @@ class ConferenciaExtratoController extends Controller {
     public function processarConferenciaExtrato()
     {
         $dados_formulario = [
-            'proprietario' => $_POST['proprietario'],
             'mes_ano' => $_POST['mes_ano'],
             'tipo_arquivo' => $_POST['tipo_arquivo'],
             'banco' => $_POST['banco']
@@ -57,5 +56,41 @@ class ConferenciaExtratoController extends Controller {
         } else {
             echo json_encode(['erro' => $resultado['erro']]);
         }
+    }
+
+    public function consultarConferenciaExtrato()
+    {
+        $model = new Model();
+
+        $this->view->settings = [
+            'action'   => $this->index_route . '/processar-conferencia-extrato',
+            'redirect' => $this->index_route . '/conferencia-extrato',
+            'title'    => 'Conferência de Extrato',
+            'div'      => 'id-tabela-conferencia'
+        ];
+
+        $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [['status', '=', '"1"']], [], []);
+
+        $this->renderPage(
+            conteudo: 'conferencia_extrato'
+        );
+    }
+
+    public function processarConsultarConferenciaExtrato()
+    {
+        $model = new Model();
+
+        $this->view->settings = [
+            'action'   => $this->index_route . '/processar-conferencia-extrato',
+            'redirect' => $this->index_route . '/conferencia-extrato',
+            'title'    => 'Conferência de Extrato',
+            'div'      => 'id-tabela-conferencia'
+        ];
+
+        $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [['status', '=', '"1"']], [], []);
+
+        $this->renderPage(
+            conteudo: 'conferencia_extrato'
+        );
     }
 }

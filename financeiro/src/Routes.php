@@ -43,7 +43,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/exibir-detalhes', 'controller' => 'MovimentosController', 'action' => 'exibirDetalhes');
 
         $routes[] = array('route' => '/buscar-orcamento-do-realizado', 'controller' => 'OrcamentoController', 'action' => 'buscarOrcamentoDoRealizado');
-        $routes[] = array('route' => '/orcamento_index', 'controller' => 'OrcamentoController', 'action' => 'index');
+        $routes[] = array('route' => '/orcamento-index', 'controller' => 'OrcamentoController', 'action' => 'index');
         $routes[] = array('route' => '/delete_itens_orcamento', 'controller' => 'OrcamentoController', 'action' => 'deletarItensOrcamento');
         $routes[] = array('route' => '/orcamento', 'controller' => 'OrcamentoController', 'action' => 'orcamento');
         $routes[] = array('route' => '/orcamento_do_realizado', 'controller' => 'OrcamentoController', 'action' => 'orcamentoDoRealizado');
@@ -94,6 +94,8 @@ class Routes extends Bootstrap {
 
         $routes[] = array('route' => '/conferencia-extrato', 'controller' => 'ConferenciaExtratoController', 'action' => 'index');
         $routes[] = array('route' => '/processar-conferencia-extrato', 'controller' => 'ConferenciaExtratoController', 'action' => 'processarConferenciaExtrato');
+        $routes[] = array('route' => '/consulta-conferencia-extrato', 'controller' => 'ConferenciaExtratoController', 'action' => 'consultarConferenciaExtrato');
+        $routes[] = array('route' => '/processar-consulta-conferencia-extrato', 'controller' => 'ConferenciaExtratoController', 'action' => 'processarConsultarConferenciaExtrato');
 
 		$this->setRoutes($routes);
 	}

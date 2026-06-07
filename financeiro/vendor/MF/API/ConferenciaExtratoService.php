@@ -53,10 +53,6 @@ class ConferenciaExtratoService
      */
     private function validarDados($dados, $arquivo)
     {
-        if (empty($dados['proprietario'])) {
-            throw new Exception('Proprietário não informado');
-        }
-
         if (empty($dados['mes_ano'])) {
             throw new Exception('Mês/Ano não informado');
         }
