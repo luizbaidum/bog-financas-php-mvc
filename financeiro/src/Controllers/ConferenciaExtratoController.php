@@ -31,6 +31,11 @@ class ConferenciaExtratoController extends Controller {
 
     public function processarConferenciaExtrato()
     {
+        $this->view->settings = [
+            'action2'  => $this->index_route . '/salvar-conferencia-extrato',
+            'redirect' => $this->index_route . '/conferencia-extrato',
+        ];
+
         $dados_formulario = [
             'mes_ano' => $_POST['mes_ano'],
             'tipo_arquivo' => $_POST['tipo_arquivo'],
@@ -55,6 +60,48 @@ class ConferenciaExtratoController extends Controller {
             $this->renderSimple('resultado');
         } else {
             echo json_encode(['erro' => $resultado['erro']]);
+        }
+    }
+    
+    public function salvarConferenciaExtrato()
+    {
+        try {
+            $conferidos = $_POST['conferidos'] ?? [];
+
+            echo '<pre>';
+            print_r($conferidos);
+            echo '</pre>';
+            exit;
+
+            if (empty($conferidos)) {
+                throw new Exception('Nenhum movimento conferido recebido.');
+            }
+
+            $dados = [];
+            foreach ($conferidos as $id_movimento => $json_extrato) {
+                $extrato = json_decode($json_extrato, true);
+
+                if ($extrato == null) {
+                    throw new Exception("Dado inválido para o movimento ID {$id_movimento}.");
+                }
+
+                $dados[] = [
+                    'id_movimento' => (int) $id_movimento,
+                    'extrato'      => $extrato,
+                ];
+            }
+
+            // TODO: persistir $dados no banco de dados
+
+            echo json_encode([
+                'result'   => true,
+                'mensagem' => 'Conferência salva com sucesso.',
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'result'   => false,
+                'mensagem' => $e->getMessage(),
+            ]);
         }
     }
 

@@ -96,6 +96,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/processar-conferencia-extrato', 'controller' => 'ConferenciaExtratoController', 'action' => 'processarConferenciaExtrato');
         $routes[] = array('route' => '/consulta-conferencia-extrato', 'controller' => 'ConferenciaExtratoController', 'action' => 'consultarConferenciaExtrato');
         $routes[] = array('route' => '/processar-consulta-conferencia-extrato', 'controller' => 'ConferenciaExtratoController', 'action' => 'processarConsultarConferenciaExtrato');
+        $routes[] = array('route' => '/salvar-conferencia-extrato', 'controller' => 'ConferenciaExtratoController', 'action' => 'salvarConferenciaExtrato');
 
 		$this->setRoutes($routes);
 	}

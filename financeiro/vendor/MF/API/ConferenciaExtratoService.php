@@ -35,6 +35,11 @@ class ConferenciaExtratoService
             // 4. Fazer conferência/match entre os dados
             $resultado = $this->conferirMovimentos($movimentosSistema, $movimentosExtrato);
 
+            // echo '<pre>';
+            // print_r($resultado);
+            // echo '</pre>';
+            // exit;
+
             return [
                 'sucesso' => true,
                 'dados' => $resultado
