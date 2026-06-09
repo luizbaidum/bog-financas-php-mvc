@@ -264,10 +264,10 @@ class ConferenciaExtratoService
             fclose($handle);
         }
 
-        echo '<pre>';
-        print_r($movimentos);
-        echo '</pre>';
-        exit;
+        // echo '<pre>';
+        // print_r($movimentos);
+        // echo '</pre>';
+        // exit;
 
         return $movimentos;
     }

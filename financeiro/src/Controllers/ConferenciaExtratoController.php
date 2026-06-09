@@ -7,6 +7,8 @@ use MF\Controller\Controller;
 use src\Models\Proprietarios\ProprietariosEntity;
 use MF\Model\Model;
 use src\Models\Movimentos\MovimentosDAO;
+use src\Models\ConferenciaExtrato\ConferenciaExtratoDAO;
+use src\Models\ConferenciaExtrato\ConferenciaExtratoEntity;
 use MF\API\ConferenciaExtratoService;
 
 class ConferenciaExtratoController extends Controller {
@@ -37,9 +39,9 @@ class ConferenciaExtratoController extends Controller {
         ];
 
         $dados_formulario = [
-            'mes_ano' => $_POST['mes_ano'],
+            'mes_ano'      => $_POST['mes_ano'],
             'tipo_arquivo' => $_POST['tipo_arquivo'],
-            'banco' => $_POST['banco']
+            'banco'        => $_POST['banco']
         ];
 
         $xpl = explode('-', $_POST['mes_ano']);
@@ -49,7 +51,10 @@ class ConferenciaExtratoController extends Controller {
         $arquivo = $_FILES['arquivo'];
 
         $model_movimentos = new MovimentosDAO();
+        $model_conferencia = new ConferenciaExtratoDAO();
+
         $movimentos = $model_movimentos->indexTable('', $ano_filtro, $mes_filtro);
+        $registros_conferidos = $model_conferencia->selectAll(new ConferenciaExtratoEntity, [['dataExtrato', '>=', $_POST['mes_ano'], ['dataExtrato', '<=', $_POST['mes_ano']]], ], [], []);
 
         $service = new ConferenciaExtratoService();
         $resultado = $service->processarConferencia($dados_formulario, $movimentos, $arquivo);
@@ -57,6 +62,7 @@ class ConferenciaExtratoController extends Controller {
         if ($resultado['sucesso']) {
             $this->view->data['resultado'] = $resultado['dados'];
             $this->view->data['movimentos'] = $movimentos;
+            $this->view->data['registros_conferidos'] = $registros_conferidos;
             $this->renderSimple('resultado');
         } else {
             echo json_encode(['erro' => $resultado['erro']]);
@@ -65,43 +71,61 @@ class ConferenciaExtratoController extends Controller {
     
     public function salvarConferenciaExtrato()
     {
-        try {
-            $conferidos = $_POST['conferidos'] ?? [];
+        if ($this->isSetPost()) {
+            try {
+                $conferidos = $_POST['conferidos'] ?? [];
 
-            echo '<pre>';
-            print_r($conferidos);
-            echo '</pre>';
-            exit;
-
-            if (empty($conferidos)) {
-                throw new Exception('Nenhum movimento conferido recebido.');
-            }
-
-            $dados = [];
-            foreach ($conferidos as $id_movimento => $json_extrato) {
-                $extrato = json_decode($json_extrato, true);
-
-                if ($extrato == null) {
-                    throw new Exception("Dado inválido para o movimento ID {$id_movimento}.");
+                if (empty($conferidos)) {
+                    throw new Exception('Nenhum movimento conferido recebido.');
                 }
 
-                $dados[] = [
-                    'id_movimento' => (int) $id_movimento,
-                    'extrato'      => $extrato,
-                ];
+                $model_conferencia = new ConferenciaExtratoDAO();
+                $obj_conferencia = new ConferenciaExtratoEntity();
+                $model_conferencia->iniciarTransacao();
+
+                $dados = [];
+                foreach ($conferidos as $id_movimento => $json_extrato) {
+                    $extrato = json_decode($json_extrato, true);
+
+                    if ($extrato == null) {
+                        throw new Exception("Dado inválido para o movimento ID {$id_movimento}.");
+                    }
+
+                    $obj_conferencia->dataExtrato = $extrato['data'];
+                    $obj_conferencia->descricao   = $extrato['descricao'];
+                    $obj_conferencia->credito     = $extrato['credito'];
+                    $obj_conferencia->debito      = $extrato['debito'];
+                    $obj_conferencia->idMovimento = $id_movimento;
+
+                    $ret = $model_conferencia->cadastrar(new ConferenciaExtratoEntity, $obj_conferencia);
+
+                    if (! $ret['result']) {
+                        throw new Exception($this->msg_retorno_falha);
+                    }
+                }
+
+                if ($ret['result']) {
+					$array_retorno = array(
+						'result'   => $ret['result'],
+						'mensagem' => $this->msg_retorno_sucesso
+					);
+
+                    $model_conferencia->finalizarTransacao();
+
+					echo json_encode($array_retorno);
+				} else {
+					throw new Exception($this->msg_retorno_falha);
+				}
+            } catch (Exception $e) {
+               $array_retorno = array(
+					'result'   => false,
+					'mensagem' => $e->getMessage(),
+				);
+
+                $model_conferencia->cancelarTransacao();
+
+				echo json_encode($array_retorno);
             }
-
-            // TODO: persistir $dados no banco de dados
-
-            echo json_encode([
-                'result'   => true,
-                'mensagem' => 'Conferência salva com sucesso.',
-            ]);
-        } catch (Exception $e) {
-            echo json_encode([
-                'result'   => false,
-                'mensagem' => $e->getMessage(),
-            ]);
         }
     }
 
