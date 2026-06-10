@@ -39,9 +39,12 @@ class ConferenciaExtratoController extends Controller {
         ];
 
         $dados_formulario = [
-            'mes_ano'      => $_POST['mes_ano'],
-            'tipo_arquivo' => $_POST['tipo_arquivo'],
-            'banco'        => $_POST['banco']
+            'mes_ano'         => $_POST['mes_ano'],
+            'tipo_arquivo'    => $_POST['tipo_arquivo'],
+            'banco'           => $_POST['banco'],
+            'match_data'      => isset($_POST['match_data']) && $_POST['match_data'] == '1',
+            'match_valor'     => isset($_POST['match_valor']) && $_POST['match_valor'] == '1',
+            'match_descricao' => isset($_POST['match_descricao']) && $_POST['match_descricao'] == '1',
         ];
 
         $xpl = explode('-', $_POST['mes_ano']);
@@ -134,7 +137,7 @@ class ConferenciaExtratoController extends Controller {
         $model = new Model();
 
         $this->view->settings = [
-            'action'   => $this->index_route . '/processar-conferencia-extrato',
+            'action'   => $this->index_route . '/processar-consulta-conferencia-extrato',
             'redirect' => $this->index_route . '/conferencia-extrato',
             'title'    => 'Conferência de Extrato',
             'div'      => 'id-tabela-conferencia'
@@ -143,25 +146,23 @@ class ConferenciaExtratoController extends Controller {
         $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [['status', '=', '"1"']], [], []);
 
         $this->renderPage(
-            conteudo: 'conferencia_extrato'
+            conteudo: 'conferencia_extrato_consulta'
         );
     }
 
     public function processarConsultarConferenciaExtrato()
     {
-        $model = new Model();
+        $model_conferencia = new ConferenciaExtratoDAO();
+        $model_movimentos = new MovimentosDAO();
 
-        $this->view->settings = [
-            'action'   => $this->index_route . '/processar-conferencia-extrato',
-            'redirect' => $this->index_route . '/conferencia-extrato',
-            'title'    => 'Conferência de Extrato',
-            'div'      => 'id-tabela-conferencia'
-        ];
+        $movimentos = $model_movimentos->indexTable('', $ano_filtro, $mes_filtro);
+        $registros_conferidos = $model_conferencia->selectAll(new ConferenciaExtratoEntity, [['dataExtrato', '>=', $_POST['mes_ano'], ['dataExtrato', '<=', $_POST['mes_ano']]], ], [], []);
 
-        $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [['status', '=', '"1"']], [], []);
+        $this->view->data['movimentos'] = $movimentos;
+        $this->view->data['registros_conferidos'] = $registros_conferidos;
 
-        $this->renderPage(
-            conteudo: 'conferencia_extrato'
+        $this->renderSimple(
+            conteudo: 'resultado_consulta'
         );
     }
 }

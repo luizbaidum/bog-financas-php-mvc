@@ -33,12 +33,12 @@ class ConferenciaExtratoService
             );
 
             // 4. Fazer conferência/match entre os dados
-            $resultado = $this->conferirMovimentos($movimentosSistema, $movimentosExtrato);
-
-            // echo '<pre>';
-            // print_r($resultado);
-            // echo '</pre>';
-            // exit;
+            $matchOpcoes = [
+                'data'      => $dadosFormulario['match_data'] ?? true,
+                'valor'     => $dadosFormulario['match_valor'] ?? true,
+                'descricao' => $dadosFormulario['match_descricao'] ?? true,
+            ];
+            $resultado = $this->conferirMovimentos($movimentosSistema, $movimentosExtrato, $matchOpcoes);
 
             return [
                 'sucesso' => true,
@@ -53,9 +53,6 @@ class ConferenciaExtratoService
         }
     }
 
-    /**
-     * Valida os dados recebidos
-     */
     private function validarDados($dados, $arquivo)
     {
         if (empty($dados['mes_ano'])) {
@@ -89,14 +86,12 @@ class ConferenciaExtratoService
         switch ($banco) {
             case 'bradesco':
             case 'bb':
-                // Bradesco e BB aceitam apenas CSV
                 if ($tipoArquivo != 'csv') {
                     throw new Exception('Para ' . strtoupper($banco) . ', apenas arquivos CSV são permitidos');
                 }
                 break;
 
             case 'cef':
-                // CEF aceita apenas PDF
                 if ($tipoArquivo != 'pdf') {
                     throw new Exception('Para CEF, apenas arquivos PDF são permitidos');
                 }
@@ -175,13 +170,10 @@ class ConferenciaExtratoService
 
     private function lerPDF($caminhoArquivo)
     {
-        // Requer: composer require smalot/pdfparser
         $parser = new PdfParser();
         $pdf = $parser->parseFile($caminhoArquivo);
         $texto = $pdf->getText();
 
-        // Processar o texto do PDF e extrair movimentos
-        // IMPORTANTE: O padrão varia por banco - ajustar conforme necessário
         return $this->extrairMovimentosDeTexto($texto);
     }
 
@@ -233,6 +225,7 @@ class ConferenciaExtratoService
                     ];
                 }
             }
+    
             fclose($handle);
         }
 
@@ -261,13 +254,9 @@ class ConferenciaExtratoService
                     ];
                 }
             }
+
             fclose($handle);
         }
-
-        // echo '<pre>';
-        // print_r($movimentos);
-        // echo '</pre>';
-        // exit;
 
         return $movimentos;
     }
@@ -286,35 +275,35 @@ class ConferenciaExtratoService
 
         foreach ($linhas as $linha) {
             if (preg_match($pattern, $linha, $matches)) {
+
+                $valor = floatval(str_replace(',', '.', str_replace('.', '', $matches[3])));
+
                 $movimentos[] = [
                     'data' => $this->converterData($matches[1]),
                     'descricao' => $this->normalizarTexto($matches[2]),
-                    'valor' => floatval(str_replace(',', '.', str_replace('.', '', $matches[3]))),
+                    'credito' => $valor >= 0 ? $valor : 0,
+                    'debito' => $valor < 0 ? abs($valor) : 0
                 ];
             }
         }
-
-        echo '<pre>';
-        print_r($movimentos);
-        echo '</pre>';
-        exit;
 
         return $movimentos;
     }
 
     /**
      * Faz a conferência entre movimentos do sistema e do extrato
+     *
+     * @param array $matchOpcoes ['data' => bool, 'valor' => bool, 'descricao' => bool]
      */
-    private function conferirMovimentos($movimentosSistema, $movimentosExtrato)
+    private function conferirMovimentos($movimentosSistema, $movimentosExtrato, $matchOpcoes = [])
     {
-        // echo '<pre>';
-        // print_r($movimentosSistema);
-        // print_r($movimentosExtrato);
-        // echo '</pre>';
-        // exit;
         $conferidos = [];
         $naoConciliados_sistema = [];
         $naoConciliados_extrato = [];
+
+        $usarData      = $matchOpcoes['data'] ?? true;
+        $usarValor     = $matchOpcoes['valor'] ?? true;
+        $usarDescricao = $matchOpcoes['descricao'] ?? true;
 
         // Criar cópia para marcar items conferidos
         $extratoRestante = $movimentosExtrato;
@@ -329,20 +318,14 @@ class ConferenciaExtratoService
                 $valor_extrato = $movExtrato['credito'] > 0 ? $movExtrato['credito'] : (abs($movExtrato['debito']) * -1);
                 $data_extrato = $movExtrato['data'];
 
-                // echo '<pre>';
-                // echo "Comparando:\n";
-                // echo "Sistema: Data={$data_sistema}, Valor={$valor_sistema}, Descrição={$movSistema['nomeMovimento']}\n";
-                // echo "Extrato: Data={$data_extrato}, Valor={$valor_extrato}, Descrição={$movExtrato['descricao']}\n";
-                // echo '</pre>';
-
-                $matchData = $data_sistema == $movExtrato['data'];
-                $matchValor = abs($valor_sistema - $valor_extrato) < 0.01;
-                $matchDescricao = $this->calcularSimilaridade(
+                $matchData = !$usarData || $data_sistema == $movExtrato['data'];
+                $matchValor = !$usarValor || abs($valor_sistema - $valor_extrato) < 0.01;
+                $matchDescricao = !$usarDescricao || $this->calcularSimilaridade(
                     $movSistema['nomeMovimento'],
                     $movExtrato['descricao']
-                ) > 0.7; // 70% de similaridade
+                ) > 0.7;
 
-                if ($matchData && $matchValor /*&& $matchDescricao*/) {
+                if ($matchData && $matchValor && $matchDescricao) {
                     $conferidos[] = [
                         'sistema' => $movSistema,
                         'extrato' => $movExtrato,
@@ -402,7 +385,6 @@ class ConferenciaExtratoService
      */
     private function converterData($data)
     {
-        // Tenta diferentes formatos
         $formatos = ['d/m/Y', 'Y-m-d', 'd-m-Y', 'm/d/Y'];
 
         foreach ($formatos as $formato) {
