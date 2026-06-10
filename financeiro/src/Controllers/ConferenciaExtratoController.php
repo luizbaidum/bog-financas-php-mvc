@@ -132,12 +132,12 @@ class ConferenciaExtratoController extends Controller {
         }
     }
 
-    public function consultarConferenciaExtrato()
+    public function relatorioConferenciaExtrato()
     {
         $model = new Model();
 
         $this->view->settings = [
-            'action'   => $this->index_route . '/processar-consulta-conferencia-extrato',
+            'action'   => $this->index_route . '/processar-relatorio-conferencia-extrato',
             'redirect' => $this->index_route . '/conferencia-extrato',
             'title'    => 'Conferência de Extrato',
             'div'      => 'id-tabela-conferencia'
@@ -146,11 +146,11 @@ class ConferenciaExtratoController extends Controller {
         $this->view->data['lista_proprietarios'] = $model->selectAll(new ProprietariosEntity, [['status', '=', '"1"']], [], []);
 
         $this->renderPage(
-            conteudo: 'conferencia_extrato_consulta'
+            conteudo: 'conferencia_extrato_relatorio'
         );
     }
 
-    public function processarConsultarConferenciaExtrato()
+    public function processarRelatorioConferenciaExtrato()
     {
         $model_conferencia = new ConferenciaExtratoDAO();
         $model_movimentos = new MovimentosDAO();
@@ -162,7 +162,7 @@ class ConferenciaExtratoController extends Controller {
         $this->view->data['registros_conferidos'] = $registros_conferidos;
 
         $this->renderSimple(
-            conteudo: 'resultado_consulta'
+            conteudo: 'conferencia_extrato_relatorio_tabela'
         );
     }
 }

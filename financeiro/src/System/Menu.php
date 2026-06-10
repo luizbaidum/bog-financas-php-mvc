@@ -52,7 +52,7 @@ class Menu {
             'categorias', 'movimentos', 'investimentos', 'movimentos-mensais-index', 'objetivos', 'orcamento', 'orcamento_do_realizado', 'investimentos-movimentar', 'metas-mensais', 'conferencia-extrato'
         ],
         'Consultas' => [
-            'indicadores-index', 'contas-investimentos-index', 'extrato-investimentos', 'orcamento-index', 'evolucao-rendimentos', 'extrato-proprietarios', 'metas-mensais-index', 'consulta-conferencia-extrato'
+            'indicadores-index', 'contas-investimentos-index', 'extrato-investimentos', 'orcamento-index', 'evolucao-rendimentos', 'extrato-proprietarios', 'metas-mensais-index', 'relatorio-conferencia-extrato'
         ],
         'Config.' => [
             'preferencias', 'proprietarios', 'usuarios'
