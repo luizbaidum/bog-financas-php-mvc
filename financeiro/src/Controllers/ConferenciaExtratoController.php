@@ -155,8 +155,12 @@ class ConferenciaExtratoController extends Controller {
         $model_conferencia = new ConferenciaExtratoDAO();
         $model_movimentos = new MovimentosDAO();
 
+        $xpl = explode('-', $_POST['mes_ano'] ?? []);
+        $ano_filtro = $xpl[0] ?? '';
+        $mes_filtro = $xpl[1] ?? '';
+
         $movimentos = $model_movimentos->indexTable('', $ano_filtro, $mes_filtro);
-        $registros_conferidos = $model_conferencia->selectAll(new ConferenciaExtratoEntity, [['dataExtrato', '>=', $_POST['mes_ano'], ['dataExtrato', '<=', $_POST['mes_ano']]], ], [], []);
+        $registros_conferidos = $model_conferencia->selectAll(new ConferenciaExtratoEntity, [["DATE_FORMAT(dataExtrato, '%Y%m')", '=', $ano_filtro . $mes_filtro]], [], []);
 
         $this->view->data['movimentos'] = $movimentos;
         $this->view->data['registros_conferidos'] = $registros_conferidos;
