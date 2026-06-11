@@ -27,9 +27,9 @@ class OrcamentoController extends Controller {
 
         $this->view->settings = [
             'action'     => '',
-            'redirect'   => $this->index_route . '/orcamento_index',
+            'redirect'   => $this->index_route . '/orcamento-index',
             'title'      => 'Orçamento',
-            'url_search' => $this->index_route . '/orcamento_index'
+            'url_search' => $this->index_route . '/orcamento-index'
         ];
 
         $buttons->setButton(

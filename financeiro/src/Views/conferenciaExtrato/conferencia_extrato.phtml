@@ -1,0 +1,87 @@
+<div class="container">
+
+    <div class="mt-2 mb-2">
+		<div class="card p-2">
+			<div class="text-center">
+				<?= $title; ?>
+			</div>
+		</div>
+	</div>
+
+    <div class="card border-0 shadow-sm formulario-padrao-card">
+        <div class="card-header bg-dark text-white">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-file-earmark-text fs-4 me-2"></i>
+                <h6 class="card-title mb-0">Filtro</h6>
+            </div>
+        </div>
+        <div class="card-body p-2">
+            <form method="POST" data-action="<?= $action; ?>" class="submit-form-render-ajax" data-div="<?= $div; ?>">
+                <div class="form-group">
+                    <div class="row g-2">
+                        <div class="col-sm-4 col-12">
+                            <label for="mesAno" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Mês/Ano</label>
+                            <input type="month" class="form-control formulario-padrao-input" id="mesAno" name="mes_ano" required>
+                        </div>
+
+                        <div class="col-sm-4 col-12">
+                            <label for="tipoArquivo" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Tipo de Arquivo</label>
+                            <select class="form-select formulario-padrao-input" id="tipoArquivo" name="tipo_arquivo" required>
+                                <option value="">Selecione</option>
+                                <option value="pdf">.pdf</option>
+                                <option value="xlsx">.xlsx</option>
+                                <option value="csv">.csv</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-4 col-12">
+                            <label for="banco" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Banco</label>
+                            <select class="form-select formulario-padrao-input" id="banco" name="banco" required>
+                                <option value="">Selecione</option>
+                                <option value="bradesco">Bradesco</option>
+                                <option value="bb">BB</option>
+                                <option value="cef">CEF</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-2">
+                    <div class="row g-2">
+                        <div class="col-12">
+                            <label class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Critérios de Conferência</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="matchData" name="match_data" value="1" checked>
+                                    <label class="form-check-label formulario-padrao-label" for="matchData">Data</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="matchValor" name="match_valor" value="1" checked>
+                                    <label class="form-check-label formulario-padrao-label" for="matchValor">Valor</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="matchDescricao" name="match_descricao" value="1" checked>
+                                    <label class="form-check-label formulario-padrao-label" for="matchDescricao">Descrição</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row g-2">
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label"></label>
+                            <input class="form-control" type="file" id="formFile" name="arquivo">
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-1">
+                    <button id="salvar" type="submit" class="btn btn-primary m-1">Processar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="<?= $div; ?>"></div>
+</div>
