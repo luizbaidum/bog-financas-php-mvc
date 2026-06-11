@@ -75,6 +75,8 @@ class ConferenciaExtratoController extends Controller {
     public function salvarConferenciaExtrato()
     {
         if ($this->isSetPost()) {
+            $model_conferencia = new ConferenciaExtratoDAO();
+            
             try {
                 $conferidos = $_POST['conferidos'] ?? [];
 
@@ -82,11 +84,10 @@ class ConferenciaExtratoController extends Controller {
                     throw new Exception('Nenhum movimento conferido recebido.');
                 }
 
-                $model_conferencia = new ConferenciaExtratoDAO();
+                
                 $obj_conferencia = new ConferenciaExtratoEntity();
                 $model_conferencia->iniciarTransacao();
 
-                $dados = [];
                 foreach ($conferidos as $id_movimento => $json_extrato) {
                     $extrato = json_decode($json_extrato, true);
 
@@ -107,7 +108,7 @@ class ConferenciaExtratoController extends Controller {
                     }
                 }
 
-                if ($ret['result']) {
+                if (! empty($ret['result'])) {
 					$array_retorno = array(
 						'result'   => $ret['result'],
 						'mensagem' => $this->msg_retorno_sucesso
