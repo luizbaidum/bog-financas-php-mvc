@@ -55,6 +55,15 @@ class UsuariosDAO extends Model {
         return $result;
     }
 
+    public function consultarUsuarioPorLoginDiferente(string $login, string|int $id_usuario) : array
+    {
+        $query = 'SELECT usuarios.* FROM usuarios WHERE usuarios.login = ? AND usuarios.idUsuario != ?';
+
+        $result = $this->sql_actions->executarQuery($query, [$login, $id_usuario], false);
+
+        return $result;
+    }
+
     public function cadastrarUsuarioSemFamilia($data)
     {
         $arr_values = array();
