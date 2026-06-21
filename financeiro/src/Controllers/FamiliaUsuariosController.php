@@ -31,8 +31,25 @@ class FamiliaUsuariosController extends Controller {
             'action'     => $this->index_route . '/cad-usuario',
             'redirect'   => $this->index_route . '/usuarios',
             'title'      => 'Família/Usuários',
-            'is_gestor'  => $is_gestor
+            'is_gestor'  => $is_gestor,
+            'edit'       => [
+                'route' => $this->index_route . '/usuarios?action=edit'
+            ]
         ];
+
+        if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['idUsuario'])) {
+            $id_usuario_editar = $_GET['idUsuario'];
+            $usuario_editar = $model_usuarios->detalhar($id_usuario_editar);
+
+            if (empty($usuario_editar)) {
+                $this->renderNullPage();
+                exit;
+            }
+
+            $this->view->settings['action'] = $this->index_route . '/edit-usuario';
+
+            $this->view->data['usuario_editar'] = $usuario_editar[0];
+        }
 
         $usuarios = (new UsuariosDAO())->selectAll(new UsuariosEntity, [], [], []);
 
@@ -145,5 +162,83 @@ class FamiliaUsuariosController extends Controller {
             echo json_encode($array_retorno);
             exit;
         }
+    }
+
+    public function editarUsuario()
+    {
+        $obj_usuario = new UsuariosEntity();
+        $model_usuario = new UsuariosDAO();
+        $service_acesso = new AcessoService();
+
+        if ($this->isSetPost()) {
+            $obj_usuario->idUsuario = $_POST['idUsuario'];
+            $obj_usuario->nome = $_POST['nome'];
+            $obj_usuario->login = $_POST['login'];
+
+            $senha_confirmar = null;
+            if ($_POST['senha'] != '') {
+                $obj_usuario->senha = md5($_POST['senha']);
+                $senha_confirmar    = md5($_POST['confirmaSenha']);
+            }
+
+            $ret_validacao = $service_acesso->validacoesPreInsercao($model_usuario, $obj_usuario, $senha_confirmar);
+
+            if ($ret_validacao['result'] == false) {
+                $array_retorno = array(
+                    'result'   => false,
+                    'mensagem' => $ret_validacao['mensagem']
+                );
+
+                echo json_encode($array_retorno);
+                exit;
+            }
+
+            $model_usuario->iniciarTransacao();
+
+            try {
+                $item = [
+                    'nome'  => $obj_usuario->nome,
+                    'login' => $obj_usuario->login
+                ];
+
+                if (isset($obj_usuario->senha)) {
+                    $item['senha'] = $obj_usuario->senha;
+                }
+
+                $ret = $model_usuario->atualizar(
+                    new UsuariosEntity,
+                    $item,
+                    ['idUsuario' => $obj_usuario->idUsuario]
+                );
+
+                if (empty($ret)) {
+                    throw new Exception($this->msg_retorno_falha);
+                }
+
+                $array_retorno = array(
+                    'result'   => $ret['result'],
+                    'mensagem' => 'Usuário editado com sucesso.'
+                );
+
+                $model_usuario->finalizarTransacao();
+
+                echo json_encode($array_retorno);
+                exit;
+            } catch (Exception $e) {
+                $array_retorno = array(
+                    'result'   => false,
+                    'mensagem' => 'Erro ao editar usuário .'
+                );
+
+                $model_usuario->cancelarTransacao();
+
+                echo json_encode($array_retorno);
+                exit;
+            }
+        }
+
+        $this->renderPage(
+            conteudo: 'usuarios'
+        );
     }
 }

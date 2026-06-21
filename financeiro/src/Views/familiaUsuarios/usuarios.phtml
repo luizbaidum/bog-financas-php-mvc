@@ -10,33 +10,38 @@
     <?php if ($is_gestor): ?>
         <div class="card mt-2 mb-2 formulario-padrao-card">
             <div class="card-header bg-dark text-white">
-                <button class="btn btn-sm nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCadUsuario" aria-expanded="false" aria-controls="collapseCadUsuario">
+                <button class="<?= isset($usuario_editar) ? 'btn btn-sm nav-link' : 'btn btn-sm nav-link collapsed'; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCadUsuario" aria-expanded="<?= isset($usuario_editar) ? 'true' : 'false'; ?>" aria-controls="collapseCadUsuario">
                     <h6 class="card-title mb-0">Cadastrar Usuário</h6>
                 </button>
             </div>
-            <div class="collapse" id="collapseCadUsuario">
+            <div class="collapse <?= isset($usuario_editar) ? 'show' : ''; ?>" id="collapseCadUsuario">
                 <div class="card-body p-1">
                     <form data-action="<?= $action; ?>" id="idform-usuario" class="submit-form-crud-ajax">
+
+                        <?php if (isset($usuario_editar)): ?>
+                            <input type="hidden" name="idUsuario" value="<?= $usuario_editar['idUsuario']; ?>">
+                        <?php endif; ?>
+
                         <div class="form-group formulario-padrao-section">
                             <div class="row g-2">
                                 <div class="col-md-3">
                                     <label for="idNome" class="form-label formulario-padrao-label">Nome</label>
                                     <input type="text" class="form-control formulario-padrao-input form-control-sm" id="idNome" name="nome" required 
-                                        placeholder="Nome do usuário">
+                                        placeholder="Nome do usuário" value="<?= isset($usuario_editar) ? $usuario_editar['nome'] : ''; ?>">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="idLogin" class="form-label formulario-padrao-label">Login</label>
                                     <input type="text" class="form-control formulario-padrao-input form-control-sm" id="idLogin" name="login" required 
-                                        placeholder="Login">
+                                        placeholder="Login" value="<?= isset($usuario_editar) ? $usuario_editar['login'] : ''; ?>">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="idSenha" class="form-label formulario-padrao-label">Senha</label>
-                                    <input type="password" class="form-control formulario-padrao-input form-control-sm" id="idSenha" name="senha" required 
+                                    <input type="password" class="form-control formulario-padrao-input form-control-sm" id="idSenha" name="senha" <?= isset($usuario_editar) ? '' : 'required'; ?>
                                         placeholder="Senha segura">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="idConfirmaSenha" class="form-label formulario-padrao-label">Confirmar</label>
-                                    <input type="password" class="form-control formulario-padrao-input form-control-sm" id="idConfirmaSenha" name="confirmaSenha" required 
+                                    <input type="password" class="form-control formulario-padrao-input form-control-sm" id="idConfirmaSenha" name="confirmaSenha" <?= isset($usuario_editar) ? '' : 'required'; ?>
                                         placeholder="Repita a senha">
                                 </div>
                             </div>
@@ -68,8 +73,9 @@
                     <thead class="table-light">
                         <tr>
                             <th scope="col" class="text-center" style="width: 10%;">ID</th>
-                            <th scope="col" style="width: 70%;">Nome</th>
+                            <th scope="col" style="width: 50%;">Nome</th>
                             <th scope="col" class="text-center" style="width: 20%;">Tipo</th>
+                            <th scope="col" style="width: 10%;">Editar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -84,6 +90,13 @@
                                     <td class="text-center">
                                         <span class="badge bg-primary rounded-pill">Gestor</span>
                                     </td>
+                                    <td>
+                                        <a href="<?= $edit['route'] . '&idUsuario=' . $usuario['idUsuario']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
+                                            <button title="Editar" class="btn btn-sm btn-outline-dark">
+                                                <i>✎</i>
+                                            </button>
+                                        </a>
+                                    </td>
                                 </tr>
                             <?php else: ?>
                                 <tr>
@@ -94,6 +107,13 @@
                                     </td>
                                     <td class="text-center">
                                         <span class="badge bg-secondary rounded-pill">Membro</span>
+                                    </td>
+                                    <td>
+                                        <a href="<?= $edit['route'] . '&idUsuario=' . $usuario['idUsuario']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
+                                            <button title="Editar" class="btn btn-sm btn-outline-dark">
+                                                <i>✎</i>
+                                            </button>
+                                        </a>
                                     </td>
                                 </tr>
                             <?php endif; ?>
