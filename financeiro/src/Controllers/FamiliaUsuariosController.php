@@ -181,7 +181,7 @@ class FamiliaUsuariosController extends Controller {
                 $senha_confirmar    = md5($_POST['confirmaSenha']);
             }
 
-            $ret_validacao = $service_acesso->validacoesPreInsercao($model_usuario, $obj_usuario, $senha_confirmar);
+            $ret_validacao = $service_acesso->validacoesPreEdicao($model_usuario, $obj_usuario, $senha_confirmar);
 
             if ($ret_validacao['result'] == false) {
                 $array_retorno = array(

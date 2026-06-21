@@ -75,7 +75,9 @@
                             <th scope="col" class="text-center" style="width: 10%;">ID</th>
                             <th scope="col" style="width: 50%;">Nome</th>
                             <th scope="col" class="text-center" style="width: 20%;">Tipo</th>
-                            <th scope="col" style="width: 10%;">Editar</th>
+                            <?php if ($is_gestor): ?>
+                                <th scope="col" style="width: 10%;">Editar</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,13 +92,15 @@
                                     <td class="text-center">
                                         <span class="badge bg-primary rounded-pill">Gestor</span>
                                     </td>
-                                    <td>
-                                        <a href="<?= $edit['route'] . '&idUsuario=' . $usuario['idUsuario']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
-                                            <button title="Editar" class="btn btn-sm btn-outline-dark">
-                                                <i>✎</i>
-                                            </button>
-                                        </a>
-                                    </td>
+                                    <?php if ($is_gestor): ?>
+                                        <td>
+                                            <a href="<?= $edit['route'] . '&idUsuario=' . $usuario['idUsuario']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
+                                                <button title="Editar" class="btn btn-sm btn-outline-dark">
+                                                    <i>✎</i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                    <?php endif; ?>
                                 </tr>
                             <?php else: ?>
                                 <tr>
@@ -108,13 +112,15 @@
                                     <td class="text-center">
                                         <span class="badge bg-secondary rounded-pill">Membro</span>
                                     </td>
-                                    <td>
-                                        <a href="<?= $edit['route'] . '&idUsuario=' . $usuario['idUsuario']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
-                                            <button title="Editar" class="btn btn-sm btn-outline-dark">
-                                                <i>✎</i>
-                                            </button>
-                                        </a>
-                                    </td>
+                                    <?php if ($is_gestor): ?>
+                                        <td>
+                                            <a href="<?= $edit['route'] . '&idUsuario=' . $usuario['idUsuario']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
+                                                <button title="Editar" class="btn btn-sm btn-outline-dark">
+                                                    <i>✎</i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                    <?php endif; ?>
                                 </tr>
                             <?php endif; ?>
                         <?php endforeach; ?>
