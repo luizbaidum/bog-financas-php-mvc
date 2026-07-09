@@ -176,7 +176,7 @@ class InvestimentosController extends Controller {
 
         $utilizado = (new ObjetivosDAO())->consultarPercentualDisponivel($id_conta_invest);
 
-        if ($utilizado !== false && ($percentual + $utilizado) > 100) {
+        if ($utilizado !== false && (NumbersHelper::formatBRtoUS($percentual) + $utilizado) > 100) {
             echo json_encode(['status' => false,
                               'msg'    => 'A Conta Invest informada já está ' . NumbersHelper::formatUStoBR($utilizado) . '% comprometida.']);
             exit;
