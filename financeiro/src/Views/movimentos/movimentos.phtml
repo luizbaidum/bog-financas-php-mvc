@@ -16,11 +16,14 @@
     <input type="hidden" name="idObjOld" value="<?= $movimento['idObj']; ?>">
 
     <?php
-        if (!empty($movimento['idObj'])) 
-            $id_obj_old = $movimento['idObj']; $obj_old_name = $movimento['nomeObj'];
+        if (! empty($movimento['idObj'])) {
+            $id_obj_old = $movimento['idObj'];
+            $obj_old_name = $movimento['nomeObj'];
+        }
 
-        if (!empty($movimento['idProprietario']))
+        if (! empty($movimento['idProprietario'])) {
             $mov_id_proprietario = $movimento['idProprietario'];
+        }
 } ?>
 
 
@@ -111,10 +114,10 @@
             </div>
             <div class="col-md-12">
                 <label for="idObservacao" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Observações</label>
-                <textarea 
-                    class="form-control formulario-padrao-input" 
-                    id="idObservacao" 
-                    name="observacao" 
+                <textarea
+                    class="form-control formulario-padrao-input"
+                    id="idObservacao"
+                    name="observacao"
                     rows="1"
                 ><?= $movimento['observacao'] ?? ''; ?></textarea>
             </div>

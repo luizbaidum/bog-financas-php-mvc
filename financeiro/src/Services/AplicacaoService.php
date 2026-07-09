@@ -72,7 +72,7 @@ class AplicacaoService {
         $obj_rendimento->idMovimento     = $id_movimento;
         $obj_rendimento->idObj           = (empty($id_objetivo) ? 0 : $id_objetivo);
 
-        $this->model->cadastrar($obj_rendimento, $obj_rendimento);
+        $this->model->cadastrar(new RendimentosEntity(), $obj_rendimento);
 
         $saldo_atual = $this->model->getSaldoAtual(
             new InvestimentosEntity(),
@@ -99,7 +99,7 @@ class AplicacaoService {
         float $valor_aplicado,
         string $id_conta_invest
     ): void {
-        if (!empty($id_objetivo)) {
+        if (! empty($id_objetivo)) {
             $saldo_atual = $this->model->getSaldoAtual(
                 new ObjetivosEntity(),
                 $id_objetivo
@@ -129,7 +129,7 @@ class AplicacaoService {
                 []
             );
 
-            if (!empty($objetivos)) {
+            if (! empty($objetivos)) {
                 foreach ($objetivos as $value) {
                     $item = [
                         'saldoAtual' => $value['saldoAtual'] +
