@@ -1,0 +1,76 @@
+<div class="container">
+
+    <div class="mt-2 mb-2">
+        <div class="mt-2 mb-2">
+            <div class="card p-2">
+                <div class="text-center">Relatório de Despesas</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mt-2">
+        <div class="card-header bg-dark text-white">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-funnel fs-4 me-2"></i>
+                <h6 class="card-title mb-0">Filtro</h6>
+            </div>
+        </div>
+        <div class="card-body p-2">
+            <form method="POST" data-action="<?= $action; ?>" class="submit-form-render-ajax" data-div="<?= $div; ?>">
+                <div class="form-group">
+                    <div class="row g-2">
+                        <div class="col-md-2">
+                            <label for="idExtratoAno" class="form-label titulo-input-formulario-cadastro">Ano</label>
+                            <select class="form-select" id="idExtratoAno" name="extratoAno">
+                                <?php foreach ($years as $v): ?>
+                                    <option value="<?= $v; ?>" <?= $v == date('Y') ? ' selected ' : ''; ?>><?= $v; ?></option>
+                                <?php endforeach;?>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="idExtratoMes" class="form-label titulo-input-formulario-cadastro">Mes</label>
+                            <select class="form-select" id="idExtratoMes" name="extratoMes">
+                                <option value="">Trimestre</option>
+                                <?php foreach ($months as $k => $v): ?>
+                                    <option value="<?= $k; ?>"><?= $v; ?></option>
+                                <?php endforeach;?>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="idCategoria" class="form-label titulo-input-formulario-cadastro">Despesa</label>
+                            <select class="form-select" id="idCategoria" name="despesa">
+                                <option value="">Todas</option>
+                                <?php foreach ($lista_categoria as $v): ?>
+                                    <option value="<?= $v['idCategoria']; ?>"><?= $v['categoria'] . ' (' . $v['regularidade'] . ')'; ?></option>
+                                <?php endforeach;?>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="idProprietario" class="form-label titulo-input-formulario-cadastro">Proprietario</label>
+                            <select class="form-select" id="idProprietario" name="idProprietario">
+                                <option value="">Todos</option>
+                                <?php foreach ($lista_proprietarios as $v): ?>
+                                    <option value="<?= $v['idProprietario']; ?>"><?= $v['idProprietario'] . ' - ' . $v['proprietario']; ?></option>
+                                <?php endforeach;?>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="idProprietarioMov" class="form-label titulo-input-formulario-cadastro">Regularidade</label>
+                            <select class="form-select" id="idProprietarioMov" name="idProprietarioMov">
+                                <option value="">Todas</option>
+                                <?php foreach ($lista_regularidade as $v): ?>
+                                    <option value="<?= $v; ?>"><?= $v; ?></option>
+                                <?php endforeach;?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 pt-3">
+                        <button class="btn btn-primary mt-1" type="submit">Processar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mt-2" id="<?= $div; ?>"></div>
+</div>

@@ -1,0 +1,104 @@
+
+<?php
+    use MF\Helpers\DateHelper;
+    use MF\Helpers\NumbersHelper;
+    $resultado_ext = 0;
+    $total_linhas = is_array($extrato) ? count($extrato) : 0;
+?>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom-0 pt-4 pb-2">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div class="d-flex align-items-center">
+                <div>
+                    <h6 class="card-title mb-0 fw-bold text-dark">Relatorio de Extrato</h6>
+                    <p class="text-muted small mb-0">Acompanhe o extrato das suas contas de investimento</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr class="text-secondary">
+                        <th class="ps-4 py-3 border-0 fw-semibold">Conta (proprietario)</th>
+                        <th class="py-3 border-0 fw-semibold text-nowrap">Data</th>
+                        <th class="py-3 border-0 fw-semibold text-center">Acao</th>
+                        <th class="py-3 border-0 fw-semibold text-end">Valor</th>
+                        <th class="py-3 border-0 fw-semibold">Objetivo</th>
+                        <th class="pe-4 py-3 border-0 fw-semibold text-end">idMov (proprietario)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($extrato)): ?>
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-5">
+                                <i class="bi bi-inbox text-muted fs-1 d-block mb-3"></i>
+                                <p class="text-muted mb-0">Nenhum registro encontrado.</p>
+                            </td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($extrato as $value): 
+                            $acao = match ($value['tipo']) {
+                                '1' => 'Prejuizo',
+                                '2' => 'Lucro',
+                                '3' => 'Resgate',
+                                '4' => 'Aplicacao'
+                            };
+
+                            $acao_classe = match ($value['tipo']) {
+                                '1' => 'bg-danger-subtle text-danger',
+                                '2' => 'bg-success-subtle text-success',
+                                '3' => 'bg-secondary-subtle text-secondary',
+                                '4' => 'bg-primary-subtle text-primary'
+                            };
+
+                            $resultado_ext += $value['valorRendimento'];
+                        ?>
+                            <tr class="border-bottom">
+                                <td class="ps-4 py-3">
+                                    <?= $value['conta']; ?> <small>(<?= $value['proprietarioConta']; ?>)</small>
+                                </td>
+                                <td class="py-3 text-nowrap">
+                                    <?= DateHelper::convertUStoBR($value['dataRendimento']); ?>
+                                </td>
+                                <td class="py-3 text-center">
+                                    <span class="badge rounded-pill <?= $acao_classe; ?>"><?= $acao; ?></span>
+                                </td>
+                                <td class="py-3 text-end">R$ <?= NumbersHelper::formatUStoBR($value['valorRendimento']); ?></td>
+                                <td class="py-3"><?= $value['objetivo']; ?></td>
+                                <td class="pe-4 py-3 text-end">
+                                    <?php if (!empty($value['idMovimento'])): ?>
+                                        <?= $value['idMovimento']; ?> <small>(<?= $value['proprietarioMov']; ?>)</small>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+                <tfoot>
+                    <tr class="table-dark">
+                        <td class="ps-4">Total de registros: <?= $total_linhas; ?></td>
+                        <td colspan="2" class="text-end">Resultado</td>
+                        <td class="text-end">R$ <?= NumbersHelper::formatUStoBR($resultado_ext); ?></td>
+                        <td></td>
+                        <td class="pe-4"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <?php if (! empty($extrato)): ?>
+        <div class="card-footer bg-white border-top-0 pt-0 pb-3 px-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">
+                    <i class="bi bi-info-circle me-1"></i>
+                    <?= $total_linhas; ?> registro(s) no extrato
+                </small>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>

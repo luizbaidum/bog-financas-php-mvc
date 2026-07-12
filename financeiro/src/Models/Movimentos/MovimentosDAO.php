@@ -449,4 +449,9 @@ class MovimentosDAO extends Model {
 
         return $ret ?? [];
     }
+
+    public function relatorioDespesas($post)
+    {
+        
+    }
 }
