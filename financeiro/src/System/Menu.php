@@ -37,7 +37,7 @@ class Menu {
             'Categorias', 'Movimentos', 'Investimentos', 'Movimentos Mensais', 'Objetivos Invest.', 'Orçamento', 'Orçamento do Realizado', 'Movimento entre Investimentos', 'Metas Mensais', 'Conferência de Extrato'
         ],
         'Consultas' => [
-            'Indicadores', 'Investimentos', 'Extrato Investimentos', 'Orçamento', 'Evolução Investimentos', 'Extrato por Proprietário', 'Metas Mensais', 'Conferência de Extrato'
+            'Indicadores', 'Investimentos', 'Extrato Investimentos', 'Orçamento', 'Evolução Investimentos', 'Extrato por Proprietário', 'Metas Mensais', 'Conferência de Extrato', 'Relatório de Despesas'
         ],
         'Config.' => [
             'Preferências', 'Proprietários', 'Usuários'
@@ -52,7 +52,7 @@ class Menu {
             'categorias', 'movimentos', 'investimentos', 'movimentos-mensais-index', 'objetivos', 'orcamento', 'orcamento_do_realizado', 'investimentos-movimentar', 'metas-mensais', 'conferencia-extrato'
         ],
         'Consultas' => [
-            'indicadores-index', 'contas-investimentos-index', 'extrato-investimentos', 'orcamento-index', 'evolucao-rendimentos', 'extrato-proprietarios', 'metas-mensais-index', 'relatorio-conferencia-extrato'
+            'indicadores-index', 'contas-investimentos-index', 'extrato-investimentos', 'orcamento-index', 'evolucao-rendimentos', 'extrato-proprietarios', 'metas-mensais-index', 'relatorio-conferencia-extrato', 'relatorio-despesas'
         ],
         'Config.' => [
             'preferencias', 'proprietarios', 'usuarios'

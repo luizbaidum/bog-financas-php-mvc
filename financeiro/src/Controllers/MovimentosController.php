@@ -5,7 +5,6 @@ use Exception;
 use MF\Controller\Controller;
 use MF\Helpers\NumbersHelper;
 use MF\Model\Model;
-use src\Models\Categorias\CategoriasDAO;
 use src\Models\Movimentos\MovimentosDAO;
 use src\Models\Categorias\CategoriasEntity;
 use src\Models\Investimentos\InvestimentosEntity;
