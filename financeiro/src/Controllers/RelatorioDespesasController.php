@@ -22,6 +22,16 @@ class RelatorioDespesasController extends Controller {
         ];
 
         if (isset($_POST) && !empty($_POST)) {
+            if (empty($_POST['anoRelatorio'])) {
+                $array_retorno = array(
+					'result'   => false,
+					'mensagem' => 'É obrigatório informar o ano do relatório.',
+				);
+
+				echo json_encode($array_retorno);
+                exit;
+            }
+
             $this->view->data['relatorio'] = $model_movimentos->relatorioDespesas($_POST);
             $this->renderSimple('tabela_relat_despesas');
         }

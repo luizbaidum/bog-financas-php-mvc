@@ -452,6 +452,42 @@ class MovimentosDAO extends Model {
 
     public function relatorioDespesas($post)
     {
-        
+        $where = 'categorias.tipo = "D" AND YEAR(movimentos.dataMovimento) = ?';
+        $params = [$post['anoRelatorio']];
+
+        if (! empty($post['mesRelatorio'])) {
+            $where .= ' AND MONTH(movimentos.dataMovimento) = ?';
+            $params[] = $post['mesRelatorio'];
+        }
+
+        if (! empty($post['despesa'])) {
+            $where .= ' AND movimentos.idCategoria IN (' . implode(',', $post['despesa']) . ')';
+        }
+
+        if (! empty($post['regularidade'])) {
+            $where .= ' AND categorias.regularidade = ?';
+            $params[] = $post['regularidade'];
+        }
+
+        if (! empty($post['idProprietario'])) {
+            $where .= ' AND movimentos.idProprietario = ?';
+            $params[] = $post['idProprietario'];
+        }
+
+        $query = "SELECT movimentos.idMovimento,
+                    movimentos.nomeMovimento,
+                    movimentos.valor,
+                    movimentos.dataMovimento,
+                    categorias.categoria,
+                    categorias.regularidade,
+                    proprietarios.proprietario
+                    FROM movimentos
+                    INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria
+                    INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario
+                    WHERE $where";
+
+        $result = $this->sql_actions->executarQuery($query, $params);
+
+        return $result;
     }
 }
