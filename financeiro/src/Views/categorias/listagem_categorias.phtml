@@ -16,7 +16,7 @@
                 <tbody>
                     <?php foreach ($lista_todas_categorias as $k => $v): ?>
                         <tr>
-                            <td><?= $v['categoria']; ?></td>
+                            <td><?= $v['idCategoria'] . ' - ' . $v['categoria']; ?></td>
                             <td><?= $v['tipo']; ?></td>
                             <td><?= $v['regularidade']; ?></td>
                             <td>
