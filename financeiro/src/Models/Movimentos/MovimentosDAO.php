@@ -476,7 +476,7 @@ class MovimentosDAO extends Model {
 
         $query = "SELECT movimentos.idMovimento,
                     movimentos.nomeMovimento,
-                    movimentos.valor,
+                    SUM(movimentos.valor) AS valor,
                     movimentos.dataMovimento,
                     categorias.categoria,
                     categorias.regularidade,
@@ -484,7 +484,9 @@ class MovimentosDAO extends Model {
                     FROM movimentos
                     INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria
                     INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario
-                    WHERE $where";
+                    WHERE $where
+                    GROUP BY movimentos.idCategoria
+                    ORDER BY valor ASC";
 
         $result = $this->sql_actions->executarQuery($query, $params);
 
