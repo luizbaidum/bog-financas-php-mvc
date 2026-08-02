@@ -1,0 +1,46 @@
+<div class="container">
+    <div class="mt-2 mb-2">
+        <div class="card p-2">
+            <div class="text-center"><?= $title; ?></div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mt-2">
+        <div class="card-header bg-dark text-white">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-bar-chart fs-4 me-2"></i>
+                <h6 class="card-title mb-0">Filtro</h6>
+            </div>
+        </div>
+        <div class="card-body p-2">
+            <form method="POST" data-action="<?= $action; ?>" class="submit-form-render-ajax" data-div="<?= $div; ?>">
+                <div class="row g-2">
+                    <div class="col-md-2">
+                        <label for="idAno" class="form-label">Ano</label>
+                        <select class="form-select" id="idAno" name="ano" required>
+                            <?php foreach ($years as $v): ?>
+                                <option value="<?= $v; ?>" <?= $v == date('Y') ? ' selected ' : ''; ?>><?= $v; ?></option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="idMes" class="form-label">Mês</label>
+                        <select class="form-select" id="idMes" name="mes">
+                            <option value="">Todos</option>
+                            <?php foreach ($months as $k => $v): ?>
+                                <option value="<?= $k; ?>"><?= $v; ?></option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button class="btn btn-primary" type="submit">Gerar Projeção</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mt-2" id="<?= $div; ?>">
+        <!-- Resultado será carregado via AJAX -->
+    </div>
+</div>
