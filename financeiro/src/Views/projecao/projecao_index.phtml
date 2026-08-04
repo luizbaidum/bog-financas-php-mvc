@@ -15,7 +15,7 @@
         <div class="card-body p-2">
             <form method="POST" data-action="<?= $action; ?>" class="submit-form-render-ajax" data-div="<?= $div; ?>">
                 <div class="row g-2">
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label for="idAno" class="form-label">Ano</label>
                         <select class="form-select" id="idAno" name="ano" required>
                             <?php foreach ($years as $v): ?>
@@ -23,24 +23,36 @@
                             <?php endforeach;?>
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <label for="idMes" class="form-label">Mês</label>
-                        <select class="form-select" id="idMes" name="mes">
-                            <option value="">Todos</option>
-                            <?php foreach ($months as $k => $v): ?>
-                                <option value="<?= $k; ?>"><?= $v; ?></option>
-                            <?php endforeach;?>
+                    <div class="col-md-3">
+                        <label for="idTipo" class="form-label">Tipo</label>
+                        <select class="form-select" id="idTipo" name="tipo">
+                            <option value="investimentos" selected>Investimentos</option>
                         </select>
                     </div>
+                    <div class="col-md-3">
+                        <label for="idBase" class="form-label">Base</label>
+                        <select class="form-select" id="idBase" name="base">
+                            <option value="anual" selected>Anual</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="idOrigem" class="form-label">Origem</label>
+                        <select class="form-select" id="idOrigem" name="origem">
+                            <option value="">Selecione</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-2">
                     <div class="col-md-3 d-flex align-items-end">
-                        <button class="btn btn-primary" type="submit">Gerar Projeção</button>
+                        <button class="btn btn-primary" type="submit">Gerar</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm mt-2" id="<?= $div; ?>">
-        <!-- Resultado será carregado via AJAX -->
-    </div>
+    <div class="card border-0 shadow-sm mt-2" id="<?= $div; ?>"></div>
 </div>

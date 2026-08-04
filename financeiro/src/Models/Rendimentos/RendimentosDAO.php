@@ -50,4 +50,28 @@ class RendimentosDAO extends Model {
 
         return $result;
     }
+
+    public function buscarProjecao($ano)
+    {
+        $sql = "SELECT
+                    MONTH(rendimentos.dataRendimento) AS mes,
+                    SUM(rendimentos.valorRendimento) AS total
+                FROM rendimentos
+                WHERE rendimentos.dataRendimento >= ?
+                AND rendimentos.dataRendimento <= ?
+                GROUP BY MONTH(rendimentos.dataRendimento)
+                ORDER BY MONTH(rendimentos.dataRendimento) ASC";
+
+        $params[] = $ano . '-01-01';
+        $params[] = $ano . '-12-31';
+
+        $result = $this->sql_actions->executarQuery(query: $sql, arr_values: $params);
+
+        $ret = array();
+        foreach ($result as $value) {
+            $ret[$value['mes']] = $value['total'];
+        }
+
+        return $ret;
+    }
 }
