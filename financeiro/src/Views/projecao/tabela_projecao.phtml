@@ -1,3 +1,54 @@
-<div class="container p-2">
-    <div class="alert alert-secondary">Projeção ainda não implementada. Aqui ficará a tabela/resultados.</div>
+<script>
+    <?php echo 'let projecao = ' . $projecao . ';'; ?>
+
+    let valores = Array();
+    let final = Array();
+
+    Object.entries(projecao).forEach(([key, value]) => {
+        obj = {
+            id: key,
+            label: key,
+            data: value
+        };
+
+        valores.push(value);
+
+        final.push(obj);
+    });
+</script>
+
+<div class="container">
+    <canvas id="teste"></canvas>
 </div>
+
+<script>
+    let porContaInvestimento = document.getElementById('teste');
+    let data_porContaInvestimento = {
+        labels: valores,
+        datasets: final
+    };
+
+    new Chart(porContaInvestimento, {
+        type: 'line',
+        data: data_porContaInvestimento,
+        options: {
+            responsive: true,
+            plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Chart.js Line Chart'
+            }
+            }
+        },
+        options: {
+        scales: {
+            y: {
+                beginAtZero: false
+            }
+        }
+    }
+  });
+</script>

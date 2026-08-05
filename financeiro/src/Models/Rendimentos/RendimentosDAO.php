@@ -15,9 +15,18 @@ class RendimentosDAO extends Model {
                     contas.idProprietario,
                     proprietarios.proprietario AS proprietarioNome
                 FROM
-                    (SELECT DISTINCT idContaInvest, tituloInvest, idProprietario FROM contas_investimentos WHERE contas_investimentos.idFamilia = $_SESSION[id_familia] AND contas_investimentos.status = '1') contas
+                    (SELECT DISTINCT idContaInvest, tituloInvest, idProprietario
+                        FROM contas_investimentos
+                        WHERE contas_investimentos.idFamilia = $_SESSION[id_familia]
+                        AND contas_investimentos.status = '1'
+                    ) contas
                 CROSS JOIN
-                    (SELECT DISTINCT DATE_FORMAT(dataRendimento, '%Y%m') AS mesAno FROM rendimentos WHERE rendimentos.idFamilia = $_SESSION[id_familia] AND rendimentos.dataRendimento <= CURDATE() AND rendimentos.dataRendimento >= DATE_SUB(CURDATE(), INTERVAL 15 MONTH)) meses
+                    (SELECT DISTINCT DATE_FORMAT(dataRendimento, '%Y%m') AS mesAno
+                        FROM rendimentos
+                        WHERE rendimentos.idFamilia = $_SESSION[id_familia]
+                        AND rendimentos.dataRendimento <= CURDATE()
+                        AND rendimentos.dataRendimento >= DATE_SUB(CURDATE(), INTERVAL 15 MONTH)
+                    ) meses
                 LEFT JOIN
                     rendimentos
                     ON rendimentos.idContaInvest = contas.idContaInvest
@@ -73,5 +82,18 @@ class RendimentosDAO extends Model {
         }
 
         return $ret;
+    }
+
+    public function buscarPosicaoInicial($ano)
+    {
+        $sql = "SELECT SUM(rendimentos.valorRendimento) AS total
+                FROM rendimentos
+                WHERE YEAR(rendimentos.dataRendimento) <= ?";
+
+        $params[] = $ano;
+
+        $result = $this->sql_actions->executarQuery(query: $sql, arr_values: $params);
+
+        return $result[0]['total'] ?? 0;
     }
 }

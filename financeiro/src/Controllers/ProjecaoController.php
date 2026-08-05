@@ -29,20 +29,23 @@ class ProjecaoController extends Controller {
 
         $data_projecao = $model_rendimentos->buscarProjecao($_POST['origem']);
         $data_realizado = $model_rendimentos->buscarProjecao($_POST['origem']);
-        $ret = $this->calcularProjecao($data_projecao);
+        $data_posicao_inicial = $model_rendimentos->buscarPosicaoInicial($_POST['origem']);
+        list($ret_projecao, $ret_realizado) = $this->calcularProjecao($data_projecao, $data_realizado, $data_posicao_inicial);
 
         echo '<pre>';
-        print_r($ret);
-        print_r($data_realizado);
+        print_r($ret_projecao);
+        print_r($ret_realizado);
         echo '</pre>';
 
-        $this->view->data['resultado'] = $ret;
+        $this->view->data['projecao'] = json_encode($ret_projecao);
+        $this->view->data['realizado'] = json_encode($ret_realizado);
         $this->renderSimple('tabela_projecao');
     }
 
-    private function calcularProjecao($data_projecao)
+    private function calcularProjecao($data_projecao, $data_realizado, $data_posicao_inicial)
     {
-        $ret = array();
+        $ret_projecao = array();
+        $ret_realizado = array();
         $total_rendimentos = array_sum($data_projecao);
         $media_mensal = count($data_projecao) > 0 ? $total_rendimentos / count($data_projecao) : 0;
         $meses = MonthAndYear::getMonthsInNumber();
@@ -52,13 +55,36 @@ class ProjecaoController extends Controller {
                 continue;
             }
 
-            $mes = str_replace('0', '', $mes);
-            $ret[$mes] = ($data_projecao[$mes] ?? 0) < 0 ? $media_mensal - abs($data_projecao[$mes] ?? 0) : ($media_mensal * 0.85);
-            if ($ret[$mes] > 2000) {
-                $ret[$mes] = 2000;
+            if (str_starts_with($mes, '0')) {
+                $mes = str_replace('0', '', $mes);
+            }
+
+            if (! isset($data_projecao[$mes])) {
+                $data_projecao[$mes] = 0;
+            }
+
+            if (! isset($data_realizado[$mes])) {
+                $data_realizado[$mes] = 0;
+            }
+
+            $valor = $data_projecao[$mes] < 0 ? $media_mensal - abs($data_projecao[$mes] ?? 0) : ($media_mensal * 0.85);
+            if ($valor > 2000) {
+                $valor = 2000;
+            }
+
+            if ($mes == 1) {
+                $ret_projecao[$mes] = $data_posicao_inicial + $valor;
+            } else {
+                $ret_projecao[$mes] = $ret_projecao[$mes - 1] + $valor;
+            }
+
+            if ($mes == 1) {
+                $ret_realizado[$mes] = $data_posicao_inicial + $ret_realizado[1];
+            } else {
+                $ret_realizado[$mes] = $ret_realizado[$mes - 1] + $valor;
             }
         }
 
-        return $ret;
+        return [$ret_projecao, $ret_realizado];
     }
 }
