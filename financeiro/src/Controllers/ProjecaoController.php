@@ -29,13 +29,8 @@ class ProjecaoController extends Controller {
 
         $data_projecao = $model_rendimentos->buscarProjecao($_POST['origem']);
         $data_realizado = $model_rendimentos->buscarProjecao($_POST['origem']);
-        $data_posicao_inicial = $model_rendimentos->buscarPosicaoInicial($_POST['origem']);
+        $data_posicao_inicial = $model_rendimentos->buscarPosicaoInicial($_POST['destino']);
         list($ret_projecao, $ret_realizado) = $this->calcularProjecao($data_projecao, $data_realizado, $data_posicao_inicial);
-
-        echo '<pre>';
-        print_r($ret_projecao);
-        print_r($ret_realizado);
-        echo '</pre>';
 
         $this->view->data['projecao'] = json_encode($ret_projecao);
         $this->view->data['realizado'] = json_encode($ret_realizado);
@@ -67,6 +62,8 @@ class ProjecaoController extends Controller {
                 $data_realizado[$mes] = 0;
             }
 
+            $ret_realizado[$mes] = $data_realizado[$mes];
+
             $valor = $data_projecao[$mes] < 0 ? $media_mensal - abs($data_projecao[$mes] ?? 0) : ($media_mensal * 0.85);
             if ($valor > 2000) {
                 $valor = 2000;
@@ -81,7 +78,7 @@ class ProjecaoController extends Controller {
             if ($mes == 1) {
                 $ret_realizado[$mes] = $data_posicao_inicial + $ret_realizado[1];
             } else {
-                $ret_realizado[$mes] = $ret_realizado[$mes - 1] + $valor;
+                $ret_realizado[$mes] = $ret_realizado[$mes - 1] + $data_projecao[$mes];
             }
         }
 

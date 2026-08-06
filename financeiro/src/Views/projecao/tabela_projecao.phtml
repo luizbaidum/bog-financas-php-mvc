@@ -1,54 +1,52 @@
-<script>
-    <?php echo 'let projecao = ' . $projecao . ';'; ?>
-
-    let valores = Array();
-    let final = Array();
-
-    Object.entries(projecao).forEach(([key, value]) => {
-        obj = {
-            id: key,
-            label: key,
-            data: value
-        };
-
-        valores.push(value);
-
-        final.push(obj);
-    });
-</script>
-
 <div class="container">
-    <canvas id="teste"></canvas>
+    <canvas id="conteudo-chart-projecao"></canvas>
 </div>
 
 <script>
-    let porContaInvestimento = document.getElementById('teste');
-    let data_porContaInvestimento = {
-        labels: valores,
-        datasets: final
+    <?php echo 'var projecao = ' . $projecao . ';'; ?>
+    <?php echo 'var realizado = ' . ($realizado ?? 'null') . ';'; ?>
+
+    // Ordena chaves por número de mês e monta arrays de labels e valores
+    var monthKeys = Object.keys(projecao || {}).map(k => parseInt(k, 10)).filter(n => !isNaN(n)).sort((a,b) => a - b);
+    var labels = monthKeys.map(m => String(m));
+    var projValues = monthKeys.map(m => Number((projecao[m] ?? projecao[String(m)] ?? 0)));
+    var realValues = monthKeys.map(m => Number((realizado && (realizado[m] ?? realizado[String(m)])) ?? 0));
+
+    var ctx = document.getElementById('conteudo-chart-projecao').getContext('2d');
+    var data = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Projetado',
+                data: projValues,
+                borderColor: 'rgba(54,162,235,1)',
+                backgroundColor: 'rgba(54,162,235,0.2)',
+                tension: 0.2,
+                fill: false
+            },
+            {
+                label: 'Realizado',
+                data: realValues,
+                borderColor: 'rgba(255,99,132,1)',
+                backgroundColor: 'rgba(255,99,132,0.2)',
+                tension: 0.2,
+                fill: false
+            }
+        ]
     };
 
-    new Chart(porContaInvestimento, {
+    new Chart(ctx, {
         type: 'line',
-        data: data_porContaInvestimento,
+        data: data,
         options: {
             responsive: true,
             plugins: {
-            legend: {
-                position: 'top',
+                legend: { position: 'top' },
+                title: { display: true, text: 'Projeção x Realizado (acumulado por mês)' }
             },
-            title: {
-                display: true,
-                text: 'Chart.js Line Chart'
-            }
-            }
-        },
-        options: {
-        scales: {
-            y: {
-                beginAtZero: false
+            scales: {
+                y: { beginAtZero: false }
             }
         }
-    }
-  });
+    });
 </script>

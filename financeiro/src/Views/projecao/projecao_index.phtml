@@ -16,11 +16,22 @@
             <form method="POST" data-action="<?= $action; ?>" class="submit-form-render-ajax" data-div="<?= $div; ?>">
                 <div class="row g-2">
                     <div class="col-md-3">
-                        <label for="idAno" class="form-label">Ano</label>
-                        <select class="form-select" id="idAno" name="ano" required>
-                            <?php foreach ($years as $v): ?>
-                                <option value="<?= $v; ?>" <?= $v == date('Y') ? ' selected ' : ''; ?>><?= $v; ?></option>
-                            <?php endforeach;?>
+                        <label for="idOrigem" class="form-label">Origem</label>
+                        <select class="form-select" id="idOrigem" name="origem">
+                            <option value="">Selecione</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="idDestino" class="form-label">Projetar em</label>
+                        <select class="form-select" id="idDestino" name="destino">
+                            <option value="">Selecione</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2024">2027</option>
+                            <option value="2024">2028</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -33,15 +44,6 @@
                         <label for="idBase" class="form-label">Base</label>
                         <select class="form-select" id="idBase" name="base">
                             <option value="anual" selected>Anual</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="idOrigem" class="form-label">Origem</label>
-                        <select class="form-select" id="idOrigem" name="origem">
-                            <option value="">Selecione</option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                            <option value="2026">2026</option>
                         </select>
                     </div>
                 </div>
