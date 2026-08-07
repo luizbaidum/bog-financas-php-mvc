@@ -8,7 +8,11 @@ class InvestimentosDAO extends Model {
 
     public function getSaldosIniciais()
     {
-        $query = "SELECT contas_investimentos.saldoInicial, contas_investimentos.dataInicio, contas_investimentos.idContaInvest FROM contas_investimentos WHERE dataInicio IS NOT NULL GROUP BY idContaInvest ORDER BY idContaInvest ASC, dataInicio ASC";
+        $query = "SELECT contas_investimentos.saldoInicial, contas_investimentos.dataInicio, contas_investimentos.idContaInvest
+                  FROM contas_investimentos
+                  WHERE contas_investimentos.dataInicio IS NOT NULL AND contas_investimentos.status = '1'
+                  GROUP BY contas_investimentos.idContaInvest
+                  ORDER BY contas_investimentos.idContaInvest ASC, contas_investimentos.dataInicio ASC";
 
         $result = $this->sql_actions->executarQuery($query);
 
