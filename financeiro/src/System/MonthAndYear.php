@@ -45,5 +45,10 @@
         {
             return self::YEARS;
         }
+
+        public static function getMonthsInNumber()
+        {
+            return self::MONTHSREVERSED;
+        }
     }
 ?>

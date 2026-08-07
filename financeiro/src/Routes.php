@@ -101,6 +101,9 @@ class Routes extends Bootstrap {
 
         $routes[] = array('route' => '/relatorio-despesas', 'controller' => 'RelatorioDespesasController', 'action' => 'index');
 
+        $routes[] = array('route' => '/projecao', 'controller' => 'ProjecaoController', 'action' => 'index');
+        $routes[] = array('route' => '/gerar-projecao', 'controller' => 'ProjecaoController', 'action' => 'gerarProjecao');
+
 		$this->setRoutes($routes);
 	}
 }

@@ -1,0 +1,63 @@
+<div class="container">
+    <div class="mt-2 mb-2">
+        <div class="card p-2">
+            <div class="text-center"><?= $title; ?></div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mt-2">
+        <div class="card-header bg-dark text-white">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-bar-chart fs-4 me-2"></i>
+                <h6 class="card-title mb-0">Filtro</h6>
+            </div>
+        </div>
+        <div class="card-body p-2">
+            <form method="POST" data-action="<?= $action; ?>" class="submit-form-render-ajax" data-div="<?= $div; ?>">
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <label for="idOrigem" class="form-label">Origem</label>
+                        <select class="form-select" id="idOrigem" name="origem">
+                            <option value="">Selecione</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="idDestino" class="form-label">Projetar em</label>
+                        <select class="form-select" id="idDestino" name="destino">
+                            <option value="">Selecione</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="idTipo" class="form-label">Tipo</label>
+                        <select class="form-select" id="idTipo" name="tipo">
+                            <option value="investimentos" selected>Investimentos</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="idBase" class="form-label">Base</label>
+                        <select class="form-select" id="idBase" name="base">
+                            <option value="anual" selected>Anual</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button class="btn btn-primary" type="submit">Gerar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mt-2" id="<?= $div; ?>"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</div>

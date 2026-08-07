@@ -8,7 +8,11 @@ class InvestimentosDAO extends Model {
 
     public function getSaldosIniciais()
     {
-        $query = "SELECT contas_investimentos.saldoInicial, contas_investimentos.dataInicio, contas_investimentos.idContaInvest FROM contas_investimentos WHERE dataInicio IS NOT NULL GROUP BY idContaInvest ORDER BY idContaInvest ASC, dataInicio ASC";
+        $query = "SELECT contas_investimentos.saldoInicial, contas_investimentos.dataInicio, contas_investimentos.idContaInvest
+                  FROM contas_investimentos
+                  WHERE contas_investimentos.dataInicio IS NOT NULL AND contas_investimentos.status = '1'
+                  GROUP BY contas_investimentos.idContaInvest
+                  ORDER BY contas_investimentos.idContaInvest ASC, contas_investimentos.dataInicio ASC";
 
         $result = $this->sql_actions->executarQuery($query);
 
@@ -108,5 +112,18 @@ class InvestimentosDAO extends Model {
         }
 
         return [];
+    }
+
+    public function buscarSaldoAtualTotal()
+    {
+        $query = "SELECT SUM(contas_investimentos.saldoAtual) AS total FROM contas_investimentos WHERE contas_investimentos.status = '1'";
+
+        $result = $this->sql_actions->executarQuery($query);
+
+        if (count($result) > 0) {
+            return $result[0]['total'];
+        }
+
+        return 0;
     }
 }
