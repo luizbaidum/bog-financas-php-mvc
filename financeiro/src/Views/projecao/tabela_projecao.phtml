@@ -4,18 +4,37 @@
 
 <script>
     <?php echo 'var projecao = ' . $projecao . ';'; ?>
-    <?php echo 'var realizado = ' . ($realizado ?? 'null') . ';'; ?>
+    <?php echo 'var realizado = ' . $realizado . ';'; ?>
+    <?php echo 'var selectedYear = ' . (int) $ano_selecionado . ';'; ?>
 
     // Ordena chaves por número de mês e monta arrays de labels e valores
     var monthKeys = Object.keys(projecao || {}).map(k => parseInt(k, 10)).filter(n => !isNaN(n)).sort((a,b) => a - b);
-    var labels = monthKeys.map(m => String(m));
+    var monthNames = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    var labels = monthKeys.map(m => (monthNames[m-1] || String(m)));
     var projValues = monthKeys.map(m => Number((projecao[m] ?? projecao[String(m)] ?? 0)));
     var realValues = monthKeys.map(m => Number((realizado && (realizado[m] ?? realizado[String(m)])) ?? 0));
+
+    // se o ano selecionado for o ano corrente, interromper a linha de "Realizado" após o mês atual
+    var currentYear = new Date().getFullYear();
+    var currentMonth = new Date().getMonth() + 1; // 1-12
+    var includeReal = (selectedYear <= currentYear);
+    var realValuesAdjusted = [];
+    if (includeReal) {
+        if (selectedYear == currentYear) {
+            realValuesAdjusted = monthKeys.map(function(m, idx) {
+                if (m > currentMonth) return null;
+                return realValues[idx];
+            });
+        } else {
+            // ano passado: exibe tudo
+            realValuesAdjusted = realValues.slice();
+        }
+    }
 
     var ctx = document.getElementById('conteudo-chart-projecao').getContext('2d');
     var data = {
         labels: labels,
-        datasets: [
+        datasets: ([
             {
                 label: 'Projetado',
                 data: projValues,
@@ -23,16 +42,16 @@
                 backgroundColor: 'rgba(54,162,235,0.2)',
                 tension: 0.2,
                 fill: false
-            },
-            {
-                label: 'Realizado',
-                data: realValues,
-                borderColor: 'rgba(255,99,132,1)',
-                backgroundColor: 'rgba(255,99,132,0.2)',
-                tension: 0.2,
-                fill: false
             }
-        ]
+        ].concat(includeReal ? [{
+            label: 'Realizado',
+            data: realValuesAdjusted,
+            borderColor: 'rgba(255,99,132,1)',
+            backgroundColor: 'rgba(255,99,132,0.2)',
+            tension: 0.2,
+            fill: false,
+            spanGaps: false
+        }] : []))
     };
 
     new Chart(ctx, {

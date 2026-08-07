@@ -2,6 +2,7 @@
 namespace src\Controllers;
 
 use MF\Controller\Controller;
+use src\Models\Investimentos\InvestimentosDAO;
 use src\Models\Rendimentos\RendimentosDAO;
 use src\System\MonthAndYear;
 
@@ -27,22 +28,29 @@ class ProjecaoController extends Controller {
     {
         $model_rendimentos = new RendimentosDAO();
 
-        $data_projecao = $model_rendimentos->buscarProjecao($_POST['origem']);
         $data_realizado = $model_rendimentos->buscarProjecao($_POST['origem']);
-        $data_posicao_inicial = $model_rendimentos->buscarPosicaoInicial($_POST['destino']);
-        list($ret_projecao, $ret_realizado) = $this->calcularProjecao($data_projecao, $data_realizado, $data_posicao_inicial);
+
+        if ((int) $_POST['destino'] > (int) date('Y')) {
+            $data_posicao_inicial = (new InvestimentosDAO())->buscarSaldoAtualTotal();
+        } else {
+            $data_posicao_inicial = $model_rendimentos->buscarPosicaoInicial($_POST['destino']);
+        }
+
+        list($ret_projecao, $ret_realizado) = $this->calcularProjecao($data_realizado, $data_posicao_inicial);
 
         $this->view->data['projecao'] = json_encode($ret_projecao);
         $this->view->data['realizado'] = json_encode($ret_realizado);
+        $this->view->data['ano_selecionado'] = $_POST['destino'];
+
         $this->renderSimple('tabela_projecao');
     }
 
-    private function calcularProjecao($data_projecao, $data_realizado, $data_posicao_inicial)
+    private function calcularProjecao($data_realizado, $data_posicao_inicial)
     {
         $ret_projecao = array();
         $ret_realizado = array();
-        $total_rendimentos = array_sum($data_projecao);
-        $media_mensal = count($data_projecao) > 0 ? $total_rendimentos / count($data_projecao) : 0;
+        $total_rendimentos = array_sum($data_realizado);
+        $media_mensal = count($data_realizado) > 0 ? $total_rendimentos / count($data_realizado) : 0;
         $meses = MonthAndYear::getMonthsInNumber();
 
         foreach ($meses as $mes) {
@@ -54,31 +62,27 @@ class ProjecaoController extends Controller {
                 $mes = str_replace('0', '', $mes);
             }
 
-            if (! isset($data_projecao[$mes])) {
-                $data_projecao[$mes] = 0;
-            }
-
             if (! isset($data_realizado[$mes])) {
                 $data_realizado[$mes] = 0;
             }
 
             $ret_realizado[$mes] = $data_realizado[$mes];
 
-            $valor = $data_projecao[$mes] < 0 ? $media_mensal - abs($data_projecao[$mes] ?? 0) : ($media_mensal * 0.85);
-            if ($valor > 2000) {
-                $valor = 2000;
+            if ($media_mensal < 0) {
+                $valor = $media_mensal;
+            } else {
+                $valor = $data_realizado[$mes] < 0 ? $media_mensal - abs($data_realizado[$mes]) : ($media_mensal * 0.85);
+                if ($valor > 2000) {
+                    $valor = 2000;
+                }
             }
 
             if ($mes == 1) {
-                $ret_projecao[$mes] = $data_posicao_inicial + $valor;
+                $ret_projecao[1] = $data_posicao_inicial + $valor;
+                $ret_realizado[1] = $data_posicao_inicial + $ret_realizado[1];
             } else {
                 $ret_projecao[$mes] = $ret_projecao[$mes - 1] + $valor;
-            }
-
-            if ($mes == 1) {
-                $ret_realizado[$mes] = $data_posicao_inicial + $ret_realizado[1];
-            } else {
-                $ret_realizado[$mes] = $ret_realizado[$mes - 1] + $data_projecao[$mes];
+                $ret_realizado[$mes] = $ret_realizado[$mes - 1] + $data_realizado[$mes];
             }
         }
 

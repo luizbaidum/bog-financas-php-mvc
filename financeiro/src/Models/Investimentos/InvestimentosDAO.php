@@ -109,4 +109,17 @@ class InvestimentosDAO extends Model {
 
         return [];
     }
+
+    public function buscarSaldoAtualTotal()
+    {
+        $query = "SELECT SUM(contas_investimentos.saldoAtual) AS total FROM contas_investimentos WHERE contas_investimentos.status = '1'";
+
+        $result = $this->sql_actions->executarQuery($query);
+
+        if (count($result) > 0) {
+            return $result[0]['total'];
+        }
+
+        return 0;
+    }
 }
