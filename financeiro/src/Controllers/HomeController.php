@@ -79,12 +79,12 @@ class HomeController extends Controller {
 			);
 
             $preferencia_cards = $model_movimentos->selectAll(
-                                    new PreferenciasEntity(), 
+                                    new PreferenciasEntity(),
                                     [['idPreferencia', '=', '"1"']]
                                 );
 
             $preferencia_investimentos = $model_movimentos->selectAll(
-                                    new PreferenciasEntity(), 
+                                    new PreferenciasEntity(),
                                     [['idPreferencia', '=', '"2"']]
                                 );
 
@@ -175,42 +175,56 @@ class HomeController extends Controller {
 
     private function prepararDadosCardReceita(array $dados_in, string|int $mes_principal): array
     {
-        $dados_out = [];
-
-        $mes_principal = ltrim($mes_principal, '0');
-        $mes_anterior = ltrim($mes_principal - 1, '0');
-
-        $receita_principal = $dados_in[$mes_principal] ?? '0';
-        $receita_anterior = $dados_in[$mes_anterior] ?? '0';
-        $diferenca = $receita_anterior != 0 ? (($receita_principal / $receita_anterior) - 1) * 100 : 0;
-
         $dados_out = [
-            'receita'     => NumbersHelper::formatUStoBR($receita_principal),
-            'diferenca'   => $diferenca > 0 ? '+' . NumbersHelper::formatUStoBR($diferenca) : NumbersHelper::formatUStoBR($diferenca),
-            'bg-color'    => $diferenca > 0 ? 'success' : 'danger',
-            'receita_iso' => $receita_principal
+            'receita'     => NumbersHelper::formatUStoBR(array_sum($dados_in)),
+            'diferenca'   => 0,
+            'bg-color'    => '',
+            'receita_iso' => array_sum($dados_in)
         ];
+
+        if ($mes_principal != 'Todos') {
+            $mes_principal = ltrim($mes_principal, '0');
+            $mes_anterior = ltrim($mes_principal - 1, '0');
+
+            $receita_principal = $dados_in[$mes_principal] ?? '0';
+            $receita_anterior = $dados_in[$mes_anterior] ?? '0';
+            $diferenca = $receita_anterior != 0 ? (($receita_principal / $receita_anterior) - 1) * 100 : 0;
+
+            $dados_out = [
+                'receita'     => NumbersHelper::formatUStoBR($receita_principal),
+                'diferenca'   => $diferenca > 0 ? '+' . NumbersHelper::formatUStoBR($diferenca) : NumbersHelper::formatUStoBR($diferenca),
+                'bg-color'    => $diferenca > 0 ? 'success' : 'danger',
+                'receita_iso' => $receita_principal
+            ];
+        }
 
         return $dados_out;
     }
 
     private function prepararDadosCardDespesa(array $dados_in, string|int $mes_principal): array
     {
-        $dados_out = [];
-
-        $mes_principal = ltrim($mes_principal, '0');
-        $mes_anterior = ltrim($mes_principal - 1, '0');
-
-        $despesa_principal = $dados_in[$mes_principal] ?? '0';
-        $despesa_anterior = $dados_in[$mes_anterior] ?? '0';
-        $diferenca = $despesa_anterior != 0 ? (($despesa_principal / $despesa_anterior) - 1) * 100 : 0;
-
         $dados_out = [
-            'despesa'     => NumbersHelper::formatUStoBR($despesa_principal),
-            'diferenca'   => $diferenca > 0 ? '+' . NumbersHelper::formatUStoBR($diferenca) : NumbersHelper::formatUStoBR($diferenca),
-            'bg-color'    => $diferenca < 0 ? 'success' : 'danger',
-            'despesa_iso' => $despesa_principal
+            'despesa'     => NumbersHelper::formatUStoBR(array_sum($dados_in)),
+            'diferenca'   => 0,
+            'bg-color'    => '',
+            'despesa_iso' => array_sum($dados_in)
         ];
+
+        if ($mes_principal != 'Todos') {
+            $mes_principal = ltrim($mes_principal, '0');
+            $mes_anterior = ltrim($mes_principal - 1, '0');
+
+            $despesa_principal = $dados_in[$mes_principal] ?? '0';
+            $despesa_anterior = $dados_in[$mes_anterior] ?? '0';
+            $diferenca = $despesa_anterior != 0 ? (($despesa_principal / $despesa_anterior) - 1) * 100 : 0;
+
+            $dados_out = [
+                'despesa'     => NumbersHelper::formatUStoBR($despesa_principal),
+                'diferenca'   => $diferenca > 0 ? '+' . NumbersHelper::formatUStoBR($diferenca) : NumbersHelper::formatUStoBR($diferenca),
+                'bg-color'    => $diferenca < 0 ? 'success' : 'danger',
+                'despesa_iso' => $despesa_principal
+            ];
+        }
 
         return $dados_out;
     }
