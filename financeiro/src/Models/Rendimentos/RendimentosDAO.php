@@ -5,7 +5,7 @@ namespace src\Models\Rendimentos;
 use MF\Model\Model;
 
 class RendimentosDAO extends Model {
-    public function getEvolucaoRendimentos()
+    public function getEvolucaoRendimentos($periodo = 'CURDATE(), INTERVAL 15 MONTH')
     {
         $query = "SELECT
                     contas.idContaInvest,
@@ -25,7 +25,7 @@ class RendimentosDAO extends Model {
                         FROM rendimentos
                         WHERE rendimentos.idFamilia = $_SESSION[id_familia]
                         AND rendimentos.dataRendimento <= CURDATE()
-                        AND rendimentos.dataRendimento >= DATE_SUB(CURDATE(), INTERVAL 15 MONTH)
+                        AND rendimentos.dataRendimento >= DATE_SUB($periodo)
                     ) meses
                 LEFT JOIN
                     rendimentos
@@ -46,6 +46,28 @@ class RendimentosDAO extends Model {
         }
 
         return [];
+    }
+
+    public function getTotalizadorRendimentosAteData($periodo = 'CURDATE(), INTERVAL 15 MONTH')
+    {
+        $query = "SELECT
+                    contas.idContaInvest,
+                    COALESCE(SUM(rendimentos.valorRendimento), 0) AS valor
+                FROM rendimentos
+                INNER JOIN contas_investimentos AS contas ON rendimentos.idContaInvest = contas.idContaInvest
+                WHERE contas.status = '1' AND rendimentos.dataRendimento < DATE_SUB($periodo)
+                GROUP BY contas.idContaInvest
+                ORDER BY contas.idContaInvest ASC";
+
+        $result = $this->sql_actions->executarQuery(query: $query);
+
+        if (count($result) > 0) {
+            foreach ($result as $row) {
+                $ret[$row['idContaInvest']] = $row['valor'];
+            }
+        }
+
+        return $ret ?? [];
     }
 
     public function selecionarDoisUltimosRendimentos(string $id_conta_invest, string $data_rend): array
