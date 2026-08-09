@@ -19,12 +19,13 @@ class RendimentosController extends Controller {
         $model_investimentos = new InvestimentosDAO();
 
         $saldos = $model_investimentos->getSaldosIniciais();
+        $rendi_anterior = $model_rendimentos->getTotalizadorRendimentosAteData();
         $rendi = $model_rendimentos->getEvolucaoRendimentos();
 
         foreach ($saldos as $s) {
             foreach ($rendi as $k => $r) {
                 if ($r['idContaInvest'] == $s['idContaInvest']) {
-                    $rendi[$k]['valor'] = $r['valor'] + $s['saldoInicial'];
+                    $rendi[$k]['valor'] = $r['valor'] + $s['saldoInicial'] + ($rendi_anterior[$s['idContaInvest']] ?? 0);
                     break;
                 }
             }

@@ -20,7 +20,11 @@ class MovimentosDAO extends Model {
             $where .= ' AND (categorias.categoria LIKE "%' . $pesquisa . '%" OR movimentos.nomeMovimento LIKE "%' . $pesquisa . '%" OR proprietarios.proprietario = "' . $pesquisa . '" OR movimentos.idMovimento = "' . $pesquisa . '")';
         }
 
-        $query = "SELECT movimentos.*, categorias.categoria, categorias.tipo, proprietarios.proprietario FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario $where ORDER BY dataMovimento DESC, valor DESC";
+        $query = "SELECT movimentos.*, categorias.categoria, categorias.tipo, proprietarios.proprietario
+                  FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria
+                  INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario
+                  $where
+                  ORDER BY dataMovimento DESC, valor DESC";
 
 		$result = $this->sql_actions->executarQuery($query);
 
@@ -122,7 +126,15 @@ class MovimentosDAO extends Model {
             $where .= ' AND (proprietarios.proprietario = "' . $pesquisa . '")';
         }
 
-        $query = "SELECT movimentos.*, categorias.categoria, CONCAT(contas_investimentos.nomeBanco, ' - ', contas_investimentos.tituloInvest) AS invest FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria INNER JOIN contas_investimentos ON contas_investimentos.idContaInvest = movimentos.idContaInvest INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario WHERE movimentos.idContaInvest > 0 AND categorias.idCategoria IN (12, 10) AND $where ORDER BY dataMovimento DESC";
+        $query = "SELECT movimentos.*, categorias.categoria, CONCAT(contas_investimentos.nomeBanco, ' - ', contas_investimentos.tituloInvest) AS invest
+                FROM movimentos
+                INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria
+                INNER JOIN contas_investimentos ON contas_investimentos.idContaInvest = movimentos.idContaInvest
+                INNER JOIN proprietarios ON proprietarios.idProprietario = movimentos.idProprietario
+                WHERE movimentos.idContaInvest > 0
+                    AND categorias.tipo IN ('RA', 'A')
+                    AND $where
+                ORDER BY dataMovimento DESC";
 
 		$result = $this->sql_actions->executarQuery($query);
 
@@ -332,7 +344,7 @@ class MovimentosDAO extends Model {
 
                 $params[] = date('Y') . $mes_anterior;
             } elseif ($mes != '' && $mes != '01') {
-                $mes_anterior = DateHelper::calcMonth($mes, '-', 1);;
+                $mes_anterior = DateHelper::calcMonth($mes, '-', 1);
                 $where_clause .= 'OR DATE_FORMAT(movimentos.dataMovimento, "%Y%m") = ?';
 
                 $params[] = "$ano$mes_anterior";
@@ -341,7 +353,12 @@ class MovimentosDAO extends Model {
             $where_clause .= ')';
         }
 
-        $query = 'SELECT SUM(movimentos.valor) AS totalReceitas, MONTH(movimentos.dataMovimento) AS mes FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria ' . $where_clause . ' GROUP BY MONTH(movimentos.dataMovimento) ORDER BY MONTH(movimentos.dataMovimento) DESC';
+        $query = "SELECT SUM(movimentos.valor) AS totalReceitas, MONTH(movimentos.dataMovimento) AS mes
+                  FROM movimentos
+                  INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria
+                  $where_clause
+                  GROUP BY MONTH(movimentos.dataMovimento)
+                  ORDER BY MONTH(movimentos.dataMovimento) DESC";
 
         $result = $this->sql_actions->executarQuery($query, $params);
 
@@ -389,7 +406,12 @@ class MovimentosDAO extends Model {
             $where_clause .= ')';
         }
 
-        $query = 'SELECT SUM(movimentos.valor) AS totalDespesas, MONTH(movimentos.dataMovimento) AS mes FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria ' . $where_clause . ' GROUP BY MONTH(movimentos.dataMovimento) ORDER BY MONTH(movimentos.dataMovimento) DESC';
+        $query = "SELECT SUM(movimentos.valor) AS totalDespesas, MONTH(movimentos.dataMovimento) AS mes
+                  FROM movimentos
+                  INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria
+                  $where_clause
+                  GROUP BY MONTH(movimentos.dataMovimento)
+                  ORDER BY MONTH(movimentos.dataMovimento) DESC";
 
         $result = $this->sql_actions->executarQuery($query, $params);
 
@@ -407,6 +429,7 @@ class MovimentosDAO extends Model {
         $where_clause = 'WHERE (categorias.tipo = ? OR categorias.tipo = ?)';
         $params[] = 'A';
         $params[] = 'RA';
+        $group_by_clause = '';
 
         if ($id_proprietario != '') {
             $where_clause .= "AND movimentos.idProprietario = ? ";
@@ -436,9 +459,14 @@ class MovimentosDAO extends Model {
             // }
 
             $where_clause .= ')';
+            $group_by_clause = 'GROUP BY MONTH(movimentos.dataMovimento)';
         }
 
-        $query = 'SELECT SUM(IF(categorias.tipo = "A", movimentos.valor, 0)) AS totalAplicacoes, SUM(IF(categorias.tipo = "RA", movimentos.valor, 0)) AS totalResgates, MONTH(movimentos.dataMovimento) AS mes FROM movimentos INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria ' . $where_clause . ' GROUP BY MONTH(movimentos.dataMovimento) ORDER BY MONTH(movimentos.dataMovimento) DESC';
+        $query = "SELECT SUM(IF(categorias.tipo = 'A', movimentos.valor, 0)) AS totalAplicacoes, SUM(IF(categorias.tipo = 'RA', movimentos.valor, 0)) AS totalResgates, MONTH(movimentos.dataMovimento) AS mes
+                FROM movimentos
+                INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria $where_clause
+                $group_by_clause
+                ORDER BY MONTH(movimentos.dataMovimento) DESC";
 
         $result = $this->sql_actions->executarQuery($query, $params);
 
@@ -455,12 +483,12 @@ class MovimentosDAO extends Model {
         $where = 'categorias.tipo = "D" AND YEAR(movimentos.dataMovimento) = ?';
         $params = [$post['anoRelatorio']];
 
-        if (! empty($post['mesRelatorio'])) {
+        if (! empty($post['mesRelatorio']) && $post['mesRelatorio'] != 'Todos') {
             $where .= ' AND MONTH(movimentos.dataMovimento) = ?';
             $params[] = $post['mesRelatorio'];
         }
 
-        if (! empty($post['despesa'])) {
+        if (! empty($post['despesa']) && $post['despesa'][0] != '') {
             $where .= ' AND movimentos.idCategoria IN (' . implode(',', $post['despesa']) . ')';
         }
 
