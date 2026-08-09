@@ -483,12 +483,12 @@ class MovimentosDAO extends Model {
         $where = 'categorias.tipo = "D" AND YEAR(movimentos.dataMovimento) = ?';
         $params = [$post['anoRelatorio']];
 
-        if (! empty($post['mesRelatorio'])) {
+        if (! empty($post['mesRelatorio']) && $post['mesRelatorio'] != 'Todos') {
             $where .= ' AND MONTH(movimentos.dataMovimento) = ?';
             $params[] = $post['mesRelatorio'];
         }
 
-        if (! empty($post['despesa'])) {
+        if (! empty($post['despesa']) && $post['despesa'][0] != '') {
             $where .= ' AND movimentos.idCategoria IN (' . implode(',', $post['despesa']) . ')';
         }
 
