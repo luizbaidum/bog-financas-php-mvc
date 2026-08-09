@@ -429,6 +429,7 @@ class MovimentosDAO extends Model {
         $where_clause = 'WHERE (categorias.tipo = ? OR categorias.tipo = ?)';
         $params[] = 'A';
         $params[] = 'RA';
+        $group_by_clause = '';
 
         if ($id_proprietario != '') {
             $where_clause .= "AND movimentos.idProprietario = ? ";
@@ -458,12 +459,13 @@ class MovimentosDAO extends Model {
             // }
 
             $where_clause .= ')';
+            $group_by_clause = 'GROUP BY MONTH(movimentos.dataMovimento)';
         }
 
         $query = "SELECT SUM(IF(categorias.tipo = 'A', movimentos.valor, 0)) AS totalAplicacoes, SUM(IF(categorias.tipo = 'RA', movimentos.valor, 0)) AS totalResgates, MONTH(movimentos.dataMovimento) AS mes
                 FROM movimentos
                 INNER JOIN categorias ON categorias.idCategoria = movimentos.idCategoria $where_clause
-                GROUP BY MONTH(movimentos.dataMovimento)
+                $group_by_clause
                 ORDER BY MONTH(movimentos.dataMovimento) DESC";
 
         $result = $this->sql_actions->executarQuery($query, $params);
