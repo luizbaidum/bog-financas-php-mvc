@@ -23,12 +23,8 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="bg-light">
                     <tr class="text-secondary">
-                        <th class="ps-4 py-3 border-0 fw-semibold">idMovimento</th>
-                        <th class="py-3 border-0 fw-semibold">Data</th>
-                        <th class="py-3 border-0 fw-semibold">Descrição</th>
                         <th class="py-3 border-0 fw-semibold">Despesa</th>
                         <th class="py-3 border-0 fw-semibold text-end">Valor</th>
-                        <th class="py-3 border-0 fw-semibold">Proprietário</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,20 +40,10 @@
                             $total += $value['valor'];
                         ?>
                             <tr class="border-bottom">
-                                <td class="ps-4 py-3">
-                                    <?= $value['idMovimento']; ?>
-                                </td>
-                                <td class="py-3">
-                                    <?= DateHelper::convertUStoBR($value['dataMovimento']); ?>
-                                </td>
-                                <td class="py-3">
-                                    <?= $value['nomeMovimento']; ?>
-                                </td>
                                 <td>
                                     <?= $value['categoria'] . ' (' . $value['regularidade'] . ')'; ?>
                                 </td>
                                 <td class="py-3 text-end">R$ <?= NumbersHelper::formatUStoBR($value['valor']); ?></td>
-                                <td class="py-3"><?= $value['proprietario']; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -65,9 +51,7 @@
                 <tfoot>
                     <tr class="table-dark">
                         <td class="ps-4">Total de registros: <?= $total_linhas; ?></td>
-                        <td colspan="3" class="text-end">Total</td>
                         <td class="text-end">R$ <?= NumbersHelper::formatUStoBR($total); ?></td>
-                        <td class="pe-4"></td>
                     </tr>
                 </tfoot>
             </table>

@@ -480,13 +480,8 @@ class MovimentosDAO extends Model {
 
     public function relatorioDespesas($post)
     {
-        $where = 'categorias.tipo = "D" AND YEAR(movimentos.dataMovimento) = ?';
-        $params = [$post['anoRelatorio']];
-
-        if (! empty($post['mesRelatorio']) && $post['mesRelatorio'] != 'Todos') {
-            $where .= ' AND MONTH(movimentos.dataMovimento) = ?';
-            $params[] = $post['mesRelatorio'];
-        }
+        $where = 'categorias.tipo = "D" AND movimentos.dataMovimento >= ? AND movimentos.dataMovimento <= ?';
+        $params = [$post['dataInicio'], $post['dataFim']];
 
         if (! empty($post['despesa']) && $post['despesa'][0] != '') {
             $where .= ' AND movimentos.idCategoria IN (' . implode(',', $post['despesa']) . ')';

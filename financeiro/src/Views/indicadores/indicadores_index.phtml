@@ -99,8 +99,87 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
-                            foreach ($arr_cat as $id => $cat): 
+                        <?php
+                            $subtotais_real = ['R' => array_fill(1, 12, 0), 'D' => array_fill(1, 12, 0), 'A' => array_fill(1, 12, 0), 'RA' => array_fill(1, 12, 0)];
+                            $subtotais_orcado = ['R' => array_fill(1, 12, 0), 'D' => array_fill(1, 12, 0), 'A' => array_fill(1, 12, 0), 'RA' => array_fill(1, 12, 0)];
+                            $prev_tipo = null;
+                            $count = 0;
+                            $total_cats = count($arr_cat);
+
+                            foreach ($arr_cat as $id => $cat):
+                                $tipo = $cat['tipo'];
+                                if ($prev_tipo !== null && $prev_tipo !== $tipo && in_array($prev_tipo, ['R', 'D'])):
+                                    $sub_total_real = 0;
+                                    $sub_total_orcado = 0;
+                        ?>
+                                <tr class="table-info border-bottom border-dark">
+                                    <td class="ps-4 fw-bold">Total <?= $prev_tipo ?></td>
+                                    <?php for ($mes = 1; $mes <= 12; $mes++):
+                                        $sub_total_real += $subtotais_real[$prev_tipo][$mes];
+                                        $sub_total_orcado += $subtotais_orcado[$prev_tipo][$mes];
+                                    ?>
+                                        <td class="text-center">
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-bold <?= $subtotais_real[$prev_tipo][$mes] < 0 ? 'text-danger' : 'text-success'; ?>" style="font-size: 0.90rem;">
+                                                    <?= NumbersHelper::formatUStoBR($subtotais_real[$prev_tipo][$mes]); ?>
+                                                </span>
+                                                <span class="fw-bold text-secondary" style="font-size: 0.85rem;">
+                                                    <?= NumbersHelper::formatUStoBR($subtotais_orcado[$prev_tipo][$mes]); ?>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    <?php endfor; ?>
+                                    <td class="text-end pe-4">
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold <?= $sub_total_real < 0 ? 'text-danger' : 'text-success'; ?>" style="font-size: 0.90rem;">
+                                                R$ <?= NumbersHelper::formatUStoBR($sub_total_real); ?>
+                                            </span>
+                                            <span class="fw-bold text-secondary" style="font-size: 0.85rem;">
+                                                R$ <?= NumbersHelper::formatUStoBR($sub_total_orcado); ?>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                        <?php
+                                    if ($prev_tipo === 'D'):
+                                        $saldo_total_real = 0;
+                                        $saldo_total_orcado = 0;
+                        ?>
+                                <tr class="table-success border-bottom border-dark">
+                                    <td class="ps-4 fw-bold">Receitas - Despesas</td>
+                                    <?php for ($mes = 1; $mes <= 12; $mes++):
+                                        $saldo_mes_real = $subtotais_real['R'][$mes] + $subtotais_real['D'][$mes];
+                                        $saldo_mes_orcado = $subtotais_orcado['R'][$mes] + $subtotais_orcado['D'][$mes];
+                                        $saldo_total_real += $saldo_mes_real;
+                                        $saldo_total_orcado += $saldo_mes_orcado;
+                                    ?>
+                                        <td class="text-center">
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-bold <?= $saldo_mes_real < 0 ? 'text-danger' : 'text-success'; ?>" style="font-size: 0.90rem;">
+                                                    <?= NumbersHelper::formatUStoBR($saldo_mes_real); ?>
+                                                </span>
+                                                <span class="fw-bold text-secondary" style="font-size: 0.85rem;">
+                                                    <?= NumbersHelper::formatUStoBR($saldo_mes_orcado); ?>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    <?php endfor; ?>
+                                    <td class="text-end pe-4">
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold <?= $saldo_total_real < 0 ? 'text-danger' : 'text-success'; ?>" style="font-size: 0.90rem;">
+                                                R$ <?= NumbersHelper::formatUStoBR($saldo_total_real); ?>
+                                            </span>
+                                            <span class="fw-bold text-secondary" style="font-size: 0.85rem;">
+                                                R$ <?= NumbersHelper::formatUStoBR($saldo_total_orcado); ?>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                        <?php
+                                    endif;
+                                endif;
+                                $prev_tipo = $tipo;
+
                                 $total_categoria_real = 0;
                                 $total_categoria_orcado = 0;
                         ?>
@@ -112,6 +191,11 @@
                                         $orcado = $indicadores_anuais[$mes][$id]['orcado'] ?? 0;
                                         $total_categoria_real += $realizado;
                                         $total_categoria_orcado += $orcado;
+
+                                        if (isset($subtotais_real[$tipo])) {
+                                            $subtotais_real[$tipo][$mes] += $realizado;
+                                            $subtotais_orcado[$tipo][$mes] += $orcado;
+                                        }
                                 ?>
                                     <td class="text-center">
                                         <div class="d-flex flex-column">
@@ -136,7 +220,79 @@
                                     </div>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php
+                            $count++;
+                            if ($count == $total_cats && in_array($prev_tipo, ['R', 'D'])) {
+                                $sub_total_real = 0;
+                                $sub_total_orcado = 0;
+                        ?>
+                                <tr class="table-info border-bottom border-dark">
+                                    <td class="ps-4 fw-bold">Total <?= $prev_tipo ?></td>
+                                    <?php for ($mes = 1; $mes <= 12; $mes++):
+                                        $sub_total_real += $subtotais_real[$prev_tipo][$mes];
+                                        $sub_total_orcado += $subtotais_orcado[$prev_tipo][$mes];
+                                    ?>
+                                        <td class="text-center">
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-bold <?= $subtotais_real[$prev_tipo][$mes] < 0 ? 'text-danger' : 'text-success'; ?>" style="font-size: 0.90rem;">
+                                                    <?= NumbersHelper::formatUStoBR($subtotais_real[$prev_tipo][$mes]); ?>
+                                                </span>
+                                                <span class="fw-bold text-secondary" style="font-size: 0.85rem;">
+                                                    <?= NumbersHelper::formatUStoBR($subtotais_orcado[$prev_tipo][$mes]); ?>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    <?php endfor; ?>
+                                    <td class="text-end pe-4">
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold <?= $sub_total_real < 0 ? 'text-danger' : 'text-success'; ?>" style="font-size: 0.90rem;">
+                                                R$ <?= NumbersHelper::formatUStoBR($sub_total_real); ?>
+                                            </span>
+                                            <span class="fw-bold text-secondary" style="font-size: 0.85rem;">
+                                                R$ <?= NumbersHelper::formatUStoBR($sub_total_orcado); ?>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                        <?php
+                                if ($prev_tipo === 'D') {
+                                    $saldo_total_real = 0;
+                                    $saldo_total_orcado = 0;
+                        ?>
+                                <tr class="table-success border-bottom border-dark">
+                                    <td class="ps-4 fw-bold">Receitas - Despesas</td>
+                                    <?php for ($mes = 1; $mes <= 12; $mes++):
+                                        $saldo_mes_real = $subtotais_real['R'][$mes] + $subtotais_real['D'][$mes];
+                                        $saldo_mes_orcado = $subtotais_orcado['R'][$mes] + $subtotais_orcado['D'][$mes];
+                                        $saldo_total_real += $saldo_mes_real;
+                                        $saldo_total_orcado += $saldo_mes_orcado;
+                                    ?>
+                                        <td class="text-center">
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-bold <?= $saldo_mes_real < 0 ? 'text-danger' : 'text-success'; ?>" style="font-size: 0.90rem;">
+                                                    <?= NumbersHelper::formatUStoBR($saldo_mes_real); ?>
+                                                </span>
+                                                <span class="fw-bold text-secondary" style="font-size: 0.85rem;">
+                                                    <?= NumbersHelper::formatUStoBR($saldo_mes_orcado); ?>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    <?php endfor; ?>
+                                    <td class="text-end pe-4">
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold <?= $saldo_total_real < 0 ? 'text-danger' : 'text-success'; ?>" style="font-size: 0.90rem;">
+                                                R$ <?= NumbersHelper::formatUStoBR($saldo_total_real); ?>
+                                            </span>
+                                            <span class="fw-bold text-secondary" style="font-size: 0.85rem;">
+                                                R$ <?= NumbersHelper::formatUStoBR($saldo_total_orcado); ?>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                        <?php
+                                    }
+                            }
+                        endforeach; ?>
                     </tbody>
                     <tfoot>
                         <?php
