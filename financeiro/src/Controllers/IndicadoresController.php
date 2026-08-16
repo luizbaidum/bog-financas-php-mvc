@@ -55,8 +55,10 @@ class IndicadoresController extends Controller {
                 $categoria_nome = $it['categoria'];
                 $total_realizado = $it['total'];
                 $mes = $it['mes'];
+                $tipo = $it['tipo'];
 
                 $arr_cat[$categoria_id]['nome'] = $categoria_nome;
+                $arr_cat[$categoria_id]['tipo'] = $tipo;
 
                 $indicadores_anuais[$mes][$categoria_id]['realizado'] = $total_realizado;
             }
@@ -68,12 +70,27 @@ class IndicadoresController extends Controller {
                 $categoria_nome = $it['categoria'];
                 $total_orcado = $it['total'];
                 $mes = $it['mes'];
+                $tipo = $it['tipo'];
 
                 $arr_cat[$categoria_id]['nome'] = $categoria_nome;
+                $arr_cat[$categoria_id]['tipo'] = $tipo;
 
                 $indicadores_anuais[$mes][$categoria_id]['orcado'] = $total_orcado;
             }
         }
+
+        // Ordenar o $arr_cat pelo tipo: Receita (R) , Despesa (D) e outras...
+        uasort($arr_cat, function($a, $b) {
+            $order = ['R' => 1, 'D' => 2, 'A' => 3, 'RA' => 4];
+            $pesoA = $order[$a['tipo']] ?? 5;
+            $pesoB = $order[$b['tipo']] ?? 5;
+
+            if ($pesoA == $pesoB) {
+                return strcmp($a['nome'], $b['nome']);
+            }
+            return $pesoA <=> $pesoB;
+        });
+
 
         return [$arr_cat, $indicadores_anuais];
     }

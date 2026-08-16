@@ -1,5 +1,4 @@
 <div class="container">
-
     <div class="mt-2 mb-2">
         <div class="mt-2 mb-2">
             <div class="card p-2">
@@ -20,21 +19,12 @@
                 <div class="form-group">
                     <div class="row g-2">
                         <div class="col-md-2">
-                            <label for="idAnoRelatorio" class="form-label titulo-input-formulario-cadastro">Ano</label>
-                            <select class="form-select" id="idAnoRelatorio" name="anoRelatorio" required>
-                                <?php foreach ($years as $v): ?>
-                                    <option value="<?= $v; ?>" <?= $v == date('Y') ? ' selected ' : ''; ?>><?= $v; ?></option>
-                                <?php endforeach;?>
-                            </select>
+                            <label for="idDataInicio" class="form-label titulo-input-formulario-cadastro">Data Início</label>
+                            <input type="date" class="form-control" id="idDataInicio" name="dataInicio" required value="<?= date('Y-m-01'); ?>">
                         </div>
                         <div class="col-md-2">
-                            <label for="idMesRelatorio" class="form-label titulo-input-formulario-cadastro">Mes</label>
-                            <select class="form-select" id="idMesRelatorio" name="mesRelatorio">
-                                <option value="">Trimestre</option>
-                                <?php foreach ($months as $k => $v): ?>
-                                    <option value="<?= $k; ?>"><?= $v; ?></option>
-                                <?php endforeach;?>
-                            </select>
+                            <label for="idDataFim" class="form-label titulo-input-formulario-cadastro">Data Fim</label>
+                            <input type="date" class="form-control" id="idDataFim" name="dataFim" required value="<?= date('Y-m-t'); ?>">
                         </div>
                         <div class="col-md-6">
                             <label for="idCategoria" class="form-label titulo-input-formulario-cadastro">Despesa</label>

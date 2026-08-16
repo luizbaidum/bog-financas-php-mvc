@@ -22,10 +22,10 @@ class RelatorioDespesasController extends Controller {
         ];
 
         if (isset($_POST) && !empty($_POST)) {
-            if (empty($_POST['anoRelatorio'])) {
+            if (empty($_POST['dataInicio']) || empty($_POST['dataFim'])) {
                 $array_retorno = array(
 					'result'   => false,
-					'mensagem' => 'É obrigatório informar o ano do relatório.',
+					'mensagem' => 'É obrigatório informar as datas de início e fim.',
 				);
 
 				echo json_encode($array_retorno);
@@ -37,8 +37,6 @@ class RelatorioDespesasController extends Controller {
         }
 
         $this->view->data['lista_categoria'] = $model_categorias->selectAll(new CategoriasEntity(), [['status', '=', '"1"'], ['tipo', '=', '"D"']], [], ['categoria' => 'ASC']);
-        $this->view->data['months'] = MonthAndYear::getMonths();
-        $this->view->data['years'] = MonthAndYear::getYears();
         $this->view->data['lista_regularidade'] = ['F', 'V'];
         $this->view->data['lista_proprietarios'] = $model_categorias->selectAll(new ProprietariosEntity, [], [], []);
 
