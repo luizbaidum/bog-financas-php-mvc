@@ -11,8 +11,7 @@ class InvestimentosDAO extends Model {
         $query = "SELECT contas_investimentos.saldoInicial, contas_investimentos.dataInicio, contas_investimentos.idContaInvest
                   FROM contas_investimentos
                   WHERE contas_investimentos.dataInicio IS NOT NULL AND contas_investimentos.status = '1'
-                  GROUP BY contas_investimentos.idContaInvest
-                  ORDER BY contas_investimentos.idContaInvest ASC, contas_investimentos.dataInicio ASC";
+                  ORDER BY contas_investimentos.idContaInvest ASC";
 
         $result = $this->sql_actions->executarQuery($query);
 
