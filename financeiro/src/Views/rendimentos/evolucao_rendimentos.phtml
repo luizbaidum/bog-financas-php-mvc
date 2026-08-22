@@ -10,14 +10,11 @@
 
     let obj_2 = Object();
     let final_2 = Array();
-    let arr_proprietario = Array();
-    let arr_valores_2 = Array();
+    let arr_valores_2 = Object();
 
     for (const item of ret) {
         let index = mes_ano.indexOf(item.mesAno);
         let index2 = arr_valores.indexOf(item.idContaInvest);
-        let index3 = arr_proprietario.indexOf(item.idProprietario);
-
         proprietarios_nome[item.idProprietario] = item.proprietarioNome;
 
         if (index == -1) {
@@ -29,14 +26,13 @@
             arr_names[item.idContaInvest] = item.nome;
         }
 
-        if (index3 == -1) {
-            arr_valores_2[`${item.idProprietario}-${item.mesAno}`] = 0;
-        }
+        arr_valores_2[`${item.idProprietario}-${item.mesAno}`] = 0;
     }
 
     for (const item of ret) {
-        arr_valores[item.idContaInvest].push(item.valor);
-        arr_valores_2[`${item.idProprietario}-${item.mesAno}`] += item.valor;
+        const valor = Number(item.valor) || 0;
+        arr_valores[item.idContaInvest].push(valor);
+        arr_valores_2[`${item.idProprietario}-${item.mesAno}`] += valor;
     }
 
     arr_valores.forEach(function (v, id) {
@@ -49,28 +45,18 @@
         final.push(obj);
     })
 
-    for (const [key, value] of Object.entries(arr_valores_2)) {
-        let spliting = key.split('-')[0];
+    let gerarDataPorProprietario = Object();
 
-        obj_2 = {
-            label: spliting,
-            data: value
-        };
+    for (const item of ret) {
+        if (!gerarDataPorProprietario[item.idProprietario]) {
+            gerarDataPorProprietario[item.idProprietario] = Array(mes_ano.length).fill(0);
+        }
 
-        final_2.push(obj_2);
+        const idxMes = mes_ano.indexOf(item.mesAno);
+        if (idxMes >= 0) {
+            gerarDataPorProprietario[item.idProprietario][idxMes] += Number(item.valor) || 0;
+        }
     }
-
-    let gerarDataPorProprietario = Array();
-
-    final_2.forEach(function(v, i) {
-        gerarDataPorProprietario[v.label] = Array();
-    })
-
-    final_2.forEach(function(v, i) {
-        gerarDataPorProprietario[v.label].push(v.data);
-    })
-
-    final_2 = Array();
 
     for (const [key, value] of Object.entries(gerarDataPorProprietario)) {
         obj_2 = {
