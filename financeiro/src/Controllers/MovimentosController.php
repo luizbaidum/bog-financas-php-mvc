@@ -13,6 +13,7 @@ use src\Models\Objetivos\ObjetivosDAO;
 use src\Models\Objetivos\ObjetivosEntity;
 use src\Models\Proprietarios\ProprietariosEntity;
 use src\Models\Rendimentos\RendimentosDAO;
+use src\Models\Rendimentos\RendimentosDeletadosEntity;
 use src\Models\Rendimentos\RendimentosEntity;
 use src\Services\AplicacaoService;
 
@@ -268,21 +269,98 @@ class MovimentosController extends Controller {
 
             $model_rendimentos = new RendimentosDAO();
             $model_movimentos = new MovimentosDAO();
+            $model_objetivos = new ObjetivosDAO();
             $model_movimentos->iniciarTransacao();
 
             try {
                 foreach ($_POST['itens'] as $id) {
-                    $rend = $model_rendimentos->selectAll(new RendimentosEntity, [['idMovimento', '=', $id]], [], []);
+                    $rendimentos = $model_rendimentos->selectAll(new RendimentosEntity, [['idMovimento', '=', $id]], [], []);
 
-                    if (!empty($rend)) {
-                        $model_movimentos->arr_nao_afetados[] = $id;
-                    } else {
-                        $ret = $model_movimentos->delete(new MovimentosEntity, 'idMovimento', $id);
-                        if ($ret != false) {
-                            $model_movimentos->arr_afetados[] = $id;
-                        } else {
-                            $model_movimentos->arr_nao_afetados[] = $id;
+                    if (! empty($rendimentos)) {
+                        foreach ($rendimentos as $rendimento) {
+                            $old_id     = $rendimento['idRendimento'];
+                            $old_invest = $rendimento['idContaInvest'];
+                            $old_valor  = $rendimento['valorRendimento'];
+                            $old_tipo   = $rendimento['tipo'];
+                            $old_id_obj = $rendimento['idObj'] ?? 0;
+
+                            $conta_invest = $model_rendimentos->selectAll(new InvestimentosEntity, [['idContaInvest', '=', $old_invest]], [], []);
+                            $conta_invest = $conta_invest[0];
+                            $saldo = $conta_invest['saldoAtual'];
+
+                            if ($old_tipo == '4' || $old_tipo == '2') {
+                                $saldo = $conta_invest['saldoAtual'] - abs($old_valor);
+                            } elseif ($old_tipo == '3' || $old_tipo == '1') {
+                                $saldo = $conta_invest['saldoAtual'] + abs($old_valor);
+                            }
+
+                            $model_rendimentos->atualizar(
+                                new InvestimentosEntity,
+                                ['saldoAtual'    => $saldo],
+                                ['idContaInvest' => $old_invest]
+                            );
+
+                            if (empty($old_id_obj)) {
+                                $objetivos = $model_objetivos->selectAll(new ObjetivosEntity, [['idContaInvest', '=', $old_invest]], [], []);
+
+                                foreach ($objetivos as $value) {
+                                    $item = [
+                                        'saldoAtual' => ($saldo * ($value['percentObjContaInvest'] / 100))
+                                    ];
+                                    $item_where = ['idObj' => $value['idObj']];
+                                    $model_objetivos->atualizar(new ObjetivosEntity, $item, $item_where);
+                                }
+                            } else {
+                                $objetivo = $model_objetivos->selectAll(new ObjetivosEntity, [['idObj', '=', $old_id_obj]], [], []);
+
+                                if (! empty($objetivo)) {
+                                    $objetivo = $objetivo[0];
+
+                                    if ($old_tipo == '4' || $old_tipo == '2') {
+                                        $saldo_obj = $objetivo['saldoAtual'] - abs($old_valor);
+                                    } elseif ($old_tipo == '3' || $old_tipo == '1') {
+                                        $saldo_obj = $objetivo['saldoAtual'] + abs($old_valor);
+                                    } else {
+                                        $saldo_obj = $objetivo['saldoAtual'];
+                                    }
+
+                                    $item = [
+                                        'saldoAtual' => $saldo_obj
+                                    ];
+                                    $item_where = ['idObj' => $old_id_obj];
+                                    $model_objetivos->atualizar(new ObjetivosEntity, $item, $item_where);
+                                }
+                            }
+
+                            $log_rendimento_deletado = [
+                                'idRendimentoOriginal' => $rendimento['idRendimento'],
+                                'idMovimento'          => $rendimento['idMovimento'],
+                                'idContaInvest'        => $rendimento['idContaInvest'],
+                                'valorRendimento'      => $rendimento['valorRendimento'],
+                                'tipo'                 => $rendimento['tipo'],
+                                'dataRendimento'       => $rendimento['dataRendimento'],
+                                'idObj'                => $rendimento['idObj'] ?? 0,
+                                'idUsuarioExclusao'    => $_SESSION['user'] ?? 0,
+                                'dataExclusao'         => date('Y-m-d H:i:s')
+                            ];
+
+                            $ret_log = $model_rendimentos->cadastrar(new RendimentosDeletadosEntity, $log_rendimento_deletado);
+                            if (!isset($ret_log['result']) || empty($ret_log['result'])) {
+                                throw new Exception('Falha ao registrar o log de rendimento deletado.');
+                            }
+
+                            $ret_del_rend = $model_rendimentos->delete(new RendimentosEntity, 'idRendimento', $old_id);
+                            if ($ret_del_rend === false) {
+                                throw new Exception('Falha ao excluir rendimento vinculado ao movimento ' . $id . '.');
+                            }
                         }
+                    }
+
+                    $ret = $model_movimentos->delete(new MovimentosEntity, 'idMovimento', $id);
+                    if ($ret != false) {
+                        $model_movimentos->arr_afetados[] = $id;
+                    } else {
+                        $model_movimentos->arr_nao_afetados[] = $id;
                     }
                 }
 
