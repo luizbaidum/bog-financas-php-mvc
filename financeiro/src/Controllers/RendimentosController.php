@@ -16,17 +16,15 @@ use src\Services\AplicacaoService;
 class RendimentosController extends Controller {
     public function index() {
         $model_rendimentos = new RendimentosDAO();
-        $model_investimentos = new InvestimentosDAO();
 
-        $saldos = $model_investimentos->getSaldosIniciais();
         $rendi_anterior = $model_rendimentos->getTotalizadorRendimentosAteData();
         $rendi = $model_rendimentos->getEvolucaoRendimentos();
 
-        foreach ($saldos as $s) {
+        foreach ($rendi_anterior as $id_conta_invest => $valor) {
             foreach ($rendi as $k => $r) {
-                if ($r['idContaInvest'] == $s['idContaInvest']) {
-                    $rendi[$k]['valor'] = $r['valor'] + $s['saldoInicial'] + ($rendi_anterior[$s['idContaInvest']] ?? 0);
-                    break;
+                if ($r['idContaInvest'] == $id_conta_invest) {
+                    $rendi[$k]['valor'] = $r['valor'] + $valor;
+                    continue 2;
                 }
             }
         }
