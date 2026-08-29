@@ -52,7 +52,7 @@ class RendimentosDAO extends Model {
     {
         $query = "SELECT
                     contas.idContaInvest,
-                    COALESCE(SUM(rendimentos.valorRendimento), 0) AS valor
+                    (COALESCE(SUM(rendimentos.valorRendimento), 0)) + COALESCE(contas.saldoInicial, 0) AS valor
                 FROM rendimentos
                 INNER JOIN contas_investimentos AS contas ON rendimentos.idContaInvest = contas.idContaInvest
                 WHERE contas.status = '1' AND rendimentos.dataRendimento < DATE_SUB($periodo)
