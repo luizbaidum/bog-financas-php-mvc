@@ -5,17 +5,20 @@ namespace src\Models\Rendimentos;
 use MF\Model\Model;
 
 class RendimentosDAO extends Model {
-    public function getEvolucaoRendimentos($periodo = 'CURDATE(), INTERVAL 15 MONTH')
+    public function getEvolucaoRendimentos()
     {
+        $data = date('Y') . '-' . date('m') . '-01';
+        $periodo = date('Y-m-d', strtotime('-1 year', strtotime($data)));
+
         $query = "SELECT
                     contas.idContaInvest,
                     COALESCE(SUM(rendimentos.valorRendimento), 0) AS valor,
                     meses.mesAno,
-                    CONCAT(contas.idContaInvest, ' - ', contas.tituloInvest) AS nome,
+                    CONCAT(contas.nomeBanco, ' - ', contas.tituloInvest) AS nome,
                     contas.idProprietario,
                     proprietarios.proprietario AS proprietarioNome
                 FROM
-                    (SELECT DISTINCT idContaInvest, tituloInvest, idProprietario
+                    (SELECT DISTINCT idContaInvest, tituloInvest, idProprietario, nomeBanco
                         FROM contas_investimentos
                         WHERE contas_investimentos.idFamilia = $_SESSION[id_familia]
                         AND contas_investimentos.status = '1'
@@ -25,7 +28,7 @@ class RendimentosDAO extends Model {
                         FROM rendimentos
                         WHERE rendimentos.idFamilia = $_SESSION[id_familia]
                         AND rendimentos.dataRendimento <= CURDATE()
-                        AND rendimentos.dataRendimento >= DATE_SUB($periodo)
+                        AND rendimentos.dataRendimento >= '$periodo'
                     ) meses
                 LEFT JOIN
                     rendimentos
@@ -48,16 +51,25 @@ class RendimentosDAO extends Model {
         return [];
     }
 
-    public function getTotalizadorRendimentosAteData($periodo = 'CURDATE(), INTERVAL 15 MONTH')
+    public function getTotalizadorRendimentosAteData()
     {
+        $data = date('Y') . '-' . date('m') . '-01';
+        $periodo = date('Y-m-d', strtotime('-1 year', strtotime($data)));
+
         $query = "SELECT
-                    contas.idContaInvest,
-                    (COALESCE(SUM(rendimentos.valorRendimento), 0)) + COALESCE(contas.saldoInicial, 0) AS valor
-                FROM rendimentos
-                INNER JOIN contas_investimentos AS contas ON rendimentos.idContaInvest = contas.idContaInvest
-                WHERE contas.status = '1' AND rendimentos.dataRendimento < DATE_SUB($periodo)
-                GROUP BY contas.idContaInvest
-                ORDER BY contas.idContaInvest ASC";
+                    contas_investimentos.idContaInvest,
+                    (contas_investimentos.saldoInicial +
+                        (
+                            SELECT COALESCE(SUM(rendimentos.valorRendimento), 0)
+                            FROM rendimentos
+                            WHERE rendimentos.idContaInvest = contas_investimentos.idContaInvest
+                            AND rendimentos.dataRendimento < '$periodo'
+                        )
+                    ) AS valor
+                FROM contas_investimentos
+                WHERE contas_investimentos.status = '1'
+                GROUP BY contas_investimentos.idContaInvest
+                ORDER BY contas_investimentos.idContaInvest ASC";
 
         $result = $this->sql_actions->executarQuery(query: $query);
 
