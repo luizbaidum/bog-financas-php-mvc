@@ -120,9 +120,16 @@ class RendimentosDAO extends Model {
 
     public function buscarPosicaoInicial($ano)
     {
-        $sql = "SELECT SUM(rendimentos.valorRendimento) AS total
-                FROM rendimentos
-                WHERE YEAR(rendimentos.dataRendimento) <= ?";
+        $sql = "SELECT
+                    SUM(contas_investimentos.saldoInicial) +
+                    (SELECT
+                        COALESCE(SUM(rendimentos.valorRendimento), 0)
+                        FROM rendimentos
+                        INNER JOIN contas_investimentos ON contas_investimentos.idContaInvest = rendimentos.idContaInvest
+                        WHERE YEAR(rendimentos.dataRendimento) < ?
+                    ) AS total
+                FROM contas_investimentos
+                WHERE 0=0";
 
         $params[] = $ano;
 
