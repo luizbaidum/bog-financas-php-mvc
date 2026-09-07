@@ -100,8 +100,9 @@ class RendimentosDAO extends Model {
                     MONTH(rendimentos.dataRendimento) AS mes,
                     SUM(rendimentos.valorRendimento) AS total
                 FROM rendimentos
+                INNER JOIN contas_investimentos ON contas_investimentos.idContaInvest = rendimentos.idContaInvest
                 WHERE rendimentos.dataRendimento >= ?
-                AND rendimentos.dataRendimento <= ?
+                AND rendimentos.dataRendimento <= ? AND contas_investimentos.status = '1'
                 GROUP BY MONTH(rendimentos.dataRendimento)
                 ORDER BY MONTH(rendimentos.dataRendimento) ASC";
 
@@ -126,10 +127,10 @@ class RendimentosDAO extends Model {
                         COALESCE(SUM(rendimentos.valorRendimento), 0)
                         FROM rendimentos
                         INNER JOIN contas_investimentos ON contas_investimentos.idContaInvest = rendimentos.idContaInvest
-                        WHERE YEAR(rendimentos.dataRendimento) < ?
+                        WHERE YEAR(rendimentos.dataRendimento) < ? AND contas_investimentos.status = '1'
                     ) AS total
                 FROM contas_investimentos
-                WHERE 0=0";
+                WHERE contas_investimentos.status = '1'";
 
         $params[] = $ano;
 
