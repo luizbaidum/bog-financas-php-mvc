@@ -12,7 +12,7 @@ class ConferenciaExtratoService
     /**
      * Processa a conferência do extrato bancário
      *
-     * @param array $dadosFormulario ['proprietario', 'mes_ano', 'tipo_arquivo']
+     * @param array $dadosFormulario ['proprietario', 'mes_ano']
      * @param array $arquivo $_FILES['arquivo']
      * @return array Resultado da conferência
      */
@@ -20,7 +20,7 @@ class ConferenciaExtratoService
     {
         try {
             // 1. Validar dados recebidos
-            $this->validarDados($dadosFormulario, $arquivo);
+            $tipo_arquivo = $this->validarDados($dadosFormulario, $arquivo);
 
             // 2. Buscar movimentos lançados no sistema
             $movimentosSistema = $movimentos;
@@ -28,7 +28,7 @@ class ConferenciaExtratoService
             // 3. Ler e processar arquivo do extrato
             $movimentosExtrato = $this->lerArquivoExtrato(
                 $arquivo,
-                $dadosFormulario['tipo_arquivo'],
+                $tipo_arquivo,
                 $dadosFormulario['banco']
             );
 
@@ -63,71 +63,37 @@ class ConferenciaExtratoService
             throw new Exception('Banco não informado');
         }
 
-        if (empty($dados['tipo_arquivo'])) {
-            throw new Exception('Tipo de arquivo não informado');
-        }
-
         if (!isset($arquivo) || $arquivo['error'] != UPLOAD_ERR_OK) {
             throw new Exception('Arquivo não enviado ou erro no upload');
         }
 
-        // Validar se o tipo do arquivo enviado corresponde ao tipo declarado no formulário
-        $this->validarTipoArquivo($arquivo, $dados['tipo_arquivo']);
+        return $this->validarTipoArquivo($arquivo, strtolower($dados['banco']));
+    }
 
-        // Validação de tipos permitidos por banco
-        $banco = strtolower($dados['banco']);
-        $tipoArquivo = strtolower($dados['tipo_arquivo']);
+    private function validarTipoArquivo($arquivo, $banco)
+    {
+        // Obter a extensão real do arquivo enviado
+        $nomeArquivo = $arquivo['name'];
+        $extensaoReal = strtolower(pathinfo($nomeArquivo, PATHINFO_EXTENSION));
 
-        if ($tipoArquivo == 'xlsx') {
-            throw new Exception('Formato XLSX ainda não é permitido. Use CSV ou PDF conforme o banco.');
-        }
-
-        // Validações específicas por banco
         switch ($banco) {
             case 'bradesco':
             case 'bb':
-                if ($tipoArquivo != 'csv') {
+                if ($extensaoReal != 'csv') {
                     throw new Exception('Para ' . strtoupper($banco) . ', apenas arquivos CSV são permitidos');
                 }
                 break;
 
             case 'cef':
-                if ($tipoArquivo != 'pdf') {
+                if ($extensaoReal != 'pdf') {
                     throw new Exception('Para CEF, apenas arquivos PDF são permitidos');
                 }
                 break;
-
             default:
                 throw new Exception('Banco não reconhecido');
         }
-    }
 
-    private function validarTipoArquivo($arquivo, $tipoDeclarado)
-    {
-        // Obter a extensão real do arquivo enviado
-        $nomeArquivo = $arquivo['name'];
-        $extensaoReal = strtolower(pathinfo($nomeArquivo, PATHINFO_EXTENSION));
-        $tipoDeclarado = strtolower($tipoDeclarado);
-
-        // Verificar correspondência
-        if ($extensaoReal !== $tipoDeclarado) {
-            throw new Exception(
-                "Incompatibilidade de arquivo: você selecionou '{$tipoDeclarado}' no formulário, " .
-                "mas o arquivo enviado é do tipo '{$extensaoReal}'. " .
-                "Por favor, envie um arquivo {$tipoDeclarado} ou selecione o tipo correto no formulário."
-            );
-        }
-
-        // Validação adicional com MIME type para maior segurança
-        $mimeType = mime_content_type($arquivo['tmp_name']);
-        $mimeTypeEsperado = $this->getMimeTypeEsperado($tipoDeclarado);
-
-        if (!in_array($mimeType, $mimeTypeEsperado)) {
-            throw new Exception(
-                "O arquivo enviado não parece ser um {$tipoDeclarado} válido. " .
-                "Tipo detectado: {$mimeType}"
-            );
-        }
+        return $extensaoReal;
     }
 
     /**
@@ -147,9 +113,6 @@ class ConferenciaExtratoService
         return $mimeTypes[$tipo] ?? [];
     }
 
-    /**
-     * Lê e processa o arquivo de extrato
-     */
     private function lerArquivoExtrato($arquivo, $tipoArquivo, $banco)
     {
         switch ($tipoArquivo) {
@@ -225,7 +188,7 @@ class ConferenciaExtratoService
                     ];
                 }
             }
-    
+
             fclose($handle);
         }
 

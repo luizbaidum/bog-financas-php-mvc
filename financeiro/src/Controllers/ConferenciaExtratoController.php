@@ -40,7 +40,6 @@ class ConferenciaExtratoController extends Controller {
 
         $dados_formulario = [
             'mes_ano'         => $_POST['mes_ano'],
-            'tipo_arquivo'    => $_POST['tipo_arquivo'],
             'banco'           => $_POST['banco'],
             'match_data'      => isset($_POST['match_data']) && $_POST['match_data'] == '1',
             'match_valor'     => isset($_POST['match_valor']) && $_POST['match_valor'] == '1',
@@ -71,12 +70,12 @@ class ConferenciaExtratoController extends Controller {
             echo json_encode(['erro' => $resultado['erro']]);
         }
     }
-    
+
     public function salvarConferenciaExtrato()
     {
         if ($this->isSetPost()) {
             $model_conferencia = new ConferenciaExtratoDAO();
-            
+
             try {
                 $conferidos = $_POST['conferidos'] ?? [];
 
@@ -84,7 +83,6 @@ class ConferenciaExtratoController extends Controller {
                     throw new Exception('Nenhum movimento conferido recebido.');
                 }
 
-                
                 $obj_conferencia = new ConferenciaExtratoEntity();
                 $model_conferencia->iniciarTransacao();
 
