@@ -35,34 +35,34 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/validar-percentual-uso-json', 'controller' => 'InvestimentosController', 'action' => 'validarPercentualUsoJson');
         $routes[] = array('route' => '/delete-objetivos', 'controller' => 'InvestimentosController', 'action' => 'deletarObjetivo');
 
-        $routes[] = array('route' => '/exibir_resultado', 'controller' => 'MovimentosController', 'action' => 'exibirResultados');
-        $routes[] = array('route' => '/movimentos', 'controller' => 'MovimentosController', 'action' => 'index');
-        $routes[] = array('route' => '/edit_movimento', 'controller' => 'MovimentosController', 'action' => 'editarMovimento');
+        $routes[] = array('route' => '/exibir-resultado', 'controller' => 'MovimentosController', 'action' => 'exibirResultados');
+        $routes[] = array('route' => '/movimentos-index', 'controller' => 'MovimentosController', 'action' => 'index');
+        $routes[] = array('route' => '/edit-movimento', 'controller' => 'MovimentosController', 'action' => 'editarMovimento');
         $routes[] = array('route' => '/delete-movimentos', 'controller' => 'MovimentosController', 'action' => 'deletarMovimento');
-        $routes[] = array('route' => '/cad_movimentos', 'controller' => 'MovimentosController', 'action' => 'cadastrarMovimentos');
+        $routes[] = array('route' => '/cad-movimentos', 'controller' => 'MovimentosController', 'action' => 'cadastrarMovimentos');
         $routes[] = array('route' => '/exibir-detalhes', 'controller' => 'MovimentosController', 'action' => 'exibirDetalhes');
 
         $routes[] = array('route' => '/buscar-orcamento-do-realizado', 'controller' => 'OrcamentoController', 'action' => 'buscarOrcamentoDoRealizado');
         $routes[] = array('route' => '/orcamento-index', 'controller' => 'OrcamentoController', 'action' => 'index');
-        $routes[] = array('route' => '/delete_itens_orcamento', 'controller' => 'OrcamentoController', 'action' => 'deletarItensOrcamento');
+        $routes[] = array('route' => '/delete-itens-orcamento', 'controller' => 'OrcamentoController', 'action' => 'deletarItensOrcamento');
         $routes[] = array('route' => '/orcamento', 'controller' => 'OrcamentoController', 'action' => 'orcamento');
-        $routes[] = array('route' => '/orcamento_do_realizado', 'controller' => 'OrcamentoController', 'action' => 'orcamentoDoRealizado');
+        $routes[] = array('route' => '/orcamento-do-realizado', 'controller' => 'OrcamentoController', 'action' => 'orcamentoDoRealizado');
         $routes[] = array('route' => '/cad_orcamento', 'controller' => 'OrcamentoController', 'action' => 'cadastrarOrcamento');
-        $routes[] = array('route' => '/cad_orcamento_do_realizado', 'controller' => 'OrcamentoController', 'action' => 'cadastrarOrcamentoDoRealizado');
+        $routes[] = array('route' => '/cad-orcamento-do-realizado', 'controller' => 'OrcamentoController', 'action' => 'cadastrarOrcamentoDoRealizado');
 
-        $routes[] = array('route' => '/preferencias', 'controller' => 'PreferenciasController', 'action' => 'index');
-        $routes[] = array('route' => '/salvar_preferencias', 'controller' => 'PreferenciasController', 'action' => 'editarPreferencia');
-        $routes[] = array('route' => '/nova_preferencia', 'controller' => 'PreferenciasController', 'action' => 'cadastrarPreferencia');
+        $routes[] = array('route' => '/preferencias-index', 'controller' => 'PreferenciasController', 'action' => 'index');
+        $routes[] = array('route' => '/salvar-preferencias', 'controller' => 'PreferenciasController', 'action' => 'editarPreferencia');
+        $routes[] = array('route' => '/nova-preferencia', 'controller' => 'PreferenciasController', 'action' => 'cadastrarPreferencia');
 
-        $routes[] = array('route' => '/evolucao-rendimentos', 'controller' => 'RendimentosController', 'action' => 'index');
+        $routes[] = array('route' => '/evolucao-rendimentos-index', 'controller' => 'RendimentosController', 'action' => 'index');
         $routes[] = array('route' => '/cadastrar-rendimento', 'controller' => 'RendimentosController', 'action' => 'cadastrarRendimento');
 
-        $routes[] = array('route' => '/extrato-investimentos', 'controller' => 'ExtratoInvestimentosController', 'action' => 'index');
+        $routes[] = array('route' => '/extrato-investimentos-index', 'controller' => 'ExtratoInvestimentosController', 'action' => 'index');
 
         $routes[] = array('route' => '/indicadores-index', 'controller' => 'IndicadoresController', 'action' => 'index');
 
         $routes[] = array('route' => '/categorias', 'controller' => 'CategoriasController', 'action' => 'categorias');
-        $routes[] = array('route' => '/cad_categorias', 'controller' => 'CategoriasController', 'action' => 'cadastrarCategorias');
+        $routes[] = array('route' => '/cad-categorias', 'controller' => 'CategoriasController', 'action' => 'cadastrarCategorias');
         $routes[] = array('route' => '/consultar-categorias-investimentos', 'controller' => 'CategoriasController', 'action' => 'consultarCategoriasInvestimentos');
         $routes[] = array('route' => '/edit-status-categoria', 'controller' => 'CategoriasController', 'action' => 'editarStatus');
 
@@ -72,7 +72,7 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/processar-extrato-proprietarios', 'controller' => 'ProprietariosController', 'action' => 'processarExtratoProprietarios');
         $routes[] = array('route' => '/edit-status-proprietario', 'controller' => 'ProprietariosController', 'action' => 'editarStatus');
 
-        $routes[] = array('route' => '/usuarios', 'controller' => 'FamiliaUsuariosController', 'action' => 'index');
+        $routes[] = array('route' => '/usuarios-index', 'controller' => 'FamiliaUsuariosController', 'action' => 'index');
         $routes[] = array('route' => '/cad-usuario', 'controller' => 'FamiliaUsuariosController', 'action' => 'cadastrarUsuario');
         $routes[] = array('route' => '/cad-primeira-familia', 'controller' => 'FamiliaUsuariosController', 'action' => 'cadastrarFamilia');
         $routes[] = array('route' => '/edit-usuario', 'controller' => 'FamiliaUsuariosController', 'action' => 'editarUsuario');
@@ -86,23 +86,26 @@ class Routes extends Bootstrap {
         $routes[] = array('route' => '/obter-metas-mensais', 'controller' => 'MetasMensaisController', 'action' => 'obterMetas');
         $routes[] = array('route' => '/delete-meta-mensal', 'controller' => 'MetasMensaisController', 'action' => 'deletarMetaMensal');
 
-        $routes[] = array('route' => '/lembrar-despesas', 'controller' => 'DespesasLembrarController', 'action' => 'index');
-        $routes[] = array('route' => '/cadastrar-lembrar-despesas', 'controller' => 'DespesasLembrarController', 'action' => 'cadastrar');
-        $routes[] = array('route' => '/delete-desp-lembrar', 'controller' => 'DespesasLembrarController', 'action' => 'deletarDespLembrar');
+        // $routes[] = array('route' => '/lembrar-despesas', 'controller' => 'DespesasLembrarController', 'action' => 'index');
+        // $routes[] = array('route' => '/cadastrar-lembrar-despesas', 'controller' => 'DespesasLembrarController', 'action' => 'cadastrar');
+        // $routes[] = array('route' => '/delete-desp-lembrar', 'controller' => 'DespesasLembrarController', 'action' => 'deletarDespLembrar');
 
-        $routes[] = array('route' => '/solicitar-acesso', 'controller' => 'SolicitarAcessoController', 'action' => 'index');
+        $routes[] = array('route' => '/solicitar-acesso-index', 'controller' => 'SolicitarAcessoController', 'action' => 'index');
         $routes[] = array('route' => '/cad-solicitar-acesso', 'controller' => 'SolicitarAcessoController', 'action' => 'solicitarPrimeiroAcesso');
 
-        $routes[] = array('route' => '/conferencia-extrato', 'controller' => 'ConferenciaExtratoController', 'action' => 'index');
+        $routes[] = array('route' => '/conferencia-extrato-index', 'controller' => 'ConferenciaExtratoController', 'action' => 'index');
         $routes[] = array('route' => '/processar-conferencia-extrato', 'controller' => 'ConferenciaExtratoController', 'action' => 'processarConferenciaExtrato');
         $routes[] = array('route' => '/relatorio-conferencia-extrato', 'controller' => 'ConferenciaExtratoController', 'action' => 'relatorioConferenciaExtrato');
         $routes[] = array('route' => '/processar-relatorio-conferencia-extrato', 'controller' => 'ConferenciaExtratoController', 'action' => 'processarRelatorioConferenciaExtrato');
         $routes[] = array('route' => '/salvar-conferencia-extrato', 'controller' => 'ConferenciaExtratoController', 'action' => 'salvarConferenciaExtrato');
 
-        $routes[] = array('route' => '/relatorio-despesas', 'controller' => 'RelatorioDespesasController', 'action' => 'index');
+        $routes[] = array('route' => '/relatorio-despesas-index', 'controller' => 'RelatorioDespesasController', 'action' => 'index');
 
-        $routes[] = array('route' => '/projecao', 'controller' => 'ProjecaoController', 'action' => 'index');
+        $routes[] = array('route' => '/projecao-index', 'controller' => 'ProjecaoController', 'action' => 'index');
         $routes[] = array('route' => '/gerar-projecao', 'controller' => 'ProjecaoController', 'action' => 'gerarProjecao');
+
+        $routes[] = array('route' => '/manutencao-index', 'controller' => 'ManutencaoController', 'action' => 'index');
+        $routes[] = array('route' => '/cadastrar-manutencao', 'controller' => 'ManutencaoController', 'action' => 'cadastrarManutencao');
 
 		$this->setRoutes($routes);
 	}

@@ -34,32 +34,32 @@ class Menu {
 
     public array $titles = [
         'Cadastros' => [
-            'Categorias', 'Movimentos', 'Investimentos', 'Movimentos Mensais', 'Objetivos Invest.', 'Orçamento', 'Orçamento do Realizado', 'Movimento entre Investimentos', 'Metas Mensais', 'Conferência de Extrato'
+            'Categorias', 'Movimentos', 'Investimentos', 'Movimentos Mensais', 'Objetivos Invest.', 'Orçamento', 'Orçamento do Realizado', 'Movimento entre Investimentos', 'Metas Mensais', 'Conferência de Extrato', 'Manutenção'
         ],
         'Consultas' => [
-            'Indicadores', 'Investimentos', 'Extrato Investimentos', 'Orçamento', 'Evolução Investimentos', 'Extrato por Proprietário', 'Metas Mensais', 'Conferência de Extrato', 'Relatório de Despesas', 'Projeção'
+            'Indicadores', 'Investimentos', 'Extrato Investimentos', 'Orçamento', 'Evolução Investimentos', 'Extrato por Proprietário', 'Metas Mensais', 'Conferência de Extrato', 'Relatório de Despesas', 'Projeção', 'Manutenção'
         ],
         'Config.' => [
             'Preferências', 'Proprietários', 'Usuários'
         ],
-        'Lembrar' => [
-            'Despesas'
-        ]
+        // 'Lembrar' => [
+        //     'Despesas'
+        // ]
     ];
 
     public array $routes = [
         'Cadastros' => [
-            'categorias', 'movimentos', 'investimentos', 'movimentos-mensais-index', 'objetivos', 'orcamento', 'orcamento_do_realizado', 'investimentos-movimentar', 'metas-mensais', 'conferencia-extrato'
+            'categorias', 'movimentos-index', 'investimentos', 'movimentos-mensais-index', 'objetivos', 'orcamento', 'orcamento-do-realizado', 'investimentos-movimentar', 'metas-mensais', 'conferencia-extrato-index', 'manutencao-index'
         ],
         'Consultas' => [
-            'indicadores-index', 'contas-investimentos-index', 'extrato-investimentos', 'orcamento-index', 'evolucao-rendimentos', 'extrato-proprietarios', 'metas-mensais-index', 'relatorio-conferencia-extrato', 'relatorio-despesas', 'projecao'
+            'indicadores-index', 'contas-investimentos-index', 'extrato-investimentos-index', 'orcamento-index', 'evolucao-rendimentos-index', 'extrato-proprietarios', 'metas-mensais-index', 'relatorio-conferencia-extrato', 'relatorio-despesas', 'projecao-index', 'manutencao-index'
         ],
         'Config.' => [
-            'preferencias', 'proprietarios', 'usuarios'
+            'preferencias-index', 'proprietarios', 'usuarios-index'
         ],
-        'Lembrar' => [
-            'lembrar-despesas'
-        ]
+        // 'Lembrar' => [
+        //     'lembrar-despesas'
+        // ]
     ];
 
     public array $niveis = [

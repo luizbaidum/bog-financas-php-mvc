@@ -19,7 +19,7 @@ class ConferenciaExtratoController extends Controller {
 
         $this->view->settings = [
             'action'   => $this->index_route . '/processar-conferencia-extrato',
-            'redirect' => $this->index_route . '/conferencia-extrato',
+            'redirect' => $this->index_route . '/conferencia-extrato-index',
             'title'    => 'Conferência de Extrato',
             'div'      => 'id-tabela-conferencia'
         ];
@@ -35,7 +35,7 @@ class ConferenciaExtratoController extends Controller {
     {
         $this->view->settings = [
             'action2'  => $this->index_route . '/salvar-conferencia-extrato',
-            'redirect' => $this->index_route . '/conferencia-extrato',
+            'redirect' => $this->index_route . '/conferencia-extrato-index',
         ];
 
         $dados_formulario = [
@@ -137,7 +137,7 @@ class ConferenciaExtratoController extends Controller {
 
         $this->view->settings = [
             'action'   => $this->index_route . '/processar-relatorio-conferencia-extrato',
-            'redirect' => $this->index_route . '/conferencia-extrato',
+            'redirect' => $this->index_route . '/conferencia-extrato-index',
             'title'    => 'Conferência de Extrato',
             'div'      => 'id-tabela-conferencia'
         ];

@@ -15,8 +15,8 @@ class RelatorioDespesasController extends Controller {
         $model_movimentos = new MovimentosDAO();
 
         $this->view->settings = [
-            'action'   => $this->index_route . '/relatorio-despesas',
-            'redirect' => $this->index_route . '/relatorio-despesas',
+            'action'   => $this->index_route . '/relatorio-despesas-index',
+            'redirect' => $this->index_route . '/relatorio-despesas-index',
             'title'    => 'Relatório de Despesas',
             'div'      => 'id-tabela-relatorio-despesas',
         ];

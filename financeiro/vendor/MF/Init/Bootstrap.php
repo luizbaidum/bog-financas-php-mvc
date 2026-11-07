@@ -125,7 +125,7 @@ abstract class Bootstrap {
     {
         if (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/primeiro-acesso' && 
             parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/cad-primeiro-acesso' && 
-            parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/solicitar-acesso' && 
+            parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/solicitar-acesso-index' && 
             parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/cad-solicitar-acesso' && 
             parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/logout' && 
             parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) != '/' && 

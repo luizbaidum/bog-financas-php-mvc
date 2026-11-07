@@ -14,8 +14,8 @@ class ExtratoInvestimentosController extends Controller {
         $model_investimentos = new InvestimentosDAO();
 
         $this->view->settings = [
-            'action'   => $this->index_route . '/extrato-investimentos',
-            'redirect' => $this->index_route . '/extrato-investimentos',
+            'action'   => $this->index_route . '/extrato-investimentos-index',
+            'redirect' => $this->index_route . '/extrato-investimentos-index',
             'title'    => 'Extrato Investimentos',
             'div'      => 'id-tabela-extrato'
         ];

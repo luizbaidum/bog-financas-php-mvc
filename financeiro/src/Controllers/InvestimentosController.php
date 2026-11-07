@@ -86,7 +86,7 @@ class InvestimentosController extends Controller {
 
         $this->view->settings = [
             'action'   => $this->index_route . '/editar_objetivo',
-            'redirect' => $this->index_route . '/extrato-investimentos',
+            'redirect' => $this->index_route . '/extrato-investimentos-index',
         ];
 
         $this->view->data['lista_objetivos'] = $lista_objetivos;

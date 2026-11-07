@@ -28,9 +28,9 @@ class MovimentosController extends Controller {
         $action = $_GET['action'] ?? null;
         $id = $_GET['idMovimento'] ?? null;
 
-        $url_action = '/cad_movimentos';
+        $url_action = '/cad-movimentos';
         if ($action == 'edit') {
-            $url_action = '/edit_movimento';
+            $url_action = '/edit-movimento';
             $mov = $model_movimentos->consultarMovimento($id);
         }
 
