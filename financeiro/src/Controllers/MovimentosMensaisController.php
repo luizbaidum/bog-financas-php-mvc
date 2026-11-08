@@ -29,7 +29,7 @@ class MovimentosMensaisController extends Controller {
         $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity, [], [], []);
 
         $this->renderPage(
-            conteudo: 'movimentos_mensais_index', 
+            conteudo: 'movimentos_mensais_index',
             base_interna: 'base_cruds'
         );
     }

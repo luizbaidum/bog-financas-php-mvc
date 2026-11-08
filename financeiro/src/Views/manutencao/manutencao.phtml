@@ -1,0 +1,53 @@
+<div class="card my-2">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-sm mb-1 align-middle">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Mecânica</th>
+                        <th>Mão-de-Obra</th>
+                        <th>Peças</th>
+                        <th>Total</th>
+                        <th style="width: 5%;">Editar</th>
+                        <th style="width: 3%;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        use MF\Helpers\NumbersHelper;
+
+                        foreach ($arr_manutencoes as $value): 
+                            $totalPecas = 0;
+                            foreach ($value['pecas'] as $peca) {
+                                $totalPecas += $peca['valor'];
+                            }
+                            $total = $value['valorMaoDeObra'] + $totalPecas;
+                    ?>
+                        <tr>
+                            <td><?= date('d/m/Y', strtotime($value['dataManutencao'])); ?></td>
+                            <td><?= $value['mecanica']; ?></td>
+                            <td><?= NumbersHelper::formatUStoBR($value['valorMaoDeObra']); ?></td>
+                            <td>
+                                <?php foreach ($value['pecas'] as $peca): ?>
+                                    <div><?= $peca['nome']; ?> - <?= NumbersHelper::formatUStoBR($peca['valor']); ?></div>
+                                <?php endforeach; ?>
+                            </td>
+                            <td><?= NumbersHelper::formatUStoBR($total); ?></td>
+                            <td>
+                                <a href="<?= $url_edit . $value['idManutencao']; ?>" class="link-offset-2 link-underline link-underline-opacity-0">
+                                    <button type="button" title="Editar" class="btn btn-sm btn-dark">
+                                        <i>&#9998;</i>
+                                    </button>
+                                </a>
+                            </td>
+                            <td>
+                                <input type="checkbox" value="<?= $value['idManutencao']; ?>" name="idManutencao[]">
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

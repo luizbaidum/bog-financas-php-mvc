@@ -2,54 +2,56 @@
     <div class="card-header bg-dark text-white">
         <div class="d-flex align-items-center">
             <i class="bi bi-plus-circle fs-4 me-2"></i>
-            <h6 class="card-title mb-0">Cadastro</h6>
+            <h6 class="card-title mb-0">Cadastro de Manutenção Mecânica Automotiva</h6>
         </div>
     </div>
     <div class="card-body p-2">
         <div class="row g-2">
-            <div class="col-md-6 col-12">
+            <div class="col-12">
                 <div class="row g-2">
-                    <div class="col-md-6 col-12">
-                        <label for="categoria" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Nome/Título</label>
-                        <input type="text" class="form-control formulario-padrao-input" id="categoria" name="categoria" required>
+                    <div class="col-sm-4 col-12">
+                        <label for="idDataManut" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Data</label>
+                        <input type="date" class="form-control formulario-padrao-input" id="idDataManut" name="dataManut" required>
                     </div>
-                    <div class="col-md-6 col-12">
-                        <label for="idRegularidade" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Regularidade</label>
-                        <select class="form-select formulario-padrao-input" id="idRegularidade" name="regularidade" required>
-                            <option value="">Selecione</option>
-                            <option value="f">F (Fixa)</option>
-                            <option value="v">V (Variável)</option>
-                        </select>
+                    <div class="col-sm-4 col-12">
+                        <label for="idOficina" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Oficina</label>
+                        <input type="text" class="form-control formulario-padrao-input" id="idOficina" name="oficina" required>
                     </div>
-                </div>
-                <div class="form-group mt-2">
-                    <div class="row g-2">
-                        <div class="col-md-6 col-12">
-                            <label for="tipo" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Tipo</label>
-                            <select class="form-select formulario-padrao-input" id="tipo" name="tipo" required>
-                                <option value="">Selecione</option>
-                                <option value="R">R (Receita)</option>
-                                <option value="D">D (Despesa)</option>
-                                <option value="A">A (Aplicação)</option>
-                                <option value="RA">RA (Resgate de Aplicação)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <label for="sinal" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Sinal</label>
-                            <select class="form-select formulario-padrao-input" id="sinal" name="sinal" required>
-                                <option value="">Selecione</option>
-                                <option value="+">+ (Entradas)</option>
-                                <option value="-">- (Saídas)</option>
-                            </select>
-                        </div>
+                    <div class="col-sm-4 col-12">
+                        <label for="idVlrMO" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Valor Mão-de-Obra</label>
+                        <input type="text" class="form-control formulario-padrao-input numero-br" id="idVlrMO" name="vlrMO" required>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 col-12">
-                <small class="text-muted">
-                    Regularidade <strong>Fixa</strong> para Categorias onde o valor não sofre alteração mês-a-mês, ou sofre pequenas alterações. <br>
-                    Regularidade <strong>Variável</strong> para Categorias onde o valor tem grandes alterações a cada mês. 
-                </small>
+
+                <div class="form-group mt-3">
+                    <label class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Peças</label>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm mb-1 align-middle" id="tabelaPecas">
+                            <thead>
+                                <tr>
+                                    <th>Nome da Peça</th>
+                                    <th>Valor</th>
+                                    <th style="width: 5%;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input type="text" class="form-control formulario-padrao-input" name="nomePeca[]" placeholder="Nome da peça">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control formulario-padrao-input numero-br" name="valorPeca[]" placeholder="0,00">
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-success" title="Adicionar Peça" onclick="adicionarPeca()">
+                                            <i>&#x2b;</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

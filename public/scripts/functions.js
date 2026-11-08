@@ -257,3 +257,22 @@ function toggleAllCheckboxes(selectAllCheckbox) {
         checkbox.checked = selectAllCheckbox.checked;
     });
 }
+
+function adicionarPeca() {
+    const tbody = document.querySelector('#tabelaPecas tbody');
+    const novaLinha = document.createElement('tr');
+    novaLinha.innerHTML = `
+        <td>
+            <input type="text" class="form-control formulario-padrao-input" name="pecaNome[]" placeholder="Nome da peça">
+        </td>
+        <td>
+            <input type="text" class="form-control formulario-padrao-input numero-br" name="pecaValor[]" placeholder="0,00">
+        </td>
+        <td>
+            <button type="button" class="btn btn-sm btn-success" title="Adicionar Peça" onclick="adicionarPeca()">
+                <i>&#x2b;</i>
+            </button>
+        </td>
+    `;
+    tbody.appendChild(novaLinha);
+}
