@@ -17,9 +17,17 @@
                         <label for="idOficina" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Oficina</label>
                         <input type="text" class="form-control formulario-padrao-input" id="idOficina" name="oficina" required>
                     </div>
-                    <div class="col-sm-4 col-12">
+                    <div class="col-sm-2 col-12">
                         <label for="idVlrMO" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Valor Mão-de-Obra</label>
-                        <input type="text" class="form-control formulario-padrao-input numero-br" id="idVlrMO" name="vlrMO" required>
+                        <input type="text" class="form-control formulario-padrao-input numero-br" id="idVlrMO" name="vlrMO" required value="0,00">
+                    </div>
+                    <div class="col-sm-2 col-12">
+                        <label for="idProprietario" class="form-label titulo-input-formulario-cadastro">Proprietário</label>
+                            <select class="form-select" id="idProprietario" name="idProprietario">
+                            <?php foreach ($lista_proprietarios as $v): ?>
+                                <option value="<?= $v['idProprietario']; ?>"><?= $v['idProprietario'] . ' - ' . $v['proprietario']; ?></option>
+                            <?php endforeach;?>
+                        </select>
                     </div>
                 </div>
 
