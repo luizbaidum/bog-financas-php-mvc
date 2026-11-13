@@ -266,6 +266,9 @@ function adicionarPeca() {
             <input type="text" class="form-control formulario-padrao-input" name="pecaNome[]" placeholder="Nome da peça">
         </td>
         <td>
+            <input type="text" class="form-control formulario-padrao-input numero-br" name="qtdPeca[]" placeholder="0,00">
+        </td>
+        <td>
             <input type="text" class="form-control formulario-padrao-input numero-br" name="pecaValor[]" placeholder="0,00">
         </td>
         <td>

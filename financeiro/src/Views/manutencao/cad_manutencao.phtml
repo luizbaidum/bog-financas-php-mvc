@@ -38,14 +38,26 @@
                             <thead>
                                 <tr>
                                     <th>Nome da Peça</th>
-                                    <th>Valor</th>
+                                    <th>Quantidade</th>
+                                    <th>Valor Total</th>
                                     <th style="width: 5%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>
-                                        <input type="text" class="form-control formulario-padrao-input" name="nomePeca[]" placeholder="Nome da peça">
+                                        <input
+                                            type="text"
+                                            class="form-control formulario-padrao-input"
+                                            name="nomePeca[]"
+                                            placeholder="Nome da peça"
+                                            data-action="<?= $url_buscar_peca; ?>"
+                                            data-div="<?= $div_buscar_peca; ?>"
+                                        >
+                                        <div id="<?= $div_buscar_peca; ?>"></div>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control formulario-padrao-input numero-br" name="qtdPeca[]" placeholder="0,00">
                                     </td>
                                     <td>
                                         <input type="text" class="form-control formulario-padrao-input numero-br" name="valorPeca[]" placeholder="0,00">

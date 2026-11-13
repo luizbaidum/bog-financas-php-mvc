@@ -17,8 +17,8 @@ $(document).on('click', '.render-ajax', function (e) {
 
     requireAjaxRender(
         {
-            action: url_action, 
-            div_destino: div_destino, 
+            action: url_action,
+            div_destino: div_destino,
             modal: modal
         }
     );
@@ -35,9 +35,9 @@ $(document).on('submit', '.submit-form-render-ajax', function (e) {
 
     requireAjaxRender(
         {
-            action: url_action, 
+            action: url_action,
             data: data,
-            div_destino: div_destino, 
+            div_destino: div_destino,
             modal: modal,
             method: method
         }
@@ -170,7 +170,7 @@ $(document).on('click', '.obter-orcamentos', function (e) {
 
     requireAjaxRender(
         {
-            action: url_action, 
+            action: url_action,
             data: post_data,
             div_destino: div_destino,
             method: 'POST'
@@ -224,15 +224,33 @@ $(document).on('keyup', '#idNomeMovimento', function (e) {
     if (valor.length > 2) {
         requireAjaxRender(
             {
-                action: url_action, 
-                div_destino: div, 
+                action: url_action,
+                div_destino: div,
                 method: 'GET'
             }
         );
     } else {
         $(`#${div}`).html('');
     }
-})
+});
+
+$(document).on('keyup', 'input[name="nomePeca[]"]', function (e) {
+    let valor = e.target.value;
+    let url_action = e.target.dataset.action + valor;
+    let div = e.target.dataset.div;
+
+    if (valor.length > 2) {
+        requireAjaxRender(
+            {
+                action: url_action,
+                div_destino: div,
+                method: 'GET'
+            }
+        );
+    } else {
+        $(`#${div}`).html('');
+    }
+});
 
 $(document).on('click', '.vincular-mov-mensal', function (e) {
     let json_value = $(e.target).closest('tr').find('.movimento_m').val();
