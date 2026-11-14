@@ -1,6 +1,6 @@
 <?php if (! empty($ret)): ?>
     <?php foreach ($ret as $v): ?>
-        <div>
+        <div class="vincular-peca">
             <?= $v['idPeca'] . ' - ' . $v['nomePeca']; ?>
             <input type="hidden" class="pecaIn" value='<?= json_encode($v, JSON_UNESCAPED_SLASHES); ?>'>
         </div>

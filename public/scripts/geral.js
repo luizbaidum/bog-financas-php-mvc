@@ -319,3 +319,15 @@ $(document).ready(function() {
         }
     });
 });
+
+$(document).on('click', '.vincular-peca', function (e) {
+    let json_value = $(e.target).closest('input').find('.pecaIn').val();
+    let peca_in = JSON.parse(json_value);
+
+    console.log(peca_in)
+
+    // $('#idNomeMovimento').val(movimento_m.nomeMovimento);
+    // $('#idValor').val((new Formatations(movimento_m.valorDespesa)).convertToBR());
+    // $('#idCategoria').val(`${movimento_m.idCategoria} - sinal: ${movimento_m.sinal}`);
+    // $('#idProprietario').val(movimento_m.idProprietario);
+})
