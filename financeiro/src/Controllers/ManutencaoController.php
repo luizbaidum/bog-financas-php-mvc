@@ -5,7 +5,6 @@ namespace src\Controllers;
 use Exception;
 use MF\Controller\Controller;
 use MF\Helpers\NumbersHelper;
-use NumberFormatter;
 use src\Models\Manutencao\ManutencaoDAO;
 use src\Models\Manutencao\ManutencaoEntity;
 use src\Models\Manutencao\ManutencoesPecasDAO;
@@ -19,13 +18,14 @@ class ManutencaoController extends Controller {
     public function index()
     {
         $this->view->settings = [
-            'action' => $this->index_route . '/cadastrar-manutencao',
-            'title'  => 'Cadastro de Manutenção',
+            'action'   => $this->index_route . '/cadastrar-manutencao',
+            'title'    => 'Cadastro de Manutenção',
+            'redirect' => $this->index_route . '/manutencao-index'
         ];
 
         $this->view->data['lista_proprietarios'] = (new ProprietariosDAO())->selectAll(new ProprietariosEntity(), [['status', '=', '"1"']], [], []);
         $this->view->data['url_buscar_peca'] = $this->index_route . '/buscar-peca?buscar=';
-        $this->view->data['div_buscar_peca'] = 'teste';
+        $this->view->data['div_buscar_peca'] = 'render-ret-pecas-0';
 
         $this->renderPage(conteudo: 'cad_manutencao', base_interna: 'base_cruds');
     }
@@ -33,6 +33,8 @@ class ManutencaoController extends Controller {
     public function buscarPeca()
     {
         $buscar = $_GET['buscar'];
+
+        $this->view->data['settings']['redirect'] = '';
 
         $ret = (new PecasDAO())->buscar($buscar);
         $this->view->data['ret'] = $ret;
@@ -64,30 +66,33 @@ class ManutencaoController extends Controller {
                     }
                 }
 
-                $item_principal = [
-                    'dataManut'      => $_POST['dataManut'],
-                    'oficina'        => $_POST['oficina'],
-                    'vlrMO'          => NumbersHelper::formatBRtoUS($_POST['vlrMO']),
-                    'idProprietario' => $_POST['idProprietario']
-                ];
-
                 $total_pecas = count($_POST['nomePeca']);
-
                 for ($i = 0; $i <= $total_pecas; $i++) {
-                    if (! empty($_POST['idPeca'][$i])) {
-                        $id_pecas[$i] = $_POST['idPeca'][$i];
-                    } else {
+
+                    if ($_POST['idPeca'][$i] == '') {
+                        continue;
+                    }
+
+                    $id_pecas[$i] = $_POST['idPeca'][$i];
+                    if ($id_pecas[$i] == '') {
                         $item_peca = [
                             'nomePeca' => $_POST['nomePeca'][$i]
                         ];
 
-                        $id_pecas[$i] = $model_pecas->cadastrar(new PecasEntity, $item_peca);
+                        $id_pecas[$i] = $model_pecas->cadastrar(new PecasEntity, $item_peca, false);
                     }
                 }
 
                 if (empty($id_pecas)) {
                     throw new Exception('Atenção: Informar peças usadas na manutenção.');
                 }
+
+                $item_principal = [
+                    'dataManut'      => $_POST['dataManut'],
+                    'oficina'        => $_POST['oficina'],
+                    'vlrMO'          => NumbersHelper::formatBRtoUS($_POST['vlrMO']),
+                    'idProprietario' => $_POST['idProprietario']
+                ];
 
                 $id_manut = $model_manutencao->cadastrar(new ManutencaoEntity, $item_principal);
 
@@ -101,7 +106,7 @@ class ManutencaoController extends Controller {
                         'qtdPeca'   => NumbersHelper::formatBRtoUS($_POST['qtdPeca'][$k])
                     ];
 
-                    $ret = $model_manutencoes_pecas->cadastrar(new ManutencoesPecasEntity, $item_manut);
+                    $ret = $model_manutencoes_pecas->cadastrar(new ManutencoesPecasEntity, $item_manut, false);
                 }
 
                 if ($ret['result']) {

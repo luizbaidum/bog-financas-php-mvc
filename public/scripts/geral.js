@@ -247,8 +247,6 @@ $(document).on('keyup', 'input[name="nomePeca[]"]', function (e) {
                 method: 'GET'
             }
         );
-    } else {
-        $(`#${div}`).html('');
     }
 });
 

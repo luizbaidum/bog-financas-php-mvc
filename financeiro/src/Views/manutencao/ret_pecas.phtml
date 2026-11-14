@@ -1,8 +1,12 @@
 <?php if (! empty($ret)): ?>
-    <?php foreach ($ret as $value): ?>
+    <?php foreach ($ret as $v): ?>
         <div>
-            <?= $ret['idPeca'] . ' - ' . $ret['nomePeca']; ?>
-            <input type="hidden" class="pecaIn" value='<?= json_encode($value, JSON_UNESCAPED_SLASHES); ?>'>
+            <?= $v['idPeca'] . ' - ' . $v['nomePeca']; ?>
+            <input type="hidden" class="pecaIn" value='<?= json_encode($v, JSON_UNESCAPED_SLASHES); ?>'>
         </div>
     <?php endforeach; ?>
+<?php else: ?>
+    <div>
+        <input type="hidden" name="idPeca[]" value="">
+    </div>
 <?php endif; ?>
