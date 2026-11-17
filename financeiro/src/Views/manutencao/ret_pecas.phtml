@@ -5,6 +5,7 @@
             <input type="hidden" class="pecaIn" value='<?= json_encode($v, JSON_UNESCAPED_SLASHES); ?>'>
         </div>
     <?php endforeach; ?>
+    <input type="hidden" name="idPeca[]" value="">
 <?php else: ?>
     <div>
         <input type="hidden" name="idPeca[]" value="">

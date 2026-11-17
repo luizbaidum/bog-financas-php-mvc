@@ -13,4 +13,5 @@ class ManutencaoEntity extends Entity {
     public float $vlrMO;
     public int $idFamilia;
     public int $idProprietario;
+    public float $km;
 }

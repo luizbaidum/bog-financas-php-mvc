@@ -4,10 +4,10 @@ namespace src\Controllers;
 
 use Exception;
 use MF\Controller\Controller;
+use MF\Helpers\DateHelper;
 use MF\Helpers\NumbersHelper;
 use src\Models\Manutencao\ManutencaoDAO;
 use src\Models\Manutencao\ManutencaoEntity;
-use src\Models\Manutencao\ManutencoesPecasDAO;
 use src\Models\Manutencao\ManutencoesPecasEntity;
 use src\Models\Manutencao\PecasDAO;
 use src\Models\Manutencao\PecasEntity;
@@ -46,10 +46,8 @@ class ManutencaoController extends Controller {
     {
         if ($this->isSetPost()) {
             $model_manutencao = new ManutencaoDAO();
-            $model_pecas = new PecasDAO();
-            $model_manutencoes_pecas = new ManutencoesPecasDAO();
-            $model_manutencao->iniciarTransacao();
 
+            $model_manutencao->iniciarTransacao();
             try {
                 if ($_POST['dataManut'] == '') {
                     throw new Exception('Atenção: Escolher data da manutenção.');
@@ -67,11 +65,7 @@ class ManutencaoController extends Controller {
                 }
 
                 $total_pecas = count($_POST['nomePeca']);
-                for ($i = 0; $i <= $total_pecas; $i++) {
-
-                    if ($_POST['idPeca'][$i] == '') {
-                        continue;
-                    }
+                for ($i = 0; $i < $total_pecas; $i++) {
 
                     $id_pecas[$i] = $_POST['idPeca'][$i];
                     if ($id_pecas[$i] == '') {
@@ -79,7 +73,10 @@ class ManutencaoController extends Controller {
                             'nomePeca' => $_POST['nomePeca'][$i]
                         ];
 
-                        $id_pecas[$i] = $model_pecas->cadastrar(new PecasEntity, $item_peca, false);
+                        $id_pecas[$i] = $model_manutencao->cadastrar(new PecasEntity, $item_peca, false)['result'] ?? 0;
+                        if ($id_pecas[$i] <= 0) {
+                            throw new Exception('Atenção: Erro ao cadastrar peça.');
+                        }
                     }
                 }
 
@@ -91,36 +88,38 @@ class ManutencaoController extends Controller {
                     'dataManut'      => $_POST['dataManut'],
                     'oficina'        => $_POST['oficina'],
                     'vlrMO'          => NumbersHelper::formatBRtoUS($_POST['vlrMO']),
-                    'idProprietario' => $_POST['idProprietario']
+                    'idProprietario' => $_POST['idProprietario'],
+                    'km'             => NumbersHelper::formatBRtoUS($_POST['km']),
                 ];
 
-                $id_manut = $model_manutencao->cadastrar(new ManutencaoEntity, $item_principal);
+                $id_manut = $model_manutencao->cadastrar(new ManutencaoEntity, $item_principal)['result'] ?? 0;
+
+                if ($id_manut <= 0) {
+                    throw new Exception('Atenção: Erro ao cadastrar manutenção.');
+                }
 
                 foreach ($id_pecas as $k => $id_p) {
-                    $id_peca = $id_pecas[$k];
-
                     $item_manut = [
                         'idManut'   => $id_manut,
-                        'idPeca'    => $id_peca,
+                        'idPeca'    => $id_p,
                         'valorPeca' => NumbersHelper::formatBRtoUS($_POST['valorPeca'][$k]),
                         'qtdPeca'   => NumbersHelper::formatBRtoUS($_POST['qtdPeca'][$k])
                     ];
 
-                    $ret = $model_manutencoes_pecas->cadastrar(new ManutencoesPecasEntity, $item_manut, false);
+                    $ret = $model_manutencao->cadastrar(new ManutencoesPecasEntity, $item_manut, false);
+                    if (empty($ret['result'])) {
+                        throw new Exception($this->msg_retorno_falha);
+                    }
                 }
 
-                if ($ret['result']) {
-                    $array_retorno = array(
-                        'result'   => $ret['result'],
-                        'mensagem' => $this->msg_retorno_sucesso
-                    );
+                $model_manutencao->finalizarTransacao();
 
-                    $model_manutencao->finalizarTransacao();
+                $array_retorno = array(
+                    'result'   => true,
+                    'mensagem' => $this->msg_retorno_sucesso
+                );
 
-                    echo json_encode($array_retorno);
-                } else {
-                    throw new Exception($this->msg_retorno_falha);
-                }
+                echo json_encode($array_retorno);
             } catch (Exception $e) {
                 $array_retorno = array(
                     'result'   => false,

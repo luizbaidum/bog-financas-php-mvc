@@ -247,6 +247,8 @@ $(document).on('keyup', 'input[name="nomePeca[]"]', function (e) {
                 method: 'GET'
             }
         );
+    } else {
+        document.getElementById(div).innerHTML = '';
     }
 });
 
@@ -321,13 +323,16 @@ $(document).ready(function() {
 });
 
 $(document).on('click', '.vincular-peca', function (e) {
-    let json_value = $(e.target).closest('input').find('.pecaIn').val();
+    let json_value = $(e.target).find('.pecaIn').val()
     let peca_in = JSON.parse(json_value);
+    let peca_input_name = $(e.target).closest('tr').find('input[name="nomePeca[]"]');
+    let peca_input_id = $(e.target).closest('tr').find('input[name="idPeca[]"]');
 
-    console.log(peca_in)
+    $(peca_input_name).val(peca_in.nomePeca);
+    $(peca_input_id).val(peca_in.idPeca);
 
-    // $('#idNomeMovimento').val(movimento_m.nomeMovimento);
-    // $('#idValor').val((new Formatations(movimento_m.valorDespesa)).convertToBR());
-    // $('#idCategoria').val(`${movimento_m.idCategoria} - sinal: ${movimento_m.sinal}`);
-    // $('#idProprietario').val(movimento_m.idProprietario);
+    let lista_pecas = $('.vincular-peca');
+    lista_pecas.each(function (n, i) {
+        $(i).html('');
+    })
 })
