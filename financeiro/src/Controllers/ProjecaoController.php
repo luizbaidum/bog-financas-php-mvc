@@ -11,7 +11,7 @@ class ProjecaoController extends Controller {
     {
         $this->view->settings = [
             'action'   => $this->index_route . '/gerar-projecao',
-            'redirect' => $this->index_route . '/projecao',
+            'redirect' => $this->index_route . '/projecao-index',
             'title'    => 'Projeção',
             'div'      => 'id-tabela-projecao'
         ];

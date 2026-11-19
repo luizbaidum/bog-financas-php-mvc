@@ -40,7 +40,7 @@ class Model {
         $this->con = NULL;
     }
 
-	public function cadastrar(object $entity, $data)
+	public function cadastrar(object $entity, $data, $apply_security = true)
 	{
 		$arr_values = array();
 
@@ -63,7 +63,7 @@ class Model {
 
 			$query = rtrim($query, ', ') . ')';
 
-			$result = $this->sql_actions->executarQuery($query, $arr_values);
+			$result = $this->sql_actions->executarQuery($query, $arr_values, $apply_security);
 
 			if ($result) {
 				return array(

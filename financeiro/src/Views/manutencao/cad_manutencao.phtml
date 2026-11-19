@@ -1,0 +1,91 @@
+<div class="card border-0 shadow-sm formulario-padrao-card">
+    <div class="card-header bg-dark text-white">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-plus-circle fs-4 me-2"></i>
+            <h6 class="card-title mb-0">Cadastro de Manutenção Mecânica Automotiva</h6>
+        </div>
+    </div>
+    <div class="card-body p-2">
+        <div class="row g-2">
+            <div class="col-12">
+                <div class="row g-2">
+                    <div class="col-sm-2 col-12">
+                        <label for="idDataManut" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Data</label>
+                        <input type="date" class="form-control formulario-padrao-input" id="idDataManut" name="dataManut" required>
+                    </div>
+                    <div class="col-sm-2 col-12">
+                        <label for="idKm" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Km</label>
+                        <input type="text" class="form-control formulario-padrao-input numero-br" id="idKm" name="km" required value="0,00">
+                    </div>
+                    <div class="col-sm-4 col-12">
+                        <label for="idOficina" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Oficina</label>
+                        <input type="text" class="form-control formulario-padrao-input" id="idOficina" name="oficina" required>
+                    </div>
+                    <div class="col-sm-2 col-12">
+                        <label for="idVlrMO" class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Valor Mão-de-Obra</label>
+                        <input type="text" class="form-control formulario-padrao-input numero-br" id="idVlrMO" name="vlrMO" required value="0,00">
+                    </div>
+                    <div class="col-sm-2 col-12">
+                        <label for="idProprietario" class="form-label titulo-input-formulario-cadastro">Proprietário</label>
+                            <select class="form-select" id="idProprietario" name="idProprietario">
+                            <?php foreach ($lista_proprietarios as $v): ?>
+                                <option value="<?= $v['idProprietario']; ?>"><?= $v['idProprietario'] . ' - ' . $v['proprietario']; ?></option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label class="form-label titulo-input-formulario-cadastro formulario-padrao-label">Peças</label>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm mb-1 align-middle" id="tabelaPecas">
+                            <thead>
+                                <tr>
+                                    <th>Nome da Peça</th>
+                                    <th>Quantidade</th>
+                                    <th>Valor Total</th>
+                                    <th style="width: 5%;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            class="form-control formulario-padrao-input"
+                                            name="nomePeca[]"
+                                            placeholder="Nome da peça"
+                                            data-action="<?= $url_buscar_peca; ?>"
+                                            data-div="<?= $div_buscar_peca; ?>"
+                                        >
+                                        <div id="<?= $div_buscar_peca; ?>">
+                                            <input type="hidden" name="idPeca[]" value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control formulario-padrao-input numero-br" name="qtdPeca[]" placeholder="0,00">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control formulario-padrao-input numero-br" name="valorPeca[]" placeholder="0,00">
+                                    </td>
+                                    <td>
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-success"
+                                            title="Adicionar Peça"
+                                            onclick="adicionarPeca(this)"
+                                            data-action="<?= $url_buscar_peca; ?>"
+                                            data-div="<?= $div_buscar_peca; ?>"
+                                        >
+                                            <i>&#x2b;</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

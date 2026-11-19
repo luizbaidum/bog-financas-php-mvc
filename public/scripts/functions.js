@@ -257,3 +257,38 @@ function toggleAllCheckboxes(selectAllCheckbox) {
         checkbox.checked = selectAllCheckbox.checked;
     });
 }
+
+function adicionarPeca(target) {
+    const tbody = document.querySelector('#tabelaPecas tbody');
+    const novaLinha = document.createElement('tr');
+    const action = target.dataset.action;
+    let div = target.dataset.div;
+    let div_spliting = div.split('-');
+    div = div_spliting[0] + '-' + div_spliting[1] + '-' + div_spliting[2] + '-' + (Number(tbody.querySelectorAll('tr').length))
+
+    novaLinha.innerHTML = `
+        <td>
+            <input
+                type="text"
+                class="form-control formulario-padrao-input"
+                name="nomePeca[]"
+                placeholder="Nome da peça"
+                data-action="${action}"
+                data-div="${div}"
+            >
+            <div id="${div}">
+                <input type="hidden" name="idPeca[]" value="">
+            </div>
+        </td>
+        <td>
+            <input type="text" class="form-control formulario-padrao-input numero-br" name="qtdPeca[]" placeholder="0,00">
+        </td>
+        <td>
+            <input type="text" class="form-control formulario-padrao-input numero-br" name="valorPeca[]" placeholder="0,00">
+        </td>
+        <td>
+        </td>
+    `;
+
+    tbody.appendChild(novaLinha);
+}

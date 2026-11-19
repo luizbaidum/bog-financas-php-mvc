@@ -29,7 +29,7 @@ class FamiliaUsuariosController extends Controller {
 
         $this->view->settings = [
             'action'     => $this->index_route . '/cad-usuario',
-            'redirect'   => $this->index_route . '/usuarios',
+            'redirect'   => $this->index_route . '/usuarios-index',
             'title'      => 'Família/Usuários',
             'is_gestor'  => $is_gestor,
             'edit'       => [

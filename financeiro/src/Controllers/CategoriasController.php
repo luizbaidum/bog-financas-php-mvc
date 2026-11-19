@@ -18,7 +18,7 @@ class CategoriasController extends Controller {
     public function categorias()
     {
         $this->view->settings = [
-            'action'    => $this->index_route . '/cad_categorias',
+            'action'    => $this->index_route . '/cad-categorias',
             'redirect'  => $this->index_route . '/categorias',
             'title'     => 'Categorias',
             'extra_url' => $this->index_route . '/edit-status-categoria?id=',

@@ -34,7 +34,7 @@ class OrcamentoController extends Controller {
 
         $buttons->setButton(
             'Apagar',
-            $this->index_route . '/delete_itens_orcamento',
+            $this->index_route . '/delete-itens-orcamento',
             'px-2 btn btn-danger action-delete'
         );
 
@@ -120,9 +120,9 @@ class OrcamentoController extends Controller {
     public function orcamentoDoRealizado()
     {
         $this->view->settings = [
-            'action'   => $this->index_route . '/cad_orcamento_do_realizado',
+            'action'   => $this->index_route . '/cad_orcamento-do-realizado',
             'url_ajax' => $this->index_route . '/buscar-orcamento-do-realizado',
-            'redirect' => $this->index_route . '/orcamento_do_realizado',
+            'redirect' => $this->index_route . '/orcamento-do-realizado',
             'title'    => 'Importação de Orçamento',
             'div_ajax' => 'id-content-importar'
         ];

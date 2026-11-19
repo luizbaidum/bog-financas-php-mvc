@@ -12,9 +12,9 @@ class PreferenciasController extends Controller {
         $prefs = $model_preferencias->selectAll(new PreferenciasEntity());
 
         $this->view->settings = [
-            'action'   => $this->index_route . '/salvar_preferencias',
-            'redirect' => $this->index_route . '/preferencias',
-            'action_2' => $this->index_route . '/nova_preferencia',
+            'action'   => $this->index_route . '/salvar-preferencias',
+            'redirect' => $this->index_route . '/preferencias-index',
+            'action_2' => $this->index_route . '/nova-preferencia',
             'title'    => 'Preferências',
         ];
 

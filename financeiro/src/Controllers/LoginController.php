@@ -16,7 +16,7 @@ class LoginController extends Controller {
             'action'               => $this->index_route . '/login',
             'title'                => 'Login - Bog Finanças',
             'url_primeiro_acesso'  => $this->index_route . '/primeiro-acesso',
-            'url_solicitar_acesso' => $this->index_route . '/solicitar-acesso'
+            'url_solicitar_acesso' => $this->index_route . '/solicitar-acesso-index'
         ];
 
         $git_hub_infos = $this->getGitHubInfos();
@@ -91,7 +91,7 @@ class LoginController extends Controller {
 
         $this->view->settings['action'] = '/login';
         $this->view->settings['url_primeiro_acesso'] = $this->index_route . '/primeiro-acesso';
-        $this->view->settings['url_solicitar_acesso'] = $this->index_route . '/solicitar-acesso';
+        $this->view->settings['url_solicitar_acesso'] = $this->index_route . '/solicitar-acesso-index';
 
         $git_hub_infos = $this->getGitHubInfos();
 
