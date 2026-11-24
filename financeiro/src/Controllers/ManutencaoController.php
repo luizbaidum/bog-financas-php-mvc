@@ -13,6 +13,7 @@ use src\Models\Manutencao\PecasDAO;
 use src\Models\Manutencao\PecasEntity;
 use src\Models\Proprietarios\ProprietariosDAO;
 use src\Models\Proprietarios\ProprietariosEntity;
+use src\System\MonthAndYear;
 
 class ManutencaoController extends Controller {
     public function index()
@@ -135,6 +136,39 @@ class ManutencaoController extends Controller {
 
     public function relatorioManutencao()
     {
+        $model_manutencao = new ManutencaoDAO();
 
+        $this->view->settings = [
+            'action'   => $this->index_route . '/processar-relatorio-manutencao',
+            'title'    => 'Manutenções',
+            'div'      => 'content-relatorio-manutencao'
+        ];
+
+        $this->view->data['years'] = MonthAndYear::getYears();
+
+        $this->renderPage(
+            conteudo: 'relatorio_manutencao'
+        );
+    }
+
+    public function processarRelatorioManutencao()
+    {
+        $model_manutencao = new ManutencaoDAO();
+
+        $ano = $_POST['anoManut'];
+
+        $this->view->data['dados'] = $model_manutencao->getManutencoesByYear($ano);
+        $this->view->data['url_detail'] = $this->index_route . '/exibir-detalhes-manutencao?idManut=';
+
+        $this->renderSimple('ret_relatorio_manutencao');
+    }
+
+    public function exibirDetalhes()
+    {
+        $id_manut = $_GET['idManut'];
+
+        $this->view->data['detalhes'] = (new ManutencaoDAO())->detalharManutencao($id_manut);
+
+        $this->renderInModal(titulo: 'Detalhes mmanut. ' . $id_manut, conteudo: 'detalhes');
     }
 }

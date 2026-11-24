@@ -1,0 +1,62 @@
+<?php
+    use MF\Helpers\DateHelper;
+    use MF\Helpers\NumbersHelper;
+?>
+
+<div class="card mt-2">
+
+    <div class="card-header bg-dark text-white">
+        <h6 class="card-title mb-0">Extrato</h6>
+    </div>
+
+    <div class="card-body">
+        <?php if (empty($dados)): ?>
+            <div class="text-center">
+                Nenhum registro encontrado
+            </div>
+        <?php
+            else:
+                $total_geral = 0;
+        ?>
+            <table class="table table-hover table-sm mb-1 align-middle">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Oficina</th>
+                        <th>Total</th>
+                        <th>Proprietário</th>
+                        <th>Detalhar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        foreach ($dados as $v):
+                            $total = $v['total_pecas'] + $v['vlrMO'];
+                            $total_geral += $total;
+                    ?>
+                        <tr>
+                            <td><?= DateHelper::convertUStoBR($v['dataManut']); ?></td>
+                            <td><?= $v['oficina']; ?></td>
+                            <td>R$ <?= NumbersHelper::formatUStoBR($total); ?></td>
+                            <td><?= $v['proprietario']; ?></td>
+                            <td>
+                                <button title="Detalhar" class="btn btn-sm btn-outline-primary render-ajax" data-url="<?= $url_detail . $v['idManut']; ?>" data-div="" data-modal="true">
+                                    🗩
+                                </button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr class="table-dark">
+                        <td colspan="2">Total</td>
+                        <td>
+                            R$ <?= NumbersHelper::formatUStoBR($total_geral); ?>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        <?php endif; ?>
+    </div>
+</div>

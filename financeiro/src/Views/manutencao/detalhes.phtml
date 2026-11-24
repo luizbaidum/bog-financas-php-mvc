@@ -1,0 +1,110 @@
+<?php
+    use MF\Helpers\DateHelper;
+    use MF\Helpers\NumbersHelper;
+
+    $total = $detalhes[0]['vlrMO'];
+    $total_pecas = 0;
+?>
+
+<div class="modal-header bg-dark text-white">
+    <h6 class="modal-title mb-0" id="modalDetalheManutencaoLabel">
+        Detalhes da Manutenção #<?= $detalhes[0]['idManut']; ?>
+    </h6>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+</div>
+
+<div class="modal-body">
+    <div class="card mb-3">
+        <div class="card-header bg-dark text-white">
+            <h6 class="card-title mb-0">Informações Gerais</h6>
+        </div>
+        <div class="card-body py-2">
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <small class="text-muted d-block">Data</small>
+                    <strong><?= DateHelper::convertUStoBR($detalhes[0]['dataManut']); ?></strong>
+                </div>
+                <div class="col-md-4">
+                    <small class="text-muted d-block">Oficina</small>
+                    <strong><?= $detalhes[0]['oficina']; ?></strong>
+                </div>
+                <div class="col-md-4">
+                    <small class="text-muted d-block">Proprietário</small>
+                    <strong><?= $detalhes[0]['proprietario']; ?></strong>
+                </div>
+                <div class="col-md-4">
+                    <small class="text-muted d-block">KM</small>
+                    <strong><?= NumbersHelper::formatUStoBR($detalhes[0]['km']); ?> km</strong>
+                </div>
+                <div class="col-md-4">
+                    <small class="text-muted d-block">Família</small>
+                    <strong><?= $detalhes[0]['nomeFamilia']; ?></strong>
+                </div>
+                <div class="col-md-4">
+                    <small class="text-muted d-block">Mão de Obra</small>
+                    <strong>R$ <?= NumbersHelper::formatUStoBR($detalhes[0]['vlrMO']); ?></strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            <h6 class="card-title mb-0">Peças</h6>
+        </div>
+        <div class="card-body p-0">
+            <?php if (empty($detalhes)): ?>
+                <div class="text-center py-3">Nenhuma peça registrada</div>
+            <?php else: ?>
+                <table class="table table-hover table-sm mb-0 align-middle">
+                    <thead>
+                        <tr>
+                            <th>Peça</th>
+                            <th class="text-center">Qtd</th>
+                            <th class="text-end">Valor Unit.</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            foreach ($detalhes as $p):
+                                $total += $p['valorPeca'];
+                                $total_pecas += $p['valorPeca'];
+                        ?>
+                            <tr>
+                                <td><?= $p['nomePeca']; ?></td>
+                                <td class="text-center"><?= NumbersHelper::formatUStoBR($p['qtdPeca']); ?></td>
+                                <td class="text-end">R$ <?= NumbersHelper::formatUStoBR($p['qtdPeca'] > 0 ? $p['valorPeca'] / $p['qtdPeca'] : 0); ?></td>
+                                <td class="text-end">R$ <?= NumbersHelper::formatUStoBR($p['valorPeca']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-dark">
+                            <td colspan="3">Total Peças</td>
+                            <td class="text-end">R$ <?= NumbersHelper::formatUStoBR($total_pecas); ?></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer justify-content-between bg-light">
+    <div class="d-flex gap-4">
+        <div>
+            <small class="text-muted d-block">Mão de Obra</small>
+            <strong>R$ <?= NumbersHelper::formatUStoBR($detalhes[0]['vlrMO']); ?></strong>
+        </div>
+        <div>
+            <small class="text-muted d-block">Peças</small>
+            <strong>R$ <?= NumbersHelper::formatUStoBR($total_pecas); ?></strong>
+        </div>
+        <div>
+            <small class="text-muted d-block">Total Geral</small>
+            <strong class="text-success fs-5">R$ <?= NumbersHelper::formatUStoBR($total); ?></strong>
+        </div>
+    </div>
+    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+</div>
