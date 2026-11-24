@@ -162,4 +162,13 @@ class ManutencaoController extends Controller {
 
         $this->renderSimple('ret_relatorio_manutencao');
     }
+
+    public function exibirDetalhes()
+    {
+        $id_manut = $_GET['idManut'];
+
+        $this->view->data['detalhes'] = (new ManutencaoDAO())->detalharManutencao($id_manut);
+
+        $this->renderInModal(titulo: 'Detalhes mmanut. ' . $id_manut, conteudo: 'detalhes');
+    }
 }
